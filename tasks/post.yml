@@ -1,0 +1,56 @@
+---
+# Post tasks
+
+- name: Perform DNF package cleanup
+  dnf:
+      autoremove: yes
+  changed_when: no
+
+- name: trigger update sysctl
+  command: /bin/true
+  changed_when: false
+  check_mode: false
+  notify: update sysctl
+  when:
+      - rhel9cis_rule_1_6_1 or
+        rhel9cis_rule_1_6_2 or
+        rhel9cis_rule_3_1_2 or
+        rhel9cis_rule_3_1_2 or
+        rhel9cis_rule_3_2_1 or
+        rhel9cis_rule_3_2_2 or
+        rhel9cis_rule_3_2_3 or
+        rhel9cis_rule_3_2_4 or
+        rhel9cis_rule_3_2_5 or
+        rhel9cis_rule_3_2_6 or
+        rhel9cis_rule_3_2_7 or
+        rhel9cis_rule_3_2_8 or
+        rhel9cis_rule_3_2_9
+  tags:
+      - sysctl
+
+- name: trigger update auditd
+  command: /bin/true
+  notify: update auditd
+  changed_when: false
+  check_mode: false
+  when:
+      - rhel9cis_rule_4_1_3 or
+        rhel9cis_rule_4_1_4 or
+        rhel9cis_rule_4_1_5 or
+        rhel9cis_rule_4_1_6 or
+        rhel9cis_rule_4_1_7 or
+        rhel9cis_rule_4_1_8 or
+        rhel9cis_rule_4_1_9 or
+        rhel9cis_rule_4_1_10 or
+        rhel9cis_rule_4_1_11 or
+        rhel9cis_rule_4_1_12
+  tags:
+      - auditd
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: Reboot host
+  reboot:
+  when:
+  - not rhel9cis_skip_reboot

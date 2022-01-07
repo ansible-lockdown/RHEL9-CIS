@@ -1,0 +1,18 @@
+---
+galaxy_info:
+    author: "Sam Doran, Josh Springer, Daniel Shepherd, Bas Meijeri, James Cassell, Mike Renfro, DFed, George Nalen, Mark Bolwell"
+    description: "Apply the RHEL 8 CIS"
+    company: "MindPoint Group"
+    license: MIT
+    role_name: rhel9_cis
+    min_ansible_version: 2.9.0
+    platforms:
+        - name: EL
+          versions:
+              - 9
+    galaxy_tags:
+        - system
+        - security
+        - cis
+        - hardening
+dependencies: []

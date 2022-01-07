@@ -1,0 +1,43 @@
+---
+
+- name: "3.1.1 | L1 | PATCH | Ensure IP forwarding is disabled"
+  block:
+      - name: "3.1.1 | L1 | PATCH | Ensure IP forwarding is disabled"
+        debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
+        notify: 
+            - update sysctl
+            - sysctl flush ipv4 route table
+
+      - name: "3.1.1 | L1 | PATCH | Ensure IP forwarding is disabled"
+        debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
+        notify:
+            - sysctl flush ipv6 route table
+            - update sysctl
+        when: rhel9cis_ipv6_required
+  when:
+      - not rhel9cis_is_router
+      - rhel9cis_rule_3_1_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - sysctl
+      - patch
+      - rule_3.1.1
+
+- name: "3.1.2 | L1 | PATCH | Ensure packet redirect sending is disabled"
+  debug:
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
+  notify:
+      - update sysctl
+      - sysctl flush ipv4 route table
+  when:
+      - not rhel9cis_is_router
+      - rhel9cis_rule_3_1_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - sysctl
+      - patch
+      - rule_3.1.2

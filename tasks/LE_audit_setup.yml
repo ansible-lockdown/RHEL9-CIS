@@ -1,0 +1,22 @@
+---
+
+- name: Download audit binary
+  get_url:
+      url: "{{ goss_url }}"
+      dest: "{{ audit_bin }}"
+      owner: root
+      group: root
+      checksum: "{{ goss_version.checksum }}"
+      mode: 0555
+  when:
+      - get_goss_file == 'download'
+
+- name: copy audit binary
+  copy:
+      src:
+      dest: "{{ audit_bin }}"
+      mode: 0555
+      owner: root
+      group: root
+  when:
+      - get_goss_file == 'copy'

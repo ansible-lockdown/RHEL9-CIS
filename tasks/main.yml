@@ -1,0 +1,111 @@
+---
+# tasks file for RHEL9-CIS
+- name: Check OS version and family
+  fail:
+      msg: "This role can only be run against RHEL 8. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
+  when:
+  - ansible_os_family == 'RedHat'
+  - ansible_distribution_major_version is version_compare('9', '!=')
+  tags:
+  - always
+
+- name: Check ansible version
+  fail:
+      msg: You must use ansible 2.9 or greater
+  when: not ansible_version.full is version_compare('2.9', '>=')
+  tags:
+  - always
+
+- name: Check crypto-policy input
+  assert:
+      that: rhel9cis_crypto_policy in rhel9cis_allowed_crypto_policies
+
+- name: Check rhel9cis_bootloader_password_hash variable has been changed
+  assert:
+      that: rhel9cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'
+      msg: "This role will not be able to run single user password commands as rhel9cis_bootloader_password_hash variable has not been set"
+  when:
+  - rhel9cis_set_boot_pass
+  - rhel9cis_rule_1_5_2
+
+- name: "check sugroup exists if used"
+  block:
+  - name: "Check su group exists if defined"
+    shell: grep -w "{{ rhel9cis_sugroup }}" /etc/group
+    register: sugroup_exists
+    changed_when: false
+    failed_when: sugroup_exists.rc >= 2
+    tags:
+    - skip_ansible_lint
+
+  - name: Check sugroup if defined exists before continuing
+    assert:
+        that: sugroup_exists.rc == 0
+        msg: "The variable rhel9cis_sugroup is defined but does not exist please rectify"
+  when:
+  - rhel9cis_sugroup is defined
+  - rhel9cis_rule_5_7
+  tags:
+  - rule_5.7
+
+- include: prelim.yml
+  become: yes
+  tags:
+  - prelim_tasks
+  - always
+
+- import_tasks: pre_remediation_audit.yml
+  when:
+  - run_audit
+
+- name: Gather the package facts
+  package_facts:
+      manager: auto
+  tags:
+  - always
+
+- include: parse_etc_password.yml
+  become: yes
+  when: rhel9cis_section6
+
+- include: section_1/main.yml
+  become: yes
+  when: rhel9cis_section1
+  tags:
+  - rhel9cis_section1
+
+- include: section_2/main.yml
+  become: yes
+  when: rhel9cis_section2
+
+- include: section_3/main.yml
+  become: yes
+  when: rhel9cis_section3
+
+- include: section_4/main.yml
+  become: yes
+  when: rhel9cis_section4
+
+- include: section_5/main.yml
+  become: yes
+  when: rhel9cis_section5
+
+- include: section_6/main.yml
+  become: yes
+  when: rhel9cis_section6
+
+- include: post.yml
+  become: yes
+  tags:
+  - post_tasks
+  - always
+
+- import_tasks: post_remediation_audit.yml
+  when:
+  - run_audit
+
+- name: Show Audit Summary
+  debug:
+      msg: "{{ audit_results.split('\n') }}"
+  when:
+  - run_audit

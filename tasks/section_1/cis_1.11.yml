@@ -1,0 +1,15 @@
+---
+
+- name: "1.11 | L2 | PATCH | Ensure system-wide crypto policy is FUTURE or FIPS"
+  shell: |
+      update-crypto-policies --set "{{ rhel9cis_crypto_policy }}"
+      update-crypto-policies
+  when:
+      - rhel9cis_rule_1_11
+      - system_wide_crypto_policy['stdout'] not in rhel9cis_allowed_crypto_policies
+  tags:
+      - level2-server
+      - level2-workstation
+      - not system_is_ec2
+      - patch
+      - rule_1.11
