@@ -1,8 +1,10 @@
-# RHEL 9 CIS (predicted) - ALPHA
+# Development Only
 
-## This is purely development and those who have access to the RH developer branches for testing
+## RHEL 9 CIS (predicted) - ALPHA - CIS baselines or OS not yet GA
 
-### This will work on RHEL8 and derivatives currently
+## Testing if you have access to the RH developer branches
+
+### This should work on RHEL8 and derivatives currently
 
 ![Build Status](https://img.shields.io/github/workflow/status/ansible-lockdown/RHEL9-CIS/CommunityToDevel?label=Devel%20Build%20Status&style=plastic)
 ![Build Status](https://img.shields.io/github/workflow/status/ansible-lockdown/RHEL9-CIS/DevelToMain?label=Main%20Build%20Status&style=plastic)
