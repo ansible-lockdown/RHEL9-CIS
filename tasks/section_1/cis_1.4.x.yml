@@ -28,16 +28,12 @@
       - rule_1.4.1
 
 - name: "1.4.2 | L1 | PATCH | Ensure filesystem integrity is regularly checked"
-  cron:
-      name: Run AIDE integrity check
-      cron_file: "{{ rhel9cis_aide_cron['cron_file'] }}"
-      user: "{{ rhel9cis_aide_cron['cron_user'] }}"
-      minute: "{{ rhel9cis_aide_cron['aide_minute'] | default('0') }}"
-      hour: "{{ rhel9cis_aide_cron['aide_hour'] | default('5') }}"
-      day: "{{ rhel9cis_aide_cron['aide_day'] | default('*') }}"
-      month: "{{ rhel9cis_aide_cron['aide_month'] | default('*') }}"
-      weekday: "{{ rhel9cis_aide_cron['aide_weekday'] | default('*') }}"
-      job: "{{ rhel9cis_aide_cron['aide_job'] }}"
+  template:
+    src: aide.cron.j2
+    dest: /etc/cron.d/aide.cron
+    owner: root
+    group: root
+    mode: 0644
   when:
       - rhel9cis_rule_1_4_2
   tags:

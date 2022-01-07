@@ -1,0 +1,5 @@
+# Run AIDE integrity check 
+# added via ansible-lockdown remediation 
+# CIS 1.4.2
+
+{{ rhel9cis_aide_cron['aide_minute'] }} {{ rhel9cis_aide_cron['aide_hour'] }} {{ rhel9cis_aide_cron['aide_month'] }} {{ rhel9cis_aide_cron['aide_weekday'] }} {{ rhel9cis_aide_cron['aide_job'] }}
