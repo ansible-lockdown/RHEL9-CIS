@@ -15,4 +15,7 @@ galaxy_info:
         - security
         - cis
         - hardening
+        - benchmark
+collections:
+  - community.general
 dependencies: []
