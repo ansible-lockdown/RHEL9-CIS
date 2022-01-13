@@ -405,7 +405,7 @@ rhel9cis_aide_cron:
 rhel9cis_selinux_pol: targeted
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
-rhel9cis_gui: no
+rhel9cis_gui: false
 
 # Set to 'true' if X Windows is needed in your environment
 rhel9cis_xwindows_required: false
@@ -539,7 +539,7 @@ rhel9cis_vartmp:
     source: /tmp
     fstype: none
     opts: "defaults,nodev,nosuid,noexec,bind"
-    enabled: no
+    enabled: false
 ## PAM
 rhel9cis_pam_password:
     minlen: "14"

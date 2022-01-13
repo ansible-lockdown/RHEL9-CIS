@@ -50,7 +50,7 @@
             warn: false
         changed_when: false
         failed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_5_5_1_4_inactive_settings
 
       - name: "5.5.1.4 | L1 | PATCH | Ensure inactive password lock is 30 days or less | Set default inactive setting"
@@ -63,7 +63,7 @@
         shell: 'egrep ^[^:]+:[^\!*] /etc/shadow | cut -d: -f1'
         args:
             warn: false
-        check_mode: no
+        check_mode: false
         register: rhel_09_5_5_1_4_audit
         changed_when: false
 
@@ -89,7 +89,7 @@
             warn: false
         failed_when: false
         changed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_5_5_1_5_currentut
 
       - name: "5.5.1.5 | L1 | AUDIT | Ensure all users last password change date is in the past | Get list of users with last changed pw date in the future"
@@ -98,7 +98,7 @@
             warn: false
         changed_when: false
         failed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_5_5_1_5_user_list
 
       - name: "5.5.1.5 | L1 | AUDIT | Ensure all users last password change date is in the past | Alert no pw change in the future exist"

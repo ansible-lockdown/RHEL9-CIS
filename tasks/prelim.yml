@@ -4,33 +4,33 @@
 - name: "PRELIM | List users accounts"
   shell: "awk -F: '{print $1}' /etc/passwd"
   args:
-      warn: no
-  changed_when: no
-  check_mode: no
+      warn: false
+  changed_when: false
+  check_mode: false
   register: users
 
 - name: "PRELIM | Gather accounts with empty password fields"
   shell: "cat /etc/shadow | awk -F: '($2 == \"\" ) {j++;print $1; } END {exit j}'"
   args:
-      warn: no
-  changed_when: no
-  check_mode: no
+      warn: false
+  changed_when: false
+  check_mode: false
   register: empty_password_accounts
 
 - name: "PRELIM | Gather UID 0 accounts other than root"
   shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
   args:
-      warn: no
-  changed_when: no
-  check_mode: no
+      warn: false
+  changed_when: false
+  check_mode: false
   register: uid_zero_accounts_except_root
 
 - name: "PRELIM | Gather system-wide crypto-policy"
   shell: update-crypto-policies --show
   args:
-      warn: no
-  changed_when: no
-  check_mode: no
+      warn: false
+  changed_when: false
+  check_mode: false
   register: system_wide_crypto_policy
 
 - name: "PRELIM | if systemd coredump"
@@ -50,15 +50,16 @@
       state: present
   become: true
   when: 
+      - '"auditd" not in ansible_facts.packages'
       - rhel9cis_level_2 or
         rhel9cis_rule_4_1_1_1
-      - '"auditd" not in ansible_facts.packages'
+
 
 - name: "PRELIM | 4.1.12 | Ensure successful file system mounts are collected"
   shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null; done
   changed_when: false
   failed_when: false
-  check_mode: no
+  check_mode: false
   register: priv_procs
   tags:
   - always

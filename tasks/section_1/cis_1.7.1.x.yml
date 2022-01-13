@@ -19,7 +19,7 @@
       regexp: '(selinux|enforcing)\s*=\s*0\s*'
       replace: ''
   register: selinux_grub_patch
-  ignore_errors: yes
+  ignore_errors: true
   notify: grub2cfg
   when:
       - rhel9cis_rule_1_7_1_2

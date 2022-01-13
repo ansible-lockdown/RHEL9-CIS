@@ -5,7 +5,7 @@
       dest: /etc/default/grub
       regexp: '(^GRUB_CMDLINE_LINUX\s*\=\s*)(?:")(.+)(?<!ipv6.disable=1)(?:")'
       replace: '\1"\2 ipv6.disable=1"'
-      follow: yes
+      follow: true
   notify: grub2cfg
   when:
       - not rhel9cis_ipv6_required

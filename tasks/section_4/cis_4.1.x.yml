@@ -125,7 +125,7 @@
             warn: false
         changed_when: false
         failed_when: false
-        check_mode: no
+        check_mode: false
         register: priv_procs
 
       - name: "4.1.12 | L2 | PATCH | Ensure successful file system mounts are collected"

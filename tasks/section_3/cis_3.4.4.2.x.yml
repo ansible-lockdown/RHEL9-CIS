@@ -124,7 +124,7 @@
 - name: "3.4.4.2.5 | L1 | PATCH | Ensure ip6tables service is enabled and active | Check if ip6tables is enabled"
   service:
       name: ip6tables
-      enabled: yes
+      enabled: true
       state: started
   when:
       - rhel9cis_firewall == "iptables"

@@ -95,7 +95,7 @@
         copy:
             src: /etc/pam.d/{{ item }}
             dest: /etc/pam.d/{{ item }}-local
-            remote_src: yes
+            remote_src: true
             owner: root
             group: root
             mode: '0644'
@@ -112,7 +112,7 @@
             src: /etc/pam.d/{{ item }}-local
             dest: /etc/pam.d/{{ item }}
             state: link
-            force: yes
+            force: true
         with_items:
             - "system-auth"
             - "password-auth"

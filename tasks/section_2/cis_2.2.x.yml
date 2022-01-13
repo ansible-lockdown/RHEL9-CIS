@@ -7,7 +7,7 @@
         args:
             warn: false
         failed_when: xorg_x11_installed.rc >=2
-        check_mode: no
+        check_mode: false
         changed_when: false
         register: xorg_x11_installed
 
@@ -32,7 +32,7 @@
   service:
       name: rsyncd
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_rsyncd_server
       - "'rsyncd' in ansible_facts.packages"
@@ -47,7 +47,7 @@
   service:
       name: avahi-daemon
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_avahi_server
       - "'avahi' in ansible_facts.packages"
@@ -65,7 +65,7 @@
   service:
       name: snmpd
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_snmp_server
       - "'net-snmp' in ansible_facts.packages"
@@ -80,7 +80,7 @@
   service:
       name: squid
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_squid_server
       - "'squid' in ansible_facts.packages"
@@ -95,7 +95,7 @@
   service:
       name: smb
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_smb_server
       - "'samba' in ansible_facts.packages"
@@ -110,7 +110,7 @@
   service:
       name: dovecot
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_dovecot_server
       - "'dovecot' in ansible_facts.packages"
@@ -125,7 +125,7 @@
   service:
       name: httpd
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_httpd_server
       - "'httpd' in ansible_facts.packages"
@@ -140,7 +140,7 @@
   service:
       name: vsftpd
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_vsftpd_server
       - "'vsftpd' in ansible_facts.packages"
@@ -155,7 +155,7 @@
   service:
       name: named
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_named_server
       - "'bind' in ansible_facts.packages"
@@ -170,7 +170,7 @@
   service:
       name: nfs-server
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_nfs_rpc_server
       - "'nfs-utils' in ansible_facts.packages"
@@ -188,7 +188,7 @@
   service:
       name: rpcbind
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_nfs_rpc_server
       - "'rpcbind' in ansible_facts.packages"
@@ -206,7 +206,7 @@
   service:
       name: slapd
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_ldap_server
       - "'openldap-servers' in ansible_facts.packages"
@@ -224,7 +224,7 @@
   service:
       name: dhcpd
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_dhcp_server
       - "'dhcp' in ansible_facts.packages"
@@ -242,7 +242,7 @@
   service:
       name: cups
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_cups_server
       - "'cups' in ansible_facts.packages"
@@ -260,7 +260,7 @@
   service:
       name: ypserv
       state: stopped
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_nis_server
       - "'ypserv' in ansible_facts.packages"

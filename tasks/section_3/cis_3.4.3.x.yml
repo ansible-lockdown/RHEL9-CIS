@@ -44,7 +44,7 @@
         shell: nft create table inet "{{ rhel9cis_nft_tables_tablename }}"
         args:
             warn: false
-        failed_when: no
+        failed_when: false
         when: rhel9cis_nft_tables_autonewtable
   when:
       - rhel9cis_firewall == "nftables"
@@ -96,7 +96,7 @@
         shell: "{{ item }}"
         args:
             warn: false
-        failed_when: no
+        failed_when: false
         with_items:
             - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" input { type filter hook input priority 0 \; }
             - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" forward { type filter hook forward priority 0 \; }
@@ -294,7 +294,7 @@
 - name: "3.4.3.7 | L1 | PATCH | Ensure nftables service is enabled | Check if nftables is enabled"
   service:
       name: nftables
-      enabled: yes
+      enabled: true
   when:
       - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_3_7

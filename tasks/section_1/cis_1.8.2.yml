@@ -6,7 +6,7 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
       state: present
-      create: yes
+      create: true
       owner: root
       group: root
       mode: 0644

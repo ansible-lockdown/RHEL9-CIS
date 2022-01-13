@@ -256,7 +256,7 @@
             warn: false
         changed_when: false
         failed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_1_1_15_dev_shm_status
 
       - name: |
@@ -325,7 +325,7 @@
 - name: "1.1.22 | L1 | PATCH | Disable Automounting"
   service:
       name: autofs
-      enabled: no
+      enabled: false
   when:
       - not rhel9cis_allow_autofs
       - "'autofs' in ansible_facts.packages"
@@ -345,7 +345,7 @@
             dest: /etc/modprobe.d/CIS.conf
             regexp: "^(#)?install usb-storage(\\s|$)"
             line: "install usb-storage /bin/true"
-            create: yes
+            create: true
             owner: root
             group: root
             mode: 0600

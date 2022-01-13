@@ -157,7 +157,7 @@
         with_items:
             - '^(\$ModLoad imtcp)'
             - '^(\$InputTCPServerRun)'
-        when: falset rhel9cis_system_is_log_server
+        when: not rhel9cis_system_is_log_server
 
       - name: "4.2.1.6 | L1 | PATCH | Ensure remote rsyslog messages are only accepted on designated log hosts. | When log host"
         replace:

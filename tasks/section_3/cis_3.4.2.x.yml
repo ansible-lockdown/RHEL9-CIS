@@ -4,7 +4,7 @@
   service:
       name: firewalld
       state: started
-      enabled: yes
+      enabled: true
   when:
       - rhel9cis_firewall == "firewalld"
       - rhel9cis_rule_3_4_2_1
@@ -19,9 +19,9 @@
       name: iptables
       enabled: false
       masked: true
-  ignore_errors: true
   when:
       - rhel9cis_firewall == "firewalld"
+      - "'iptables' in ansible_facts.packages"
       - rhel9cis_rule_3_4_2_2
   tags:
       - skip_ansible_lint
@@ -37,6 +37,7 @@
       masked: true
   when:
       - rhel9cis_firewall == "firewalld"
+      - "'nftables' in ansible_facts.packages"
       - rhel9cis_rule_3_4_2_3
   tags:
       - level1-server
@@ -65,7 +66,7 @@
             warn: false
         changed_when: false
         failed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_3_4_2_5_interfacepolicy
 
       - name: "3.4.2.5 | L1 | AUDIT | Ensure network interfaces are assigned to appropriate zone | Get list of interfaces and polocies | Show the interface to policy"
@@ -90,7 +91,7 @@
             warn: false
         changed_when: false
         failed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_3_4_2_6_servicesport
 
       - name: "3.4.2.6 | L1 | AUDIT | Ensure firewalld drops unnecessary services and ports | Show services and ports"

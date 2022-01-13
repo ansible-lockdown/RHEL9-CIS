@@ -4,7 +4,7 @@
 - name: Perform DNF package cleanup
   dnf:
       autoremove: true
-  changed_when: no
+  changed_when: false
 
 - name: trigger update sysctl
   shell: /bin/true

@@ -5,7 +5,7 @@
       dest: /etc/modprobe.d/CIS.conf
       regexp: "^(#)?install dccp(\\s|$)"
       line: "install dccp /bin/true"
-      create: yes
+      create: true
       mode: 0600
   when:
       - rhel9cis_rule_3_3_1
@@ -20,7 +20,7 @@
       dest: /etc/modprobe.d/CIS.conf
       regexp: "^(#)?install sctp(\\s|$)"
       line: "install sctp /bin/true"
-      create: yes
+      create: true
       mode: 0600
   when:
       - rhel9cis_rule_3_3_2
@@ -35,7 +35,7 @@
       dest: /etc/modprobe.d/CIS.conf
       regexp: "^(#)?install rds(\\s|$)"
       line: "install rds /bin/true"
-      create: yes
+      create: true
       mode: 0600
   when:
       - rhel9cis_rule_3_3_3
@@ -50,7 +50,7 @@
       dest: /etc/modprobe.d/CIS.conf
       regexp: "^(#)?install tipc(\\s|$)"
       line: "install tipc /bin/true"
-      create: yes
+      create: true
       mode: 0600
   when:
       - rhel9cis_rule_3_3_4

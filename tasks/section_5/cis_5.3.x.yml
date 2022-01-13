@@ -8,7 +8,7 @@
             warn: false
         failed_when: false
         changed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_5_3_1_profiles
 
       - name: "5.3.1 | L1 | AUDIT | Create custom authselect profile | Show profiles"
@@ -39,7 +39,7 @@
             warn: false
         failed_when: false
         changed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_5_3_2_profiles
 
       - name: "5.3.2 | L1 | AUDIT | Select authselect profile | Show profiles"
@@ -70,7 +70,7 @@
             warn: false
         failed_when: false
         changed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_5_3_3_profiles_faillock
 
       - name: "5.3.3 | L1 | AUDIT | Ensure authselect includes with-faillock| Show profiles"

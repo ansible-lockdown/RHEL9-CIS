@@ -41,7 +41,7 @@
 
 - name: "5.5.3 | L1 | PATCH | Ensure default user shell timeout is 900 seconds or less"
   blockinfile:
-      create: yes
+      create: true
       mode: 0644
       dest: "{{ item.dest }}"
       state: "{{ item.state }}"
