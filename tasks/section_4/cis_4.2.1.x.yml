@@ -16,7 +16,7 @@
 - name: "4.2.1.2 | L1 | PATCH | Ensure rsyslog Service is enabled"
   service:
       name: rsyslog
-      enabled: yes
+      enabled: true
   when:
       - rhel9cis_rule_4_2_1_2
   tags:
@@ -46,10 +46,10 @@
         shell: cat /etc/rsyslog.conf
         args:
             warn: false
-        become: yes
+        become: true
         changed_when: false
-        failed_when: no
-        check_mode: no
+        failed_when: false
+        check_mode: false
         register: rhel_09_4_2_1_4_audit
 
       - name: "4.2.1.4 | L1 | AUDIT | Ensure logging is configured | rsyslog current config message out"
@@ -157,7 +157,7 @@
         with_items:
             - '^(\$ModLoad imtcp)'
             - '^(\$InputTCPServerRun)'
-        when: not rhel9cis_system_is_log_server
+        when: falset rhel9cis_system_is_log_server
 
       - name: "4.2.1.6 | L1 | PATCH | Ensure remote rsyslog messages are only accepted on designated log hosts. | When log host"
         replace:
