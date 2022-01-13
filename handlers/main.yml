@@ -2,22 +2,22 @@
 # handlers file for RHEL9-CIS
 
 - name: sysctl flush ipv4 route table
-  become: yes
+  become: true
   sysctl:
       name: net.ipv4.route.flush
       value: '1'
-      sysctl_set: yes
-  ignore_errors: yes
+      sysctl_set: true
+  ignore_errors: true
   when: ansible_virtualization_type != "docker"
   tags:
       - skip_ansible_lint
 
 - name: sysctl flush ipv6 route table
-  become: yes
+  become: true
   sysctl:
       name: net.ipv6.route.flush
       value: '1'
-      sysctl_set: yes
+      sysctl_set: true
   when: ansible_virtualization_type != "docker"
 
 - name: update sysctl
@@ -35,26 +35,26 @@
     name: net.ipv4.route.flush
     value: '1'
     state: present
-    reload: yes
-    ignoreerrors: yes
+    reload: true
+    ignoreerrors: true
   when: ansible_virtualization_type != "docker"
 
 - name: systemd restart tmp.mount
-  become: yes
+  become: true
   systemd:
       name: tmp.mount
-      daemon_reload: yes
-      enabled: yes
-      masked: no
+      daemon_reload: true
+      enabled: true
+      masked: false
       state: reloaded
 
 - name: systemd restart var-tmp.mount
-  become: yes
+  become: true
   systemd:
       name: var-tmp.mount
-      daemon_reload: yes
-      enabled: yes
-      masked: no
+      daemon_reload: true
+      enabled: true
+      masked: false
       state: reloaded
 
 - name: remount tmp
@@ -63,31 +63,31 @@
       warn: false
 
 - name: restart firewalld
-  become: yes
+  become: true
   service:
       name: firewalld
       state: restarted
 
 - name: restart xinetd
-  become: yes
+  become: true
   service:
       name: xinetd
       state: restarted
 
 - name: restart sshd
-  become: yes
+  become: true
   service:
       name: sshd
       state: restarted
 
 - name: restart postfix
-  become: yes
+  become: true
   service:
       name: postfix
       state: restarted
 
 - name: reload dconf
-  become: yes
+  become: true
   shell: dconf update
   args:
       warn: false
@@ -103,9 +103,9 @@
 
 - name: restart auditd
   shell: /sbin/service auditd restart
-  changed_when: no
-  check_mode: no
-  failed_when: no
+  changed_when: false
+  check_mode: false
+  failed_when: false
   args:
       warn: false
   when:
@@ -122,17 +122,17 @@
       - skip_ansible_lint
 
 - name: restart rsyslog
-  become: yes
+  become: true
   service:
       name: rsyslog
       state: restarted
 
 - name: restart syslog-ng
-  become: yes
+  become: true
   service:
       name: syslog-ng
       state: restarted
 
 - name: systemd_daemon_reload
   systemd:
-      daemon-reload: yes
+      daemon-reload: true
