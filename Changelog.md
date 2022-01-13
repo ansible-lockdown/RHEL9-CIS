@@ -5,6 +5,16 @@
 - change to include statements
 - prelim and package facts discovery
 - commands module removed and moved to shell
+  - added
+
+```yml
+args:
+    warn: false
+```
+
+- update boolean values to true/false
+- 3.4.2 improved checks for p[ackage presence
+- changed to assert for OS/release and ansible version
 
 ## Initial
 
