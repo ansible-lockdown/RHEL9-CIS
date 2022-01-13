@@ -52,7 +52,7 @@
         register: rhel9cis_5_5_1_4_inactive_settings
 
       - name: "5.5.1.4 | L1 | PATCH | Ensure inactive password lock is 30 days or less | Set default inactive setting"
-        command: useradd -D -f {{ rhel9cis_inactivelock.lock_days }}
+        shell: useradd -D -f {{ rhel9cis_inactivelock.lock_days }}
         when: rhel9cis_5_5_1_4_inactive_settings.stdout | length == 0
 
       - name: "5.5.1.4 | L1 | AUDIT | Ensure inactive password lock is 30 days or less | Getting user list"
@@ -62,7 +62,7 @@
         changed_when: false
 
       - name: "5.5.1.4 | L1 | PATCH | Ensure inactive password lock is 30 days or less | Apply Inactive setting to existing accounts"
-        command: chage --inactive {{ rhel9cis_inactivelock.lock_days }} "{{ item }}"
+        shell: chage --inactive {{ rhel9cis_inactivelock.lock_days }} "{{ item }}"
         with_items:
             - "{{ rhel_09_5_5_1_4_audit.stdout_lines }}"
   when:
@@ -102,7 +102,7 @@
             - not rhel9cis_futurepwchgdate_autofix
 
       - name: "5.5.1.5 | L1 | PATCH | Ensure all users last password change date is in the past | Fix accounts with pw change in the future"
-        command: passwd --expire {{ item }}
+        shell: passwd --expire {{ item }}
         when:
             - rhel9cis_5_5_1_5_user_list | length > 0
             - rhel9cis_futurepwchgdate_autofix

@@ -2,7 +2,7 @@
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
 - name: "PRELIM | List users accounts"
-  command: "awk -F: '{print $1}' /etc/passwd"
+  shell: "awk -F: '{print $1}' /etc/passwd"
   args:
       warn: no
   changed_when: no
@@ -48,7 +48,11 @@
   package:
       name: audit
       state: present
-  when: rhel9cis_level_2
+  become: true
+  when: 
+      - rhel9cis_level_2 or
+        rhel9cis_rule_4_1_1_1
+      - '"auditd" not in ansible_facts.packages'
 
 - name: "PRELIM | 4.1.12 | Ensure successful file system mounts are collected"
   shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null; done
@@ -63,16 +67,23 @@
   package:
       name: cronie
       state: present
+  become: true
+  when: 
+      - rhel9cis_rule_5_1_1
+      - '"cronie" not in ansible_facts.packages'
 
 - name: "PRELIM | Install authconfig"
   package:
       name: authconfig
       state: present
+  become: true
   when:
       - rhel9cis_use_authconfig
       - rhel9cis_rule_5_3_1 or
         rhel9cis_rule_5_3_2 or
-        rhel9cis_rule_5_3_3
+        rhel9cis_rule_5_3_3 or
+       '"authconfig" not in ansible_facts.packages' or
+       '"auditd-lib" not in ansible_facts.packages'
 
 - name: "PRELIM | Set facts based on boot type"
   block:
@@ -92,26 +103,17 @@
             grub2_path: /etc/grub2-efi.cfg
         when: rhel_09_efi_boot.stat.exists
 
-# - name: debug legacy boot var
-#   debug:
-#       msg: |
-#           legacy_boot={{ rhel9cis_legacy_boot }}
-#           grub2_path={{ grub2_path }}
-
 - name: "PRELIM | AUDIT | Ensure permissions on bootloader config are configured | Get grub config file stats"
   stat:
       path: "{{ grub2_path }}"
   changed_when: false
   register: grub_cfg
 
-# - name: debug grub stat
-#   debug:
-#       var: grub_cfg.stat
-
 - name: "PRELIM | Check for rhnsd service"
   shell: "systemctl show rhnsd | grep LoadState | cut -d = -f 2"
   changed_when: false
   check_mode: false
+  become: true
   register: rhnsd_service_status
   when:
       - rhel9cis_rule_1_2_2

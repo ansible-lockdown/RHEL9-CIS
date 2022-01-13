@@ -182,7 +182,7 @@
 - name: "6.1.11 | L1 | AUDIT | Ensure no unowned files or directories exist"
   block:
       - name: "6.1.11 | L1 | AUDIT | Ensure no unowned files or directories exist | Finding all unowned files or directories"
-        command: find "{{ item.mount }}" -xdev -nouser
+        shell: find "{{ item.mount }}" -xdev -nouser
         check_mode: false
         failed_when: false
         changed_when: false
@@ -208,7 +208,7 @@
 - name: "6.1.12 | L1 | AUDIT | Ensure no ungrouped files or directories exist"
   block:
       - name: "6.1.12 | L1 | AUDIT | Ensure no ungrouped files or directories exist | Finding all ungrouped files or directories"
-        command: find "{{ item.mount }}" -xdev -nogroup
+        shell: find "{{ item.mount }}" -xdev -nogroup
         check_mode: false
         failed_when: false
         changed_when: false

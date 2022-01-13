@@ -63,7 +63,7 @@
       - rule_5.5.3
 
 - name: "5.5.4 | L1 | PATCH | Ensure default group for the root account is GID 0"
-  command: usermod -g 0 root
+  shell: usermod -g 0 root
   changed_when: false
   failed_when: false
   when:

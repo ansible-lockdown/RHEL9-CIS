@@ -1,7 +1,7 @@
 ---
 
 - name: "6.2.1 | L1 | AUDIT | Ensure password fields are not empty"
-  command: passwd -l {{ item }}
+  shell: passwd -l {{ item }}
   changed_when: false
   failed_when: false
   with_items: "{{ empty_password_accounts.stdout_lines }}"
@@ -15,7 +15,7 @@
       - rule_6.2.1
 
 - name: "6.2.2 | L1 | PATCH | Ensure no legacy '+' entries exist in /etc/passwd"
-  command: sed -i '/^+/ d' /etc/passwd
+  shell: sed -i '/^+/ d' /etc/passwd
   changed_when: false
   failed_when: false
   when:
@@ -74,7 +74,7 @@
       - rule_6.2.3
 
 - name: "6.2.4 | L1 | PATCH | Ensure no legacy '+' entries exist in /etc/shadow"
-  command: sed -i '/^+/ d' /etc/shadow
+  shell: sed -i '/^+/ d' /etc/shadow
   changed_when: false
   failed_when: false
   when:
@@ -87,7 +87,7 @@
       - skip_ansible_lint
 
 - name: "6.2.5 | L1 | PATCH | Ensure no legacy '+' entries exist in /etc/group"
-  command: sed -i '/^+/ d' /etc/group
+  shell: sed -i '/^+/ d' /etc/group
   changed_when: false
   failed_when: false
   when:
@@ -100,7 +100,7 @@
       - skip_ansible_lint
 
 - name: "6.2.6 | L1 | PATCH | Ensure root is the only UID 0 account"
-  command: passwd -l {{ item }}
+  shell: passwd -l {{ item }}
   changed_when: false
   failed_when: false
   with_items: "{{ uid_zero_accounts_except_root.stdout_lines }}"
@@ -122,7 +122,7 @@
         register: rhel_09_6_2_7_audit
 
       - name: "6.2.7 | L1 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
-        command: find -H {{ item.0 | quote }} -not -type l -perm /027
+        shell: find -H {{ item.0 | quote }} -not -type l -perm /027
         check_mode: false
         changed_when: rhel_09_6_2_7_patch_audit.stdout | length > 0
         register: rhel_09_6_2_7_patch_audit
@@ -251,7 +251,7 @@
       - rule_6.2.11
 
 - name: "6.2.12 | L1 | PATCH | Ensure users' .netrc Files are not group or world accessible"
-  command: /bin/true
+  shell: /bin/true
   changed_when: false
   failed_when: false
   when:
@@ -464,7 +464,7 @@
         with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', rhel9cis_int_gid) | selectattr('uid', '!=', 65534) | map(attribute='dir') | list }}"
 
       - name: "6.2.20 | L1 | AUDIT | Ensure all users' home directories exist"
-        command: find -H {{ item.0 | quote }} -not -type l -perm /027
+        shell: find -H {{ item.0 | quote }} -not -type l -perm /027
         check_mode: false
         changed_when: rhel_09_6_2_20_patch_audit.stdout | length > 0
         register: rhel_09_6_2_20_patch_audit

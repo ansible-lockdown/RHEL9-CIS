@@ -59,11 +59,11 @@
         path: "{{ audit_bin }}"
     register: goss_available
 
-  - name: Pre Audit | If audit ensure goss is available
+  - name: Pre Audit | Alert if goss not available
     assert:
-        msg: "Audit has been selected: unable to find goss binary at {{ audit_bin }}"
-    when:
-    - not goss_available.stat.exists
+        that: goss_available.stat.exists
+        fail_msg: "Audit binary file {{ audit_bin }} does not exist"
+        success_msg: "Audit binary file {{ audit_bin }} exists"
   when:
   - run_audit
 
@@ -92,7 +92,7 @@
 - name: Pre Audit | Capture audit data if json format
   block:
   - name: "Pre Audit | capture data {{ pre_audit_outfile }}"
-    command: "cat {{ pre_audit_outfile }}"
+    shell: "cat {{ pre_audit_outfile }}"
     register: pre_audit
     changed_when: false
 
@@ -107,7 +107,7 @@
 - name: Pre Audit | Capture audit data if documentation format
   block:
   - name: "Pre Audit | capture data {{ pre_audit_outfile }}"
-    command: "tail -2 {{ pre_audit_outfile }}"
+    shell: "tail -2 {{ pre_audit_outfile }}"
     register: pre_audit
     changed_when: false
 

@@ -7,7 +7,7 @@
   changed_when: no
 
 - name: trigger update sysctl
-  command: /bin/true
+  shell: /bin/true
   changed_when: false
   check_mode: false
   notify: update sysctl
@@ -29,7 +29,7 @@
       - sysctl
 
 - name: trigger update auditd
-  command: /bin/true
+  shell: /bin/true
   notify: update auditd
   changed_when: false
   check_mode: false

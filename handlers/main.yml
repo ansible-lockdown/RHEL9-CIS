@@ -58,7 +58,7 @@
       state: reloaded
 
 - name: remount tmp
-  command: mount -o remount /tmp
+  shell: mount -o remount /tmp
   args:
       warn: false
 
@@ -88,7 +88,7 @@
 
 - name: reload dconf
   become: yes
-  command: dconf update
+  shell: dconf update
 
 - name: update auditd
   template:
@@ -100,7 +100,7 @@
   notify: restart auditd
 
 - name: restart auditd
-  command: /sbin/service auditd restart
+  shell: /sbin/service auditd restart
   changed_when: no
   check_mode: no
   failed_when: no
@@ -112,7 +112,7 @@
       - skip_ansible_lint
 
 - name: grub2cfg
-  command: "grub2-mkconfig -o {{ grub_cfg.stat.lnk_source }}"
+  shell: "grub2-mkconfig -o {{ grub_cfg.stat.lnk_source }}"
   ignore_errors: True
   tags:
       - skip_ansible_lint

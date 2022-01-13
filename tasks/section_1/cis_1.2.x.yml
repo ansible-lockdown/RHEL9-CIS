@@ -37,7 +37,7 @@
       - rule_1.2.2
 
 - name: "1.2.3 | L1 | AUDIT | Ensure GPG keys are configured"
-  command: gpg --quiet --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-{{ ansible_distribution|lower }}-release
+  shell: gpg --quiet --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-{{ ansible_distribution|lower }}-release
   when:
       - rhel9cis_rule_1_2_3
       - ansible_distribution == "RedHat"
@@ -76,7 +76,7 @@
 - name: "1.2.5 | L1 | Ensure package manager repositories are configured"
   block:
       - name: "1.2.5 | L1 | AUDIT | Ensure package manager repositories are configured | Get repo list"
-        command: dnf repolist
+        shell: dnf repolist
         changed_when: false
         failed_when: false
         register: dnf_configured
