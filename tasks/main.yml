@@ -1,25 +1,29 @@
 ---
 # tasks file for RHEL9-CIS
 - name: Check OS version and family
-  fail:
-      msg: "This role can only be run against RHEL 8 or 9. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
-  when:
-  - ansible_os_family == 'RedHat'
-  - ansible_distribution_major_version == 8 or
-    ansible_distribution_major_version == 9
+  assert:
+      that:
+          - ansible_os_family == 'RedHat'
+          - ansible_distribution_major_version |int >= 8
+      fail_msg: "This role can only be run against RHEL 8 or 9. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
+      success_msg: "Supported OS release and version"
   tags:
   - always
 
 - name: Check ansible version
-  fail:
-      msg: You must use ansible 2.9 or greater
-  when: not ansible_version.full is version_compare('2.9', '>=')
+  assert:
+      that:
+          - "ansible_version.full is version_compare ('2.9', '>=')"
+      fail_msg: "You must use ansible 2.9 or greater"
+      success_msg: "Supported ansible_version"
   tags:
   - always
 
 - name: Check crypto-policy input
   assert:
       that: rhel9cis_crypto_policy in rhel9cis_allowed_crypto_policies
+      fail_msg: "Crypto policy is not a permitted version"
+      success_msg: "Crypto policy is a permitted version"
 
 - name: Check rhel9cis_bootloader_password_hash variable has been changed
   assert:
