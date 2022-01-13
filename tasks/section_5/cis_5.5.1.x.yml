@@ -46,6 +46,8 @@
   block:
       - name: "5.5.1.4 | L1 | AUDIT | Ensure inactive password lock is 30 days or less | Check current settings"
         shell: useradd -D | grep INACTIVE={{ rhel9cis_inactivelock.lock_days }} | cut -f2 -d=
+        args:
+            warn: false
         changed_when: false
         failed_when: false
         check_mode: no
@@ -53,16 +55,22 @@
 
       - name: "5.5.1.4 | L1 | PATCH | Ensure inactive password lock is 30 days or less | Set default inactive setting"
         shell: useradd -D -f {{ rhel9cis_inactivelock.lock_days }}
+        args:
+            warn: false
         when: rhel9cis_5_5_1_4_inactive_settings.stdout | length == 0
 
       - name: "5.5.1.4 | L1 | AUDIT | Ensure inactive password lock is 30 days or less | Getting user list"
         shell: 'egrep ^[^:]+:[^\!*] /etc/shadow | cut -d: -f1'
+        args:
+            warn: false
         check_mode: no
         register: rhel_09_5_5_1_4_audit
         changed_when: false
 
       - name: "5.5.1.4 | L1 | PATCH | Ensure inactive password lock is 30 days or less | Apply Inactive setting to existing accounts"
         shell: chage --inactive {{ rhel9cis_inactivelock.lock_days }} "{{ item }}"
+        args:
+            warn: false
         with_items:
             - "{{ rhel_09_5_5_1_4_audit.stdout_lines }}"
   when:
@@ -77,6 +85,8 @@
   block:
       - name: "5.5.1.5 | L1 | AUDIT | Ensure all users last password change date is in the past | Get current date in Unix Time"
         shell: echo $(($(date --utc --date "$1" +%s)/86400))
+        args:
+            warn: false
         failed_when: false
         changed_when: false
         check_mode: no
@@ -84,6 +94,8 @@
 
       - name: "5.5.1.5 | L1 | AUDIT | Ensure all users last password change date is in the past | Get list of users with last changed pw date in the future"
         shell: "cat /etc/shadow | awk -F: '{if($3>{{ rhel9cis_5_5_1_5_currentut.stdout }})print$1}'"
+        args:
+            warn: false
         changed_when: false
         failed_when: false
         check_mode: no
@@ -103,6 +115,8 @@
 
       - name: "5.5.1.5 | L1 | PATCH | Ensure all users last password change date is in the past | Fix accounts with pw change in the future"
         shell: passwd --expire {{ item }}
+        args:
+            warn: false
         when:
             - rhel9cis_5_5_1_5_user_list | length > 0
             - rhel9cis_futurepwchgdate_autofix

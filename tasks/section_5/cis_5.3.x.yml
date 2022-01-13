@@ -4,6 +4,8 @@
   block:
       - name: "5.3.1 | L1 | PATCH | Create custom authselect profile | Gather profiles"
         shell: 'authselect current | grep "Profile ID: custom/"'
+        args:
+            warn: false
         failed_when: false
         changed_when: false
         check_mode: no
@@ -18,7 +20,7 @@
       - name: "5.3.1 | L1 | PATCH | Create custom authselect profile | Create custom profiles"
         shell: authselect create-profile {{ rhel9cis_authselect['custom_profile_name'] }} -b {{ rhel9cis_authselect['default_file_to_copy'] }}
         args:
-            warn: no
+            warn: false
         when: rhel9cis_authselect_custom_profile_create
   when:
       - rhel9cis_rule_5_3_1
@@ -34,7 +36,7 @@
       - name: "5.3.2 | L1 | AUDIT | Select authselect profile | Gather profiles and enabled features"
         shell: "authselect current"
         args:
-            warn: no
+            warn: false
         failed_when: false
         changed_when: false
         check_mode: no
@@ -49,7 +51,7 @@
       - name: "5.3.2 | L1 | PATCH | Select authselect profile | Create custom profiles"
         shell: "authselect select custom/{{ rhel9cis_authselect['custom_profile_name'] }} {{ rhel9cis_authselect['options'] }}"
         args:
-            warn: no
+            warn: false
         when: rhel9cis_authselect_custom_profile_select
   when:
       - rhel9cis_rule_5_3_2
@@ -64,6 +66,8 @@
   block:
       - name: "5.3.3 | L1 | AUDIT | Ensure authselect includes with-faillock | Gather profiles and enabled features"
         shell: "authselect current | grep with-faillock"
+        args:
+            warn: false
         failed_when: false
         changed_when: false
         check_mode: no
@@ -78,7 +82,7 @@
       - name: "5.3.3 | L1 | PATCH | Ensure authselect includes with-faillock | Create custom profiles"
         shell: "authselect select custom/{{ rhel9cis_authselect['custom_profile_name'] }} with-faillock"
         args:
-            warn: no
+            warn: false
         when: rhel9cis_authselect_custom_profile_select
   when:
       - rhel9cis_rule_5_3_3

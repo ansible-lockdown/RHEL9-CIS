@@ -5,7 +5,7 @@
       - name: "2.2.2 | L1 | AUDIT | Ensure X Window System is not installed | capture xorg-x11 packages"
         shell: rpm -qa | grep xorg-x11
         args:
-            warn: no
+            warn: false
         failed_when: xorg_x11_installed.rc >=2
         check_mode: no
         changed_when: false
@@ -14,7 +14,7 @@
       - name: "2.2.2 | L1 | PATCH | Ensure X Window System is not installed | remove packages if found"
         shell: "dnf remove {{ item }}"
         args:
-            warn: no
+            warn: false
         with_items:
             - xorg_x11_installed.stdout_lines
         when: xorg_x11_installed.stdout | length > 0

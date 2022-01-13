@@ -46,6 +46,8 @@
 
 - name: "3.4.2.4 | L1 | PATCH | Ensure default zone is set"
   shell: firewall-cmd --set-default-zone="{{ rhel9cis_default_zone }}"
+  args:
+      warn: false
   when:
       - rhel9cis_firewall == "firewalld"
       - rhel9cis_rule_3_4_2_4
@@ -59,6 +61,8 @@
   block:
       - name: "3.4.2.5 | L1 | AUDIT | Ensure network interfaces are assigned to appropriate zone | Get list of interfaces and polocies"
         shell: "nmcli -t connection show | awk -F: '{ if($4){print $4} }' | while read INT; do firewall-cmd --get-active-zones | grep -B1 $INT; done"
+        args:
+            warn: false
         changed_when: false
         failed_when: false
         check_mode: no
@@ -82,6 +86,8 @@
   block:
       - name: "3.4.2.6 | L1 | AUDIT | Ensure firewalld drops unnecessary services and ports | Get list of services and ports"
         shell: "firewall-cmd --get-active-zones | awk '!/:/ {print $1}' | while read ZN; do firewall-cmd --list-all --zone=$ZN; done"
+        args:
+            warn: false
         changed_when: false
         failed_when: false
         check_mode: no

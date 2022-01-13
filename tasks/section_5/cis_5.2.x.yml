@@ -334,7 +334,7 @@
 - name: "5.2.20 | L1 | PATCH | Ensure system-wide crypto policy is not over-ridden"
   shell: sed -ri "s/^\s*(CRYPTO_POLICY\s*=.*)$/# \1/" /etc/sysconfig/sshd
   args:
-      warn: no
+      warn: false
   notify: restart sshd
   when:
       - rhel9cis_rule_5_2_20

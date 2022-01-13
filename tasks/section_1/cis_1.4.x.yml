@@ -9,12 +9,13 @@
 
       - name: "1.4.1 | L1 | PATCH | Ensure AIDE is installed | Configure AIDE"
         shell: /usr/sbin/aide --init -B 'database_out=file:/var/lib/aide/aide.db.gz'
+        args:
+            warn: false
+            creates: /var/lib/aide/aide.db.gz
         changed_when: false
         failed_when: false
         async: 45
         poll: 0
-        args:
-            creates: /var/lib/aide/aide.db.gz
         when: not ansible_check_mode
   when:
       - rhel9cis_config_aide

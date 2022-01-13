@@ -38,6 +38,8 @@
 
 - name: "1.2.3 | L1 | AUDIT | Ensure GPG keys are configured"
   shell: gpg --quiet --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-{{ ansible_distribution|lower }}-release
+  args:
+      warn: false
   when:
       - rhel9cis_rule_1_2_3
       - ansible_distribution == "RedHat"
@@ -77,12 +79,12 @@
   block:
       - name: "1.2.5 | L1 | AUDIT | Ensure package manager repositories are configured | Get repo list"
         shell: dnf repolist
+        args:
+            warn: false
         changed_when: false
         failed_when: false
         register: dnf_configured
         check_mode: no
-        args:
-            warn: false
 
       - name: "1.2.5 | L1 | AUDIT | Ensure package manager repositories are configured | Display repo list"
         debug:

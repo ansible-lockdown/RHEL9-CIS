@@ -2,15 +2,10 @@
 
 - name: "3.5 | L1 | PATCH | Ensure wireless interfaces are disabled"
   block:
-      - name: "3.5 | L1 | AUDIT |  Ensure wireless interfaces are disabled | Check if nmcli command is available"
-        shell: rpm -q NetworkManager
-#        changed_when: false
-#        failed_when: false
-        check_mode: no
-        register: rhel_09_nmcli_available
-
       - name: "3.5 | L1 | AUDIT | Ensure wireless interfaces are disabled | Check if wifi is enabled"
         shell: nmcli radio wifi
+        args:
+            warn: false
         register: rhel_09_wifi_enabled
         changed_when: rhel_09_wifi_enabled.stdout != "disabled"
         failed_when: false
@@ -18,10 +13,13 @@
 
       - name: "3.5 | L1 | PATCH | Ensure wireless interfaces are disabled | Disable wifi if enabled"
         shell: nmcli radio all off
+        args:
+            warn: false
         changed_when: false
         failed_when: false
         when: rhel_09_wifi_enabled is changed
   when:
+      - '"NetworkManager" in ansible_facts.packages'
       - rhel9cis_rule_3_5
   tags:
       - level1-server

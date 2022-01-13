@@ -5,7 +5,7 @@
       - name: "6.1.1 | L2 | AUDIT | Audit system file permissions | Audit the packages"
         shell: rpm -Va --nomtime --nosize --nomd5 --nolinkto
         args:
-            warn: no
+            warn: false
         changed_when: false
         failed_when: false
         register: rhel9cis_6_1_1_packages_rpm
@@ -152,6 +152,8 @@
   block:
       - name: "6.1.10 | L1 | AUDIT | Ensure no world writable files exist | Get list of world-writable files"
         shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
+        args:
+            warn: false
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_10_perms_results
@@ -183,6 +185,8 @@
   block:
       - name: "6.1.11 | L1 | AUDIT | Ensure no unowned files or directories exist | Finding all unowned files or directories"
         shell: find "{{ item.mount }}" -xdev -nouser
+        args:
+            warn: false
         check_mode: false
         failed_when: false
         changed_when: false
@@ -209,6 +213,8 @@
   block:
       - name: "6.1.12 | L1 | AUDIT | Ensure no ungrouped files or directories exist | Finding all ungrouped files or directories"
         shell: find "{{ item.mount }}" -xdev -nogroup
+        args:
+            warn: false
         check_mode: false
         failed_when: false
         changed_when: false
@@ -235,6 +241,8 @@
   block:
       - name: "6.1.13 | L1 | AUDIT | Audit SUID executables | Find all SUID executables"
         shell: df {{ item.mount }} -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -4000
+        args:
+            warn: false
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_13_perms_results
@@ -266,6 +274,8 @@
   block:
       - name: "6.1.14 | L1 | AUDIT | Audit SGID executables | Find all SGID executables"
         shell: df {{ item.mount }} -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -2000
+        args:
+            warn: false
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_14_perms_results

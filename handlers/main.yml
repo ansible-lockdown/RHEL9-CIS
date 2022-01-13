@@ -89,6 +89,8 @@
 - name: reload dconf
   become: yes
   shell: dconf update
+  args:
+      warn: false
 
 - name: update auditd
   template:
@@ -105,7 +107,7 @@
   check_mode: no
   failed_when: no
   args:
-      warn: no
+      warn: false
   when:
       - not rhel9cis_skip_for_travis
   tags:
@@ -113,6 +115,8 @@
 
 - name: grub2cfg
   shell: "grub2-mkconfig -o {{ grub_cfg.stat.lnk_source }}"
+  args:
+      warn: false
   ignore_errors: True
   tags:
       - skip_ansible_lint

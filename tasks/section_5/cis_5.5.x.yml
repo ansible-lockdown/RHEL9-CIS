@@ -64,6 +64,8 @@
 
 - name: "5.5.4 | L1 | PATCH | Ensure default group for the root account is GID 0"
   shell: usermod -g 0 root
+  args:
+      warn: false
   changed_when: false
   failed_when: false
   when:

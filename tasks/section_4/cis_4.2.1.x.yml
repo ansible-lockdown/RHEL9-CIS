@@ -44,6 +44,8 @@
   block:
       - name: "4.2.1.4 | L1 | AUDIT | Ensure logging is configured | rsyslog current config message out"
         shell: cat /etc/rsyslog.conf
+        args:
+            warn: false
         become: yes
         changed_when: false
         failed_when: no

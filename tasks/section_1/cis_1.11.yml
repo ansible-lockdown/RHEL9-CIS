@@ -4,6 +4,8 @@
   shell: |
       update-crypto-policies --set "{{ rhel9cis_crypto_policy }}"
       update-crypto-policies
+  args:
+      warn: false
   when:
       - rhel9cis_rule_1_11
       - system_wide_crypto_policy['stdout'] not in rhel9cis_allowed_crypto_policies

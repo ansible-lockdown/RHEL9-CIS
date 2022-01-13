@@ -252,6 +252,8 @@
           1.1.16 | L1 | AUDIT | Ensure nosuid option set on /dev/shm partition | Check for /dev/shm existence
           1.1.17 | L1 | AUDIT | Ensure noexec option set on /dev/shm partition | Check for /dev/shm existence"
         shell: mount -l | grep -E '\s/dev/shm\s'
+        args:
+            warn: false
         changed_when: false
         failed_when: false
         check_mode: no
@@ -306,7 +308,7 @@
 - name: "1.1.21 | L1 | PATCH | Ensure sticky bit is set on all world-writable directories"
   shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
   args:
-      warn: no
+      warn: false
   changed_when: false
   failed_when: false
   when:

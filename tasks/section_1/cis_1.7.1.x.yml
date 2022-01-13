@@ -66,6 +66,8 @@
   block:
       - name: "1.7.1.5 | L2 | AUDIT | Ensure no unconfined daemons exist | Find the unconfined daemons"
         shell: ps -eZ | grep unconfined_service_t | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
+        args:
+            warn: false
         register: rhelcis_1_7_1_5_unconf_daemons
         failed_when: false
         changed_when: false

@@ -10,6 +10,8 @@
 
       - name: "5.6 | L1 | AUDIT | Ensure root login is restricted to system console | Capture consoles"
         shell: cat /etc/securetty
+        args:
+            warn: false
         changed_when: false
         register: rhel_09_5_6_audit
         when: rhel9cis_securetty_check.stat.exists
