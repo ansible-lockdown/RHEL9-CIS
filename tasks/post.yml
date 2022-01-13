@@ -10,7 +10,7 @@
   shell: /bin/true
   args:
       warn: false
-  changed_when: false
+  changed_when: true
   check_mode: false
   notify: update sysctl
   when:
@@ -35,7 +35,7 @@
   args:
       warn: false
   notify: update auditd
-  changed_when: false
+  changed_when: true
   check_mode: false
   when:
       - rhel9cis_rule_4_1_3 or
