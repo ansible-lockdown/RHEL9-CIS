@@ -2,7 +2,7 @@
 
 - name: "Post Audit | Run post_remediation {{ benchmark }} audit"
   shell: "{{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -o {{ post_audit_outfile }} -g {{ group_names }}"
-  vars:
+  args:
       warn: false
 
 - name: Post Audit | ensure audit files readable by users
@@ -18,6 +18,8 @@
   block:
       - name: "capture data {{ post_audit_outfile }}"
         shell: "cat {{ post_audit_outfile }}"
+        args:
+            warn: false
         register: post_audit
         changed_when: false
 
@@ -33,6 +35,8 @@
   block:
       - name: "Post Audit | capture data {{ post_audit_outfile }}"
         shell: "tail -2 {{ post_audit_outfile }}"
+        args:
+            warn: false
         register: post_audit
         changed_when: false
 

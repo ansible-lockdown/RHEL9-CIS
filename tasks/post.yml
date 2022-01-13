@@ -8,6 +8,8 @@
 
 - name: trigger update sysctl
   shell: /bin/true
+  args:
+      warn: false
   changed_when: false
   check_mode: false
   notify: update sysctl
@@ -30,6 +32,8 @@
 
 - name: trigger update auditd
   shell: /bin/true
+  args:
+      warn: false
   notify: update auditd
   changed_when: false
   check_mode: false

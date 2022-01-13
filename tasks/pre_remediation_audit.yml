@@ -86,13 +86,15 @@
 
 - name: "Pre Audit | Run pre_remediation {{ benchmark }} audit"
   shell: "{{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -o {{ pre_audit_outfile }} -g {{ group_names }}"
-  vars:
+  args:
       warn: false
 
 - name: Pre Audit | Capture audit data if json format
   block:
   - name: "Pre Audit | capture data {{ pre_audit_outfile }}"
     shell: "cat {{ pre_audit_outfile }}"
+    args:
+        warn: false
     register: pre_audit
     changed_when: false
 
@@ -108,6 +110,8 @@
   block:
   - name: "Pre Audit | capture data {{ pre_audit_outfile }}"
     shell: "tail -2 {{ pre_audit_outfile }}"
+    args:
+        warn: false
     register: pre_audit
     changed_when: false
 

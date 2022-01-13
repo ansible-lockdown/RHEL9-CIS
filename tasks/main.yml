@@ -37,6 +37,8 @@
   block:
   - name: "Check su group exists if defined"
     shell: grep -w "{{ rhel9cis_sugroup }}" /etc/group
+    args:
+      warn: false
     register: sugroup_exists
     changed_when: false
     failed_when: sugroup_exists.rc >= 2
