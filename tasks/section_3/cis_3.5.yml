@@ -9,7 +9,6 @@
         register: rhel_09_wifi_enabled
         changed_when: rhel_09_wifi_enabled.stdout != "disabled"
         failed_when: false
-        when: rhel_09_nmcli_available.rc == 0
 
       - name: "3.5 | L1 | PATCH | Ensure wireless interfaces are disabled | Disable wifi if enabled"
         shell: nmcli radio all off
