@@ -5,6 +5,8 @@
 
 - name: "SECTION | 5.2 | Configure SSH Server"
   include_tasks: cis_5.2.x.yml
+  when:
+      - "'openssh-server' in ansible_facts.packages"
 
 - name: "SECTION | 5.3 | Configure Profiles"
   import_tasks: cis_5.3.x.yml
