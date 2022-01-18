@@ -42,7 +42,8 @@
       warn: false
   when:
       - rhel9cis_rule_1_2_3
-      - ansible_distribution == "RedHat"
+      - ansible_distribution == "RedHat" or
+        ansible_distribution == "Rocky"
   tags:
       - level1-server
       - level1-workstation
