@@ -6,7 +6,7 @@
       state: present
   when:
       - rhel9cis_rule_2_2_1_1
-      - not rhel9cis_system_is_container
+      - not system_is_container
   tags:
       - level1-server
       - level1-workstation
@@ -34,7 +34,7 @@
   when:
       - rhel9cis_time_synchronization == "chrony"
       - rhel9cis_rule_2_2_1_2
-      - not rhel9cis_system_is_container
+      - not system_is_container
   tags:
       - level1-server
       - level1-workstation
