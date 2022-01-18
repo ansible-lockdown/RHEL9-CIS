@@ -17,6 +17,7 @@
             - { path: "/etc/logrotate.conf" }
   when:
       - rhel9cis_rule_4_3
+      - "'logrotate' in ansible_facts.packages"
   tags:
       - level1-server
       - level1-workstation
