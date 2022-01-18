@@ -3,7 +3,7 @@
 - name: Check OS version and family
   assert:
       that:
-          - ansible_os_family == 'RedHat'
+          - (ansible_os_family == 'RedHat' or ansible_os_family == "Rocky")
           - ansible_distribution_major_version |int >= 8
       fail_msg: "This role can only be run against RHEL 8 or 9. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
       success_msg: "Supported OS release and version"
@@ -18,6 +18,28 @@
       success_msg: "Supported ansible_version"
   tags:
   - always
+
+- name: Setup rules if container
+  block:
+      - name: Discover and set container variable if required
+        set_fact:
+            system_is_container: true
+
+      - name: Load variable for container
+        include_vars:
+            file: is_container.yml
+      
+      - name: output if discovered is a container
+        debug:
+            msg: system has been discovered as a container
+        when:
+            - system_is_container
+  when:
+      - ansible_connection == 'docker' or
+        ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
+  tags:
+      - container_discovery
+      - always
 
 - name: Check crypto-policy input
   assert:
@@ -82,6 +104,8 @@
 - name: capture /etc/password variables
   include_tasks: parse_etc_password.yml
   when: rhel9cis_section6
+  tags:
+  - rhel9cis_section6
 
 - name: run Section 1 tasks
   import_tasks: section_1/main.yml
@@ -94,26 +118,36 @@
   import_tasks: section_2/main.yml
   become: true
   when: rhel9cis_section2
+  tags:
+  - rhel9cis_section2
 
 - name: run Section 3 tasks
   import_tasks: section_3/main.yml
   become: true
   when: rhel9cis_section3
+  tags:
+  - rhel9cis_section3
 
 - name: run Section 4 tasks
   import_tasks: section_4/main.yml
   become: true
   when: rhel9cis_section4
+  tags:
+  - rhel9cis_section4
 
 - name: run Section 5 tasks
   import_tasks: section_5/main.yml
   become: true
   when: rhel9cis_section5
+  tags:
+  - rhel9cis_section5
 
 - name: run Section 6 tasks
   import_tasks: section_6/main.yml
   become: true
   when: rhel9cis_section6
+  tags:
+  - rhel9cis_section6
 
 - name: run post remediation tasks
   import_tasks: post.yml
