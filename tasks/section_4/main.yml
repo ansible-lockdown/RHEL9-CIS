@@ -2,6 +2,8 @@
 
 - name: "SECTION | 4.1| Configure System Accounting (auditd)"
   include_tasks: cis_4.1.1.x.yml
+  when:
+      - not system_is_container
 
 - name: "SECTION | 4.1.2.x| Configure Data Retention"
   include_tasks: cis_4.1.2.x.yml

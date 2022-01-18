@@ -6,6 +6,7 @@
       state: present
   when:
       - rhel9cis_rule_3_4_1_1
+      - not system_is_container
   tags:
       - level1-server
       - level1-workstation
