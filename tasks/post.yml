@@ -38,6 +38,7 @@
   changed_when: true
   check_mode: false
   when:
+      - "'auditd' in ansible_facts.packages"
       - rhel9cis_rule_4_1_3 or
         rhel9cis_rule_4_1_4 or
         rhel9cis_rule_4_1_5 or
