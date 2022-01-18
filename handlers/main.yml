@@ -28,7 +28,9 @@
       group: root
       mode: 0600
   notify: reload sysctl
-  when: ansible_virtualization_type != "docker"
+  when: 
+      - ansible_virtualization_type != "docker"
+      - "'procps-ng' in ansible_facts.packages"
 
 - name: reload sysctl
   sysctl:
@@ -37,7 +39,9 @@
     state: present
     reload: true
     ignoreerrors: true
-  when: ansible_virtualization_type != "docker"
+  when: 
+      - ansible_virtualization_type != "docker"
+      - "'systemd' in ansible_facts.packages"
 
 - name: systemd restart tmp.mount
   become: true
