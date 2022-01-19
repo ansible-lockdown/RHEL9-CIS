@@ -20,6 +20,7 @@
       - level2-workstation
       - patch
       - rule_4.1.1.1
+      - auditd
 
 - name: "4.1.1.2 | L2 | PATCH | Ensure auditd service is enabled"
   service:
@@ -104,4 +105,5 @@
       - level2-server
       - level2-workstation
       - patch
+      - auditd
       - rule_4.1.1.4
