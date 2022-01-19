@@ -6,6 +6,12 @@
       autoremove: true
   changed_when: false
 
+- name: Gather the package facts after remediation
+  package_facts:
+      manager: auto
+  tags:
+  - always
+
 - name: trigger update sysctl
   shell: /bin/true
   args:
@@ -38,8 +44,13 @@
   changed_when: true
   check_mode: false
   when:
-      - "'auditd' in ansible_facts.packages"
-      - rhel9cis_rule_4_1_3 or
+      - rhel9cis_rule_4_1_1_1 or
+        rhel9cis_rule_4_1_1_2 or
+        rhel9cis_rule_4_1_1_3 or
+        rhel9cis_rule_4_1_2_1 or
+        rhel9cis_rule_4_1_2_2 or
+        rhel9cis_rule_4_1_2_3 or
+        rhel9cis_rule_4_1_3 or
         rhel9cis_rule_4_1_4 or
         rhel9cis_rule_4_1_5 or
         rhel9cis_rule_4_1_6 or
