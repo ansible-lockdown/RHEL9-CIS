@@ -27,7 +27,7 @@
 
       - name: Load variable for container
         include_vars:
-            file: is_container.yml
+            file: "{{ container_vars_file }}"
       
       - name: output if discovered is a container
         debug:
