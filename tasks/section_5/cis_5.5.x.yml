@@ -13,7 +13,7 @@
             - item.id != "sync"
             - item.id != "shutdown"
             - item.id != "halt"
-            - item.gid < rhel9cis_int_gid
+            - item.gid < min_int_uid
             - item.shell != "      /bin/false"
             - item.shell != "      /usr/sbin/nologin"
 
@@ -28,7 +28,7 @@
             - item.id != "shutdown"
             - item.id != "sync"
             - item.id != "root"
-            - item.gid < rhel9cis_int_gid
+            - item.gid < min_int_uid
             - item.shell != "      /bin/false"
             - item.shell != "      /usr/sbin/nologin"
   when:

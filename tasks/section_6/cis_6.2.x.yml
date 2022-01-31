@@ -134,7 +134,7 @@
       - name: "6.2.7 | L1 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
         stat:
             path: "{{ item }}"
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', rhel9cis_int_gid) | selectattr('uid', '!=', 65534) | map(attribute='dir') | list }}"
+        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid) | selectattr('uid', '!=', max_int_uid) | map(attribute='dir') | list }}"
         register: rhel_09_6_2_7_audit
 
       - name: "6.2.7 | L1 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
@@ -204,7 +204,7 @@
   loop_control:
       label: "{{ rhel9cis_passwd_label }}"
   when:
-      - item.uid >= rhel9cis_int_gid
+      - item.uid >= min_int_uid
       - rhel9cis_rule_6_2_8
   tags:
       - skip_ansible_lint  # settings found on 6_2_7
@@ -500,7 +500,7 @@
         stat:
             path: "{{ item }}"
         register: rhel_09_6_2_20_audit
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', rhel9cis_int_gid) | selectattr('uid', '!=', 65534) | map(attribute='dir') | list }}"
+        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid) | selectattr('uid', '!=', max_int_uid) | map(attribute='dir') | list }}"
 
       - name: "6.2.20 | L1 | AUDIT | Ensure all users' home directories exist"
         shell: find -H {{ item.0 | quote }} -not -type l -perm /027
