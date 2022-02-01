@@ -108,9 +108,12 @@
 
 - name: capture /etc/password variables
   include_tasks: parse_etc_password.yml
-  when: rhel9cis_section6
+  when: 
+  - rhel9cis_section6
   tags:
   - rule_5.5.2
+  - rule_6.2.7
+  - rule_6.2.20
   - rhel9cis_section6
 
 - name: run Section 1 tasks
