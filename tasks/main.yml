@@ -1,23 +1,24 @@
 ---
 # tasks file for RHEL9-CIS
+
 - name: Check OS version and family
   assert:
-      that:
-          - (ansible_os_family == 'RedHat' or ansible_os_family == "Rocky")
-          - ansible_distribution_major_version |int >= 8
-      fail_msg: "This role can only be run against RHEL 8 or 9. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
-      success_msg: "Supported OS release and version"
+      that: (ansible_os_family == 'RedHat' or ansible_os_family == "Rocky") and ansible_distribution_major_version is version_compare('8', '==')
+      fail_msg: "This role can only be run against RHEL8 family OSs. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
+      success_msg: "This role is running against a supported OS {{ ansible_distribution }} {{ ansible_distribution_major_version }}"
+  when: 
+    - os_check
+    - not system_is_ec2
   tags:
-  - always
+      - always
 
 - name: Check ansible version
   assert:
-      that:
-          - "ansible_version.full is version_compare ('2.9', '>=')"
-      fail_msg: "You must use ansible 2.9 or greater"
-      success_msg: "Supported ansible_version"
+      that: ansible_version.full is version_compare(min_ansible_version, '>=')
+      fail_msg: "You must use Ansible {{ min_ansible_version }} or greater"
+      success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
   tags:
-  - always
+      - always
 
 - name: Setup rules if container
   block:

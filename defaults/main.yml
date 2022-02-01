@@ -8,6 +8,9 @@ container_vars_file: is_container.yml
 # system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
 system_is_ec2: false
 
+# Run the OS validation check
+os_check: true
+
 rhel9cis_notauto: false
 rhel9cis_section1: true
 rhel9cis_section2: true
