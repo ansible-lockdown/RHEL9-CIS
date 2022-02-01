@@ -91,7 +91,7 @@
   - always
 
 - name: run pre_remediation audit
-  import_tasks: pre_remediation_audit.yml
+  include_tasks: pre_remediation_audit.yml
   when:
   - run_audit
 
