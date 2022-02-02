@@ -69,4 +69,4 @@
 - name: Reboot host
   reboot:
   when:
-  - not rhel9cis_skip_reboot
+  - not skip_reboot
