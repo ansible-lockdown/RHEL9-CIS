@@ -28,7 +28,7 @@
             - item.id != "shutdown"
             - item.id != "sync"
             - item.id != "root"
-            - item.uid < 1000
+            - min_int_uid | int >= item.uid
             - item.shell != "      /bin/false"
             - item.shell != "      /usr/sbin/nologin"
   when:
