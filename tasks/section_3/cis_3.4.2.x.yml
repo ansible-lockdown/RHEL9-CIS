@@ -17,7 +17,6 @@
 - name: "3.4.2.2 | L1 | PATCH | Ensure iptables is not enabled with firewalld"
   systemd:
       name: iptables
-      enabled: false
       masked: true
   when:
       - rhel9cis_firewall == "firewalld"

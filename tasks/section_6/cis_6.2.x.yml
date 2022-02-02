@@ -207,7 +207,7 @@
   loop_control:
       label: "{{ rhel9cis_passwd_label }}"
   when:
-      - item.uid >= min_int_uid
+      - min_int_uid | int >= item.uid
       - rhel9cis_rule_6_2_8
   tags:
       - skip_ansible_lint  # settings found on 6_2_7
