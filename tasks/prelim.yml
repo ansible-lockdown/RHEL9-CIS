@@ -190,3 +190,32 @@
   tags:
       - rule_1.2.2
       - skip_ansible_lint
+
+- name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
+  block:
+      - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
+        shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: uid_min_id
+   
+      - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
+        shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: uid_max_id
+
+      - name: "PRELIM | AUDIT | Capture GID_MIN information from logins.def"
+        shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: gid_min_id
+
+      - name: "PRELIM | AUDIT | set_facts for interactive uid/gid"
+        set_fact:
+            min_int_uid: "{{ uid_min_id.stdout }}"
+            max_int_uid: "{{ uid_max_id.stdout }}"
+            min_int_gid: "{{ gid_min_id.stdout }}"
+- debug:
+    msg: "{{ min_int_uid }} {{ max_int_uid }}"
+
+  when:
+      - not discover_int_uid
+

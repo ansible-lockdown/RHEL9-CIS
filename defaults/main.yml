@@ -8,6 +8,9 @@ container_vars_file: is_container.yml
 # system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
 system_is_ec2: false
 
+# Run the OS validation check
+os_check: true
+
 rhel9cis_notauto: false
 rhel9cis_section1: true
 rhel9cis_section2: true
@@ -546,8 +549,12 @@ rhel9cis_pam_password:
     minlen: "14"
     minclass: "4"
 
-# Starting GID for interactive users
-rhel9cis_int_gid: 1000
+# UID settings for interactive users
+# These are discovered via logins.def is set true
+discover_int_uid: false
+min_int_uid: 1000
+max_int_uid: 65533
+
 
 # RHEL-09-5.4.5
 # Session timeout setting file (TMOUT setting can be set in multiple files)
