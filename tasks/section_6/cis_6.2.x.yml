@@ -137,6 +137,9 @@
         with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int) | selectattr('uid', '<', max_int_uid | int) | selectattr('dir', '!=', '/') | map(attribute='dir') | list }}"
         register: rhel_09_6_2_7_audit
 
+      - debug:
+          var: rhel_09_6_2_7_audit
+
       - name: "6.2.7 | L1 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
         shell: find -H {{ item.0 | quote }} -not -type l -perm /027
         args:
