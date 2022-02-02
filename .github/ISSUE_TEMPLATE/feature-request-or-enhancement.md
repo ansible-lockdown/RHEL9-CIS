@@ -7,9 +7,10 @@ assignees: ''
 
 ---
 
-**Feature Request or Enhancement**
- - Feature []
- - Enhancement []
+## Feature Request or Enhancement
+
+- Feature []
+- Enhancement []
 
 **Summary of Request**
 A clear and concise description of what you want to happen.
