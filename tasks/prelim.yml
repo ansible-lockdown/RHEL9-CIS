@@ -1,4 +1,5 @@
 ---
+
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
 - name: "PRELIM | List users accounts"
@@ -8,6 +9,10 @@
   changed_when: false
   check_mode: false
   register: users
+  tags:
+      - level1-server
+      - level1-workstation
+      - users
 
 - name: "PRELIM | Gather accounts with empty password fields"
   shell: "cat /etc/shadow | awk -F: '($2 == \"\" ) {j++;print $1; } END {exit j}'"
@@ -16,6 +21,10 @@
   changed_when: false
   check_mode: false
   register: empty_password_accounts
+  tags:
+      - level1-server
+      - level1-workstation
+      - passwords
 
 - name: "PRELIM | Gather UID 0 accounts other than root"
   shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
@@ -24,14 +33,36 @@
   changed_when: false
   check_mode: false
   register: uid_zero_accounts_except_root
+  tags:
+      - level1-server
+      - level1-workstation
+      - users
 
-- name: "PRELIM | Gather system-wide crypto-policy"
-  shell: update-crypto-policies --show
-  args:
-      warn: false
-  changed_when: false
-  check_mode: false
-  register: system_wide_crypto_policy
+- name: "PRELIM | Setup crypto-policy"
+  block:
+      - name: "PRELIM | Install crypto-policies"
+        dnf:
+            name:
+                - crypto-policies
+                - crypto-policies-scripts
+            state: present
+
+      - name: "PRELIM | Gather system-wide crypto-policy"
+        shell: update-crypto-policies --show
+        args:
+            warn: false
+        changed_when: false
+        check_mode: false
+        register: system_wide_crypto_policy
+  when:
+      - rhel9cis_rule_1_10 or
+        rhel9cis_rule_1_11
+  tags:
+      - level1-server
+      - level1-workstation
+      - rule_1.10 or
+        rule_1.11
+      - crypto
 
 - name: "PRELIM | if systemd coredump"
   stat:
@@ -39,10 +70,18 @@
   register: systemd_coredump
   when:
       - rhel9cis_rule_1_6_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - rule_1.6.1
+      - systemd
 
 - name: "PRELIM | Section 1.1 | Create list of mount points"
   set_fact:
       mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
+  tags:
+      - level1-server
+      - level1-workstation
 
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   package:
@@ -51,9 +90,13 @@
   become: true
   when: 
       - '"auditd" not in ansible_facts.packages'
-      - rhel9cis_level_2 or
-        rhel9cis_rule_4_1_1_1
-
+      - rhel9cis_rule_4_1_1_1
+  tags:
+      - level2-server
+      - level2-workstation
+      - patch
+      - rule_4.1.1.1
+      - auditd
 
 - name: "PRELIM | 4.1.12 | Ensure successful file system mounts are collected"
   shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null; done
@@ -62,16 +105,23 @@
   check_mode: false
   register: priv_procs
   tags:
-  - always
+      - level1-server
+      - level1-workstation
+      - always
 
 - name: "PRELIM | Section 5.1 | Configure cron"
   package:
       name: cronie
       state: present
   become: true
-  when: 
+  when:
       - rhel9cis_rule_5_1_1
       - '"cronie" not in ansible_facts.packages'
+  tags:
+      - level1-server
+      - level1-workstation
+      - rule_5.1.1
+      - cron
 
 - name: "PRELIM | Install authconfig"
   package:
@@ -83,8 +133,16 @@
       - rhel9cis_rule_5_3_1 or
         rhel9cis_rule_5_3_2 or
         rhel9cis_rule_5_3_3 or
-       '"authconfig" not in ansible_facts.packages' or
-       '"auditd-lib" not in ansible_facts.packages'
+       '"authconfig" not in ansible_facts.packages or
+       "auditd-lib" not in ansible_facts.packages'
+  tags:
+      - level1-server
+      - level1-workstation
+      - rule_5.3.1 or
+        rule_5.3.2 or
+        rule_5.3.3
+      - authconfig
+      - auditd
 
 - name: "PRELIM | Set facts based on boot type"
   block:
@@ -103,12 +161,22 @@
         set_fact:
             grub2_path: /etc/grub2-efi.cfg
         when: rhel_09_efi_boot.stat.exists
+  when:
+      - not system_is_container
+  tags:
+      - bootloader
+      - grub
 
 - name: "PRELIM | AUDIT | Ensure permissions on bootloader config are configured | Get grub config file stats"
   stat:
       path: "{{ grub2_path }}"
   changed_when: false
   register: grub_cfg
+  when:
+      - not system_is_container
+  tags:
+      - bootloader
+      - grub
 
 - name: "PRELIM | Check for rhnsd service"
   shell: "systemctl show rhnsd | grep LoadState | cut -d = -f 2"
@@ -118,5 +186,36 @@
   register: rhnsd_service_status
   when:
       - rhel9cis_rule_1_2_2
+      - ansible_distribution == "RedHat"
   tags:
+      - rule_1.2.2
       - skip_ansible_lint
+
+- name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
+  block:
+      - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
+        shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: uid_min_id
+   
+      - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
+        shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: uid_max_id
+
+      - name: "PRELIM | AUDIT | Capture GID_MIN information from logins.def"
+        shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
+        changed_when: false
+        register: gid_min_id
+
+      - name: "PRELIM | AUDIT | set_facts for interactive uid/gid"
+        set_fact:
+            min_int_uid: "{{ uid_min_id.stdout }}"
+            max_int_uid: "{{ uid_max_id.stdout }}"
+            min_int_gid: "{{ gid_min_id.stdout }}"
+- debug:
+    msg: "{{ min_int_uid }} {{ max_int_uid }}"
+
+  when:
+      - not discover_int_uid
+

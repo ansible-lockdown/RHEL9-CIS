@@ -2,10 +2,14 @@
 # defaults file for rhel9-cis
 
 rhel9cis_skip_for_travis: false
-rhel9cis_system_is_container: false
+system_is_container: false
+container_vars_file: is_container.yml
 # rhel9cis is left off the front of this var for consistency in testing pipeline
 # system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
 system_is_ec2: false
+
+# Run the OS validation check
+os_check: true
 
 rhel9cis_notauto: false
 rhel9cis_section1: true
@@ -30,7 +34,7 @@ python2_bin: /bin/python2.7
 benchmark: RHEL9-CIS
 
 # Whether to skip the reboot
-rhel9cis_skip_reboot: true
+skip_reboot: true
 
 #### Basic external goss audit enablement settings ####
 #### Precise details - per setting can be found at the bottom of this file ####
@@ -545,8 +549,12 @@ rhel9cis_pam_password:
     minlen: "14"
     minclass: "4"
 
-# Starting GID for interactive users
-rhel9cis_int_gid: 1000
+# UID settings for interactive users
+# These are discovered via logins.def is set true
+discover_int_uid: false
+min_int_uid: 1000
+max_int_uid: 65533
+
 
 # RHEL-09-5.4.5
 # Session timeout setting file (TMOUT setting can be set in multiple files)
