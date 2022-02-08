@@ -18,4 +18,6 @@ galaxy_info:
         - benchmark
 collections:
   - community.general
+  - community.crypto
+  - ansible.posix
 dependencies: []
