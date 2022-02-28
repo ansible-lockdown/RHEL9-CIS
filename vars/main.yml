@@ -1,7 +1,7 @@
 ---
 # vars file for RHEL9-CIS
 
-min_ansible_version: 2.9
+min_ansible_version: 2.10
 rhel9cis_allowed_crypto_policies:
     - 'FUTURE'
     - 'FIPS'
