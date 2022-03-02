@@ -5,7 +5,7 @@ galaxy_info:
     company: "MindPoint Group"
     license: MIT
     role_name: rhel9_cis
-    min_ansible_version: 2.9.0
+    min_ansible_version: 2.10.0
     platforms:
         - name: EL
           versions:
@@ -13,9 +13,16 @@ galaxy_info:
     galaxy_tags:
         - system
         - security
-        - cis
+        - stig
         - hardening
         - benchmark
+        - compliance
+        - redhat
+        - complianceascode
+        - disa
+        - rhel9
 collections:
   - community.general
+  - community.crypto
+  - ansible.posix
 dependencies: []
