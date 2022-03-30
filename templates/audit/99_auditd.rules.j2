@@ -1,79 +1,92 @@
-# File created initially via RHEL9 CIS ansible-lockdown remdiation role
-{% if rhel9cis_rule_4_1_3 %}
+# This template will set all of the auditd configurations via a handler in the role in one task instead of individually
+{% if rhel9cis_rule_4_1_3_1 %}
 -w /etc/sudoers -p wa -k scope
 -w /etc/sudoers.d/ -p wa -k scope
 {% endif %}
-{% if rhel9cis_rule_4_1_4 %}
--w /var/log/faillog -p wa -k logins 
--w /var/log/lastlog -p wa -k logins
+{% if rhel9cis_rule_4_1_3_2 %}
+-a always,exit -F arch=b64 -C euid!=uid -F auid!=unset -S execve -k user_emulation
+-a always,exit -F arch=b32 -C euid!=uid -F auid!=unset -S execve -k user_emulation
 {% endif %}
-{% if rhel9cis_rule_4_1_5 %}
--w /var/run/utmp -p wa -k session
--w /var/log/wtmp -p wa -k logins
--w /var/log/btmp -p wa -k logins
+{% if rhel9cis_rule_4_1_3_3 %}
+-w {{ rhel9cis_varlog_location }} -p wa -k sudo_log_file
 {% endif %}
-{% if rhel9cis_rule_4_1_6 %}
--a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change
--a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change
--a always,exit -F arch=b64 -S clock_settime -k time-change
--a always,exit -F arch=b32 -S clock_settime -k time-change
+{% if rhel9cis_rule_4_1_3_4 %}
+-a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time-change
+-a always,exit -F arch=b32 -S adjtimex,settimeofday,clock_settime -k time-change
 -w /etc/localtime -p wa -k time-change
 {% endif %}
-{% if rhel9cis_rule_4_1_7 %}
--w /etc/selinux/ -p wa -k MAC-policy
--w /usr/share/selinux/ -p wa -k MAC-policy
-{% endif %}
-{% if rhel9cis_rule_4_1_8 %}
--a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale 
--a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale 
+{% if rhel9cis_rule_4_1_3_5 %}
+-a always,exit -F arch=b64 -S sethostname,setdomainname -F key=system-locale
+-a always,exit -F arch=b32 -S sethostname,setdomainname -F key=system-locale
 -w /etc/issue -p wa -k system-locale
 -w /etc/issue.net -p wa -k system-locale
 -w /etc/hosts -p wa -k system-locale
 -w /etc/sysconfig/network -p wa -k system-locale
+-w /etc/sysconfig/network-scripts -p wa -k system-locale
 {% endif %}
-{% if rhel9cis_rule_4_1_9 %}
--a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>={{ min_int_uid }} -F auid!=4294967295 -k perm_mod
--a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>={{ min_int_uid }} -F auid!=4294967295 -k perm_mod
--a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>={{ min_int_uid }} -F auid!=4294967295 -k perm_mod
--a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>={{ min_int_uid }} -F auid!=4294967295 -k perm_mod
--a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>={{ min_int_uid }} -F auid!=4294967295 -k perm_mod
--a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>={{ min_int_uid }} -F auid!=4294967295 -k perm_mod
+{% if rhel9cis_rule_4_1_3_6 %}
+{% for proc in priv_procs.stdout_lines -%}
+-a always,exit -F path={{ proc }} -F perm=x -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -k privileged
+{% endfor %}
 {% endif %}
-{% if rhel9cis_rule_4_1_10 %}
--a always,exit -F arch=b32 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EACCES -F auid>={{ min_int_uid }} -F auid!=4294967295 -F key=access
--a always,exit -F arch=b32 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EPERM -F auid>={{ min_int_uid }} -F auid!=4294967295 -F key=access
--a always,exit -F arch=b64 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EACCES -F auid>={{ min_int_uid }} -F auid!=4294967295 -F key=access
--a always,exit -F arch=b64 -S creat,open,openat,open_by_handle_at,truncate,ftruncate -F exit=-EPERM -F auid>={{ min_int_uid }} -F auid!=4294967295 -F key=access
+{% if rhel9cis_rule_4_1_3_7 %}
+-a always,exit -F arch=b64 -S creat,open,openat,truncate,ftruncate -F exit=-EACCES -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=access
+-a always,exit -F arch=b64 -S creat,open,openat,truncate,ftruncate -F exit=-EPERM -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=access
+-a always,exit -F arch=b32 -S creat,open,openat,truncate,ftruncate -F exit=-EACCES -F auid>={{ rhel9cis_int_gid }} -F auid!=-4294967295 -F key=access
+-a always,exit -F arch=b32 -S creat,open,openat,truncate,ftruncate -F exit=-EPERM -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=access
 {% endif %}
-{% if rhel9cis_rule_4_1_11 %}
+{% if rhel9cis_rule_4_1_3_8 %}
 -w /etc/group -p wa -k identity
 -w /etc/passwd -p wa -k identity
 -w /etc/gshadow -p wa -k identity
 -w /etc/shadow -p wa -k identity
 -w /etc/security/opasswd -p wa -k identity
 {% endif %}
-{% if rhel9cis_rule_4_1_12 %}
--a always,exit -F arch=b32 -S mount -F auid>={{ min_int_uid }} -F auid!=4294967295 -k mounts
--a always,exit -F arch=b64 -S mount -F auid>={{ min_int_uid }} -F auid!=4294967295 -k mounts
+{% if rhel9cis_rule_4_1_3_9 %}
+-a always,exit -F arch=b64 -S chmod,fchmod,fchmodat -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=perm_mod
+-a always,exit -F arch=b64 -S chown,fchown,lchown,fchownat -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=perm_mod
+-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=perm_mod
+-a always,exit -F arch=b32 -S lchown,fchown,chown,fchownat -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=perm_mod
+-a always,exit -F arch=b64 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=perm_mod
+-a always,exit -F arch=b32 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=perm_mod
 {% endif %}
-{% if rhel9cis_rule_4_1_13 %}
-{% for proc in priv_procs.stdout_lines -%}
--a always,exit -F path={{ proc }} -F perm=x -F auid>={{ min_int_uid }} -F auid!=4294967295 -k privileged
-{% endfor %}
+{% if rhel9cis_rule_4_1_3_10 %}
+-a always,exit -F arch=b32 -S mount -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -k mounts
+-a always,exit -F arch=b64 -S mount -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -k mounts
 {% endif %}
-{% if rhel9cis_rule_4_1_14 %}
--a always,exit -F arch=b32 -S rmdir,unlink,unlinkat,rename -S renameat -F auid>={{ min_int_uid }} -F auid!=4294967295 -F key=delete
--a always,exit -F arch=b64 -S rmdir,unlink,unlinkat,rename -S renameat -F auid>={{ min_int_uid }} -F auid!=4294967295 -F key=delete
+{% if rhel9cis_rule_4_1_3_11 %}
+-w /var/run/utmp -p wa -k session
+-w /var/log/wtmp -p wa -k session
+-w /var/log/btmp -p wa -k session
 {% endif %}
-{% if rhel9cis_rule_4_1_15 %}
--w /usr/sbin/insmod -p x -k modules
--w /usr/sbin/rmmod -p x -k modules
--w /usr/sbin/modprobe -p x -k modules
--a always,exit -F arch=b64 -S init_module -S delete_module -k modules
+{% if rhel9cis_rule_4_1_3_12 %}
+-w /var/log/lastlog -p wa -k logins
+-w /var/run/faillock -p wa -k logins
 {% endif %}
-{% if rhel9cis_rule_4_1_16 %}
--w /var/log/sudo.log -p wa -k actions
+{% if rhel9cis_rule_4_1_3_13 %}
+-a always,exit -F arch=b64 -S rename,unlink,unlinkat,renameat -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=delete
+-a always,exit -F arch=b32 -S rename,unlink,unlinkat,renameat -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -F key=delete
 {% endif %}
-{% if rhel9cis_rule_4_1_17 %}
+{% if rhel9cis_rule_4_1_3_14 %}
+-w /etc/selinux/ -p wa -k MAC-policy
+-w /usr/share/selinux/ -p wa -k MAC-policy
+{% endif %}
+{% if rhel9cis_rule_4_1_3_15 %}
+-a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -k perm_chng
+{% endif %}
+{% if rhel9cis_rule_4_1_3_16 %}
+-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -k perm_chng
+{% endif %}
+{% if rhel9cis_rule_4_1_3_17 %}
+-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -k priv_cmd
+{% endif %}
+{% if rhel9cis_rule_4_1_3_18 %}
+-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -k usermod
+{% endif %}
+{% if rhel9cis_rule_4_1_3_19 %}
+-a always,exit -F arch=b64 -S init_module,finit_module,delete_module,create_module,query_module -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -k kernel_modules
+-a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>={{ rhel9cis_int_gid }} -F auid!=4294967295 -k kernel_modules
+{% endif %}
+{% if rhel9cis_rule_4_1_3_20 %}
 -e 2
 {% endif %}

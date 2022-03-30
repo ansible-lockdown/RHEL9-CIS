@@ -128,16 +128,16 @@
       - patch
       - rule_3.3.8
 
-- name: "3.3.9 | L2 | PATCH | Ensure IPv6 router advertisements are not accepted"
+- name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted"
   block:
-      - name: "3.3.9 | L2 | PATCH | Ensure IPv6 router advertisements are not accepted"
+      - name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify: 
             - update sysctl
             - sysctl flush ipv4 route table
 
-      - name: "3.3.9 | L2 | PATCH | Ensure IPv6 router advertisements are not accepted"
+      - name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify:
