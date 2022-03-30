@@ -32,13 +32,10 @@
       - rule_1.5.2
 
 - name: "1.5.3 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
-  sysctl:
-      name: kernel.randomize_va_space
-      value: '2'
-      state: present
-      reload: yes
-      sysctl_set: yes
-      ignoreerrors: yes
+  debug:
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
+  notify: 
+      - update sysctl
   when:
       - rhel9cis_rule_1_5_3
   tags:

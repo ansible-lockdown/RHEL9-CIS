@@ -22,12 +22,16 @@
 
 - name: update sysctl
   template:
-      src: etc/99-sysctl.conf.j2
-      dest: /etc/sysctl.d/99-sysctl.conf
+      src: "etc/sysctl.d/{{ item }}.j2"
+      dest: "/etc/sysctl.d/{{ item }}"
       owner: root
       group: root
       mode: 0600
   notify: reload sysctl
+  with_items:
+      - 60-kernel_sysctl.conf
+      - 60-disable_ipv6.conf
+      - 99-sysctl.conf
   when: 
       - ansible_virtualization_type != "docker"
       - "'procps-ng' in ansible_facts.packages"

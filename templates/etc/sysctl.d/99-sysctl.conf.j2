@@ -1,16 +1,5 @@
 # Setting added via ansible CIS remediation playbook
 
-{% if rhel9cis_rule_1_6_1 %}
-# Filesystem sysctl
-# CIS 1.6.1
-fs.suid_dumpable = 0
-{% endif %}
-{% if rhel9cis_rule_1_6_2 %}
-# Kernel sysctl
-# CIS 1.6.2
-kernel.randomize_va_space = 2
-{% endif %}
-
 # Network sysctl
 {% if rhel9cis_rule_3_2_1 %}
 # CIS 3.2.1
