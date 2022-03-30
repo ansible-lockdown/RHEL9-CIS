@@ -1,0 +1,51 @@
+---
+
+- name: "3.2.1 | PATCH | Ensure source routed packets are not accepted"
+  block:
+      - name: "3.2.1 | PATCH | Ensure source routed packets are not accepted"
+        debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
+        notify: 
+            - update sysctl
+            - sysctl flush ipv4 route table
+
+      - name: "3.2.1 | PATCH | Ensure source routed packets are not accepted"
+        debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
+        notify:
+            - sysctl flush ipv6 route table
+            - update sysctl
+        when: rhel9cis_ipv6_required
+  when:
+      - rhel9cis_rule_3.2.1
+  tags:
+      - level1-server
+      - level1-workstation
+      - sysctl
+      - patch
+      - rule_3.2.1
+
+- name: "3.2.2 | PATCH | Ensure ICMP redirects are not accepted"
+  block:
+      - name: "3.2.2 | PATCH | Ensure ICMP redirects are not accepted"
+        debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
+        notify: 
+            - update sysctl
+            - sysctl flush ipv4 route table
+
+      - name: "3.2.2 | PATCH | Ensure ICMP redirects are not accepted"
+        debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
+        notify:
+            - sysctl flush ipv6 route table
+            - update sysctl
+        when: rhel9cis_ipv6_required
+  when:
+      - rhel9cis_rule_3.2.2
+  tags:
+      - level1-server
+      - level1-workstation
+      - sysctl
+      - patch
+      - rule_3.2.2

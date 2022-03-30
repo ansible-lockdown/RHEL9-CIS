@@ -1,15 +1,15 @@
 ---
 
-- name: "3.2.1 | L1 | PATCH | Ensure source routed packets are not accepted"
+- name: "3.3.1 | L1 | PATCH | Ensure source routed packets are not accepted"
   block:
-      - name: "3.2.1 | L1 | PATCH | Ensure source routed packets are not accepted"
+      - name: "3.3.1 | L1 | PATCH | Ensure source routed packets are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify: 
             - update sysctl
             - sysctl flush ipv4 route table
 
-      - name: "3.2.1 | L1 | PATCH | Ensure source routed packets are not accepted"
+      - name: "3.3.1 | L1 | PATCH | Ensure source routed packets are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify:
@@ -17,24 +17,24 @@
             - update sysctl
         when: rhel9cis_ipv6_required
   when:
-      - rhel9cis_rule_3_2_1
+      - rhel9cis_rule_3.3.1
   tags:
       - level1-server
       - level1-workstation
       - sysctl
       - patch
-      - rule_3.2.1
+      - rule_3.3.1
 
-- name: "3.2.2 | L1 | PATCH | Ensure ICMP redirects are not accepted"
+- name: "3.3.2 | L1 | PATCH | Ensure ICMP redirects are not accepted"
   block:
-      - name: "3.2.2 | L1 | PATCH | Ensure ICMP redirects are not accepted"
+      - name: "3.3.2 | L1 | PATCH | Ensure ICMP redirects are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify: 
             - update sysctl
             - sysctl flush ipv4 route table
 
-      - name: "3.2.2 | L1 | PATCH | Ensure ICMP redirects are not accepted"
+      - name: "3.3.2 | L1 | PATCH | Ensure ICMP redirects are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify:
@@ -42,102 +42,102 @@
             - update sysctl
         when: rhel9cis_ipv6_required
   when:
-      - rhel9cis_rule_3_2_2
+      - rhel9cis_rule_3.3.2
   tags:
       - level1-server
       - level1-workstation
       - sysctl
       - patch
-      - rule_3.2.2
+      - rule_3.3.2
 
-- name: "3.2.3 | L1 | PATCH | Ensure secure ICMP redirects are not accepted"
+- name: "3.3.3 | L1 | PATCH | Ensure secure ICMP redirects are not accepted"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3_2_3
+      - rhel9cis_rule_3.3.3
   tags:
       - level1-server
       - level1-workstation
       - sysctl
       - patch
-      - rule_3.2.3
+      - rule_3.3.3
 
-- name: "3.2.4 | L1 | PATCH | Ensure suspicious packets are logged"
+- name: "3.3.4 | L1 | PATCH | Ensure suspicious packets are logged"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3_2_4
+      - rhel9cis_rule_3.3.4
   tags:
       - level1-server
       - level1-workstation
       - sysctl
       - patch
-      - rule_3.2.4
+      - rule_3.3.4
 
-- name: "3.2.5 | L1 | PATCH | Ensure broadcast ICMP requests are ignored"
+- name: "3.3.5 | L1 | PATCH | Ensure broadcast ICMP requests are ignored"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3_2_5
+      - rhel9cis_rule_3.3.5
   tags:
       - level1-server
       - level1-workstation
       - sysctl
       - patch
-      - rule_3.2.5
+      - rule_3.3.5
 
-- name: "3.2.6 | L1 | PATCH | Ensure bogus ICMP responses are ignored"
+- name: "3.3.6 | L1 | PATCH | Ensure bogus ICMP responses are ignored"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3_2_6
+      - rhel9cis_rule_3.3.6
   tags:
       - level1-server
       - level1-workstation
       - sysctl
       - patch
-      - rule_3.2.6
+      - rule_3.3.6
 
-- name: "3.2.7 | L1 | PATCH | Ensure Reverse Path Filtering is enabled"
+- name: "3.3.7 | L1 | PATCH | Ensure Reverse Path Filtering is enabled"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3_2_7
+      - rhel9cis_rule_3.3.7
   tags:
       - level1-server
       - level1-workstation
       - sysctl
       - patch
-      - rule_3.2.7
+      - rule_3.3.7
 
-- name: "3.2.8 | L1 | PATCH | Ensure TCP SYN Cookies is enabled"
+- name: "3.3.8 | L1 | PATCH | Ensure TCP SYN Cookies is enabled"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3_2_8
+      - rhel9cis_rule_3.3.8
   tags:
       - level1-server
       - level1-workstation
       - sysctl
       - patch
-      - rule_3.2.8
+      - rule_3.3.8
 
-- name: "3.2.9 | L2 | PATCH | Ensure IPv6 router advertisements are not accepted"
+- name: "3.3.9 | L2 | PATCH | Ensure IPv6 router advertisements are not accepted"
   block:
-      - name: "3.2.9 | L2 | PATCH | Ensure IPv6 router advertisements are not accepted"
+      - name: "3.3.9 | L2 | PATCH | Ensure IPv6 router advertisements are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify: 
             - update sysctl
             - sysctl flush ipv4 route table
 
-      - name: "3.2.9 | L2 | PATCH | Ensure IPv6 router advertisements are not accepted"
+      - name: "3.3.9 | L2 | PATCH | Ensure IPv6 router advertisements are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify:
@@ -146,10 +146,10 @@
         when: rhel9cis_ipv6_required
   when:
       - rhel9cis_ipv6_required
-      - rhel9cis_rule_3_2_9
+      - rhel9cis_rule_3.3.9
   tags:
       - level2-server
       - level2-workstation
       - sysctl
       - patch
-      - rule_3.2.9
+      - rule_3.3.9
