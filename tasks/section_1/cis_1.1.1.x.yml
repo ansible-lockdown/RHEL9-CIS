@@ -16,7 +16,7 @@
             state: absent
         when: ansible_connection != 'docker'
   when:
-      - rhel8cis_rule_1_1_1_1
+      - rhel9cis_rule_1_1_1_1
   tags:
       - level1-server
       - level1-workstation
@@ -41,7 +41,7 @@
             state: absent
         when: ansible_connection != 'docker'
   when:
-      - rhel8cis_rule_1_1_1_2
+      - rhel9cis_rule_1_1_1_2
   tags:
       - level2-server
       - level2-workstation
@@ -66,7 +66,7 @@
             state: absent
         when: ansible_connection != 'docker'
   when:
-      - rhel8cis_rule_1_1_1_3
+      - rhel9cis_rule_1_1_1_3
   tags:
       - level2-server
       - level2-workstation

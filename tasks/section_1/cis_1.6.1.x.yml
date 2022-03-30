@@ -5,7 +5,7 @@
       name: libselinux
       state: present
   when:
-      - rhel8cis_rule_1_6_1_1
+      - rhel9cis_rule_1_6_1_1
   tags:
       - level1-server
       - level1-workstation
@@ -22,7 +22,7 @@
   ignore_errors: yes
   notify: grub2cfg
   when:
-      - rhel8cis_rule_1_6_1_2
+      - rhel9cis_rule_1_6_1_2
   tags:
       - level1-server
       - level1-workstation
@@ -34,11 +34,11 @@
 - name: "1.6.1.3 | PATCH | Ensure SELinux policy is configured"
   selinux:
       conf: /etc/selinux/config
-      policy: "{{ rhel8cis_selinux_pol }}"
+      policy: "{{ rhel9cis_selinux_pol }}"
       state: enforcing
   when:
-      - not rhel8cis_selinux_disable
-      - rhel8cis_rule_1_6_1_3
+      - not rhel9cis_selinux_disable
+      - rhel9cis_rule_1_6_1_3
   tags:
       - level1-server
       - level1-workstation
@@ -51,11 +51,11 @@
 - name: "1.6.1.4 | PATCH | Ensure the SELinux mode is not disabled"
   selinux:
       conf: /etc/selinux/config
-      policy: "{{ rhel8cis_selinux_pol }}"
+      policy: "{{ rhel9cis_selinux_pol }}"
       state: enforcing
   when:
-      - not rhel8cis_selinux_disable
-      - rhel8cis_rule_1_6_1_4
+      - not rhel9cis_selinux_disable
+      - rhel9cis_rule_1_6_1_4
   tags:
       - level1-server
       - level1-workstation
@@ -67,11 +67,11 @@
 - name: "1.6.1.5 | PATCH | Ensure the SELinux state is enforcing"
   selinux:
       conf: /etc/selinux/config
-      policy: "{{ rhel8cis_selinux_pol }}"
+      policy: "{{ rhel9cis_selinux_pol }}"
       state: enforcing
   when:
-      - not rhel8cis_selinux_disable
-      - rhel8cis_rule_1_6_1_5
+      - not rhel9cis_selinux_disable
+      - rhel9cis_rule_1_6_1_5
   tags:
       - level2-server
       - level2-workstation
@@ -98,7 +98,7 @@
             msg: "Warning! You have unconfined services: {{ rhelcis_1_6_1_6_unconf_services.stdout_lines }}"
         when: rhelcis_1_6_1_6_unconf_services.stdout | length > 0
   when:
-      - rhel8cis_rule_1_6_1_6
+      - rhel9cis_rule_1_6_1_6
   tags:
       - level1-server
       - level1-workstation
@@ -112,7 +112,7 @@
       name: setroubleshoot
       state: absent
   when:
-      - rhel8cis_rule_1_6_1_7
+      - rhel9cis_rule_1_6_1_7
       - "'setroubleshoot' in ansible_facts.packages"
   tags:
       - level1-server
@@ -126,7 +126,7 @@
       name: mcstrans
       state: absent
   when:
-      - rhel8cis_rule_1_6_1_8
+      - rhel9cis_rule_1_6_1_8
   tags:
       - level1-server
       - level1-workstation

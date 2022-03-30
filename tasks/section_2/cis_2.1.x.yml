@@ -2,11 +2,11 @@
 
 - name: "2.1.1 | PATCH | Ensure time synchronization is in use"
   package:
-      name: "{{ rhel8cis_time_synchronization }}"
+      name: "{{ rhel9cis_time_synchronization }}"
       state: present
   when:
-      - rhel8cis_rule_2_1_1
-      - not rhel8cis_system_is_container
+      - rhel9cis_rule_2_1_1
+      - not rhel9cis_system_is_container
   tags:
       - level1-server
       - level1-workstation
@@ -33,9 +33,9 @@
             create: yes
             mode: 0644
   when:
-      - rhel8cis_time_synchronization == "chrony"
-      - rhel8cis_rule_2_1_2
-      - not rhel8cis_system_is_container
+      - rhel9cis_time_synchronization == "chrony"
+      - rhel9cis_rule_2_1_2
+      - not rhel9cis_system_is_container
   tags:
       - level1-server
       - level1-workstation

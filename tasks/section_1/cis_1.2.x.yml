@@ -3,14 +3,14 @@
 - name: "1.2.1 | PATCH | Ensure Red Hat Subscription Manager connection is configured"
   redhat_subscription:
       state: present
-      username: "{{ rhel8cis_rh_sub_user }}"
-      password: "{{ rhel8cis_rh_sub_password }}"
+      username: "{{ rhel9cis_rh_sub_user }}"
+      password: "{{ rhel9cis_rh_sub_password }}"
       auto_attach: true
       no_log: true
   when:
       - ansible_distribution == "RedHat"
-      - rhel8cis_rhnsd_required
-      - rhel8cis_rule_1_2_1
+      - rhel9cis_rhnsd_required
+      - rhel9cis_rule_1_2_1
   tags:
       - level1-server
       - level1-workstation
@@ -22,7 +22,7 @@
 - name: "1.2.2 | AUDIT | Ensure GPG keys are configured"
   command: gpg --quiet --with-fingerprint "{{ rpm_gpg_key }}"
   when:
-      - rhel8cis_rule_1_2_2
+      - rhel9cis_rule_1_2_2
       - ansible_distribution == "RedHat" or
         ansible_distribution == "Rocky"
   tags:
@@ -51,7 +51,7 @@
         loop_control:
             label: "{{ item.path }}"
   when:
-      - rhel8cis_rule_1_2_3
+      - rhel9cis_rule_1_2_3
   tags:
       - level1-server
       - level1-workstation
@@ -76,7 +76,7 @@
                 - "Alert! Below are the configured repos. Please review and make sure all align with site policy"
                 - "{{ dnf_configured.stdout_lines }}"
   when:
-      - rhel8cis_rule_1_2_4
+      - rhel9cis_rule_1_2_4
   tags:
       - level1-server
       - level1-workstation

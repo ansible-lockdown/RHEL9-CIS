@@ -5,8 +5,8 @@
       name: xinetd
       state: absent
   when:
-      - rhel8cis_rule_2_2_1
-      - not rhel8cis_xinetd_server
+      - rhel9cis_rule_2_2_1
+      - not rhel9cis_xinetd_server
       - "'xinetd' in ansible_facts.packages"
   tags:
       - level1-server
@@ -20,7 +20,7 @@
       name: xorg-x11-server-common
       state: absent
   when:
-      - rhel8cis_rule_2_2_2
+      - rhel9cis_rule_2_2_2
       - "'xorg-x11-server-common' in ansible_facts.packages"
   tags:
       - level1-server
@@ -36,8 +36,8 @@
           - avahi
       state: absent
   when:
-      - rhel8cis_rule_2_2_3
-      - not rhel8cis_avahi_server
+      - rhel9cis_rule_2_2_3
+      - not rhel9cis_avahi_server
       - "'avahi' in ansible_facts.packages or 'avahi-autopd' in ansible_facts.packages"
   tags:
       - level1-server
@@ -52,9 +52,9 @@
       name: cups
       state: absent
   when:
-      - not rhel8cis_cups_server
+      - not rhel9cis_cups_server
       - "'cups' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_3
+      - rhel9cis_rule_2_2_3
   tags:
       - level1-server
       - automated
@@ -67,9 +67,9 @@
       name: dhcp-server
       state: absent 
   when:
-      - not rhel8cis_dhcp_server
+      - not rhel9cis_dhcp_server
       - "'dhcp-server' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_5
+      - rhel9cis_rule_2_2_5
   tags:
       - level1-server
       - level1-workstation
@@ -83,9 +83,9 @@
       name: bind
       state: absent
   when:
-      - not rhel8cis_dns_server
+      - not rhel9cis_dns_server
       - "'bind' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_6
+      - rhel9cis_rule_2_2_6
   tags:
       - level1-server
       - level1-workstation
@@ -99,9 +99,9 @@
       name: ftp
       state: absent
   when:
-      - not rhel8cis_ftp_server
+      - not rhel9cis_ftp_server
       - "'ftp' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_7
+      - rhel9cis_rule_2_2_7
   tags:
       - level1-server
       - level1-workstation
@@ -115,9 +115,9 @@
       name: vsftpd
       state: absent 
   when:
-      - not rhel8cis_vsftpd_server
+      - not rhel9cis_vsftpd_server
       - "'vsftpd' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_8
+      - rhel9cis_rule_2_2_8
   tags:
       - level1-server
       - level1-workstation
@@ -131,9 +131,9 @@
       name: tftp-server
       state: absent
   when:
-      - not rhel8cis_tftp_server
+      - not rhel9cis_tftp_server
       - "'tftp-server' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_9
+      - rhel9cis_rule_2_2_9
   tags:
       - level1-server
       - level1-workstation
@@ -149,7 +149,7 @@
             name: httpd
             state: absent
         when:
-            - not rhel8cis_httpd_server
+            - not rhel9cis_httpd_server
             - "'httpd' in ansible_facts.packages"
 
       - name: "2.2.10 | PATCH | Ensure a web server is not installed | Remove nginx server"
@@ -157,10 +157,10 @@
             name: nginx
             state: absent
         when:
-            - not rhel8cis_nginx_server
+            - not rhel9cis_nginx_server
             - "'nginx' in ansible_facts.packages"
   when:
-      - rhel8cis_rule_2_2_9
+      - rhel9cis_rule_2_2_9
   tags:
       - level1-server
       - level1-workstation
@@ -178,9 +178,9 @@
           - cyrus-imapd
       state: absent
   when:
-      - not rhel8cis_dovecot_cyrus_server
+      - not rhel9cis_dovecot_cyrus_server
       - "'dovecot' in ansible_facts.packages or 'cyrus-imapd' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_11
+      - rhel9cis_rule_2_2_11
   tags:
       - level1-server
       - level1-workstation
@@ -196,9 +196,9 @@
       name: samba
       state: absent
   when:
-      - not rhel8cis_samba_server
+      - not rhel9cis_samba_server
       - "'samba' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_12
+      - rhel9cis_rule_2_2_12
   tags:
       - level1-server
       - level1-workstation
@@ -212,9 +212,9 @@
       name: squid
       state: absent 
   when:
-      - not rhel8cis_squid_server
+      - not rhel9cis_squid_server
       - "'squid' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_6
+      - rhel9cis_rule_2_2_6
   tags:
       - level1-server
       - level1-workstation
@@ -228,9 +228,9 @@
       name: net-snmp
       state: absent
   when:
-      - not rhel8cis_snmp_server
+      - not rhel9cis_snmp_server
       - "'net-snmp' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_14
+      - rhel9cis_rule_2_2_14
   tags:
       - level1-server
       - level1-workstation
@@ -244,9 +244,9 @@
       name: ypserv
       state: absent
   when:
-      - not rhel8cis_nis_server
+      - not rhel9cis_nis_server
       - "'ypserv' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_17
+      - rhel9cis_rule_2_2_17
   tags:
       - level1-server
       - level1-workstation
@@ -260,9 +260,9 @@
       name: telnet-server
       state: absent
   when:
-      - not rhel8cis_telnet_server
+      - not rhel9cis_telnet_server
       - "'telnet-server' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_16
+      - rhel9cis_rule_2_2_16
   tags:
       - level1-server
       - level1-workstation
@@ -278,9 +278,9 @@
       line: "inet_interfaces = loopback-only"
   notify: restart postfix
   when:
-      - not rhel8cis_is_mail_server
+      - not rhel9cis_is_mail_server
       - "'postfix' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_17
+      - rhel9cis_rule_2_2_17
   tags:
       - level1-server
       - level1-workstation
@@ -296,9 +296,9 @@
       name: nfs-utils
       state: absent
   when:
-      - not rhel8cis_nfs_server
+      - not rhel9cis_nfs_server
       - "'nfs-utils' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_18
+      - rhel9cis_rule_2_2_18
   tags:
       - level1-server
       - level1-workstation
@@ -315,9 +315,9 @@
       name: rpcbind
       state: absent
   when:
-      - not rhel8cis_rpc_server
+      - not rhel9cis_rpc_server
       - "'rpcbind' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_19
+      - rhel9cis_rule_2_2_19
   tags:
       - level1-server
       - level1-workstation
@@ -333,9 +333,9 @@
       name: rsync
       state: absent
   when:
-      - not rhel8cis_rsync_server
+      - not rhel9cis_rsync_server
       - "'rsync' in ansible_facts.packages"
-      - rhel8cis_rule_2_2_20
+      - rhel9cis_rule_2_2_20
   tags:
       - level1-server
       - level1-workstation

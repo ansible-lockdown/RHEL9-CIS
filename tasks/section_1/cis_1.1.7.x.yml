@@ -18,7 +18,7 @@
   vars:
       required_mount: '/home'
   when:
-      - rhel8cis_rule_1_1_7_1
+      - rhel9cis_rule_1_1_7_1
   tags:
       - level2-server
       - level2-workstation
@@ -38,7 +38,7 @@
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
       state: present
-      opts: defaults,{% if rhel8cis_rule_1_1_7_2 %}nodev,{% endif %}{% if rhel8cis_rule_1_1_7_3 %}nosuid,{% endif %}{% if rhel8cis_rule_1_1_7_4 %}usrquota,{% endif %}{% if rhel8cis_rule_1_1_7_5 %}grpquota{% endif %}
+      opts: defaults,{% if rhel9cis_rule_1_1_7_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_7_3 %}nosuid,{% endif %}{% if rhel9cis_rule_1_1_7_4 %}usrquota,{% endif %}{% if rhel9cis_rule_1_1_7_5 %}grpquota{% endif %}
   with_items:
       - "{{ ansible_mounts }}"
   loop_control:
@@ -47,11 +47,11 @@
   when:
       - home_mount_present is defined
       - item.mount == "/home"
-      - rhel8cis_rule_1_1_7_1
-      - rhel8cis_rule_1_1_7_2 or
-        rhel8cis_rule_1_1_7_3 or
-        rhel8cis_rule_1_1_7_4 or
-        rhel8cis_rule_1_1_7_5
+      - rhel9cis_rule_1_1_7_1
+      - rhel9cis_rule_1_1_7_2 or
+        rhel9cis_rule_1_1_7_3 or
+        rhel9cis_rule_1_1_7_4 or
+        rhel9cis_rule_1_1_7_5
   tags:
       - level1-server
       - level1-workstation

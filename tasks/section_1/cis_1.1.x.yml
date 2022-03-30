@@ -5,9 +5,9 @@
       name: autofs
       enabled: no
   when:
-      - not rhel8cis_allow_autofs
+      - not rhel9cis_allow_autofs
       - "'autofs' in ansible_facts.packages"
-      - rhel8cis_rule_1_1_9
+      - rhel9cis_rule_1_1_9
   tags:
       - level1-server
       - level2-workstation
@@ -34,7 +34,7 @@
             name: usb-storage
             state: absent
   when:
-      - rhel8cis_rule_1_1_10
+      - rhel9cis_rule_1_1_10
   tags:
       - level1-server
       - level2-workstation
