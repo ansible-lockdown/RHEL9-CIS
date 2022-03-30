@@ -1,15 +1,15 @@
 ---
 
-- name: "3.3.1 | L1 | PATCH | Ensure source routed packets are not accepted"
+- name: "3.3.1 | PATCH | Ensure source routed packets are not accepted"
   block:
-      - name: "3.3.1 | L1 | PATCH | Ensure source routed packets are not accepted"
+      - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify: 
             - update sysctl
             - sysctl flush ipv4 route table
 
-      - name: "3.3.1 | L1 | PATCH | Ensure source routed packets are not accepted"
+      - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify:
@@ -25,16 +25,16 @@
       - patch
       - rule_3.3.1
 
-- name: "3.3.2 | L1 | PATCH | Ensure ICMP redirects are not accepted"
+- name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted"
   block:
-      - name: "3.3.2 | L1 | PATCH | Ensure ICMP redirects are not accepted"
+      - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify: 
             - update sysctl
             - sysctl flush ipv4 route table
 
-      - name: "3.3.2 | L1 | PATCH | Ensure ICMP redirects are not accepted"
+      - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
         notify:
@@ -50,7 +50,7 @@
       - patch
       - rule_3.3.2
 
-- name: "3.3.3 | L1 | PATCH | Ensure secure ICMP redirects are not accepted"
+- name: "3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
@@ -63,7 +63,7 @@
       - patch
       - rule_3.3.3
 
-- name: "3.3.4 | L1 | PATCH | Ensure suspicious packets are logged"
+- name: "3.3.4 | PATCH | Ensure suspicious packets are logged"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
@@ -76,7 +76,7 @@
       - patch
       - rule_3.3.4
 
-- name: "3.3.5 | L1 | PATCH | Ensure broadcast ICMP requests are ignored"
+- name: "3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
@@ -89,7 +89,7 @@
       - patch
       - rule_3.3.5
 
-- name: "3.3.6 | L1 | PATCH | Ensure bogus ICMP responses are ignored"
+- name: "3.3.6 | PATCH | Ensure bogus ICMP responses are ignored"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
@@ -102,7 +102,7 @@
       - patch
       - rule_3.3.6
 
-- name: "3.3.7 | L1 | PATCH | Ensure Reverse Path Filtering is enabled"
+- name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
@@ -115,7 +115,7 @@
       - patch
       - rule_3.3.7
 
-- name: "3.3.8 | L1 | PATCH | Ensure TCP SYN Cookies is enabled"
+- name: "3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled"
   debug:
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
