@@ -10,7 +10,6 @@ system_is_ec2: false
 # Run the OS validation check
 os_check: true
 
-rhel9cis_notauto: false
 rhel9cis_section1: true
 rhel9cis_section2: true
 rhel9cis_section3: true
