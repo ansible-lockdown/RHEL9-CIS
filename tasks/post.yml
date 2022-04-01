@@ -20,19 +20,20 @@
   check_mode: false
   notify: update sysctl
   when:
-      - rhel9cis_rule_1_6_1 or
-        rhel9cis_rule_1_6_2 or
+      - rhel9cis_rule_3_1_1 or
         rhel9cis_rule_3_1_2 or
-        rhel9cis_rule_3_1_2 or
+        rhel9cis_rule_3_1_3 or
         rhel9cis_rule_3_2_1 or
         rhel9cis_rule_3_2_2 or
-        rhel9cis_rule_3_2_3 or
-        rhel9cis_rule_3_2_4 or
-        rhel9cis_rule_3_2_5 or
-        rhel9cis_rule_3_2_6 or
-        rhel9cis_rule_3_2_7 or
-        rhel9cis_rule_3_2_8 or
-        rhel9cis_rule_3_2_9
+        rhel9cis_rule_3_3_1 or
+        rhel9cis_rule_3_3_2 or
+        rhel9cis_rule_3_3_3 or
+        rhel9cis_rule_3_3_4 or
+        rhel9cis_rule_3_3_5 or
+        rhel9cis_rule_3_3_6 or
+        rhel9cis_rule_3_3_7 or
+        rhel9cis_rule_3_3_8 or
+        rhel9cis_rule_3_3_9
   tags:
       - sysctl
 
