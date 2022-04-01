@@ -1,7 +1,6 @@
 ---
 # defaults file for rhel9-cis
 
-rhel9cis_skip_for_travis: false
 system_is_container: false
 container_vars_file: is_container.yml
 # rhel9cis is left off the front of this var for consistency in testing pipeline

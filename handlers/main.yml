@@ -110,8 +110,6 @@
   failed_when: false
   args:
       warn: false
-  when:
-      - not rhel9cis_skip_for_travis
   tags:
       - skip_ansible_lint
 

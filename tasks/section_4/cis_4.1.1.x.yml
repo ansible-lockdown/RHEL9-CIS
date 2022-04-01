@@ -29,7 +29,6 @@
       state: started
       enabled: yes
   when:
-      - not rhel9cis_skip_for_travis
       - rhel9cis_rule_4_1_1_2
       - ansible_connection != 'docker'
   tags:
