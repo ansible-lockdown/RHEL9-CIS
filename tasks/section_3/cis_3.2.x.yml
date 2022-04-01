@@ -17,7 +17,7 @@
             - update sysctl
         when: rhel9cis_ipv6_required
   when:
-      - rhel9cis_rule_3.2.1
+      - rhel9cis_rule_3_2_1
   tags:
       - level1-server
       - level1-workstation
@@ -42,7 +42,7 @@
             - update sysctl
         when: rhel9cis_ipv6_required
   when:
-      - rhel9cis_rule_3.2.2
+      - rhel9cis_rule_3_2_2
   tags:
       - level1-server
       - level1-workstation

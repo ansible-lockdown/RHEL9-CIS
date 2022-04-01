@@ -230,7 +230,7 @@
         stat:
             path: "{{ item }}"
         register: rhel_08_6_2_9_audit
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', rhel9cis_int_gid) | selectattr('uid', '!=', 65534) | map(attribute='dir') | list }}"
+        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '!=', 65534) | map(attribute='dir') | list }}"
 
       - name: "6.2.9 | AUDIT | Ensure all users' home directories exist"
         command: find -H {{ item.0 | quote }} -not -type l -perm /027
@@ -270,7 +270,7 @@
             recursive: yes
             etype: "{{ item.1.etype }}"
             permissions: "{{ item.1.mode }}"
-        when: not rhel9cis_system_is_container
+        when: not system_is_container
         with_nested:
             - "{{ (ansible_check_mode | ternary(rhel_08_6_2_9_patch_audit, rhel_08_6_2_9_patch)).results |
               rejectattr('skipped', 'defined') | map(attribute='item') | map('first') | list }}"
@@ -299,13 +299,13 @@
   loop_control:
       label: "{{ rhel9cis_passwd_label }}"
   when:
-      - item.uid >= rhel9cis_int_gid
+      - min_int_uid | int <= item.uid
       - rhel9cis_rule_6_2_10
   tags:
       - skip_ansible_lint  # settings found on 6_2_7
       - level1-server
       - level1-workstation
-      - autoamted
+      - automated
       - patch
       - users
       - rule_6.2.10
@@ -315,7 +315,7 @@
       - name: "6.2.11 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
         stat:
             path: "{{ item }}"
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', rhel9cis_int_gid) | selectattr('uid', '!=', 65534) | map(attribute='dir') | list }}"
+        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '!=', 65534) | map(attribute='dir') | list }}"
         register: rhel_08_6_2_11_audit
 
       - name: "6.2.11 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
@@ -356,7 +356,7 @@
             recursive: yes
             etype: "{{ item.1.etype }}"
             permissions: "{{ item.1.mode }}"
-        when: not rhel9cis_system_is_container
+        when: not system_is_container
         with_nested:
             - "{{ (ansible_check_mode | ternary(rhel_08_6_2_11_patch_audit, rhel_08_6_2_11_patch)).results |
               rejectattr('skipped', 'defined') | map(attribute='item') | map('first') | list }}"

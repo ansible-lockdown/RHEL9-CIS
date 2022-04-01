@@ -6,8 +6,6 @@
 
 ## controls
 
-# Authconfig
-rhel9cis_use_authconfig: false
 
 # Firewall
 rhel9cis_firewall: None

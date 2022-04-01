@@ -17,7 +17,7 @@
             - update sysctl
         when: rhel9cis_ipv6_required
   when:
-      - rhel9cis_rule_3.3.1
+      - rhel9cis_rule_3_3_1
   tags:
       - level1-server
       - level1-workstation
@@ -42,7 +42,7 @@
             - update sysctl
         when: rhel9cis_ipv6_required
   when:
-      - rhel9cis_rule_3.3.2
+      - rhel9cis_rule_3_3_2
   tags:
       - level1-server
       - level1-workstation
@@ -55,7 +55,7 @@
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3.3.3
+      - rhel9cis_rule_3_3_3
   tags:
       - level1-server
       - level1-workstation
@@ -68,7 +68,7 @@
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3.3.4
+      - rhel9cis_rule_3_3_4
   tags:
       - level1-server
       - level1-workstation
@@ -81,7 +81,7 @@
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3.3.5
+      - rhel9cis_rule_3_3_5
   tags:
       - level1-server
       - level1-workstation
@@ -94,7 +94,7 @@
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3.3.6
+      - rhel9cis_rule_3_3_6
   tags:
       - level1-server
       - level1-workstation
@@ -107,7 +107,7 @@
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3.3.7
+      - rhel9cis_rule_3_3_7
   tags:
       - level1-server
       - level1-workstation
@@ -120,7 +120,7 @@
     msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
   notify: update sysctl
   when:
-      - rhel9cis_rule_3.3.8
+      - rhel9cis_rule_3_3_8
   tags:
       - level1-server
       - level1-workstation
@@ -146,7 +146,7 @@
         when: rhel9cis_ipv6_required
   when:
       - rhel9cis_ipv6_required
-      - rhel9cis_rule_3.3.9
+      - rhel9cis_rule_3_3_9
   tags:
       - level2-server
       - level2-workstation

@@ -76,12 +76,6 @@
       name: firewalld
       state: restarted
 
-- name: restart xinetd
-  become: true
-  service:
-      name: xinetd
-      state: restarted
-
 - name: restart sshd
   become: true
   service:
@@ -135,12 +129,20 @@
       name: rsyslog
       state: restarted
 
-- name: restart syslog-ng
-  become: true
+- name: restart journald
   service:
-      name: syslog-ng
+      name: systemd-journald
+      state: restarted
+
+- name: restart systemd_journal_upload
+  service:
+      name: systemd-journal-upload
       state: restarted
 
 - name: systemd_daemon_reload
   systemd:
       daemon-reload: true
+
+- name: change_requires_reboot
+  set_fact:
+      change_requires_reboot: true

@@ -281,39 +281,36 @@ rhel9cis_rule_6_2_20: {{ rhel9cis_rule_6_2_20 }}
 rhel9cis_avahi_server: {{ rhel9cis_avahi_server }}
 rhel9cis_cups_server: {{ rhel9cis_cups_server }}
 rhel9cis_dhcp_server: {{ rhel9cis_dhcp_server }}
-rhel9cis_ldap_server: {{ rhel9cis_ldap_server }}
+rhel9cis_dns_server: {{ rhel9cis_dns_server }}
+rhel9cis_ftp_server: {{ rhel9cis_ftp_server }}
+rhel9cis_vsftpd_server: {{ rhel9cis_vsftpd_server }}
+rhel9cis_tftp_server: {{ rhel9cis_tftp_server }}
+rhel9cis_httpd_server: {{ rhel9cis_httpd_server }}
+rhel9cis_nginx_server: {{ rhel9cis_nginx_server }}
+rhel9cis_dovecot_cyrus_server: {{ rhel9cis_dovecot_cyrus_server }}
+rhel9cis_samba_server: {{ rhel9cis_samba_server }}
+rhel9cis_squid_server: {{ rhel9cis_squid_server }}
+rhel9cis_snmp_server: {{ rhel9cis_snmp_server }}
+rhel9cis_nis_server: {{ rhel9cis_nis_server }}
 rhel9cis_telnet_server: {{ rhel9cis_telnet_server }}
+rhel9cis_is_mail_server: {{ rhel9cis_is_mail_server }}
 rhel9cis_nfs_server: {{ rhel9cis_nfs_server }}
 rhel9cis_rpc_server: {{ rhel9cis_rpc_server }}
-rhel9cis_ntalk_server: {{ rhel9cis_ntalk_server }}
-rhel9cis_rsyncd_server: {{ rhel9cis_rsyncd_server }}
-rhel9cis_tftp_server: {{ rhel9cis_tftp_server }}
-rhel9cis_rsh_server: {{ rhel9cis_rsh_server }}
-rhel9cis_nis_server: {{ rhel9cis_nis_server }}
-rhel9cis_snmp_server: {{ rhel9cis_snmp_server }}
-rhel9cis_squid_server: {{ rhel9cis_squid_server }}
-rhel9cis_smb_server: {{ rhel9cis_smb_server }}
-rhel9cis_dovecot_server: {{ rhel9cis_dovecot_server }}
-rhel9cis_httpd_server: {{ rhel9cis_httpd_server }}
-rhel9cis_vsftpd_server: {{ rhel9cis_vsftpd_server }}
-rhel9cis_named_server: {{ rhel9cis_named_server }}
-rhel9cis_nfs_rpc_server: {{ rhel9cis_nfs_rpc_server }}
-rhel9cis_is_mail_server: {{ rhel9cis_is_mail_server }}
-rhel9cis_bind: {{ rhel9cis_bind }}
-rhel9cis_vsftpd: {{ rhel9cis_vsftpd }}
-rhel9cis_httpd: {{ rhel9cis_httpd }}
-rhel9cis_dovecot: {{ rhel9cis_dovecot }}
-rhel9cis_samba: {{ rhel9cis_samba }}
-rhel9cis_squid: {{ rhel9cis_squid }}
-rhel9cis_net_snmp: {{ rhel9cis_net_snmp}}
+rhel9cis_rsync_server: {{ rhel9cis_rsync_server }}
+
+
 rhel9cis_allow_autofs: {{ rhel9cis_allow_autofs }}
 
 # client services
-rhel9cis_openldap_clients_required: {{ rhel9cis_openldap_clients_required }}
-rhel9cis_telnet_required: {{ rhel9cis_telnet_required }}
-rhel9cis_talk_required: {{ rhel9cis_talk_required }}
-rhel9cis_rsh_required: {{ rhel9cis_rsh_required }}
 rhel9cis_ypbind_required: {{ rhel9cis_ypbind_required }}
+rhel9cis_rsh_required: {{ rhel9cis_rsh_required }}
+rhel9cis_talk_required: {{ rhel9cis_talk_required }}
+rhel9cis_telnet_required: {{ rhel9cis_telnet_required }}
+rhel9cis_openldap_clients_required: {{ rhel9cis_openldap_clients_required }}
+rhel9cis_tftp_client: {{ rhel9cis_tftp_client }}
+
+
+
 
 # AIDE
 rhel9cis_config_aide: {{ rhel9cis_config_aide }}
@@ -343,14 +340,12 @@ rhel9cis_crypto_policy: {{ rhel9cis_crypto_policy }}
 rhel9cis_warning_banner: {{ rhel9cis_warning_banner }}
 # End Banner
 
-# Set to 'true' if X Windows is needed in your environment
-rhel9cis_xwindows_required: {{ rhel9cis_xwindows_required }}
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
 rhel9cis_gui: {{ rhel9cis_gui }}
 
 # xinetd required
-rhel9cis_xinetd_required: {{ rhel9cis_xinetd_required }}
+rhel9cis_xinetd_server: {{ rhel9cis_xinetd_server }}
 
 # IPv6 required
 rhel9cis_ipv6_required: {{ rhel9cis_ipv6_required }}
@@ -358,10 +353,6 @@ rhel9cis_ipv6_required: {{ rhel9cis_ipv6_required }}
 # System network parameters (host only OR host and router)
 rhel9cis_is_router: {{ rhel9cis_is_router }}
 
-# Time Synchronization
-rhel9cis_time_synchronization: {{ rhel9cis_time_synchronization }}
-
-rhel9cis_varlog_location: {{ rhel9cis_varlog_location }}
 
 rhel9cis_firewall: {{ rhel9cis_firewall }}
 #rhel9cis_firewall: iptables
@@ -371,7 +362,6 @@ rhel9cis_firewall_interface:
 - enp0s8
 
 rhel9cis_firewall_services: {{ rhel9cis_firewall_services }}
-
 
 
 ### Section 4
@@ -395,44 +385,10 @@ rhel9cis_sshd_access:
   DenyUser:
   DenyGroup:
 
-rhel9cis_ssh_strong_ciphers:  Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128- gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
-rhel9cis_ssh_weak_ciphers:
-  3des-cbc
-  aes128-cbc
-  aes192-cbc
-  aes256-cbc
-  arcfour
-  arcfour128
-  arcfour256
-  blowfish-cbc
-  cast128-cbc 
-  rijndael-cbc@lysator.liu.se
-
-rhel9cis_ssh_strong_macs:  MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2- 512,hmac-sha2-256
-rhel9cis_ssh_weak_macs:
-  hmac-md5 
-  hmac-md5-96 
-  hmac-ripemd160 
-  hmac-sha1
-  hmac-sha1-96 
-  umac-64@openssh.com 
-  umac-128@openssh.com 
-  hmac-md5-etm@openssh.com 
-  hmac-md5-96-etm@openssh.com 
-  hmac-ripemd160-etm@openssh.com 
-  hmac-sha1-etm@openssh.com 
-  hmac-sha1-96-etm@openssh.com 
-  umac-64-etm@openssh.com 
-  umac-128-etm@openssh.com
-
-rhel9cis_ssh_strong_kex: KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman- group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256
-rhel9cis_ssh_weak_kex: 
-  diffie-hellman-group1-sha1 
-  diffie-hellman-group14-sha1 
-  diffie-hellman-group-exchange-sha1
-
 rhel9cis_ssh_aliveinterval: "300"
 rhel9cis_ssh_countmax: "3"
+
+rhel9cis_sudolog_location: {{ rhel9cis_sudolog_location }}
 
 ## PAM
 rhel9cis_pam_password: 

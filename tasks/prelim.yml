@@ -32,8 +32,9 @@
       warn: false
   changed_when: false
   check_mode: false
-  register: uid_zero_accounts_except_root
+  register: rhel9cis_uid_zero_accounts_except_root
   tags:
+      - rule_6.2.8
       - level1-server
       - level1-workstation
       - users
@@ -143,6 +144,19 @@
         rule_5.3.3
       - authconfig
       - auditd
+
+- name: "PRELIM | 5.3.4 | Find all sudoers files."
+  command: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  register: rhel9cis_sudoers_files
+  when:
+      - rhel9cis_rule_5_3_4 or
+        rhel9cis_rule_5_3_5
+  tags:
+      - rule_5.3.4
+      - rule_5.3.5
 
 - name: "PRELIM | Set facts based on boot type"
   block:

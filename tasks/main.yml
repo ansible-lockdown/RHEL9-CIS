@@ -112,9 +112,11 @@
   - rhel9cis_section6
   tags:
   - rule_5.5.2
-  - rule_6.2.7
-  - rule_6.2.8
-  - rule_6.2.20
+  - rule_5.6.2
+  - rule_6.2.9
+  - rule_6.2.10
+  - rule_6.2.11
+  - rhel9cis_section5
   - rhel9cis_section6
 
 - name: run Section 1 tasks
