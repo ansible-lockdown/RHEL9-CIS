@@ -23,7 +23,6 @@
             source: 127.0.0.0/8
             jump: DROP
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_2_1
   tags:
       - level1-server
@@ -49,7 +48,6 @@
       - { chain: INPUT, protocol: udp, ctstate: ESTABLISHED }
       - { chain: INPUT, protocol: icmp, ctstate: ESTABLISHED }
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_2_2
   tags:
       - level1-server
@@ -99,7 +97,6 @@
             - "{{ rhel9cis_3_4_3_2_3_oudp.stdout_lines }}"
         when: rhel9cis_3_4_3_2_3_otcp.stdout is defined
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_2_3
   tags:
       - level1-server
@@ -128,7 +125,6 @@
             - OUTPUT
   when:
       - rhel9cis_rule_3_4_3_2_4
-      - rhel9cis_firewall == "iptables"
   tags:
       - level1-server
       - level1-workstation
@@ -143,7 +139,6 @@
       path: /etc/sysconfig/iptables
   when:
       - rhel9cis_rule_3_4_3_2_5
-      - rhel9cis_firewall == "iptables"
   tags:
       - level1-server
       - level1-workstation
@@ -158,7 +153,6 @@
       enabled: yes
       state: started
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_2_6
   tags:
       - level1-server

@@ -7,7 +7,6 @@
           - iptables-services
       state: present
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_1_1
   tags:
       - level1-server
@@ -22,7 +21,6 @@
       name: nftables
       state: absent
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_1_2
   tags:
       - level1-server
@@ -39,7 +37,6 @@
       name: firewalld
       state: absent
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_1_3
   tags:
       - level1-server

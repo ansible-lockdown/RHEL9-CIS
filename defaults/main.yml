@@ -114,8 +114,6 @@ rhel9cis_rule_1_4_3: true
 rhel9cis_rule_1_5_1: true
 rhel9cis_rule_1_5_2: true
 rhel9cis_rule_1_5_3: true
-rhel9cis_rule_1_6_1: true
-rhel9cis_rule_1_6_2: true
 rhel9cis_rule_1_6_1_1: true
 rhel9cis_rule_1_6_1_2: true
 rhel9cis_rule_1_6_1_3: true
@@ -137,7 +135,6 @@ rhel9cis_rule_1_8_4: true
 rhel9cis_rule_1_8_5: true
 rhel9cis_rule_1_9: true
 rhel9cis_rule_1_10: true
-rhel9cis_rule_1_11: true
 
 # Section 2 rules
 rhel9cis_rule_2_1_1: true
@@ -469,11 +466,6 @@ rhel9cis_firewall: firewalld
 
 ##### firewalld
 rhel9cis_default_zone: public
-rhel9cis_int_zone: customzone
-rhel9cis_interface: eth0
-rhel9cis_firewall_services:
-    - ssh
-    - dhcpv6-client
 
 #### nftables
 rhel9cis_nft_tables_autonewtable: true
@@ -541,13 +533,6 @@ rhel9cis_sshd:
     # allowgroups: systems dba
     # denyusers:
     # denygroups:
-rhel9cis_pam_faillock:
-    attempts: 5
-    interval: 900
-    unlock_time: 900
-    fail_for_root: no
-    remember: 5
-    pwhash: sha512
 
 # 5.2.5 SSH LogLevel setting. Options are INFO or VERBOSE
 rhel9cis_ssh_loglevel: INFO
@@ -580,11 +565,7 @@ rhel9cis_pass:
 rhel9cis_syslog: rsyslog
 rhel9cis_rsyslog_ansiblemanaged: true
 
-rhel9cis_vartmp:
-    source: /tmp
-    fstype: none
-    opts: "defaults,nodev,nosuid,noexec,bind"
-    enabled: false
+
 ## PAM
 rhel9cis_pam_password:
     minlen: "14"

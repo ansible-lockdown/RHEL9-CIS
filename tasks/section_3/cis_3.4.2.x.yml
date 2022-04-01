@@ -5,7 +5,6 @@
       name: nftables
       state: present
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_1
   tags:
       - level1-server
@@ -22,7 +21,6 @@
       name: firewalld
       state: absent
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_2
   tags:
       - level1-server
@@ -49,7 +47,6 @@
             name: iptables-service
             state: absent
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_3
   tags:
       - level1-server
@@ -107,7 +104,6 @@
         failed_when: no
         when: rhel9cis_nft_tables_autonewtable
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_5
   tags:
       - level1-server
@@ -159,7 +155,6 @@
             - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" output { type filter hook output priority 0 \; }
         when: rhel9cis_nft_tables_autochaincreate
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_6
   tags:
       - level1-server
@@ -201,7 +196,6 @@
         command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input ip6 saddr ::1 counter drop
         when: '"ip6 saddr ::1 counter packets 0 bytes 0 drop" not in rhel9cis_3_4_2_7_ip6saddr.stdout'
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_7
   tags:
       - level1-server
@@ -249,7 +243,6 @@
         command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" output ip protocol icmp ct state new,related,established accept
         when: '"ip protocol icmp ct state established,related,new accept" not in rhel9cis_3_4_2_8_outconnectionrule.stdout'
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_8
   tags:
       - level1-server
@@ -301,7 +294,6 @@
         command: nft chain inet "{{ rhel9cis_nft_tables_tablename }}" output { policy drop \; }
         when: '"type filter hook output priority 0; policy drop;" not in rhel9cis_3_4_2_9_outputpolicy.stdout'
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_9
   tags:
       - level1-server
@@ -316,7 +308,6 @@
       name: nftables
       enabled: yes
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_10
   tags:
       - level1-server
@@ -333,7 +324,6 @@
       insertafter: EOF
       line: include "/etc/nftables/inet-{{ rhel9cis_nft_tables_tablename }}"
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_11
   tags:
       - level1-server

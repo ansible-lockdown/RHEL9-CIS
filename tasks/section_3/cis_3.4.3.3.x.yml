@@ -26,9 +26,7 @@
             jump: DROP
             ip_version: ipv6
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_3_1
-      - rhel9cis_ipv6_required
   tags:
       - level1-server
       - level1-workstation
@@ -54,9 +52,7 @@
       - { chain: INPUT, protocol: udp, ctstate: ESTABLISHED }
       - { chain: INPUT, protocol: icmp, ctstate: ESTABLISHED }
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_3_2
-      - rhel9cis_ipv6_required
   tags:
       - level1-server
       - level1-workstation
@@ -87,9 +83,7 @@
             - "{{ rhel9cis_3_4_3_3_3_otcp.stdout_lines }}"
         when: rhel9cis_3_4_3_3_3_otcp.stdout is defined
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_3_3
-      - rhel9cis_ipv6_required
   tags:
       - level1-server
       - level1-workstation
@@ -118,9 +112,7 @@
             - FORWARD
             - OUTPUT
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_3_4
-      - rhel9cis_ipv6_required
   tags:
       - level1-server
       - level1-workstation
@@ -135,8 +127,6 @@
       path: /etc/sysconfig/ip6tables
       ip_version: ipv6
   when:
-      - rhel9cis_firewall == "iptables"
-      - rhel9cis_ipv6_required
       - rhel9cis_rule_3_4_3_3_5
   tags:
       - level1-server
@@ -152,7 +142,6 @@
       enabled: yes
       state: started
   when:
-      - rhel9cis_firewall == "iptables"
       - rhel9cis_rule_3_4_3_3_6
   tags:
       - level1-server

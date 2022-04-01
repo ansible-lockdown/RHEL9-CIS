@@ -56,13 +56,11 @@
         check_mode: false
         register: system_wide_crypto_policy
   when:
-      - rhel9cis_rule_1_10 or
-        rhel9cis_rule_1_11
+      - rhel9cis_rule_1_10
   tags:
       - level1-server
       - level1-workstation
-      - rule_1.10 or
-        rule_1.11
+      - rule_1.10
       - crypto
 
 - name: "PRELIM | if systemd coredump"
@@ -70,11 +68,11 @@
       path: /etc/systemd/coredump.conf
   register: systemd_coredump
   when:
-      - rhel9cis_rule_1_6_1
+      - rhel9cis_rule_1_5_1
   tags:
       - level1-server
       - level1-workstation
-      - rule_1.6.1
+      - rule_1.5.1
       - systemd
 
 - name: "PRELIM | Section 1.1 | Create list of mount points"

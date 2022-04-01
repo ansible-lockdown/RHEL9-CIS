@@ -8,7 +8,6 @@
       state: present
   when:
       - rhel9cis_rule_3_4_1_1
-      - rhel9cis_firewall == "firewalld"
   tags:
       - level1-server
       - level1-workstation
@@ -34,7 +33,6 @@
             state: absent
   when:
       - rhel9cis_rule_3_4_1_2
-      - rhel9cis_firewall == "firewalld"
   tags:
       - level1-server
       - level1-workstation
@@ -49,7 +47,6 @@
       state: stopped
       masked: yes
   when:
-      - rhel9cis_firewall == "firewalld"
       - rhel9cis_rule_3_4_1_3
   tags:
       - level1-server
@@ -65,7 +62,6 @@
       state: started
       enabled: yes
   when:
-      - rhel9cis_firewall == "firewalld"
       - rhel9cis_rule_3_4_1_4
   tags:
       - level1-server
@@ -78,7 +74,6 @@
 - name: "3.4.1.5 | PATCH | Ensure firewalld default zone is set"
   command: firewall-cmd --set-default-zone="{{ rhel9cis_default_zone }}"
   when:
-      - rhel9cis_firewall == "firewalld"
       - rhel9cis_rule_3_4_1_5
   tags:
       - level1-server
@@ -103,7 +98,6 @@
                 - "The items below are the policies tied to the interfaces, please correct as needed"
                 - "{{ rhel9cis_3_4_1_6_interfacepolicy.stdout_lines }}"
   when:
-      - rhel9cis_firewall == "firewalld"
       - rhel9cis_rule_3_4_1_6
   tags:
       - level1-server
@@ -127,7 +121,6 @@
                 - "The items below are the services and ports that are accepted, please correct as needed"
                 - "{{ rhel9cis_3_4_1_7_servicesport.stdout_lines }}"
   when:
-      - rhel9cis_firewall == "firewalld"
       - rhel9cis_rule_3_4_1_7
   tags:
       - level1-server
