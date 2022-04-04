@@ -31,7 +31,8 @@
   with_items:
       - 60-kernel_sysctl.conf
       - 60-disable_ipv6.conf
-      - 99-sysctl.conf
+      - 60-netipv4_sysctl.conf
+      - 60-netipv6_sysctl.conf
   when: 
       - ansible_virtualization_type != "docker"
       - "'procps-ng' in ansible_facts.packages"
