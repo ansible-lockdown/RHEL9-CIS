@@ -317,7 +317,6 @@
         systemd:
             name: nfs-server
             masked: true
-            enabled: false
         when:
             - not rhel9cis_use_nfs.server
             - rhel9cis_use_nfs.service
@@ -349,7 +348,6 @@
         systemd:
             name: rpcbind.socket
             masked: true
-            enabled: false
         when:
             - rhel9cis_use_rpc.server
             - not rhel9cis_use_rpc.service
@@ -380,7 +378,6 @@
         systemd:
             name: rsyncd
             masked: true
-            enabled: false
         when:
             - rhel9cis_use_rsync.server
             - not rhel9cis_use_rsync.service
