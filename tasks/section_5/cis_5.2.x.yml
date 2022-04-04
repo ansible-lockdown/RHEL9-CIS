@@ -87,6 +87,7 @@
             dest: /etc/ssh/sshd_config
             regexp: "^AllowUsers"
             line: AllowUsers {{ rhel9cis_sshd['allowusers'] }}
+            validate: sshd -t -f %s
         notify: restart sshd
         when: "rhel9cis_sshd['allowusers']|default('') | length > 0"
 
@@ -96,6 +97,7 @@
             dest: /etc/ssh/sshd_config
             regexp: "^AllowGroups"
             line: AllowGroups {{ rhel9cis_sshd['allowgroups'] }}
+            validate: sshd -t -f %s
         notify: restart sshd
         when: "rhel9cis_sshd['allowgroups']|default('') | length > 0"
 
@@ -105,6 +107,7 @@
             dest: /etc/ssh/sshd_config
             regexp: "^DenyUsers"
             line: DenyUsers {{ rhel9cis_sshd['denyusers'] }}
+            validate: sshd -t -f %s
         notify: restart sshd
         when: "rhel9cis_sshd['denyusers']|default('') | length > 0"
 
@@ -114,6 +117,7 @@
             dest: /etc/ssh/sshd_config
             regexp: "^DenyGroups"
             line: DenyGroups {{ rhel9cis_sshd['denygroups'] }}
+            validate: sshd -t -f %s
         notify: restart sshd
         when: "rhel9cis_sshd['denygroups']|default('') | length > 0"
   when:
@@ -132,6 +136,7 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#LogLevel|^LogLevel"
       line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_5
   tags:
@@ -148,6 +153,7 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#UsePAM|^UsePAM"
       line: 'UsePAM yes'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_6
   tags:
@@ -164,6 +170,7 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#PermitRootLogin|^PermitRootLogin"
       line: 'PermitRootLogin no'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_7
   tags:
@@ -178,8 +185,9 @@
   lineinfile:
       state: present
       dest: /etc/ssh/sshd_config
-      regexp: ^#HostbasedAuthentication|^HostbasedAuthentication"
+      regexp: "^#HostbasedAuthentication|^HostbasedAuthentication"
       line: 'HostbasedAuthentication no'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_8
   tags:
@@ -196,6 +204,7 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#PermitEmptyPasswords|^PermitEmptyPasswords"
       line: 'PermitEmptyPasswords no'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_9
   tags:
@@ -212,6 +221,7 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#PermitUserEnvironment|^PermitUserEnvironment"
       line: 'PermitUserEnvironment no'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_10
   tags:
@@ -228,12 +238,13 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#IgnoreRhosts|^IgnoreRhosts"
       line: 'IgnoreRhosts yes'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_11
   tags:
       - level1-server
       - level1-workstation
-      - autoamted
+      - automated
       - patch
       - ssh
       - rule_5.2.11
@@ -244,12 +255,13 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#X11Forwarding|^X11Forwarding"
       line: 'X11Forwarding no'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_12
   tags:
       - level2-server
       - level1-workstation
-      - autoamted
+      - automated
       - patch
       - ssh
       - rule_5.2.12
@@ -260,12 +272,13 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#AllowTcpForwarding|^AllowTcpForwarding"
       line: 'AllowTcpForwarding no'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_13
   tags:
       - level2-server
       - level2-workstation
-      - autoamted
+      - automated
       - patch
       - ssh
       - rule_5.2.13
@@ -307,6 +320,7 @@
       dest: /etc/ssh/sshd_config
       regexp: '^(#)?MaxAuthTries \d'
       line: 'MaxAuthTries 4'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_16
   tags:
@@ -323,6 +337,7 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#MaxStartups|^MaxStartups"
       line: 'MaxStartups 10:30:60'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_17
   tags:
@@ -339,6 +354,7 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#MaxSessions|^MaxSessions"
       line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_18
   tags:
@@ -355,6 +371,7 @@
       dest: /etc/ssh/sshd_config
       regexp: "^#LoginGraceTime|^LoginGraceTime"
       line: "LoginGraceTime {{ rhel9cis_sshd['logingracetime'] }}"
+      validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_19
   tags:
@@ -373,6 +390,7 @@
             dest: /etc/ssh/sshd_config
             regexp: '^ClientAliveInterval'
             line: "ClientAliveInterval {{ rhel9cis_sshd['clientaliveinterval'] }}"
+            validate: sshd -t -f %s
 
       - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Ensure SSH ClientAliveCountMax set to <= 3"
         lineinfile:
@@ -380,6 +398,7 @@
             dest: /etc/ssh/sshd_config
             regexp: '^ClientAliveCountMax'
             line: "ClientAliveCountMax {{ rhel9cis_sshd['clientalivecountmax'] }}"
+            validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_20
   tags:
