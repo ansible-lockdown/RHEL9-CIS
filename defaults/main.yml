@@ -17,6 +17,10 @@ rhel9cis_section4: true
 rhel9cis_section5: true
 rhel9cis_section6: true
 
+# This is used for audit purposes to run only specifc level use the tags
+# e.g.
+# - level1-server
+# - level2-workstation
 rhel9cis_level_1: true
 rhel9cis_level_2: true
 

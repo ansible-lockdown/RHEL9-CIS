@@ -3,7 +3,7 @@
 - name: "1.5.1 | PATCH | Ensure core dump storage is disabled"
   lineinfile:
       path: /etc/systemd/coredump.conf
-      regexp: 'Storage='
+      regexp: '^Storage\s*=\s*(?!none).*'
       line: 'Storage=none'
   notify: systemd_daemon_reload
   when:
@@ -19,7 +19,7 @@
 - name: "1.5.2 | PATCH | Ensure core dump backtraces are disabled"
   lineinfile:
       path: /etc/systemd/coredump.conf
-      regexp: 'ProcessSizeMax='
+      regexp: '^ProcessSizeMax\s*=\s*.*[1-9]$'
       line: 'ProcessSizeMax=0'
   when:
       - rhel9cis_rule_1_5_2
@@ -33,7 +33,7 @@
 
 - name: "1.5.3 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
   debug:
-      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/99-sysctl.conf"
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
   notify: 
       - update sysctl
   when:
