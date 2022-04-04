@@ -583,6 +583,7 @@ rhel9cis_authselect_custom_profile_create: false
 # 5.3.2 Enable automation to select custom profile options, using the settings above
 rhel9cis_authselect_custom_profile_select: false
 
+
 rhel9cis_pass:
     max_days: 365
     min_days: 7
@@ -591,14 +592,17 @@ rhel9cis_pass:
 rhel9cis_syslog: rsyslog
 rhel9cis_rsyslog_ansiblemanaged: true
 
-
+# 5.5.1
 ## PAM
-rhel9cis_pam_password:
-    minlen: "14"
-    minclass: "4"
+rhel9cis_pam_password: |
+    minlen = 14
+    minclass = 4
+
+rhel9cis_pam_faillock:
+    remember: 5
 
 # UID settings for interactive users
-# These are discovered via logins.def is set true
+# These are discovered via logins.def if set true
 discover_int_uid: false
 min_int_uid: 1000
 max_int_uid: 65533
