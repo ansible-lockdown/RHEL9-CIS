@@ -44,7 +44,7 @@
       - name: "1.2.3 | PATCH | Ensure gpgcheck is globally activated | Update yum.repos"
         replace:
             name: "{{ item.path }}"
-            regexp: "^gpgcheck\s*=\s*0"
+            regexp: '^gpgcheck\s+=\s+0'
             replace: "gpgcheck=1"
         with_items:
             - "{{ yum_repos.files }}"
