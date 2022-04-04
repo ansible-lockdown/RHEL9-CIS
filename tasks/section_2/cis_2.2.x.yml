@@ -105,7 +105,7 @@
   tags:
       - level1-server
       - level1-workstation
-      - automation
+      - automated
       - patch
       - ftp
       - rule_2.2.7
@@ -230,7 +230,7 @@
   tags:
       - level1-server
       - level1-workstation
-      - automation
+      - automated
       - patch
       - squid
       - rule_2.2.13
@@ -246,7 +246,7 @@
   tags:
       - level1-server
       - level1-workstation
-      - automation
+      - automated
       - patch
       - snmp
       - rule_2.2.14
