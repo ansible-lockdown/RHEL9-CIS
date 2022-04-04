@@ -73,7 +73,7 @@
   tags:
       - level1-server
       - level1-workstation
-      - audtomated
+      - automated
       - patch
       - dhcp
       - rule_2.2.5
@@ -160,7 +160,7 @@
             - not rhel9cis_nginx_server
             - "'nginx' in ansible_facts.packages"
   when:
-      - rhel9cis_rule_2_2_9
+      - rhel9cis_rule_2_2_10
   tags:
       - level1-server
       - level1-workstation
@@ -172,14 +172,26 @@
       - rule_2.2.9
 
 - name: "2.2.11 | PATCH | Ensure IMAP and POP3 server is not installed"
-  package:
-      name:
-          - dovecot
-          - cyrus-imapd
-      state: absent
+  block:
+      - name: "2.2.11 | PATCH | Ensure IMAP and POP3 server is not installed"
+        package:
+            name:
+            - dovecot
+        state: absent
+        when:
+            - not rhel9cis_dovecot_server
+            - "'dovecot' in ansible_facts.packages"
+
+      - name: "2.2.11 | PATCH | Ensure IMAP and POP3 server is not installed"
+        package:
+            name:
+            - cyrus-imapd
+        state: absent
+        when:
+            - not rhel9cis_imap_server
+            - "'cyrus-imapd' in ansible_facts.packages"
+
   when:
-      - not rhel9cis_dovecot_cyrus_server
-      - "'dovecot' in ansible_facts.packages or 'cyrus-imapd' in ansible_facts.packages"
       - rhel9cis_rule_2_2_11
   tags:
       - level1-server
@@ -290,13 +302,26 @@
       - rule_2.2.17
 
 # The name title of the service says mask the service, but the fix allows for both options
-# We went with removing to remove the security/update overhead with having the package installed
+# Options available in default/main if to remove the package default is false just mask the server service
 - name: "2.2.18 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked"
-  package:
-      name: nfs-utils
-      state: absent
+  block:
+      - name: "2.2.18 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked | remove package"
+        package:
+            name: nfs-utils
+            state: absent
+        when:
+            - not rhel9cis_use_nfs.server
+            - not rhel9cis_use_nfs.service
+
+      - name: "2.2.18 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked | mask service"
+        systemd:
+            name: nfs-server
+            masked: true
+            enabled: false
+        when:
+            - not rhel9cis_use_nfs.server
+            - rhel9cis_use_nfs.service
   when:
-      - not rhel9cis_nfs_server
       - "'nfs-utils' in ansible_facts.packages"
       - rhel9cis_rule_2_2_18
   tags:
@@ -309,13 +334,26 @@
       - rule_2.2.18
 
 # The name title of the service says mask the service, but the fix allows for both options
-# We went with removing to remove the security/update overhead with having the package installed
+# Options available in default/main if to remove the package default is false just mask the server service
 - name: "2.2.19 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked"
-  package:
-      name: rpcbind
-      state: absent
+  block:
+      - name: "2.2.19 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked | remove package"
+        package:
+            name: rpcbind
+            state: absent
+        when:
+            - not rhel9cis_use_rpc.server
+            - not rhel9cis_use_rpc.service
+
+      - name: "2.2.19 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked | mask service"
+        systemd:
+            name: rpcbind.socket
+            masked: true
+            enabled: false
+        when:
+            - rhel9cis_use_rpc.server
+            - not rhel9cis_use_rpc.service
   when:
-      - not rhel9cis_rpc_server
       - "'rpcbind' in ansible_facts.packages"
       - rhel9cis_rule_2_2_19
   tags:
@@ -327,13 +365,26 @@
       - rule_2.2.19
 
 # The name title of the service says mask the service, but the fix allows for both options
-# We went with removing to remove the security/update overhead with having the package installed
+# Options available in default/main if to remove the package default is false just mask the server service
 - name: "2.2.20 | PATCH | Ensure rsync service is not enabled "
-  package:
-      name: rsync
-      state: absent
+  block:
+      - name: "2.2.20 | PATCH | Ensure rsync service is not enabled | remove package"
+        package:
+            name: rsync
+            state: absent
+        when:
+            - not rhel9cis_use_rsync.server
+            - not rhel9cis_use_rsync.service
+
+      - name: "2.2.20 | PATCH | Ensure rsync service is not enabled | mask service"
+        systemd:
+            name: rsyncd
+            masked: true
+            enabled: false
+        when:
+            - rhel9cis_use_rsync.server
+            - not rhel9cis_use_rsync.service
   when:
-      - not rhel9cis_rsync_server
       - "'rsync' in ansible_facts.packages"
       - rhel9cis_rule_2_2_20
   tags:
