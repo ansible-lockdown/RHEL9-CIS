@@ -17,9 +17,21 @@
 # The control allows the service it be masked or not installed
 # We have chosen not installed
 - name: "3.4.2.2 | PATCH | Ensure firewalld is either not installed or masked with nftables"
-  package:
-      name: firewalld
-      state: absent
+  block:
+      - name: "3.4.2.2 | PATCH | Ensure firewalld is either not installed or masked with nftables | mask service"
+        systemd:
+            name: firewalld
+            masked: true
+            state: stopped
+        when:
+            - rhel9cis_nftables_firewalld_state == "masked"
+
+      - name: "3.4.2.2 | PATCH | Ensure firewalld is either not installed or masked with nftables | pkg removed"
+        package:
+            name: firewalld
+            state: absent
+        when:
+            - rhel9cis_nftables_firewalld_state == "absent"
   when:
       - rhel9cis_rule_3_4_2_2
   tags:
