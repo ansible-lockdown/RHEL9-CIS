@@ -476,17 +476,24 @@ rhel9cis_tftp_client: false
 
 ## Section3 vars
 ### Firewall Service - either firewalld, iptables, or nftables
+#### Some control allow for services to be removed or masked
+#### The options are under each heading
+#### absent = remove the package
+#### masked = leave package if installed and mask the service
 rhel9cis_firewall: firewalld
 
 ##### firewalld
 rhel9cis_default_zone: public
+rhel9cis_firewalld_nftables_state: absent
 
 #### nftables
+rhel9cis_nftables_firewalld_state: absent
 rhel9cis_nft_tables_autonewtable: true
 rhel9cis_nft_tables_tablename: filter
 rhel9cis_nft_tables_autochaincreate: true
 
 #### iptables
+rhel9cis_iptables_firewalld_state: absent
 
 # Warning Banner Content (issue, issue.net, motd)
 rhel9cis_warning_banner: |
@@ -507,6 +514,11 @@ rhel9cis_audit_back_log_limit: 8192
 
 # The max_log_file parameter should be based on your sites policy
 rhel9cis_max_log_file_size: 10
+
+## Preferred method of logging
+## Whether rsyslog or journald preferred method for local logging
+## Affects rsyslog cis 4.2.1.3 and journald cis 4.2.2.5
+rhel9cis_preferred_log_capture: rsyslog
 
 #### 4.2.1.6 remote and destation log server name
 rhel9cis_remote_log_server: logagg.example.com

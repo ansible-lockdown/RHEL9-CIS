@@ -137,6 +137,7 @@
   notify: restart systemd_journal_upload
   when:
       - rhel9cis_rule_4_2_2_5
+      - rhel9cis_preferred_log_capture == "journald"
   tags:
       - level1-server
       - level2-workstation
