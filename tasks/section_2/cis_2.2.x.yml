@@ -176,8 +176,8 @@
       - name: "2.2.11 | PATCH | Ensure IMAP and POP3 server is not installed"
         package:
             name:
-            - dovecot
-        state: absent
+                - dovecot
+            state: absent
         when:
             - not rhel9cis_dovecot_server
             - "'dovecot' in ansible_facts.packages"
@@ -185,8 +185,8 @@
       - name: "2.2.11 | PATCH | Ensure IMAP and POP3 server is not installed"
         package:
             name:
-            - cyrus-imapd
-        state: absent
+                - cyrus-imapd
+            state: absent
         when:
             - not rhel9cis_imap_server
             - "'cyrus-imapd' in ansible_facts.packages"
