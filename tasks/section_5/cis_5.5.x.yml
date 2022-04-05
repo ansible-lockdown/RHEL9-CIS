@@ -84,7 +84,6 @@
         replace: 
             path: /etc/pam.d/system-auth
             regexp: '^password\s*sufficient\s*pam_unix.so.*$'
-            #after: '^password\s*requisite\s*pam_pwhistory.so'
             replace: 'password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
   when:
       - rhel9cis_rule_5_5_3
@@ -108,16 +107,16 @@
           regexp: '^ENCRYPT_METHOD.*'
           replace: 'ENCRYPT_METHOD SHA512'
 
-      - name: "5.5.4 | PATCH | Ensure password reuse is limited | pwhistory"
+      - name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 | password-auth"
         replace:
             path: /etc/pam.d/password-auth
             regexp: '^password\s*sufficient\s*pam_unix.so.*$'
             replace: 'password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
 
-      - name: "5.5.4 | PATCH | Ensure password reuse is limited | pam_unix"
+      - name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 | system-auth"
         replace: 
             path: /etc/pam.d/system-auth
-            regexp: '^password\s*sufficient\s*pam_unix.so.*'
+            regexp: '^password\s*sufficient\s*pam_unix.so.*$'
             replace: 'password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
   when:
       - rhel9cis_rule_5_5_4
