@@ -54,7 +54,7 @@
         with_items:
             - "system-auth"
             - "password-auth"
-  when: 
+  when:
       - ansible_distribution_version <= "8.1"
       - rhel9cis_rule_5_5_2
 
@@ -67,7 +67,7 @@
   with_items:
       - { regexp: '^\s*deny\s*=\s*[1-5]\b', line: 'deny = 5' }
       - { regexp: '^\s*unlock_time\s*=\s*(0|9[0-9][0-9]|[1-9][0-9][0-9][0-9]+)\b', line: 'unlock_time = 900' }
-  when: 
+  when:
       - ansible_distribution_version >= "8.2"
       - rhel9cis_rule_5_5_2
 
@@ -79,9 +79,9 @@
             state: present
             line: "password    requisite     pam_pwhistory.so try_first_pass local_users_only enforce_for_root retry=3 remember={{ rhel9cis_pam_faillock.remember }}"
             insertafter: '^password\s*requisite\s*pam_pwquality.so'
-        
+
       - name: "5.5.3 | PATCH | Ensure password reuse is limited | pam_unix"
-        replace: 
+        replace:
             path: /etc/pam.d/system-auth
             regexp: '^password\s*sufficient\s*pam_unix.so.*$'
             replace: 'password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
@@ -97,15 +97,15 @@
   block:
       - name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 | libuser.conf"
         replace:
-          path: /etc/libuser.conf
-          regexp: '^crypt_style\s*=\s*.*$'
-          replace: 'crypt_style = sha512'
-      
+            path: /etc/libuser.conf
+            regexp: '^crypt_style\s*=\s*.*$'
+            replace: 'crypt_style = sha512'
+
       - name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 | login.defs"
         replace:
-          path: /etc/login.defs
-          regexp: '^ENCRYPT_METHOD.*'
-          replace: 'ENCRYPT_METHOD SHA512'
+            path: /etc/login.defs
+            regexp: '^ENCRYPT_METHOD.*'
+            replace: 'ENCRYPT_METHOD SHA512'
 
       - name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 | password-auth"
         replace:
@@ -114,7 +114,7 @@
             replace: 'password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
 
       - name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 | system-auth"
-        replace: 
+        replace:
             path: /etc/pam.d/system-auth
             regexp: '^password\s*sufficient\s*pam_unix.so.*$'
             replace: 'password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'

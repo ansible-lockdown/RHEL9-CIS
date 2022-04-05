@@ -33,18 +33,18 @@
       - 60-disable_ipv6.conf
       - 60-netipv4_sysctl.conf
       - 60-netipv6_sysctl.conf
-  when: 
+  when:
       - ansible_virtualization_type != "docker"
       - "'procps-ng' in ansible_facts.packages"
 
 - name: reload sysctl
   sysctl:
-    name: net.ipv4.route.flush
-    value: '1'
-    state: present
-    reload: true
-    ignoreerrors: true
-  when: 
+      name: net.ipv4.route.flush
+      value: '1'
+      state: present
+      reload: true
+      ignoreerrors: true
+  when:
       - ansible_virtualization_type != "docker"
       - "'systemd' in ansible_facts.packages"
 

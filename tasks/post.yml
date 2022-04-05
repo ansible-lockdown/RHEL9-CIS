@@ -10,7 +10,7 @@
   package_facts:
       manager: auto
   tags:
-  - always
+      - always
 
 - name: trigger update sysctl
   shell: /bin/true

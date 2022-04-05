@@ -22,7 +22,7 @@ galaxy_info:
         - disa
         - rhel9
 collections:
-  - community.general
-  - community.crypto
-  - ansible.posix
+    - community.general
+    - community.crypto
+    - ansible.posix
 dependencies: []

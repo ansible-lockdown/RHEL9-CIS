@@ -73,8 +73,8 @@
 
 - name: "5.6.4 | PATCH | Ensure default group for the root account is GID 0"
   user:
-    name: root
-    group: 0
+      name: root
+      group: 0
   when:
       - rhel9cis_rule_5_6_4
   tags:

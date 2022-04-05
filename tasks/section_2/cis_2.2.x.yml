@@ -65,7 +65,7 @@
 - name: "2.2.5 | PATCH | Ensure DHCP Server is not installed"
   package:
       name: dhcp-server
-      state: absent 
+      state: absent
   when:
       - not rhel9cis_dhcp_server
       - "'dhcp-server' in ansible_facts.packages"
@@ -113,7 +113,7 @@
 - name: "2.2.8 | PATCH | Ensure VSFTP Server is not installed"
   package:
       name: vsftpd
-      state: absent 
+      state: absent
   when:
       - not rhel9cis_vsftpd_server
       - "'vsftpd' in ansible_facts.packages"
@@ -222,7 +222,7 @@
 - name: "2.2.13 | PATCH | Ensure HTTP Proxy Server is not installed"
   package:
       name: squid
-      state: absent 
+      state: absent
   when:
       - not rhel9cis_squid_server
       - "'squid' in ansible_facts.packages"

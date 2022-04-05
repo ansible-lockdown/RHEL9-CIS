@@ -5,7 +5,7 @@
       - name: "3.2.1 | PATCH | Ensure IP forwarding is disabled | Disable IPv4 forwarding"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
-        notify: 
+        notify:
             - update sysctl
             - sysctl flush ipv4 route table
 

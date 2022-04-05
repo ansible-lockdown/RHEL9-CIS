@@ -383,8 +383,6 @@ rhel9cis_rh_sub_password: password
 rhel9cis_rhnsd_required: false
 
 
-
-
 # 1.4.2 Bootloader password
 rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'
 rhel9cis_bootloader_password: random
@@ -454,7 +452,7 @@ rhel9cis_telnet_server: false
 rhel9cis_is_mail_server: false
 # Note the options
 # Packages are used for client services and Server- only remove if you dont use the client service
-# 
+#
 rhel9cis_use_nfs:
     - service: false
     - server: false
@@ -484,7 +482,7 @@ rhel9cis_firewall: firewalld
 
 ##### firewalld
 rhel9cis_default_zone: public
-rhel9cis_firewalld_nftables_state: masked # Note if absent removes the firewalld pkg dependancy
+rhel9cis_firewalld_nftables_state: masked  # Note if absent removes the firewalld pkg dependancy
 
 #### nftables
 rhel9cis_nftables_firewalld_state: absent

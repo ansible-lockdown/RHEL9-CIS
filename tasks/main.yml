@@ -6,9 +6,9 @@
       that: (ansible_distribution != 'CentOS' and ansible_os_family == 'RedHat' or ansible_os_family == "Rocky") and ansible_distribution_major_version is version_compare('8', '==')
       fail_msg: "This role can only be run against Supported OSs. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
       success_msg: "This role is running against a supported OS {{ ansible_distribution }} {{ ansible_distribution_major_version }}"
-  when: 
-    - os_check
-    - not system_is_ec2
+  when:
+      - os_check
+      - not system_is_ec2
   tags:
       - always
 
@@ -29,7 +29,7 @@
       - name: Load variable for container
         include_vars:
             file: "{{ container_vars_file }}"
-      
+
       - name: output if discovered is a container
         debug:
             msg: system has been discovered as a container
@@ -53,128 +53,128 @@
       that: rhel9cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'
       msg: "This role will not be able to run single user password commands as rhel9cis_bootloader_password_hash variable has not been set"
   when:
-  - rhel9cis_set_boot_pass
-  - rhel9cis_rule_1_5_2
+      - rhel9cis_set_boot_pass
+      - rhel9cis_rule_1_5_2
 
 - name: "check sugroup exists if used"
   block:
-  - name: "Check su group exists if defined"
-    shell: grep -w "{{ rhel9cis_sugroup }}" /etc/group
-    args:
-      warn: false
-    register: sugroup_exists
-    changed_when: false
-    failed_when: sugroup_exists.rc >= 2
-    tags:
-    - skip_ansible_lint
+      - name: "Check su group exists if defined"
+        shell: grep -w "{{ rhel9cis_sugroup }}" /etc/group
+        args:
+            warn: false
+        register: sugroup_exists
+        changed_when: false
+        failed_when: sugroup_exists.rc >= 2
+        tags:
+            - skip_ansible_lint
 
-  - name: Check sugroup if defined exists before continuing
-    assert:
-        that: sugroup_exists.rc == 0
-        msg: "The variable rhel9cis_sugroup is defined but does not exist please rectify"
+      - name: Check sugroup if defined exists before continuing
+        assert:
+            that: sugroup_exists.rc == 0
+            msg: "The variable rhel9cis_sugroup is defined but does not exist please rectify"
   when:
-  - rhel9cis_sugroup is defined
-  - rhel9cis_rule_5_7
+      - rhel9cis_sugroup is defined
+      - rhel9cis_rule_5_7
   tags:
-  - rule_5.7
+      - rule_5.7
 
 - name: Gather the package facts
   package_facts:
       manager: auto
   tags:
-  - always
+      - always
 
 - name: Include OS specific variables
   include_vars: "{{ ansible_distribution }}.yml"
   tags:
-  - always
+      - always
 
 - name: Include preliminary steps
   import_tasks: prelim.yml
   tags:
-  - prelim_tasks
-  - always
+      - prelim_tasks
+      - always
 
 - name: run pre_remediation audit
   include_tasks: pre_remediation_audit.yml
   when:
-  - run_audit
+      - run_audit
 
 - name: Gather the package facts after prelim
   package_facts:
       manager: auto
   tags:
-  - always
+      - always
 
 - name: capture /etc/password variables
   include_tasks: parse_etc_password.yml
-  when: 
-  - rhel9cis_section6
+  when:
+      - rhel9cis_section6
   tags:
-  - rule_5.5.2
-  - rule_5.6.2
-  - rule_6.2.9
-  - rule_6.2.10
-  - rule_6.2.11
-  - rhel9cis_section5
-  - rhel9cis_section6
+      - rule_5.5.2
+      - rule_5.6.2
+      - rule_6.2.9
+      - rule_6.2.10
+      - rule_6.2.11
+      - rhel9cis_section5
+      - rhel9cis_section6
 
 - name: run Section 1 tasks
   import_tasks: section_1/main.yml
   become: true
   when: rhel9cis_section1
   tags:
-  - rhel9cis_section1
+      - rhel9cis_section1
 
 - name: run Section 2 tasks
   import_tasks: section_2/main.yml
   become: true
   when: rhel9cis_section2
   tags:
-  - rhel9cis_section2
+      - rhel9cis_section2
 
 - name: run Section 3 tasks
   import_tasks: section_3/main.yml
   become: true
   when: rhel9cis_section3
   tags:
-  - rhel9cis_section3
+      - rhel9cis_section3
 
 - name: run Section 4 tasks
   import_tasks: section_4/main.yml
   become: true
   when: rhel9cis_section4
   tags:
-  - rhel9cis_section4
+      - rhel9cis_section4
 
 - name: run Section 5 tasks
   import_tasks: section_5/main.yml
   become: true
   when: rhel9cis_section5
   tags:
-  - rhel9cis_section5
+      - rhel9cis_section5
 
 - name: run Section 6 tasks
   import_tasks: section_6/main.yml
   become: true
   when: rhel9cis_section6
   tags:
-  - rhel9cis_section6
+      - rhel9cis_section6
 
 - name: run post remediation tasks
   import_tasks: post.yml
   become: true
   tags:
-  - post_tasks
-  - always
+      - post_tasks
+      - always
 
 - name: run post_remediation audit
   import_tasks: post_remediation_audit.yml
   when:
-  - run_audit
+      - run_audit
 
 - name: Show Audit Summary
   debug:
       msg: "{{ audit_results.split('\n') }}"
   when:
-  - run_audit
+      - run_audit

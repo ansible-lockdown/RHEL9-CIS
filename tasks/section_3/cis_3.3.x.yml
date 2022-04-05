@@ -5,7 +5,7 @@
       - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
-        notify: 
+        notify:
             - update sysctl
             - sysctl flush ipv4 route table
 
@@ -30,7 +30,7 @@
       - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
-        notify: 
+        notify:
             - update sysctl
             - sysctl flush ipv4 route table
 
@@ -52,7 +52,7 @@
 
 - name: "3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted"
   debug:
-    msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
   notify: update sysctl
   when:
       - rhel9cis_rule_3_3_3
@@ -65,7 +65,7 @@
 
 - name: "3.3.4 | PATCH | Ensure suspicious packets are logged"
   debug:
-    msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
   notify: update sysctl
   when:
       - rhel9cis_rule_3_3_4
@@ -78,7 +78,7 @@
 
 - name: "3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored"
   debug:
-    msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
   notify: update sysctl
   when:
       - rhel9cis_rule_3_3_5
@@ -91,7 +91,7 @@
 
 - name: "3.3.6 | PATCH | Ensure bogus ICMP responses are ignored"
   debug:
-    msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
   notify: update sysctl
   when:
       - rhel9cis_rule_3_3_6
@@ -104,7 +104,7 @@
 
 - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
   debug:
-    msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
   notify: update sysctl
   when:
       - rhel9cis_rule_3_3_7
@@ -117,7 +117,7 @@
 
 - name: "3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled"
   debug:
-    msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
   notify: update sysctl
   when:
       - rhel9cis_rule_3_3_8
@@ -133,7 +133,7 @@
       - name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
-        notify: 
+        notify:
             - update sysctl
             - sysctl flush ipv4 route table
 

@@ -54,7 +54,7 @@ rhel9cis_rule_1_1_2: false
 rhel9cis_rule_1_1_3: false
 rhel9cis_rule_1_1_4: false
 rhel9cis_rule_1_1_5: false
-#/var
+# /var
 rhel9cis_rule_1_1_6: false
 # /var/tmp
 rhel9cis_rule_1_1_7: false

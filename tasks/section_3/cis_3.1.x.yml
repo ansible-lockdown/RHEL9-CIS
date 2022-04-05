@@ -1,11 +1,11 @@
 ---
 
-# The CIS Control wants IPv6 disabled if not in use. 
+# The CIS Control wants IPv6 disabled if not in use.
 # We are using the rhel9cis_ipv6_required to specify if you have IPv6 in use
 - name: "3.1.1 | PATCH | Verify if IPv6 is enabled on the system"
   debug:
       msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-disable_ipv6.conf"
-      notify: 
+      notify:
           - update sysctl
           - sysctl flush ipv6 route table
   when:

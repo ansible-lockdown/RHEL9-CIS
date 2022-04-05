@@ -87,7 +87,7 @@
       name: audit
       state: present
   become: true
-  when: 
+  when:
       - '"auditd" not in ansible_facts.packages'
       - rhel9cis_rule_4_1_1_1
   tags:
@@ -209,7 +209,7 @@
         shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
         changed_when: false
         register: uid_min_id
-   
+
       - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
         shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
         changed_when: false
@@ -226,8 +226,7 @@
             max_int_uid: "{{ uid_max_id.stdout }}"
             min_int_gid: "{{ gid_min_id.stdout }}"
 - debug:
-    msg: "{{ min_int_uid }} {{ max_int_uid }}"
+      msg: "{{ min_int_uid }} {{ max_int_uid }}"
 
   when:
       - not discover_int_uid
-
