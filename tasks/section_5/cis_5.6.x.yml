@@ -13,6 +13,7 @@
             - item.id != "sync"
             - item.id != "shutdown"
             - item.id != "halt"
+            - item.id != "nfsnobody"
             - min_int_uid | int < item.gid
             - item.shell != "      /bin/false"
             - item.shell != "      /usr/sbin/nologin"
@@ -30,6 +31,7 @@
             - item.id != "shutdown"
             - item.id != "sync"
             - item.id != "root"
+            - item.id != "nfsnobody"
             - min_int_uid | int < item.gid
             - item.shell != "      /bin/false"
             - item.shell != "      /usr/sbin/nologin"
@@ -51,9 +53,8 @@
       mode: 0644
       dest: "{{ item.dest }}"
       state: "{{ item.state }}"
-      marker: "# {mark} ANSIBLE MANAGED"
+      marker: "# {mark} CIS 5.6.3 ANSIBLE MANAGED"
       block: |
-        # Set session timeout - CIS ID RHEL-08-5.4.5
         TMOUT={{ rhel9cis_shell_session_timeout.timeout }}
         export TMOUT
         readonly TMOUT
@@ -71,9 +72,9 @@
       - rule_5.6.3
 
 - name: "5.6.4 | PATCH | Ensure default group for the root account is GID 0"
-  command: usermod -g 0 root
-  changed_when: false
-  failed_when: false
+  user:
+    name: root
+    group: 0
   when:
       - rhel9cis_rule_5_6_4
   tags:
