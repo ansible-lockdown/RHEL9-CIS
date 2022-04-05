@@ -142,7 +142,7 @@
             marker: "#{mark} Auth SETTINGS (ANSIBLE MANAGED)"
             block: |
               # Private settings to meet CIS standards
-              auth,authpriv.*                                          -/var/log/secure
+              auth,authpriv.*                                           /var/log/secure
             insertafter: '#### RULES ####'
         notify: restart rsyslog
 
