@@ -10,7 +10,7 @@
 
       - name: "5.5.1 | PATCH | Ensure password creation requirements are configured | Set system-auth retry settings"
         lineinfile:
-            dest: /etc/pam.d/system-auth
+            path: /etc/pam.d/system-auth
             state: present
             regexp: '^password\s*requisite\s*pam_pwquality.so'
             line: "password    requisite     pam_pwquality.so try_first_pass local_users_only enforce_for_root retry=3"
@@ -18,7 +18,7 @@
 
       - name: "5.5.1 | PATCH | Ensure password creation requirements are configured | Set system-auth retry settings"
         lineinfile:
-            dest: /etc/pam.d/password-auth
+            path: /etc/pam.d/password-auth
             state: present
             regexp: '^password\s*requisite\s*pam_pwquality.so'
             line: "password    requisite     pam_pwquality.so try_first_pass local_users_only enforce_for_root retry=3"
@@ -35,7 +35,7 @@
   block:
       - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | pre RHEL8.2 | Add deny count and unlock time for preauth"
         lineinfile:
-            dest: /etc/pam.d/{{ item }}
+            path: /etc/pam.d/{{ item }}
             state: present
             regexp: '^auth\s*required\s*pam_faillock.so preauth'
             line: "auth        required                                     pam_faillock.so preauth silent deny={{ rhel9cis_pam_faillock.attempts }}{{ (rhel9cis_pam_faillock.fail_for_root) | ternary(' even_deny_root ',' ') }}unlock_time={{ rhel9cis_pam_faillock.unlock_time }}"
@@ -46,7 +46,7 @@
 
       - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | pre RHEL8.2 | Add deny count and unlock times for authfail"
         lineinfile:
-            dest: /etc/pam.d/{{ item }}
+            path: /etc/pam.d/{{ item }}
             state: present
             regexp: '^auth\s*required\s*pam_faillock.so authfail'
             line: "auth        required                                     pam_faillock.so authfail deny={{ rhel9cis_pam_faillock.attempts }}{{ (rhel9cis_pam_faillock.fail_for_root) | ternary(' even_deny_root ',' ') }}unlock_time={{ rhel9cis_pam_faillock.unlock_time }}"
@@ -60,7 +60,7 @@
 
 - name: "5.5.2 | PATCH | Ensure system accounts are secured | RHEL8.2+ "
   lineinfile:
-      dest: /etc/security/faillock.conf
+      path: /etc/security/faillock.conf
       state: present
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
