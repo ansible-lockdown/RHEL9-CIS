@@ -485,13 +485,13 @@ rhel9cis_default_zone: public
 rhel9cis_firewalld_nftables_state: masked  # Note if absent removes the firewalld pkg dependancy
 
 #### nftables
-rhel9cis_nftables_firewalld_state: absent
+rhel9cis_nftables_firewalld_state: masked
 rhel9cis_nft_tables_autonewtable: true
 rhel9cis_nft_tables_tablename: filter
 rhel9cis_nft_tables_autochaincreate: true
 
 #### iptables
-rhel9cis_iptables_firewalld_state: absent
+rhel9cis_iptables_firewalld_state: masked
 
 # Warning Banner Content (issue, issue.net, motd)
 rhel9cis_warning_banner: |
