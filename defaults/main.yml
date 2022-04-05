@@ -484,7 +484,7 @@ rhel9cis_firewall: firewalld
 
 ##### firewalld
 rhel9cis_default_zone: public
-rhel9cis_firewalld_nftables_state: absent
+rhel9cis_firewalld_nftables_state: masked # Note if absent removes the firewalld pkg dependancy
 
 #### nftables
 rhel9cis_nftables_firewalld_state: absent
