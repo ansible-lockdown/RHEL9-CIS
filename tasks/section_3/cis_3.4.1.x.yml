@@ -21,16 +21,18 @@
       - name: "3.4.1.2 | PATCH | Ensure iptables-services not installed with firewalld | Stop running services"
         systemd:
             name: "{{ item }}"
-            masked: true
+            state: stopped
+            enabled: false
         with_items:
             - iptables
             - ip6tables
         when: item in ansible_facts.packages
 
-      - name: "3.4.1.2 | PATCH | Ensure iptables-services not installed with firewalld | Remove IPTables"
+      - name: "3.4.1.2 | PATCH | Ensure iptables-services not installed with firewalld | remove iptables-services pkg "
         package:
             name: iptables-services
             state: absent
+        when: "'iptables-services' in ansible_facts.packages"
   when:
       - rhel9cis_rule_3_4_1_2
   tags:
