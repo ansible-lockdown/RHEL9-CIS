@@ -310,8 +310,8 @@
             name: nfs-utils
             state: absent
         when:
-            - not rhel9cis_use_nfs.server
-            - not rhel9cis_use_nfs.service
+            - not rhel9cis_use_nfs_server
+            - not rhel9cis_use_nfs_service
 
       - name: "2.2.18 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked | mask service"
         systemd:
@@ -319,8 +319,8 @@
             masked: true
             state: stopped
         when:
-            - not rhel9cis_use_nfs.server
-            - rhel9cis_use_nfs.service
+            - not rhel9cis_use_nfs_server
+            - rhel9cis_use_nfs_service
   when:
       - "'nfs-utils' in ansible_facts.packages"
       - rhel9cis_rule_2_2_18
@@ -342,8 +342,8 @@
             name: rpcbind
             state: absent
         when:
-            - not rhel9cis_use_rpc.server
-            - not rhel9cis_use_rpc.service
+            - not rhel9cis_use_rpc_server
+            - not rhel9cis_use_rpc_service
 
       - name: "2.2.19 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked | mask service"
         systemd:
@@ -351,8 +351,8 @@
             masked: true
             state: stopped
         when:
-            - rhel9cis_use_rpc.server
-            - not rhel9cis_use_rpc.service
+            - rhel9cis_use_rpc_server
+            - not rhel9cis_use_rpc_service
   when:
       - "'rpcbind' in ansible_facts.packages"
       - rhel9cis_rule_2_2_19
@@ -373,8 +373,8 @@
             name: rsync
             state: absent
         when:
-            - not rhel9cis_use_rsync.server
-            - not rhel9cis_use_rsync.service
+            - not rhel9cis_use_rsync_server
+            - not rhel9cis_use_rsync_service
 
       - name: "2.2.20 | PATCH | Ensure rsync service is not enabled | mask service"
         systemd:
@@ -382,8 +382,8 @@
             masked: true
             state: stopped
         when:
-            - rhel9cis_use_rsync.server
-            - not rhel9cis_use_rsync.service
+            - rhel9cis_use_rsync_server
+            - not rhel9cis_use_rsync_service
   when:
       - "'rsync' in ansible_facts.packages"
       - rhel9cis_rule_2_2_20
