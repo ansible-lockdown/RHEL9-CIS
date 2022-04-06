@@ -205,21 +205,7 @@ rhel9cis_rule_3_4_2_8: true
 rhel9cis_rule_3_4_2_9: true
 rhel9cis_rule_3_4_2_10: true
 rhel9cis_rule_3_4_2_11: true
-rhel9cis_rule_3_4_3_1_1: true
-rhel9cis_rule_3_4_3_1_2: true
-rhel9cis_rule_3_4_3_1_3: true
-rhel9cis_rule_3_4_3_2_1: true
-rhel9cis_rule_3_4_3_2_2: true
-rhel9cis_rule_3_4_3_2_3: true
-rhel9cis_rule_3_4_3_2_4: true
-rhel9cis_rule_3_4_3_2_5: true
-rhel9cis_rule_3_4_3_2_6: true
-rhel9cis_rule_3_4_3_3_1: true
-rhel9cis_rule_3_4_3_3_2: true
-rhel9cis_rule_3_4_3_3_3: true
-rhel9cis_rule_3_4_3_3_4: true
-rhel9cis_rule_3_4_3_3_5: true
-rhel9cis_rule_3_4_3_3_6: true
+
 
 # Section 4 rules
 rhel9cis_rule_4_1_1_1: true
@@ -490,8 +476,6 @@ rhel9cis_nft_tables_autonewtable: true
 rhel9cis_nft_tables_tablename: filter
 rhel9cis_nft_tables_autochaincreate: true
 
-#### iptables
-rhel9cis_iptables_firewalld_state: masked
 
 # Warning Banner Content (issue, issue.net, motd)
 rhel9cis_warning_banner: |
