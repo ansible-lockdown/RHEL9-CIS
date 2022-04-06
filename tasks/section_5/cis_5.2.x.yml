@@ -83,8 +83,7 @@
   block:
       - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for allowusers"
         lineinfile:
-            state: present
-            dest: /etc/ssh/sshd_config
+            path: /etc/ssh/sshd_config
             regexp: "^AllowUsers"
             line: AllowUsers {{ rhel9cis_sshd['allowusers'] }}
             validate: sshd -t -f %s
@@ -93,8 +92,7 @@
 
       - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for allowgroups"
         lineinfile:
-            state: present
-            dest: /etc/ssh/sshd_config
+            path: /etc/ssh/sshd_config
             regexp: "^AllowGroups"
             line: AllowGroups {{ rhel9cis_sshd['allowgroups'] }}
             validate: sshd -t -f %s
@@ -103,8 +101,7 @@
 
       - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for denyusers"
         lineinfile:
-            state: present
-            dest: /etc/ssh/sshd_config
+            path: /etc/ssh/sshd_config
             regexp: "^DenyUsers"
             line: DenyUsers {{ rhel9cis_sshd['denyusers'] }}
             validate: sshd -t -f %s
@@ -113,8 +110,7 @@
 
       - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for denygroups"
         lineinfile:
-            state: present
-            dest: /etc/ssh/sshd_config
+            path: /etc/ssh/sshd_config
             regexp: "^DenyGroups"
             line: DenyGroups {{ rhel9cis_sshd['denygroups'] }}
             validate: sshd -t -f %s
@@ -132,8 +128,7 @@
 
 - name: "5.2.5 | PATCH | Ensure SSH LogLevel is appropriate"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#LogLevel|^LogLevel"
       line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
       validate: sshd -t -f %s
@@ -149,8 +144,7 @@
 
 - name: "5.2.6 | PATCH | Ensure SSH PAM is enabled"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#UsePAM|^UsePAM"
       line: 'UsePAM yes'
       validate: sshd -t -f %s
@@ -166,8 +160,7 @@
 
 - name: "5.2.7 | PATCH | Ensure SSH root login is disabled"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#PermitRootLogin|^PermitRootLogin"
       line: 'PermitRootLogin no'
       validate: sshd -t -f %s
@@ -183,8 +176,7 @@
 
 - name: "5.2.8 | PATCH | Ensure SSH HostbasedAuthentication is disabled"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#HostbasedAuthentication|^HostbasedAuthentication"
       line: 'HostbasedAuthentication no'
       validate: sshd -t -f %s
@@ -200,8 +192,7 @@
 
 - name: "5.2.9 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#PermitEmptyPasswords|^PermitEmptyPasswords"
       line: 'PermitEmptyPasswords no'
       validate: sshd -t -f %s
@@ -217,8 +208,7 @@
 
 - name: "5.2.10 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#PermitUserEnvironment|^PermitUserEnvironment"
       line: 'PermitUserEnvironment no'
       validate: sshd -t -f %s
@@ -234,8 +224,7 @@
 
 - name: "5.2.11 | PATCH | Ensure SSH IgnoreRhosts is enabled"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#IgnoreRhosts|^IgnoreRhosts"
       line: 'IgnoreRhosts yes'
       validate: sshd -t -f %s
@@ -251,8 +240,7 @@
 
 - name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#X11Forwarding|^X11Forwarding"
       line: 'X11Forwarding no'
       validate: sshd -t -f %s
@@ -268,8 +256,7 @@
 
 - name: "5.2.13 | PATCH | Ensure SSH AllowTcpForwarding is disabled"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#AllowTcpForwarding|^AllowTcpForwarding"
       line: 'AllowTcpForwarding no'
       validate: sshd -t -f %s
@@ -300,8 +287,7 @@
 
 - name: "5.2.15  | PATCH | Ensure SSH warning banner is configured"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: '^Banner'
       line: 'Banner /etc/issue.net'
   when:
@@ -316,8 +302,7 @@
 
 - name: "5.2.16 | PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: '^(#)?MaxAuthTries \d'
       line: 'MaxAuthTries 4'
       validate: sshd -t -f %s
@@ -333,8 +318,7 @@
 
 - name: "5.2.17 | PATCH | Ensure SSH MaxStartups is configured"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#MaxStartups|^MaxStartups"
       line: 'MaxStartups 10:30:60'
       validate: sshd -t -f %s
@@ -350,8 +334,7 @@
 
 - name: "5.2.18  | PATCH | Ensure SSH MaxSessions is set to 10 or less"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#MaxSessions|^MaxSessions"
       line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
       validate: sshd -t -f %s
@@ -367,8 +350,7 @@
 
 - name: "5.2.19 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
   lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       regexp: "^#LoginGraceTime|^LoginGraceTime"
       line: "LoginGraceTime {{ rhel9cis_sshd['logingracetime'] }}"
       validate: sshd -t -f %s
@@ -386,16 +368,14 @@
   block:
       - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Add line in sshd_config for ClientAliveInterval"
         lineinfile:
-            state: present
-            dest: /etc/ssh/sshd_config
+            path: /etc/ssh/sshd_config
             regexp: '^ClientAliveInterval'
             line: "ClientAliveInterval {{ rhel9cis_sshd['clientaliveinterval'] }}"
             validate: sshd -t -f %s
 
       - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Ensure SSH ClientAliveCountMax set to <= 3"
         lineinfile:
-            state: present
-            dest: /etc/ssh/sshd_config
+            path: /etc/ssh/sshd_config
             regexp: '^ClientAliveCountMax'
             line: "ClientAliveCountMax {{ rhel9cis_sshd['clientalivecountmax'] }}"
             validate: sshd -t -f %s

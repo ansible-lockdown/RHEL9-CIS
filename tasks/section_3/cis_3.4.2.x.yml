@@ -332,7 +332,6 @@
 - name: "3.4.2.11 | PATCH | Ensure nftables rules are permanent"
   lineinfile:
       path: /etc/sysconfig/nftables.conf
-      state: present
       insertafter: EOF
       line: include "/etc/nftables/inet-{{ rhel9cis_nft_tables_tablename }}"
   when:
