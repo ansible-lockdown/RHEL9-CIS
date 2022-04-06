@@ -32,7 +32,7 @@
 {% if rhel9cis_rule_4_1_3_7 %}
 -a always,exit -F arch=b64 -S creat,open,openat,truncate,ftruncate -F exit=-EACCES -F auid>={{ min_int_uid }} -F auid!=unset -k access
 -a always,exit -F arch=b64 -S creat,open,openat,truncate,ftruncate -F exit=-EPERM -F auid>={{ min_int_uid }} -F auid!=unset -k access
--a always,exit -F arch=b32 -S creat,open,openat,truncate,ftruncate -F exit=-EACCES -F auid>={{ min_int_uid }} -F auid!=-unset -k access
+-a always,exit -F arch=b32 -S creat,open,openat,truncate,ftruncate -F exit=-EACCES -F auid>={{ min_int_uid }} -F auid!=unset -k access
 -a always,exit -F arch=b32 -S creat,open,openat,truncate,ftruncate -F exit=-EPERM -F auid>={{ min_int_uid }} -F auid!=unset -k access
 {% endif %}
 {% if rhel9cis_rule_4_1_3_8 %}
