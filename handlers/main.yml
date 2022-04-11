@@ -115,7 +115,7 @@
       - skip_ansible_lint
 
 - name: grub2cfg
-  shell: "grub2-mkconfig -o {{ grub_cfg.stat.lnk_source }}"
+  shell: "grub2-mkconfig -o /boot/grub2/grub.cfg"
   args:
       warn: false
   ignore_errors: True

@@ -25,7 +25,7 @@
   block:
       - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
         file:
-            path: "{{ grub_cfg.stat.lnk_source }}"
+            path: /boot/grub2/grub.cfg
             owner: root
             group: root
             mode: 0600
@@ -47,8 +47,6 @@
             - item.mount == "/boot/efi"
   when:
       - rhel9cis_rule_1_4_2
-      - grub_cfg.stat.exists
-      - grub_cfg.stat.islnk
   tags:
       - level1-server
       - level1-workstation
