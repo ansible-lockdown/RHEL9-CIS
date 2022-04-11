@@ -1,5 +1,16 @@
 # Changes to rhel9CIS
 
+## 0.2
+
+- not all controls work with rhel8 releases any longer
+  - selinux disabled 1.6.1.4
+  - logrotate - 4.3.x
+- updated to rhel8cis v2.0 benchamrk requirements
+- removed iptables firewall controls (not valid on rhel9)
+- added more to logrotate 4.3.x - sure to logrotate now a seperate package
+- grub path now standard to /boot/grub2/grub.cfg
+- 1.6.1.4 from rh8 removed as selinux.cfg doesnt disable selinux any longer
+
 ## 0.1
 
 - change to include statements
