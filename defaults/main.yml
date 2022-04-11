@@ -125,7 +125,6 @@ rhel9cis_rule_1_6_1_4: true
 rhel9cis_rule_1_6_1_5: true
 rhel9cis_rule_1_6_1_6: true
 rhel9cis_rule_1_6_1_7: true
-rhel9cis_rule_1_6_1_8: true
 rhel9cis_rule_1_7_1: true
 rhel9cis_rule_1_7_2: true
 rhel9cis_rule_1_7_3: true
@@ -254,7 +253,9 @@ rhel9cis_rule_4_2_2_5: true
 rhel9cis_rule_4_2_2_6: true
 rhel9cis_rule_4_2_2_7: true
 rhel9cis_rule_4_2_3: true
-rhel9cis_rule_4_3: true
+rhel9cis_rule_4_3_1: true
+rhel9cis_rule_4_3_2: true
+rhel9cis_rule_4_3_3: true
 
 # Section 5 rules
 rhel9cis_rule_5_1_1: true
