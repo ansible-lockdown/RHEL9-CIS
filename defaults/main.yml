@@ -376,9 +376,9 @@ rhel9cis_bootloader_password: random
 rhel9cis_set_boot_pass: false
 
 
-# 1.10/1.11 Set crypto policy (LEGACY, DEFAULT, FUTURE, FIPS)
-# Control 1.10 sates not ot use LEGACY and control 1.11 says to use FUTURE or FIPS.
-rhel9cis_crypto_policy: "FUTURE"
+# 1.10 Set crypto policy DEFAULT
+# Control 1.10 states not to use LEGACY
+rhel9cis_crypto_policy: "DEFAULT"
 
 # System network parameters (host only OR host and router)
 rhel9cis_is_router: false
