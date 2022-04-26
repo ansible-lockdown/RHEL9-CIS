@@ -40,6 +40,7 @@ net.ipv4.icmp_ignore_bogus_error_responses = 1
 {% endif %}
 {% if rhel9cis_rule_3_3_7 %}
 # CIS 3.3.7
+net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
 {% endif %}
 {% if rhel9cis_rule_3_3_8 %}
