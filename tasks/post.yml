@@ -10,7 +10,7 @@
   package_facts:
       manager: auto
   tags:
-  - always
+      - always
 
 - name: trigger update sysctl
   shell: /bin/true
@@ -20,19 +20,20 @@
   check_mode: false
   notify: update sysctl
   when:
-      - rhel9cis_rule_1_6_1 or
-        rhel9cis_rule_1_6_2 or
+      - rhel9cis_rule_3_1_1 or
         rhel9cis_rule_3_1_2 or
-        rhel9cis_rule_3_1_2 or
+        rhel9cis_rule_3_1_3 or
         rhel9cis_rule_3_2_1 or
         rhel9cis_rule_3_2_2 or
-        rhel9cis_rule_3_2_3 or
-        rhel9cis_rule_3_2_4 or
-        rhel9cis_rule_3_2_5 or
-        rhel9cis_rule_3_2_6 or
-        rhel9cis_rule_3_2_7 or
-        rhel9cis_rule_3_2_8 or
-        rhel9cis_rule_3_2_9
+        rhel9cis_rule_3_3_1 or
+        rhel9cis_rule_3_3_2 or
+        rhel9cis_rule_3_3_3 or
+        rhel9cis_rule_3_3_4 or
+        rhel9cis_rule_3_3_5 or
+        rhel9cis_rule_3_3_6 or
+        rhel9cis_rule_3_3_7 or
+        rhel9cis_rule_3_3_8 or
+        rhel9cis_rule_3_3_9
   tags:
       - sysctl
 
@@ -66,7 +67,30 @@
 - name: flush handlers
   meta: flush_handlers
 
-- name: Reboot host
-  reboot:
-  when:
-  - not skip_reboot
+- name: POST | reboot system if changes require it and not skipped
+  block:
+      - name: POST | Reboot system if changes require it and not skipped
+        reboot:
+        when:
+            - change_requires_reboot
+            - not skip_reboot
+
+      - name: POST | Warning a reboot required but skip option set
+        debug:
+            msg: "Warning!! changes have been made that require a reboot to be implemented but skip reboot was set - Can affect compliance check results"
+        changed_when: true
+        when:
+            - change_requires_reboot
+            - skip_reboot
+  tags:
+      - grub
+      - level1-server
+      - level1-workstation
+      - level2-server
+      - level2-workstation
+      - rhel9cis_section1
+      - rhel9cis_section2
+      - rhel9cis_section3
+      - rhel9cis_section4
+      - rhel9cis_section5
+      - rhel9cis_section6

@@ -6,8 +6,6 @@
 
 ## controls
 
-# Authconfig
-rhel9cis_use_authconfig: false
 
 # Firewall
 rhel9cis_firewall: None
@@ -43,7 +41,7 @@ rhel9cis_rule_5_1_8: false
 
 # crypto
 rhel9cis_rule_1_10: false
-rhel9cis_rule_1_11: false
+
 
 # grub
 rhel9cis_rule_1_5_1: false
@@ -56,7 +54,7 @@ rhel9cis_rule_1_1_2: false
 rhel9cis_rule_1_1_3: false
 rhel9cis_rule_1_1_4: false
 rhel9cis_rule_1_1_5: false
-#/var
+# /var
 rhel9cis_rule_1_1_6: false
 # /var/tmp
 rhel9cis_rule_1_1_7: false
@@ -89,7 +87,7 @@ rhel9cis_rule_4_2_2_2: false
 rhel9cis_rule_4_2_2_3: false
 
 # systemd
-rhel9cis_rule_1_6_1: false
+
 
 # Users/passwords/accounts
 rhel9cis_rule_5_5_2: false

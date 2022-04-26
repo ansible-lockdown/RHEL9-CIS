@@ -1,13 +1,42 @@
 ---
 
-- name: "4.3 | L1 | PATCH | Ensure logrotate is configured"
+- name: "4.3.1 | PATCH | Ensure logrotate is installed"
+  package:
+    name: rsyslog-logrotate
+    state: present
+  when:
+      - rhel9cis_rule_4_3_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - manual
+      - patch
+      - logrotate
+      - rule_4.3.1
+
+- name: "4.3.2 | PATCH | Ensure logrotate is running and enabled"
+  systemd:
+    name: logrotate
+    state: started
+    enabled: true
+  when:
+      - rhel9cis_rule_4_3_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - manual
+      - patch
+      - logrotate
+      - rule_4.3.2
+
+- name: "4.3.3 | PATCH | Ensure logrotate is configured"
   block:
-      - name: "4.3 | L1 | AUDIT | Ensure logrotate is configured | Get logrotate settings"
+      - name: "4.3.3 | AUDIT | Ensure logrotate is configured | Get logrotate settings"
         find:
             paths: /etc/logrotate.d/
         register: log_rotates
 
-      - name: "4.3 | L1 | PATCH | Ensure logrotate is configured"
+      - name: "4.3.3 | PATCH | Ensure logrotate is configured"
         replace:
             path: "{{ item.path }}"
             regexp: '^(\s*)(daily|weekly|monthly|yearly)$'
@@ -15,11 +44,14 @@
         with_items:
             - "{{ log_rotates.files }}"
             - { path: "/etc/logrotate.conf" }
+        loop_control:
+            label: "{{ item.path }}"
   when:
-      - rhel9cis_rule_4_3
-      - "'logrotate' in ansible_facts.packages"
+      - rhel9cis_rule_4_3_3
   tags:
       - level1-server
       - level1-workstation
+      - manual
       - patch
-      - rule_4.3
+      - logrotate
+      - rule_4.3.3

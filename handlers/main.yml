@@ -22,24 +22,29 @@
 
 - name: update sysctl
   template:
-      src: etc/99-sysctl.conf.j2
-      dest: /etc/sysctl.d/99-sysctl.conf
+      src: "etc/sysctl.d/{{ item }}.j2"
+      dest: "/etc/sysctl.d/{{ item }}"
       owner: root
       group: root
       mode: 0600
   notify: reload sysctl
-  when: 
+  with_items:
+      - 60-kernel_sysctl.conf
+      - 60-disable_ipv6.conf
+      - 60-netipv4_sysctl.conf
+      - 60-netipv6_sysctl.conf
+  when:
       - ansible_virtualization_type != "docker"
       - "'procps-ng' in ansible_facts.packages"
 
 - name: reload sysctl
   sysctl:
-    name: net.ipv4.route.flush
-    value: '1'
-    state: present
-    reload: true
-    ignoreerrors: true
-  when: 
+      name: net.ipv4.route.flush
+      value: '1'
+      state: present
+      reload: true
+      ignoreerrors: true
+  when:
       - ansible_virtualization_type != "docker"
       - "'systemd' in ansible_facts.packages"
 
@@ -70,12 +75,6 @@
   become: true
   service:
       name: firewalld
-      state: restarted
-
-- name: restart xinetd
-  become: true
-  service:
-      name: xinetd
       state: restarted
 
 - name: restart sshd
@@ -112,13 +111,11 @@
   failed_when: false
   args:
       warn: false
-  when:
-      - not rhel9cis_skip_for_travis
   tags:
       - skip_ansible_lint
 
 - name: grub2cfg
-  shell: "grub2-mkconfig -o {{ grub_cfg.stat.lnk_source }}"
+  shell: "grub2-mkconfig -o /boot/grub2/grub.cfg"
   args:
       warn: false
   ignore_errors: True
@@ -131,12 +128,20 @@
       name: rsyslog
       state: restarted
 
-- name: restart syslog-ng
-  become: true
+- name: restart journald
   service:
-      name: syslog-ng
+      name: systemd-journald
+      state: restarted
+
+- name: restart systemd_journal_upload
+  service:
+      name: systemd-journal-upload
       state: restarted
 
 - name: systemd_daemon_reload
   systemd:
       daemon-reload: true
+
+- name: change_requires_reboot
+  set_fact:
+      change_requires_reboot: true
