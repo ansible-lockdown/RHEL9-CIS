@@ -90,13 +90,13 @@
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/bashrc"
         replace:
             path: /etc/bashrc
-            regexp: '^(\s+UMASK|UMASK)\s0[0-2][0-6]'
+            regexp: '^(?i)(\s+UMASK|UMASK)\s0[0-2][0-6]'
             replace: 'UMASK 027'
 
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/profile"
         replace:
             path: /etc/profile
-            regexp: '^(\s+UMASK|UMASK)\s0[0-2][0-6]'
+            regexp: '^(?i)(\s+UMASK|UMASK)\s0[0-2][0-6]'
             replace: 'UMASK 027'
   when:
       - rhel9cis_rule_5_6_5
