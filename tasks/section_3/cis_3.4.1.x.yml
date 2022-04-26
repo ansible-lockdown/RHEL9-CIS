@@ -31,7 +31,7 @@
         package:
             name: iptables-services
             state: absent
-        when: 
+        when:
   when:
       - rhel9cis_rule_3_4_1_2
       - "'iptables-services' in ansible_facts.packages"

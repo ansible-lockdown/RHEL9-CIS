@@ -2,8 +2,8 @@
 
 - name: "4.3.1 | PATCH | Ensure logrotate is installed"
   package:
-    name: rsyslog-logrotate
-    state: present
+      name: rsyslog-logrotate
+      state: present
   when:
       - rhel9cis_rule_4_3_1
   tags:
@@ -16,9 +16,9 @@
 
 - name: "4.3.2 | PATCH | Ensure logrotate is running and enabled"
   systemd:
-    name: logrotate
-    state: started
-    enabled: true
+      name: logrotate
+      state: started
+      enabled: true
   when:
       - rhel9cis_rule_4_3_2
   tags:

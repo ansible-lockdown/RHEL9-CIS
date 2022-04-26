@@ -55,7 +55,7 @@
   when:
       - rhel9cis_set_boot_pass
       - rhel9cis_rule_1_4_1
-  tags: 
+  tags:
       - always
 
 - name: "check sugroup exists if used"
