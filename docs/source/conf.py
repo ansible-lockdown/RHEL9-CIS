@@ -89,15 +89,18 @@ role_name = BENCHMARK_NAME
 target_name = BENCHMARK_NAME
 title = 'Ansible-Lockdown' + BENCHMARK_NAME +  'Documentation:'
 
-rst_prolog = """
-.. |benchmark_name| replace:: +BENCHMARK_TYPE
-.. |benchmark_os| replace:: +BENCHMARK_OS
-.. |benchmark_os_short| replace:: +BENCHMARK_OS_SHORT
-.. |benchmark_version| replace:: +BENCHMARK_VERSION
-.. |benchmark_release_date| replace:: +BENCHMARK_REL_DATE
-.. |lockdown_url| replace:: +LOCKDOWN_URL
-.. |tested_oss| replace:: +TESTED_OS
-"""
+# Added to variables.rst
+
+.. include:: variables.rst
+#rst_prolog = """
+#.. |benchmark_name| replace:: +BENCHMARK_TYPE
+#.. |benchmark_os| replace:: +BENCHMARK_OS
+#.. |benchmark_os_short| replace:: +BENCHMARK_OS_SHORT
+#.. |benchmark_version| replace:: +BENCHMARK_VERSION
+#.. |benchmark_release_date| replace:: +BENCHMARK_REL_DATE
+#.. |lockdown_url| replace:: +LOCKDOWN_URL
+#.. |tested_oss| replace:: +TESTED_OS
+#"""
 
 # The version info for the project you're documenting, acts as replacement for
 # |mindpointversion| and |release|, also used in various other places throughout the

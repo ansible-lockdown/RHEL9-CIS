@@ -1,0 +1,9 @@
+rst_prolog = """
+.. |benchmark_name| replace:: CIS
+.. |benchmark_os| replace:: RedHat Enterprise Linux 9
+.. |benchmark_os_short| replace:: RHEL9
+.. |benchmark_version| replace:: V0.5 beta
+.. |benchmark_release_date| replace:: TBC
+.. |lockdown_url| replace:: https://github.com/ansible-lockdown/|benchmark_os_short|-|benchmark_name|
+.. |tested_oss| replace:: 
+"""
