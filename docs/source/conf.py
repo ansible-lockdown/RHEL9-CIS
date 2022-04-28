@@ -91,7 +91,7 @@ title = 'Ansible-Lockdown' + BENCHMARK_NAME +  'Documentation:'
 
 # Added to variables.rst
 
-.. include:: variables.rst
+rst_prolog ="\n.. include:: .variables.rst\n"
 #rst_prolog = """
 #.. |benchmark_name| replace:: +BENCHMARK_TYPE
 #.. |benchmark_os| replace:: +BENCHMARK_OS
