@@ -82,11 +82,11 @@ master_doc = 'index'
 author = 'MindPoint Group'
 category = 'Security'
 copyright = '2022, MindPoint Group'
-description = BENCHMARK_TYPE + " " + compliance for + " " + BENCHMARK_OS_SHORT + " " + systems'
-project = 'Ansible-lockdown BENCHMARK_OS_SHORT + " - " + BENCHMARK
-role_name = '{BENCHMARK_OS_SHORT}-{BENCHMARK_TYPE}'
-target_name = BENCHMARK_OS_SHORT + " - " + {BENCHMARK_TYPE}
-title = 'Ansible-Lockdown {BENCHMARK_OS_SHORT}-{BENCHMARK_TYPE}  Documentation:'
+description = BENCHMARK_TYPE + " " + compliance for + " " + BENCHMARK_OS_SHORT + " " + systems
+project = Ansible-lockdown BENCHMARK_OS_SHORT + " - " + BENCHMARK
+role_name = BENCHMARK_OS_SHORT+"-"+BENCHMARK_TYPE
+target_name = BENCHMARK_OS_SHORT+"-"+{BENCHMARK_TYPE}
+title = Ansible-Lockdown + BENCHMARK_OS_SHORT+"-"+BENCHMARK_TYPE  Documentation:
 
 rst_prolog = """
 .. |benchmark_name| replace:: {BENCHMARK_TYPE}
