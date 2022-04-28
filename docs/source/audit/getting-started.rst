@@ -13,9 +13,12 @@ standalone role or it can be used along with other Ansible roles and playbooks.
 Requirements
 ------------
 This documentation assumes that the reader has completed the steps within the
-`Ansible installation guide <http://docs.ansible.com/ansible/intro_installation.html>`_.
+
+* `Ansible installation guide <http://docs.ansible.com/ansible/intro_installation.html>`_.
+
 and has a good understanding of using ansible
-`Ansible User Guide <https://docs.ansible.com/ansible/latest/user_guide/index.html>`_.
+
+* `Ansible User Guide <https://docs.ansible.com/ansible/latest/user_guide/index.html>`_.
 
 
 Installation
@@ -31,6 +34,7 @@ The easiest installation method is to use the ``ansible-galaxy`` command that
 is provided with your Ansible installation:
 
 .. code-block:: console
+   
 
    ansible-galaxy install git+|lockdown_url|
 
