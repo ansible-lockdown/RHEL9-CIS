@@ -5,6 +5,7 @@
 BENCHMARK_TYPE = "CIS"
 BENCHMARK_OS = 'RedHat Enterprise Linux 9'
 BENCHMARK_OS_SHORT = "RHEL9"
+BENCHMARK_NAME = BENCHMARK_OS_SHORT+'-'+BENCHMARK_TYPE
 BENCHMARK_VERSION = 'V0.5 beta'
 BENCHMARK_REL_DATE = 'TBC'
 LOCKDOWN_URL = 'https://github.com/ansible-lockdown/{BENCHMARK_OS_SHORT}-{BENCHMARK_TYPE}'
@@ -82,11 +83,11 @@ master_doc = 'index'
 author = 'MindPoint Group'
 category = 'Security'
 copyright = '2022, MindPoint Group'
-description = BENCHMARK_TYPE + " " + compliance for + " " + BENCHMARK_OS_SHORT + " " + systems
-project = Ansible-lockdown BENCHMARK_OS_SHORT + " - " + BENCHMARK
-role_name = BENCHMARK_OS_SHORT+"-"+BENCHMARK_TYPE
-target_name = BENCHMARK_OS_SHORT+"-"+{BENCHMARK_TYPE}
-title = Ansible-Lockdown + BENCHMARK_OS_SHORT+"-"+BENCHMARK_TYPE  Documentation:
+description = BENCHMARK_TYPE + " " + 'compliance for' + " " + BENCHMARK_OS_SHORT + " " + systems
+project = Ansible-lockdown + BENCHMARK_NAME
+role_name = BENCHMARK_NAME
+target_name = BENCHMARK_NAME
+title = Ansible-Lockdown + BENCHMARK_NAME +  Documentation:
 
 rst_prolog = """
 .. |benchmark_name| replace:: {BENCHMARK_TYPE}
