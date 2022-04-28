@@ -3,11 +3,11 @@
 # Set Variables
 # Used to try and allow multiple benchmark versions to use the same layout
 BENCHMARK_TYPE = "CIS"
-BENCHMARK_OS = "RedHat Enterprise Linux 9"
+BENCHMARK_OS = 'RedHat Enterprise Linux 9'
 BENCHMARK_OS_SHORT = "RHEL9"
-BENCHMARK_VERSION = "V0.5 beta"
-BENCHMARK_REL_DATE = "TBC"
-LOCKDOWN_URL = "https://github.com/ansible-lockdown/{BENCHMARK_OS_SHORT}-{BENCHMARK_TYPE}"
+BENCHMARK_VERSION = 'V0.5 beta'
+BENCHMARK_REL_DATE = 'TBC'
+LOCKDOWN_URL = 'https://github.com/ansible-lockdown/{BENCHMARK_OS_SHORT}-{BENCHMARK_TYPE}'
 TESTED_OS = '''\
 * RHEL9
 * ROCKY9
@@ -82,10 +82,10 @@ master_doc = 'index'
 author = 'MindPoint Group'
 category = 'Security'
 copyright = '2022, MindPoint Group'
-description = '{BENCHMARK_TYPE} compliance for {BENCHMARK_OS_SHORT} systems'
-project = 'Ansible-lockdown {BENCHMARK_OS_SHORT}-{BENCHMARK}'
+description = BENCHMARK_TYPE + " " compliance for + " " + BENCHMARK_OS_SHORT + " " + systems'
+project = 'Ansible-lockdown BENCHMARK_OS_SHORT + " - " + BENCHMARK
 role_name = '{BENCHMARK_OS_SHORT}-{BENCHMARK_TYPE}'
-target_name = '{BENCHMARK_OS_SHORT}-{BENCHMARK_TYPE}'
+target_name = BENCHMARK_OS_SHORT + " - " + {BENCHMARK_TYPE}
 title = 'Ansible-Lockdown {BENCHMARK_OS_SHORT}-{BENCHMARK_TYPE}  Documentation:'
 
 rst_prolog = """
