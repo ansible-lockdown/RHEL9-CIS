@@ -83,11 +83,11 @@ master_doc = 'index'
 author = 'MindPoint Group'
 category = 'Security'
 copyright = '2022, MindPoint Group'
-description = BENCHMARK_TYPE + " " + 'compliance for' + " " + BENCHMARK_OS_SHORT + " " + systems
-project = Ansible-lockdown + BENCHMARK_NAME
+description = BENCHMARK_TYPE + " " + 'compliance for' + " " + BENCHMARK_OS_SHORT + " " + 'systems'
+project = 'Ansible-lockdown' + BENCHMARK_NAME
 role_name = BENCHMARK_NAME
 target_name = BENCHMARK_NAME
-title = Ansible-Lockdown + BENCHMARK_NAME +  'Documentation:'
+title = 'Ansible-Lockdown' + BENCHMARK_NAME +  'Documentation:'
 
 rst_prolog = """
 .. |benchmark_name| replace:: {BENCHMARK_TYPE}
