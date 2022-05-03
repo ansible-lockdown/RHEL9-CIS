@@ -622,6 +622,12 @@ rhel9cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | de
 # 6.2.9
 rhel9cis_dotperm_ansiblemanaged: true
 #### Goss Configuration Settings ####
+# Set correct env for the run_audit.sh script from https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
+audit_run_script_environment:
+    AUDIT_BIN: "{{ audit_bin }}"
+    AUDIT_FILE: 'goss.yml'
+    AUDIT_CONTENT_LOCATION: "{{ audit_out_dir }}"
+
 
 ### Goss binary settings ###
 goss_version:
