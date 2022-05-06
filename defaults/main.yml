@@ -582,6 +582,8 @@ rhel9cis_pam_password:
     minclass: 4
 
 rhel9cis_pam_faillock:
+    unlock_time: 900
+    deny: 5
     remember: 5
 
 # UID settings for interactive users
