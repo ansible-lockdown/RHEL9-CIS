@@ -20,3 +20,11 @@
       group: root
   when:
       - get_goss_file == 'copy'
+
+- name: install git if not present
+  package: 
+      name: git
+      state: present
+  register: git_installed
+  when:
+      - '"git" not in ansible_facts.packages'
