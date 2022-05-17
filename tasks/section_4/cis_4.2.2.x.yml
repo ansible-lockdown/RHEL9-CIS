@@ -83,7 +83,7 @@
       - name: "4.2.2.2 | AUDIT | Ensure journald service is enabled | Alert on bad status"
         debug:
             msg:
-                - "ALERT! The status of systemd-journald should be static and it is not. Please investigate"
+                - "Warning! The status of systemd-journald should be static and it is not. Please investigate"
         when: "'static' not in rhel9cis_4_2_2_2_status.stdout"
   when:
       - rhel9cis_rule_4_2_2_2
@@ -190,7 +190,7 @@
       - name: "4.2.2.7 | AUDIT | Ensure journald default file permissions configured | Display file settings"
         debug:
             msg:
-                - "Alert! Below are the current default settings for journald, please confirm they align with your site policies"
+                - "Warning! Below are the current default settings for journald, please confirm they align with your site policies"
                 # - "{{ rhel9cis_4_2_2_7_override_settings.stdout_lines }}"
                 - "{{ (rhel9cis_4_2_2_7_override_status.matched >= 1) | ternary(rhel9cis_4_2_2_7_override_settings.stdout_lines, rhel9cis_4_2_2_7_notoverride_settings.stdout_lines) }}"
   when:

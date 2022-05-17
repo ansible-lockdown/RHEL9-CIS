@@ -32,32 +32,7 @@
       - patch
       - rule_5.5.1
 
-- name: "5.5.2 | PATCH | Ensure system accounts are secured | pre RHEL8.2"
-  block:
-      - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | pre RHEL8.2 | Add deny count and unlock time for preauth"
-        lineinfile:
-            path: /etc/pam.d/{{ item }}
-            regexp: '^auth\s*required\s*pam_faillock.so preauth'
-            line: "auth        required                                     pam_faillock.so preauth silent deny={{ rhel9cis_pam_faillock.attempts }}{{ (rhel9cis_pam_faillock.fail_for_root) | ternary(' even_deny_root ',' ') }}unlock_time={{ rhel9cis_pam_faillock.unlock_time }}"
-            insertafter: '^#?auth ?'
-        with_items:
-            - "system-auth"
-            - "password-auth"
-
-      - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | pre RHEL8.2 | Add deny count and unlock times for authfail"
-        lineinfile:
-            path: /etc/pam.d/{{ item }}
-            regexp: '^auth\s*required\s*pam_faillock.so authfail'
-            line: "auth        required                                     pam_faillock.so authfail deny={{ rhel9cis_pam_faillock.attempts }}{{ (rhel9cis_pam_faillock.fail_for_root) | ternary(' even_deny_root ',' ') }}unlock_time={{ rhel9cis_pam_faillock.unlock_time }}"
-            insertafter: '^#?auth ?'
-        with_items:
-            - "system-auth"
-            - "password-auth"
-  when:
-      - ansible_distribution_version <= "8.1"
-      - rhel9cis_rule_5_5_2
-
-- name: "5.5.2 | PATCH | Ensure system accounts are secured | RHEL8.2+ "
+- name: "5.5.2 | PATCH | Ensure system accounts are secured"
   lineinfile:
       path: /etc/security/faillock.conf
       regexp: "{{ item.regexp }}"
@@ -66,7 +41,6 @@
       - { regexp: '^\s*deny\s*=\s*[1-5]\b', line: 'deny = 5' }
       - { regexp: '^\s*unlock_time\s*=\s*(0|9[0-9][0-9]|[1-9][0-9][0-9][0-9]+)\b', line: 'unlock_time = 900' }
   when:
-      - ansible_distribution_version >= "8.2"
       - rhel9cis_rule_5_5_2
 
 - name: "5.5.3 | PATCH | Ensure password reuse is limited"

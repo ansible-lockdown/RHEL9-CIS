@@ -2,7 +2,7 @@
 
 - name: "1.1.2.1 | PATCH | Ensure /tmp is a separate partition"
   debug:
-      msg: "WARNING!! /tmp is not mounted on a separate partition"
+      msg: "Warning! /tmp is not mounted on a separate partition"
   when:
       - rhel9cis_rule_1_1_2_1
       - ansible_mounts | selectattr('mount', 'match', '^/tmp$') | list | length == 0

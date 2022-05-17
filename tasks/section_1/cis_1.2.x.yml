@@ -74,7 +74,7 @@
       - name: "1.2.4 | AUDIT | Ensure package manager repositories are configured | Display repo list"
         debug:
             msg:
-                - "Alert! Below are the configured repos. Please review and make sure all align with site policy"
+                - "Warning! Below are the configured repos. Please review and make sure all align with site policy"
                 - "{{ dnf_configured.stdout_lines }}"
   when:
       - rhel9cis_rule_1_2_4

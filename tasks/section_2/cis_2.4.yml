@@ -12,7 +12,7 @@
       - name: "2.4 | AUDIT | Ensure nonessential services are removed or masked | Display list of services"
         debug:
             msg:
-                - "Alert! Below are the list of services, both active and inactive"
+                - "Warning! Below are the list of services, both active and inactive"
                 - "Please review to make sure all are essential"
                 - "{{ rhel9cis_2_4_services.stdout_lines }}"
   when:
