@@ -189,7 +189,7 @@
                 - "The following paths have colon end: {{ rhel9cis_6_2_7_path_colon_end.stdout_lines }}"
                 - "The following paths have a dot in the path: {{ rhel9cis_6_2_7_dot_in_path.stdout_lines }}"
 
-      - name: "6.2.7 | PATCH | Ensure root PATH Integrity (Scored) | Determine rights and owner"
+      - name: "6.2.7 | PATCH | Ensure root PATH Integrity | Determine rights and owner"
         file: >
           path='{{ item }}'
           follow=yes
@@ -230,7 +230,7 @@
         stat:
             path: "{{ item }}"
         register: rhel_08_6_2_9_audit
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '!=', 65534) | map(attribute='dir') | list }}"
+        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<', max_int_uid | int ) | map(attribute='dir') | list }}"
 
       - name: "6.2.9 | AUDIT | Ensure all users' home directories exist"
         command: find -H {{ item.0 | quote }} -not -type l -perm /027
@@ -315,7 +315,7 @@
       - name: "6.2.11 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
         stat:
             path: "{{ item }}"
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '!=', 65534) | map(attribute='dir') | list }}"
+        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<', max_int_uid | int ) | map(attribute='dir') | list }}"
         register: rhel_08_6_2_11_audit
 
       - name: "6.2.11 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
