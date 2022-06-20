@@ -12,57 +12,24 @@
   tags:
       - always
 
-- name: trigger update sysctl
-  shell: /bin/true
-  args:
-      warn: false
-  changed_when: true
-  check_mode: false
-  notify: update sysctl
+- name: update sysctl
+  template:
+      src: "etc/sysctl.d/{{ item }}.j2"
+      dest: "/etc/sysctl.d/{{ item }}"
+      owner: root
+      group: root
+      mode: 0600
+  register: sysctl_updated
+  notify: reload sysctl
+  with_items:
+      - 60-kernel_sysctl.conf
+      - 60-disable_ipv6.conf
+      - 60-netipv4_sysctl.conf
+      - 60-netipv6_sysctl.conf
   when:
-      - rhel9cis_rule_3_1_1 or
-        rhel9cis_rule_3_1_2 or
-        rhel9cis_rule_3_1_3 or
-        rhel9cis_rule_3_2_1 or
-        rhel9cis_rule_3_2_2 or
-        rhel9cis_rule_3_3_1 or
-        rhel9cis_rule_3_3_2 or
-        rhel9cis_rule_3_3_3 or
-        rhel9cis_rule_3_3_4 or
-        rhel9cis_rule_3_3_5 or
-        rhel9cis_rule_3_3_6 or
-        rhel9cis_rule_3_3_7 or
-        rhel9cis_rule_3_3_8 or
-        rhel9cis_rule_3_3_9
-  tags:
-      - sysctl
-
-- name: trigger update auditd
-  shell: /bin/true
-  args:
-      warn: false
-  notify: update auditd
-  changed_when: true
-  check_mode: false
-  when:
-      - rhel9cis_rule_4_1_1_1 or
-        rhel9cis_rule_4_1_1_2 or
-        rhel9cis_rule_4_1_1_3 or
-        rhel9cis_rule_4_1_2_1 or
-        rhel9cis_rule_4_1_2_2 or
-        rhel9cis_rule_4_1_2_3 or
-        rhel9cis_rule_4_1_3 or
-        rhel9cis_rule_4_1_4 or
-        rhel9cis_rule_4_1_5 or
-        rhel9cis_rule_4_1_6 or
-        rhel9cis_rule_4_1_7 or
-        rhel9cis_rule_4_1_8 or
-        rhel9cis_rule_4_1_9 or
-        rhel9cis_rule_4_1_10 or
-        rhel9cis_rule_4_1_11 or
-        rhel9cis_rule_4_1_12
-  tags:
-      - auditd
+      - sysctl_update
+      - not system_is_container
+      - "'procps-ng' in ansible_facts.packages"
 
 - name: flush handlers
   meta: flush_handlers
