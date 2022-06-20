@@ -1,5 +1,18 @@
 # Changes to rhel9CIS
 
+## 0.3
+
+- update to auditd template
+  - uses facts and template new variable
+    - update_audit_template (default false)
+- sysctl template updates and idempotency improvements
+- container discovery usage improvements
+- 3.4.1.5 discovery improvement
+- 5.6.1.4 discovery improvement
+- logrotate process logrotate.timer
+- tidy up become:
+- logic improvements
+
 ## 0.2
 
 - not all controls work with rhel8 releases any longer
