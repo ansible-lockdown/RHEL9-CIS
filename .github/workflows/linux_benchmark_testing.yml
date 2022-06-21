@@ -83,12 +83,11 @@ jobs:
 
 # Ensure system is up for connections before continuing
 
-      - name: Check system is up and runnimn
+      - name: Check system is up and running
         working-directory: .github/workflows
         id: test_os
         run: >-
           ansible all -i hosts.yml -m wait_for -a "host='{{ (ansible_ssh_host|default(ansible_host) }}' port=22 delay=10"
-
 
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
