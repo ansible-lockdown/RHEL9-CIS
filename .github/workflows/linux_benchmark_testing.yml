@@ -81,20 +81,14 @@ jobs:
         working-directory: .github/workflows
         run: cat hosts.yml
 
-# Centos 7 images take a while to come up insert sleep or playbook fails
+# Ensure system is up for connections before continuing
 
-      - name: Check if test os is rhel7 or rhel9
+      - name: Check system is up and runnimn
         working-directory: .github/workflows
         id: test_os
         run: >-
-          echo "::set-output name=Pause::$(
-          grep -c "RHEL\(7\|9\)" OS.tfvars
-          )"
+          ansible all -i hosts.yml -m wait_for -a "host='{{ (ansible_ssh_host|default(ansible_host) }}' port=22 delay=10"
 
-      - name: if RHEL(7|9) - Sleep for 60 seconds
-        if: steps.test_os.outputs.Pause >= 1
-        run: sleep 60s
-        shell: bash
 
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
