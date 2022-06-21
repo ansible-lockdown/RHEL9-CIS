@@ -87,7 +87,7 @@ jobs:
         working-directory: .github/workflows
         id: test_os
         run: >-
-          ansible all -i hosts.yml -m wait_for -a "host='{{ (ansible_ssh_host|default(ansible_host) }}' port=22 delay=10"
+          ansible all -i hosts.yml -m ping -e retries=20 -e delay=20
 
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
