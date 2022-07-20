@@ -5,6 +5,8 @@
   shell: sysctl --system
   args:
       warn: false
+  when:
+      - sysctl_updated.changed
 
 - name: sysctl flush ipv4 route table
   become: true
