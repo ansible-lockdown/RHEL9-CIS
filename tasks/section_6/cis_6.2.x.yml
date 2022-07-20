@@ -29,12 +29,18 @@
       - name: "6.2.2 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print message that all groups match between passwd and group files"
         debug:
             msg: "Good News! There are no users that have non-existent GUIDs (Groups)"
-        when: rhel9cis_6_2_2_passwd_gid_check.stdout | length == 0
+        when: rhel9cis_6_2_2_passwd_gid_check.stdout is not defined
 
       - name: "6.2.2 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print warning about users with invalid GIDs missing GID entries in /etc/group"
         debug:
-            msg: "Warning! The following users have non-existent GIDs (Groups): {{ rhel9cis_6_2_2_passwd_gid_check.stdout_lines | join (', ') }}"
-        when: rhel9cis_6_2_2_passwd_gid_check.stdout | length > 0
+            msg: "Warning!! The following users have non-existent GIDs (Groups): {{ rhel9cis_6_2_2_passwd_gid_check.stdout_lines | join (', ') }}"
+        when: rhel9cis_6_2_2_passwd_gid_check.stdout is defined
+
+      - name: "6.2.2 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | warning count"
+        set_fact:
+            control_number: "{{ control_number }} + [ 'rule_6.2.2' ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+        when: rhel9cis_6_2_2_passwd_gid_check.stdout is defined
   when:
       - rhel9cis_rule_6_2_2
   tags:
@@ -57,12 +63,18 @@
       - name: "6.2.3 | AUDIT | Ensure no duplicate UIDs exist | Print message that no duplicate UIDs exist"
         debug:
             msg: "Good News! There are no duplicate UID's in the system"
-        when: rhel9cis_6_2_3_user_uid_check.stdout | length == 0
+        when: rhel9cis_6_2_3_user_uid_check.stdout is not defined
 
       - name: "6.2.3 | AUDIT| Ensure no duplicate UIDs exist | Print warning about users with duplicate UIDs"
         debug:
-            msg: "Warning! The following users have UIDs that are duplicates: {{ rhel9cis_6_2_3_user_uid_check.stdout_lines }}"
-        when: rhel9cis_6_2_3_user_uid_check.stdout | length > 0
+            msg: "Warning!! The following users have UIDs that are duplicates: {{ rhel9cis_6_2_3_user_uid_check.stdout_lines }}"
+        when: rhel9cis_6_2_3_user_uid_check.stdout is defined
+
+      - name: "6.2.3 | AUDIT| Ensure no duplicate UIDs exist | warning count"
+        set_fact:
+            control_number: "{{ control_number }} + [ 'rule_6.2.3' ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+        when: rhel9cis_6_2_3_user_uid_check.stdout is defined
   when:
       - rhel9cis_rule_6_2_3
   tags:
@@ -85,12 +97,19 @@
       - name: "6.2.4 | AUDIT | Ensure no duplicate GIDs exist | Print message that no duplicate GID's exist"
         debug:
             msg: "Good News! There are no duplicate GIDs in the system"
-        when: rhel9cis_6_2_4_user_user_check.stdout | length == 0
+        when: rhel9cis_6_2_4_user_user_check.stdout is not defined
 
       - name: "6.2.4 | AUDIT | Ensure no duplicate GIDs exist | Print warning about users with duplicate GIDs"
         debug:
-            msg: "Warning! The following groups have duplicate GIDs: {{ rhel9cis_6_2_4_user_user_check.stdout_lines }}"
-        when: rhel9cis_6_2_4_user_user_check.stdout | length > 0
+            msg: "Warning!! The following groups have duplicate GIDs: {{ rhel9cis_6_2_4_user_user_check.stdout_lines }}"
+        when: rhel9cis_6_2_4_user_user_check.stdout is defined
+
+      - name: "6.2.4 | AUDIT | Ensure no duplicate GIDs exist | warning count"
+        set_fact:
+            control_number: "{{ control_number }} + [ 'rule_6.2.4' ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+        when: rhel9cis_6_2_4_user_user_check.stdout is defined
+
   when:
       - rhel9cis_rule_6_2_4
   tags:
@@ -113,12 +132,18 @@
       - name: "6.2.5 | AUDIT | Ensure no duplicate user names exist | Print message that no duplicate user names exist"
         debug:
             msg: "Good News! There are no duplicate user names in the system"
-        when: rhel9cis_6_2_5_user_username_check.stdout | length == 0
+        when: rhel9cis_6_2_5_user_username_check.stdout is not defined
 
       - name: "6.2.5 | AUDIT | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
         debug:
-            msg: "Warning! The following user names are duplicates: {{ rhel9cis_6_2_5_user_username_check.stdout_lines }}"
-        when: rhel9cis_6_2_5_user_username_check.stdout | length > 0
+            msg: "Warning!! The following user names are duplicates: {{ rhel9cis_6_2_5_user_username_check.stdout_lines }}"
+        when: rhel9cis_6_2_5_user_username_check.stdout is defined
+
+      - name: "6.2.5 | AUDIT | Ensure no duplicate user names exist | warning count"
+        set_fact:
+            control_number: "{{ control_number }} + [ 'rule_6.2.5' ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+        when: rhel9cis_6_2_5_user_username_check.stdout is defined
   when:
       - rhel9cis_rule_6_2_5
   tags:
@@ -142,12 +167,18 @@
       - name: "6.2.6 | AUDIT | Ensure no duplicate group names exist | Print message that no duplicate groups exist"
         debug:
             msg: "Good News! There are no duplicate group names in the system"
-        when: rhel9cis_6_2_6_group_group_check.stdout | length == 0
+        when: rhel9cis_6_2_6_group_group_check.stdout is defined
 
       - name: "6.2.6 | AUDIT | Ensure no duplicate group names exist | Print warning about users with duplicate group names"
         debug:
-            msg: "Warning! The following group names are duplicates: {{ rhel9cis_6_2_6_group_group_check.stdout_lines }}"
-        when: rhel9cis_6_2_6_group_group_check.stdout | length > 0
+            msg: "Warning!! The following group names are duplicates: {{ rhel9cis_6_2_6_group_group_check.stdout_lines }}"
+        when: rhel9cis_6_2_6_group_group_check.stdout is not defined
+
+      - name: "6.2.6 | AUDIT | Ensure no duplicate group names exist | warning count"
+        set_fact:
+            control_number: "{{ control_number }} + [ 'rule_6.2.6' ]"
+            warn_count: "{{ warn_count|int + 1 }}"
+        when: rhel9cis_6_2_6_group_group_check.stdout is not defined
   when:
       - rhel9cis_rule_6_2_6
   tags:
@@ -230,7 +261,7 @@
         stat:
             path: "{{ item }}"
         register: rhel_08_6_2_9_audit
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<', max_int_uid | int ) | map(attribute='dir') | list }}"
+        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | map(attribute='dir') | list }}"
 
       - name: "6.2.9 | AUDIT | Ensure all users' home directories exist"
         command: find -H {{ item.0 | quote }} -not -type l -perm /027
@@ -270,7 +301,8 @@
             recursive: yes
             etype: "{{ item.1.etype }}"
             permissions: "{{ item.1.mode }}"
-        when: not system_is_container
+        when: 
+            - not system_is_container
         with_nested:
             - "{{ (ansible_check_mode | ternary(rhel_08_6_2_9_patch_audit, rhel_08_6_2_9_patch)).results |
               rejectattr('skipped', 'defined') | map(attribute='item') | map('first') | list }}"
@@ -299,7 +331,8 @@
   loop_control:
       label: "{{ rhel9cis_passwd_label }}"
   when:
-      - min_int_uid | int <= item.uid
+      - item.uid >= min_int_uid | int
+      - item.id != 'nobody'
       - rhel9cis_rule_6_2_10
   tags:
       - skip_ansible_lint  # settings found on 6_2_7
@@ -315,7 +348,7 @@
       - name: "6.2.11 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
         stat:
             path: "{{ item }}"
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<', max_int_uid | int ) | map(attribute='dir') | list }}"
+        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int) | selectattr('uid', '<=', max_int_uid | int) | map(attribute='dir') | list }}"
         register: rhel_08_6_2_11_audit
 
       - name: "6.2.11 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
@@ -356,7 +389,8 @@
             recursive: yes
             etype: "{{ item.1.etype }}"
             permissions: "{{ item.1.mode }}"
-        when: not system_is_container
+        when: 
+            - not system_is_container
         with_nested:
             - "{{ (ansible_check_mode | ternary(rhel_08_6_2_11_patch_audit, rhel_08_6_2_11_patch)).results |
               rejectattr('skipped', 'defined') | map(attribute='item') | map('first') | list }}"
@@ -427,8 +461,8 @@
 
 - name: "6.2.14 | PATCH | Ensure no users have .forward files"
   file:
+      path: "~{{ item }}/.forward"
       state: absent
-      dest: "~{{ item }}/.forward"
   with_items:
       - "{{ users.stdout_lines }}"
   when:
@@ -444,8 +478,8 @@
 
 - name: "6.2.15 | PATCH | Ensure no users have .netrc files"
   file:
+      path: "~{{ item }}/.netrc"
       state: absent
-      dest: "~{{ item }}/.netrc"
   with_items:
       - "{{ users.stdout_lines }}"
   when:
@@ -461,8 +495,8 @@
 
 - name: "6.2.16 | PATCH | Ensure no users have .rhosts files"
   file:
+      path: "~{{ item }}/.rhosts"
       state: absent
-      dest: "~{{ item }}/.rhosts"
   with_items: "{{ users.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_16
