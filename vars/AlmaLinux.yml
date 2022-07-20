@@ -1,4 +1,6 @@
 ---
 # OS Specific Settings
 
-rpm_gpg_key: RPM-GPG-KEY-AlmaLinux
+rpm_gpg_key: /etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux-9
+rpm_packager: "AlmaLinux Packaging Team <packager@almalinux.org>"
+rpm_key: "d36cb86cb86b3716"
