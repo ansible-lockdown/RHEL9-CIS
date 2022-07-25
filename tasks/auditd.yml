@@ -8,6 +8,17 @@
   register: audit_rules_updated
   notify: restart auditd
 
+
+- name: POST | Set up auditd user logging exceptions
+  template:
+    src: audit/98_auditd_exception.rules.j2
+    dest: /etc/audit/rules.d/98_auditd_exceptions.rules
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart auditd
+  when: allow_auditd_uid_user_exclusions
+
 - name: POST | AUDITD | Discover if auditd immutable - Set reboot required if auditd immutable
   block:
       - name: POST | AUDITD | Discover if auditd immutable - will require reboot if auditd template applied
