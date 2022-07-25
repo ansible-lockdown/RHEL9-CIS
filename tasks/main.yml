@@ -184,6 +184,6 @@
 - name: If Warnings found Output count and control IDs affected
   debug:
     msg: "You have {{ warn_count }} warning(s) that require investigating that are related to the following benchmark ID(s) {{ control_number }}"
-  when: warn_count > 0
+  when: warn_count != 0
   tags:
       - always
