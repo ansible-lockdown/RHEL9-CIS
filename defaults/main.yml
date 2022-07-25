@@ -369,7 +369,6 @@ rhel9cis_rh_sub_password: password
 # RedHat Satellite Subscription items
 rhel9cis_rhnsd_required: false
 
-
 # 1.4.2 Bootloader password
 rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'
 rhel9cis_bootloader_password: random
