@@ -89,6 +89,7 @@ jobs:
         run: >-
           ansible all -i hosts.yml -m wait_for -a "port=22 connect_timeout=10 delay=10 timeout=600 sleep=5" --private-key=.ssh/github_actions.pem
 
+
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
         uses: arillso/action.playbook@master
