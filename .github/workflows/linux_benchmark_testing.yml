@@ -87,7 +87,7 @@ jobs:
         working-directory: .github/workflows
         id: test_os
         run: >-
-          ansible all -i hosts.yml -m wait_for_connection -a "connect_timeout=10 delay=10 timeout=600 sleep=5"
+          ansible all -i hosts.yml -m wait_for -a "port=22 connect_timeout=10 delay=10 timeout=600 sleep=5"
 
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
