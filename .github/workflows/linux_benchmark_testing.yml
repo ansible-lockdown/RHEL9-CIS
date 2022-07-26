@@ -93,7 +93,10 @@ jobs:
         id: test_os
         run: >-
           ansible all -i hosts.yml -m wait_for -a "port=22 delay=10 timeout=600" --private-key=.ssh/github_actions.pem -u ec2-user -vvv
+<<<<<<< HEAD
 
+=======
+>>>>>>> df2d812e6a15a5330198cd77a57fbc2019ea040e
 
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
