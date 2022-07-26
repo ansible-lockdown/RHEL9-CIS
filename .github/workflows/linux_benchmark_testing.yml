@@ -87,7 +87,7 @@ jobs:
         working-directory: .github/workflows
         id: test_os
         run: >-
-          ansible all -i hosts.yml -m wait_for -a "port=22 connect_timeout=10 delay=10 timeout=600 sleep=5" --private-key=.ssh/github_actions.pem
+          ansible all -i hosts.yml -m wait_for -a "port=22 delay=10 timeout=600 " --private-key=.ssh/github_actions.pem -u ec2-user
 
 
 # Run the ansible playbook
