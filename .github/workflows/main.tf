@@ -71,7 +71,7 @@ resource "aws_instance" "testing_vm" {
     type = "ssh"
   }
   provisioner "remote-exec" {
-    inline = [ "echo hello_world"]
+    command = "echo 'hello world'"
   }
 }
 
