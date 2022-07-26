@@ -505,6 +505,9 @@ rhel9cis_max_log_file_size: 10
 ### 4.1.3.x audit template
 update_audit_template: false
 
+## Advanced option found in auditd post
+allow_auditd_uid_user_exclusions: false
+
 ## Preferred method of logging
 ## Whether rsyslog or journald preferred method for local logging
 ## Affects rsyslog cis 4.2.1.3 and journald cis 4.2.2.5

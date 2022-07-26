@@ -1,5 +1,13 @@
 # Changes to rhel9CIS
 
+## 0.4
+
+- RockyLinux now supported
+- workflow updates
+- selinux regexp improvements
+- warning summary now at end of play
+- advanced auditd options to exclude users in POST section
+
 ## 0.3
 
 - update to auditd template
