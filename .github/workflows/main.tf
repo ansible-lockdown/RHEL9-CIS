@@ -59,6 +59,20 @@ resource "aws_instance" "testing_vm" {
   root_block_device {
     delete_on_termination = true
   }
+    # SSH into instance - will ensure server is up before next step in workflows
+  connection {
+    # Host name
+    host = self.public_ip
+    # The default username for our AMI
+    user = var.ami_username
+    # Private key for connection
+    private_key = "${file(var.private_key)}"
+    # Type of connection
+    type = "ssh"
+  }
+  provisioner "remote-exec" {
+    inline = [ "echo hello_world"]
+  }
 }
 
 // generate inventory file
