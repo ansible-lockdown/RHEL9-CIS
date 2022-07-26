@@ -3,6 +3,11 @@ provider "aws" {
   region  = var.aws_region
 }
 
+// Read local file not created via terraform
+data "local_file" "github_actions" {
+  filename = "${path.module}/${var.private_key}"
+}
+
 // Create a security group with access to port 22 and port 80 open to serve HTTP traffic
 
 data "aws_vpc" "default" {
@@ -66,7 +71,7 @@ resource "aws_instance" "testing_vm" {
     # The default username for our AMI
     user = var.ami_username
     # Private key for connection
-    private_key = "${file(var.private_key)}"
+    private_key = data.local_file.github_actions
     # Type of connection
     type = "ssh"
   }
