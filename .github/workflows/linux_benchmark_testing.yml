@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env: 
-      ENABLE_DEBUG: false
+      ENABLE_DEBUG: true
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -67,7 +67,12 @@ jobs:
       - name: Terraform_Validate
         working-directory: .github/workflows
         run: terraform validate
-
+      
+      - name: validate path contents
+        if: env.ENABLE_DEBUG == 'true'
+        working-directory: .github/workflows
+        run: pwd && ls -laR
+        
       - name: Terraform_Apply
         working-directory: .github/workflows
         env:
