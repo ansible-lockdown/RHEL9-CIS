@@ -74,16 +74,6 @@
   args:
       warn: false
 
-- name: update auditd
-  template:
-      src: audit/99_auditd.rules.j2
-      dest: /etc/audit/rules.d/99_auditd.rules
-      owner: root
-      group: root
-      mode: 0600
-  register: auditd_template_update
-  notify: restart auditd
-
 - name: restart auditd
   shell: service auditd restart
   args:
