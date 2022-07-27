@@ -64,7 +64,7 @@ resource "aws_instance" "testing_vm" {
   root_block_device {
     delete_on_termination = true
   }
-    # SSH into instance - will ensure server is up before next step in workflows
+  # SSH into instance - will ensure server is up before next step in workflows
   connection {
     # Host name
     host = self.public_ip
@@ -101,4 +101,3 @@ resource "local_file" "inventory" {
         audit_git_version: devel
     EOF
 }
-
