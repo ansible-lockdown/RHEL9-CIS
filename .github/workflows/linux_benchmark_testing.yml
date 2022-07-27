@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env: 
-      ENABLE_DEBUG: true
+      ENABLE_DEBUG: false
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -58,6 +58,7 @@ jobs:
           chmod 700 .ssh
           echo $PRIVATE_KEY > .ssh/github_actions.pem
           chmod 600 .ssh/github_actions.pem
+          file .ssh/github_actions.pem && cat .ssh/github_actions.pem
 
 ### Build out the server
       - name: Terraform_Init
@@ -67,12 +68,12 @@ jobs:
       - name: Terraform_Validate
         working-directory: .github/workflows
         run: terraform validate
-      
-      - name: validate path contents
+
+      - name: Validate path contents
         if: env.ENABLE_DEBUG == 'true'
         working-directory: .github/workflows
         run: pwd && ls -laR
-        
+
       - name: Terraform_Apply
         working-directory: .github/workflows
         env:
