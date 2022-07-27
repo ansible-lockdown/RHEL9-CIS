@@ -71,7 +71,7 @@ resource "aws_instance" "testing_vm" {
     # The default username for our AMI
     user = var.ami_username
     # Private key for connection
-    private_key = file("${path.module}/.ssh/github_actions.pem")
+    private_key = data.local_file.github_actions.content
     # Type of connection
     type = "ssh"
   }
