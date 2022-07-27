@@ -101,4 +101,3 @@ resource "local_file" "inventory" {
         audit_git_version: devel
     EOF
 }
-
