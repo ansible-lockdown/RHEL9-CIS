@@ -89,11 +89,11 @@ jobs:
 
 # Ensure system is up for connections before continuing
 
-      - name: Check system is up and running
-        working-directory: .github/workflows
-        id: test_os
-        run: >-
-          ansible all -i hosts.yml -m wait_for -a "port=22 delay=10 timeout=600" --private-key=.ssh/github_actions.pem -u ec2-user -vvv
+ #     - name: Check system is up and running
+ #       working-directory: .github/workflows
+ #       id: test_os
+ #       run: >-
+ #         ansible all -i hosts.yml -m wait_for -a "port=22 delay=10 timeout=600" --private-key=.ssh/github_actions.pem -u ec2-user -vvv
 
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
