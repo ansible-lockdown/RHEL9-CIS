@@ -58,7 +58,6 @@ jobs:
           chmod 700 .ssh
           echo $PRIVATE_KEY > .ssh/github_actions.pem
           chmod 600 .ssh/github_actions.pem
-          file .ssh/github_actions.pem && cat .ssh/github_actions.pem
 
 ### Build out the server
       - name: Terraform_Init
