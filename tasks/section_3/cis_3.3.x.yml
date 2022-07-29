@@ -18,7 +18,6 @@
           - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv6"
             debug:
                 msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl.conf"
-        
         when: rhel9cis_ipv6_required
   when:
       - rhel9cis_rule_3_3_1
@@ -82,6 +81,7 @@
         set_fact:
             sysctl_update: true
             flush_ipv4_route: true
+
       - name: "3.3.4 | PATCH | Ensure suspicious packets are logged"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
@@ -100,6 +100,7 @@
         set_fact:
             sysctl_update: true
             flush_ipv4_route: true
+
       - name: 3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
@@ -155,6 +156,7 @@
         set_fact:
             sysctl_update: true
             flush_ipv4_route: true
+
       - name: "3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
