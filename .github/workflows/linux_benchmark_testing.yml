@@ -86,6 +86,16 @@ jobs:
         working-directory: .github/workflows
         run: cat hosts.yml
 
+# Ensure system is up for connections before continuing
+
+      - name: Check system is up and running
+        working-directory: .github/workflows
+        env:
+          PRIVATE_KEY: "${{ secrets.SSH_PRV_KEY }}"
+        id: test_os
+        run: >-
+          ansible all -i hosts.yml -m wait_for -a "port=22 delay=10 timeout=600" --private-key=.ssh/github_actions.pem -u ec2-user -e ansible_ssh_private_key_file='{{ lookup("env", "PRIVATE_KEY") }}'
+
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
         uses: arillso/action.playbook@master
