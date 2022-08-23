@@ -35,6 +35,8 @@
 - added more to logrotate 4.3.x - sure to logrotate now a seperate package
 - grub path now standard to /boot/grub2/grub.cfg
 - 1.6.1.4 from rh8 removed as selinux.cfg doesnt disable selinux any longer
+- workflow update
+- removed doc update
 
 ## 0.1
 
