@@ -93,7 +93,7 @@ jobs:
 
       - name: if RHEL7 - Sleep for 60 seconds
         #if: steps.test_os.outputs.RHEL7 >= 1
-        run: sleep 60s
+        run: sleep 120s
         shell: bash
 
 # Run the ansible playbook
