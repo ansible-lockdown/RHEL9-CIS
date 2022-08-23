@@ -1,6 +1,6 @@
 # Development Only
 
-## RHEL 9 CIS (predicted) - ALPHA - CIS baselines or OS not yet GA
+## RHEL 9 CIS (predicted) - Beta - CIS baselines or OS not yet GA
 
 ## Testing if you have access to the RH developer branches
 
@@ -17,7 +17,7 @@ Based on [CIS RedHat Enterprise Linux 8 Benchmark v2.0.0. - 02-23-2022 ](https:/
 
 ## Join us
 
-On our [Discord Server](https://discord.gg/JFxpSgPFEJ) to ask questions, discuss features, or just chat with other Ansible-Lockdown users
+On our [Discord Server](https://discord.io/ansible-lockdown) to ask questions, discuss features, or just chat with other Ansible-Lockdown users
 
 ## Caution(s)
 
@@ -49,7 +49,9 @@ Refer to [RHEL9-CIS-Audit](https://github.com/ansible-lockdown/RHEL9-CIS-Audit).
 
 ## Requirements
 
-RHEL 9 - Other versions are not supported.
+RHEL 9
+Almalinux 9
+Rocky 9
 
 - Access to download or add the goss binary and content to the system if using auditing (other options are available on how to get the content to the system.)
 
