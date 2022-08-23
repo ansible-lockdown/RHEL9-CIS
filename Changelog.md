@@ -4,7 +4,7 @@
 
 - RockyLinux now supported - release since initial branches
 - gpg check updates
-- workflow updates
+- workflow updates and improvements moved to rocky image
 - selinux regexp improvements
 - warning summary now at end of play
 - advanced auditd options to exclude users in POST section
