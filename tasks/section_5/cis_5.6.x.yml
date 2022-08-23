@@ -32,7 +32,7 @@
             - item.id != "sync"
             - item.id != "root"
             - item.id != "nfsnobody"
-            - min_int_uid | int < item.gid
+            - item.gid < min_int_uid | int
             - item.shell != "      /bin/false"
             - item.shell != "      /usr/sbin/nologin"
         loop_control:
