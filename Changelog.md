@@ -7,6 +7,9 @@
 - selinux regexp improvements
 - warning summary now at end of play
 - advanced auditd options to exclude users in POST section
+- Issues fixed thanks to fgierlinger
+  - [#21](https://github.com/ansible-lockdown/RHEL9-CIS/issues/21)
+  - [#22](https://github.com/ansible-lockdown/RHEL9-CIS/issues/22)
 
 ## 0.3
 
