@@ -117,7 +117,7 @@
       - name: "5.6.1.5 | PATCH | Ensure all users last password change date is in the past | Fix accounts with pw change in the future"
         command: passwd --expire {{ item }}
         when:
-            - rhel9cis_5_6_1_5_user_list | length > 0
+            - rhel9cis_5_6_1_5_user_list.stdout | length > 0
             - rhel9cis_futurepwchgdate_autofix
         with_items:
             - "{{ rhel9cis_5_6_1_5_user_list.stdout_lines }}"
