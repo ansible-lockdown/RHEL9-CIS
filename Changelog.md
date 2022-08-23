@@ -2,7 +2,8 @@
 
 ## 0.4
 
-- RockyLinux now supported
+- RockyLinux now supported - release since initial branches
+- gpg check updates
 - workflow updates
 - selinux regexp improvements
 - warning summary now at end of play
