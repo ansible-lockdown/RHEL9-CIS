@@ -217,7 +217,9 @@
             min_int_uid: "{{ uid_min_id.stdout }}"
             max_int_uid: "{{ uid_max_id.stdout }}"
             min_int_gid: "{{ gid_min_id.stdout }}"
-- debug:
+
+- name: Output of uid findings
+  debug:
       msg: "{{ min_int_uid }} {{ max_int_uid }}"
 
   when:

@@ -22,7 +22,7 @@
       - get_goss_file == 'copy'
 
 - name: install git if not present
-  package: 
+  package:
       name: git
       state: present
   register: git_installed
