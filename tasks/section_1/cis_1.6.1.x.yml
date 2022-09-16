@@ -19,7 +19,7 @@
       regexp: 'selinux=0'
       replace: ''
   register: selinux_grub_patch
-  ignore_errors: yes
+  ignore_errors: true  # noqa ignore-errors
   notify: grub2cfg
   when:
       - rhel9cis_rule_1_6_1_2

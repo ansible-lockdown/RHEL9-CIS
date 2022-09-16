@@ -39,7 +39,7 @@
       - name: "6.2.2 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | warning count"
         set_fact:
             control_number: "{{ control_number }} + [ 'rule_6.2.2' ]"
-            warn_count: "{{ warn_count|int + 1 }}"
+            warn_count: "{{ warn_count | int + 1 }}"
         when: rhel9cis_6_2_2_passwd_gid_check.stdout | length >= 1
   when:
       - rhel9cis_rule_6_2_2
@@ -73,7 +73,7 @@
       - name: "6.2.3 | AUDIT| Ensure no duplicate UIDs exist | warning count"
         set_fact:
             control_number: "{{ control_number }} + [ 'rule_6.2.3' ]"
-            warn_count: "{{ warn_count|int + 1 }}"
+            warn_count: "{{ warn_count | int + 1 }}"
         when: rhel9cis_6_2_3_user_uid_check.stdout | length >= 1
   when:
       - rhel9cis_rule_6_2_3
@@ -107,7 +107,7 @@
       - name: "6.2.4 | AUDIT | Ensure no duplicate GIDs exist | warning count"
         set_fact:
             control_number: "{{ control_number }} + [ 'rule_6.2.4' ]"
-            warn_count: "{{ warn_count|int + 1 }}"
+            warn_count: "{{ warn_count | int + 1 }}"
         when: rhel9cis_6_2_4_user_user_check.stdout | length >= 1
 
   when:
@@ -142,7 +142,7 @@
       - name: "6.2.5 | AUDIT | Ensure no duplicate user names exist | warning count"
         set_fact:
             control_number: "{{ control_number }} + [ 'rule_6.2.5' ]"
-            warn_count: "{{ warn_count|int + 1 }}"
+            warn_count: "{{ warn_count | int + 1 }}"
         when: rhel9cis_6_2_5_user_username_check.stdout | length >= 1
   when:
       - rhel9cis_rule_6_2_5
@@ -161,7 +161,7 @@
         shell: 'getent passwd | cut -d: -f1 | sort -n | uniq -d'
         changed_when: false
         failed_when: false
-        check_mode: no
+        check_mode: false
         register: rhel9cis_6_2_6_group_group_check
 
       - name: "6.2.6 | AUDIT | Ensure no duplicate group names exist | Print message that no duplicate groups exist"
@@ -177,7 +177,7 @@
       - name: "6.2.6 | AUDIT | Ensure no duplicate group names exist | warning count"
         set_fact:
             control_number: "{{ control_number }} + [ 'rule_6.2.6' ]"
-            warn_count: "{{ warn_count|int + 1 }}"
+            warn_count: "{{ warn_count | int + 1 }}"
         when: rhel9cis_6_2_6_group_group_check.stdout is not defined
   when:
       - rhel9cis_rule_6_2_6
@@ -194,23 +194,23 @@
   block:
       - name: "6.2.7 | AUDIT | Ensure root PATH Integrity | Determine empty value"
         shell: 'echo $PATH | grep ::'
-        changed_when: False
+        changed_when: false
         failed_when: rhel9cis_6_2_7_path_colon.rc == 0
-        check_mode: no
+        check_mode: false
         register: rhel9cis_6_2_7_path_colon
 
       - name: "6.2.7 | AUDIT | Ensure root PATH Integrity | Determin colon end"
         shell: 'echo $PATH | grep :$'
-        changed_when: False
+        changed_when: false
         failed_when: rhel9cis_6_2_7_path_colon_end.rc == 0
-        check_mode: no
+        check_mode: false
         register: rhel9cis_6_2_7_path_colon_end
 
       - name: "6.2.7 | AUDIT | Ensure root PATH Integrity | Determine dot in path"
         shell: "/bin/bash --login -c 'env | grep ^PATH=' | sed -e 's/PATH=//' -e 's/::/:/' -e 's/:$//' -e 's/:/\\n/g'"
-        changed_when: False
+        changed_when: false
         failed_when: '"." in rhel9cis_6_2_7_dot_in_path.stdout_lines'
-        check_mode: no
+        check_mode: false
         register: rhel9cis_6_2_7_dot_in_path
 
       - name: "6.2.7 | AUDIT | Ensure root PATH Integrity | Alert on empty value, colon end, and dot in path"
@@ -280,7 +280,7 @@
       - name: "6.2.9 | PATCH | Ensure all users' home directories exist"
         file:
             path: "{{ item.0 }}"
-            recurse: yes
+            recurse: true
             mode: a-st,g-w,o-rwx
         register: rhel_08_6_2_9_patch
         when:
@@ -296,12 +296,12 @@
       - name: "6.2.9 | PATCH | Ensure all users' home directories exist"
         acl:
             path: "{{ item.0 }}"
-            default: yes
+            default: true
             state: present
-            recursive: yes
+            recursive: true
             etype: "{{ item.1.etype }}"
             permissions: "{{ item.1.mode }}"
-        when: 
+        when:
             - not system_is_container
         with_nested:
             - "{{ (ansible_check_mode | ternary(rhel_08_6_2_9_patch_audit, rhel_08_6_2_9_patch)).results |
@@ -368,7 +368,7 @@
       - name: "6.2.11 | PATCH | Ensure users' home directories permissions are 750 or more restrictive"
         file:
             path: "{{ item.0 }}"
-            recurse: yes
+            recurse: true
             mode: a-st,g-w,o-rwx
         register: rhel_08_6_2_11_patch
         when:
@@ -384,12 +384,12 @@
       - name: "6.2.11 | PATCH | Ensure users' home directories permissions are 750 or more restrictive"
         acl:
             path: "{{ item.0 }}"
-            default: yes
+            default: true
             state: present
-            recursive: yes
+            recursive: true
             etype: "{{ item.1.etype }}"
             permissions: "{{ item.1.mode }}"
-        when: 
+        when:
             - not system_is_container
         with_nested:
             - "{{ (ansible_check_mode | ternary(rhel_08_6_2_11_patch_audit, rhel_08_6_2_11_patch)).results |
