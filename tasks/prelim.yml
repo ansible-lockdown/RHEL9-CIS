@@ -86,7 +86,6 @@
   package:
       name: python3-libselinux
       state: present
-  become: true
   when:
       - '"python3-libselinux" not in ansible_facts.packages'
 
