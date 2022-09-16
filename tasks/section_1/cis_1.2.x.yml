@@ -27,7 +27,7 @@
         failed_when: false
         register: os_installed_pub_keys
 
-      #- debug:
+      # - debug:
       #    msg: "{{ os_installed_pub_keys }}"
 
       - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | Query found keys"
@@ -40,7 +40,7 @@
       - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | expected keys pass"
         debug:
             msg: "Congratulations !! - The installed gpg keys match expected values"
-        when: 
+        when:
             - os_installed_pub_keys.rc == 0
             - os_gpg_key_check.rc == 0
 
@@ -96,7 +96,7 @@
         changed_when: false
         failed_when: false
         register: dnf_configured
-        check_mode: no
+        check_mode: false
         args:
             warn: false
 
@@ -109,7 +109,7 @@
       - name: "1.2.4 | AUDIT | Ensure package manager repositories are configured | Warn Count"
         set_fact:
             control_number: "{{ control_number }} + ['rule_1.2.4']"
-            warn_count: "{{ warn_count|int + 1 }}"
+            warn_count: "{{ warn_count | int + 1 }}"
   when:
       - rhel9cis_rule_1_2_4
   tags:

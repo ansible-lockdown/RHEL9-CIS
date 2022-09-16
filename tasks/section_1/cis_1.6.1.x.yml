@@ -84,7 +84,7 @@
       - name: "1.6.1.5 | AUDIT | Ensure no unconfined services exist | warning count"
         set_fact:
             control_number: "{{ control_number }} + [ 'rule_1.6.1.5' ]"
-            warn_count: "{{ warn_count|int + 1 }}"
+            warn_count: "{{ warn_count | int + 1 }}"
         when: rhelcis_1_6_1_5_unconf_services.stdout | length > 0
   when:
       - rhel9cis_rule_1_6_1_5
