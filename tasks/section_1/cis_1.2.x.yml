@@ -27,14 +27,11 @@
         failed_when: false
         register: os_installed_pub_keys
 
-      # - debug:
-      #    msg: "{{ os_installed_pub_keys }}"
-
       - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | Query found keys"
         shell: "rpm -q --queryformat \"%{PACKAGER} %{VERSION}\\n\" {{ os_gpg_key_pubkey_name }} | grep \"{{ os_gpg_key_pubkey_content }}\""
-        register: os_gpg_key_check
         changed_when: false
         failed_when: false
+        register: os_gpg_key_check
         when: os_installed_pub_keys.rc == 0
 
       - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | expected keys pass"
