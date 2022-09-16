@@ -172,7 +172,7 @@
   tags:
       - level1-server
       - level1-workstation
-      - automate
+      - automated
       - patch
       - nftables
       - rule_3.4.2.6

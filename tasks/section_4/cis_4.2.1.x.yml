@@ -65,7 +65,6 @@
   block:
       - name: "4.2.1.5 | AUDIT | Ensure logging is configured | rsyslog current config message out"
         command: cat /etc/rsyslog.conf
-        become: true
         changed_when: false
         failed_when: false
         check_mode: false

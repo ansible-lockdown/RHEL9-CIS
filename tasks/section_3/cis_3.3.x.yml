@@ -65,6 +65,7 @@
         set_fact:
             sysctl_update: true
             flush_ipv4_route: true
+
       - name: "3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
@@ -140,6 +141,7 @@
         set_fact:
             sysctl_update: true
             flush_ipv4_route: true
+
       - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
         debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
