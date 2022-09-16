@@ -10,7 +10,7 @@
             flush_ipv6_route: true
 
       - name: "3.1.1 | PATCH | Verify if IPv6 is enabled on the system"
-        debug: 
+        debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-disable_ipv6.conf"
   when:
       - not rhel9cis_ipv6_required
@@ -68,9 +68,9 @@
         command: rpm -q NetworkManager
         changed_when: false
         failed_when: false
-        check_mode: no
+        check_mode: false
         args:
-            warn: no
+            warn: false
         register: rhel_08_nmcli_available
 
       - name: "3.1.4 | AUDIT | Ensure wireless interfaces are disabled | Check if wifi is enabled"
