@@ -5,6 +5,8 @@
 - Added assertion that ansible_user has password set for rule 5.3.4
 - RockyLinux now supported - release since initial branches
 - gpg check updates
+- audit out dir now /opt
+- lint updates and improvements
 - workflow updates and improvements moved to rocky image
 - selinux regexp improvements
 - warning summary now at end of play
