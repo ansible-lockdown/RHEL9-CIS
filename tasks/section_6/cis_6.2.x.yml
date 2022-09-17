@@ -301,6 +301,8 @@
   when:
       - min_int_uid | int <= item.uid
       - rhel9cis_rule_6_2_10
+      - item.id != 'nobody'
+      - (item.id != 'tss' and item.dir != '/dev/null')
   tags:
       - skip_ansible_lint  # settings found on 6_2_7
       - level1-server
