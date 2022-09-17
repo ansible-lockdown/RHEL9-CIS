@@ -285,7 +285,7 @@
       - ssh
       - rule_5.2.14
 
-- name: "5.2.15  | PATCH | Ensure SSH warning banner is configured"
+- name: "5.2.15 | PATCH | Ensure SSH warning banner is configured"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: '^Banner'
@@ -332,7 +332,7 @@
       - ssh
       - rule_5.2.17
 
-- name: "5.2.18  | PATCH | Ensure SSH MaxSessions is set to 10 or less"
+- name: "5.2.18 | PATCH | Ensure SSH MaxSessions is set to 10 or less"
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: "^#MaxSessions|^MaxSessions"
