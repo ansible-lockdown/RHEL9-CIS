@@ -369,7 +369,6 @@ rhel9cis_rh_sub_password: password
 # RedHat Satellite Subscription items
 rhel9cis_rhnsd_required: false
 
-
 # 1.4.2 Bootloader password
 rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'
 rhel9cis_bootloader_password: random
@@ -460,6 +459,11 @@ rhel9cis_tftp_client: false
 
 
 ## Section3 vars
+## Sysctl
+sysctl_update: false
+flush_ipv4_route: false
+flush_ipv6_route: false
+
 ### Firewall Service - either firewalld, iptables, or nftables
 #### Some control allow for services to be removed or masked
 #### The options are under each heading
@@ -497,6 +501,12 @@ rhel9cis_audit_back_log_limit: 8192
 
 # The max_log_file parameter should be based on your sites policy
 rhel9cis_max_log_file_size: 10
+
+### 4.1.3.x audit template
+update_audit_template: false
+
+## Advanced option found in auditd post
+allow_auditd_uid_user_exclusions: false
 
 ## Preferred method of logging
 ## Whether rsyslog or journald preferred method for local logging
@@ -633,8 +643,8 @@ audit_run_script_environment:
 
 ### Goss binary settings ###
 goss_version:
-    release: v0.3.16
-    checksum: 'sha256:827e354b48f93bce933f5efcd1f00dc82569c42a179cf2d384b040d8a80bfbfb'
+    release: v0.3.18
+    checksum: 'sha256:432308ebca0caf8165d45bd27e3262126aad9d15572ac8cb3149b3c91f75aace'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json
@@ -651,7 +661,7 @@ copy_goss_from_path: /some/accessible/path
 ## managed by the control audit_content
 # git
 audit_file_git: "https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
-audit_git_version: main
+audit_git_version: devel
 
 # copy:
 audit_local_copy: "some path to copy from"
@@ -659,12 +669,9 @@ audit_local_copy: "some path to copy from"
 # get_url:
 audit_files_url: "some url maybe s3?"
 
-# Where the goss audit configuration will be stored
-audit_files: "/var/tmp/{{ benchmark }}-Audit/"
-
 ## Goss configuration information
 # Where the goss configs and outputs are stored
-audit_out_dir: '/var/tmp'
+audit_out_dir: '/opt'
 audit_conf_dir: "{{ audit_out_dir }}/{{ benchmark }}-Audit/"
 pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
 post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"

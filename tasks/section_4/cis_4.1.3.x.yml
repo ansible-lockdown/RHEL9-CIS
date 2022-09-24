@@ -1,10 +1,9 @@
 ---
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.1 | PATCH | Ensure changes to system administration scope (sudoers) is collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_1
   tags:
@@ -15,11 +14,10 @@
       - auditd
       - rule_4.1.3.1
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.2 | PATCH | Ensure actions as another user are always logged"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_2
   tags:
@@ -30,11 +28,10 @@
       - auditd
       - rule_4.1.3.2
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.3 | PATCH | Ensure events that modify the sudo log file are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_3
   tags:
@@ -45,11 +42,10 @@
       - auditd
       - rule_4.1.3.3
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.4 | PATCH | Ensure events that modify date and time information are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_4
   tags:
@@ -60,11 +56,10 @@
       - auditd
       - rule_4.1.3.4
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.5 | PATCH | Ensure events that modify the system's network environment are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_5
   tags:
@@ -75,19 +70,19 @@
       - auditd
       - rule_4.1.3.5
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.6 | PATCH | Ensure use of privileged commands is collected"
   block:
       - name: "4.1.3.6 | PATCH | Ensure use of privileged commands is collected"
         shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null; done
         changed_when: false
         failed_when: false
-        check_mode: no
+        check_mode: false
         register: priv_procs
 
       - name: "4.1.3.6 | PATCH | Ensure use of privileged commands is collected"
-        debug:
-            msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-        changed_when: true
+        set_fact:
+            update_audit_template: true
         notify: update auditd
   when:
       - rhel9cis_rule_4_1_3_6
@@ -99,11 +94,10 @@
       - auditd
       - rule_4.1.3.6
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.7 | PATCH | Ensure unsuccessful unauthorized file access attempts are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_7
   tags:
@@ -114,11 +108,10 @@
       - auditd
       - rule_4.1.3_7
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.8 | PATCH | Ensure events that modify user/group information are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_8
   tags:
@@ -129,11 +122,10 @@
       - auditd
       - rule_4.1.3.8
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.9 | PATCH | Ensure discretionary access control permission modification events are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_9
   tags:
@@ -144,11 +136,10 @@
       - auditd
       - rule_4.1.3.9
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.10 | PATCH | Ensure successful file system mounts are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_10
   tags:
@@ -159,11 +150,10 @@
       - auditd
       - rule_4.1.3.10
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.11 | PATCH | Ensure session initiation information is collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_11
   tags:
@@ -174,11 +164,10 @@
       - auditd
       - rule_4.1.3.11
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.12 | PATCH | Ensure login and logout events are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_12
   tags:
@@ -189,11 +178,10 @@
       - auditd
       - rule_4.1.3.12
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.13 | PATCH | Ensure file deletion events by users are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_13
   tags:
@@ -203,11 +191,10 @@
       - patch
       - rule_4.1.3.13
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.14 | PATCH | Ensure events that modify the system's Mandatory Access Controls are collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_14
   tags:
@@ -218,11 +205,10 @@
       - auditd
       - rule_4.1.3.14
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.15 | PATCH | Ensure successful and unsuccessful attempts to use the chcon command are recorded"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_15
   tags:
@@ -233,11 +219,10 @@
       - auditd
       - rule_4.1.3.15
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.16 | PATCH | Ensure successful and unsuccessful attempts to use the setfacl command are recorded"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_16
   tags:
@@ -248,11 +233,10 @@
       - auditd
       - rule_4.1.3.16
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.17 | PATCH | Ensure successful and unsuccessful attempts to use the chacl command are recorded"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_17
   tags:
@@ -263,11 +247,10 @@
       - auditd
       - rule_4.1.3.17
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.18 | PATCH | Ensure successful and unsuccessful attempts to use the usermod command are recorded"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_18
   tags:
@@ -278,11 +261,10 @@
       - auditd
       - rule_4.1.3.18
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.19 | PATCH | Ensure kernel module loading and unloading is collected"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_19
   tags:
@@ -293,11 +275,10 @@
       - auditd
       - rule_4.1.3.19
 
+# All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.20 | PATCH | Ensure the audit configuration is immutable"
-  debug:
-      msg: "Control being set via Handler 'update auditd' which writes to /etc/audit.d/99_auditd.rules"
-  changed_when: true
-  notify: update auditd
+  set_fact:
+      update_audit_template: true
   when:
       - rhel9cis_rule_4_1_3_20
   tags:
@@ -321,3 +302,10 @@
       - patch
       - auditd
       - rule_4.1.3.21
+
+- name: Auditd | 4.1.3 | Auditd controls updated
+  debug:
+      msg: "Auditd Controls handled in POST using template - updating /etc/auditd/rules.d/99_auditd.rules"
+  changed_when: false
+  when:
+      - update_audit_template
