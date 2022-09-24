@@ -271,10 +271,21 @@
       - rule_5.2.13
 
 - name: "5.2.14 | PATCH | Ensure system-wide crypto policy is not over-ridden"
-  shell: sed -ri "s/^\s*(CRYPTO_POLICY\s*=.*)$/# \1/" /etc/sysconfig/sshd
-  args:
-      warn: no
-  notify: restart sshd
+  block:
+      - name: "5.2.14 | AUDIT | Ensure system-wide crypto policy is not over-ridden"
+        shell: grep -i '^\s*CRYPTO_POLICY=' /etc/sysconfig/sshd
+        args:
+            warn: false
+        changed_when: false
+        failed_when: ( ssh_crypto_discovery.rc not in [ 0, 1 ] )
+        register: ssh_crypto_discovery
+
+      - name: "5.2.14 | PATCH | Ensure system-wide crypto policy is not over-ridden"
+        shell: sed -ri "s/^\s*(CRYPTO_POLICY\s*=.*)$/# \1/" /etc/sysconfig/sshd
+        args:
+            warn: false
+        notify: restart sshd
+        when: ssh_crypto_discovery.stdout | length > 0
   when:
       - rhel9cis_rule_5_2_14
   tags:

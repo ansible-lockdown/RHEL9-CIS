@@ -82,6 +82,31 @@
       - level1-server
       - level1-workstation
 
+- name: "PRELIM | Ensure python3-libselinux is installed"
+  package:
+      name: python3-libselinux
+      state: present
+  when:
+      - '"python3-libselinux" not in ansible_facts.packages'
+
+- name: "PRELIM | Set facts based on boot type"
+  block:
+      - name: "PRELIM | Check whether machine is UEFI-based"
+        stat:
+            path: /sys/firmware/efi
+        register: rhel_09_efi_boot
+
+      - name: "PRELIM | AUDIT | set legacy boot and grub path | Bios"
+        set_fact:
+            rhel9cis_legacy_boot: true
+            grub2_path: /etc/grub2.cfg
+        when: not rhel_09_efi_boot.stat.exists
+
+      - name: "PRELIM | set grub fact | UEFI"
+        set_fact:
+            grub2_path: /etc/grub2-efi.cfg
+        when: rhel_09_efi_boot.stat.exists
+
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   package:
       name: audit
@@ -191,7 +216,9 @@
             min_int_uid: "{{ uid_min_id.stdout }}"
             max_int_uid: "{{ uid_max_id.stdout }}"
             min_int_gid: "{{ gid_min_id.stdout }}"
-- debug:
+
+- name: Output of uid findings
+  debug:
       msg: "{{ min_int_uid }} {{ max_int_uid }}"
 
   when:
