@@ -333,6 +333,7 @@
   when:
       - item.uid >= min_int_uid | int
       - item.id != 'nobody'
+      - (item.id != 'tss' and item.dir != '/dev/null')
       - rhel9cis_rule_6_2_10
   tags:
       - skip_ansible_lint  # settings found on 6_2_7
