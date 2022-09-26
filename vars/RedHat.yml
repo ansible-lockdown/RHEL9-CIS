@@ -1,5 +1,6 @@
 ---
 # OS Specific Settings
 
-os_gpg_key_pubkey_name: gpg-pubkey-fd431d51-4ae0493b
-os_gpg_key_pubkey_content: "Red Hat, Inc. (release key 2) <security@redhat.com> fd431d51"
+rpm_gpg_key: /etc/pki/rpm-gpg/RPM-GPG-KEY-{{ ansible_distribution|lower }}-release
+rpm_packager: "Red Hat, Inc"
+rpm_key: "199e2f91fd431d51"  # found on https://access.redhat.com/security/team/key/

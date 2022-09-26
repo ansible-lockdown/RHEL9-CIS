@@ -16,10 +16,10 @@
 - name: "1.6.1.2 | PATCH | Ensure SELinux is not disabled in bootloader configuration"
   replace:
       dest: /etc/default/grub
-      regexp: 'selinux=0'
+      regexp: '(selinux|enforcing)\s*=(\s0|0).*'
       replace: ''
   register: selinux_grub_patch
-  ignore_errors: true  # noqa ignore-errors
+  ignore_errors: yes
   notify: grub2cfg
   when:
       - rhel9cis_rule_1_6_1_2
@@ -78,13 +78,7 @@
 
       - name: "1.6.1.5 | AUDIT | Ensure no unconfined services exist | Message on unconfined services"
         debug:
-            msg: "Warning!! You have unconfined services: {{ rhelcis_1_6_1_5_unconf_services.stdout_lines }}"
-        when: rhelcis_1_6_1_5_unconf_services.stdout | length > 0
-
-      - name: "1.6.1.5 | AUDIT | Ensure no unconfined services exist | warning count"
-        set_fact:
-            control_number: "{{ control_number }} + [ 'rule_1.6.1.5' ]"
-            warn_count: "{{ warn_count | int + 1 }}"
+            msg: "Warning! You have unconfined services: {{ rhelcis_1_6_1_5_unconf_services.stdout_lines }}"
         when: rhelcis_1_6_1_5_unconf_services.stdout | length > 0
   when:
       - rhel9cis_rule_1_6_1_5

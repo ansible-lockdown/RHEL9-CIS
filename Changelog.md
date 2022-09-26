@@ -1,33 +1,5 @@
 # Changes to rhel9CIS
 
-## 0.4
-
-- Added assertion that ansible_user has password set for rule 5.3.4
-- RockyLinux now supported - release since initial branches
-- gpg check updates
-- audit out dir now /opt
-- lint updates and improvements
-- workflow updates and improvements moved to rocky image
-- selinux regexp improvements
-- warning summary now at end of play
-- advanced auditd options to exclude users in POST section
-- Issues fixed thanks to fgierlinger
-  - [#21](https://github.com/ansible-lockdown/RHEL9-CIS/issues/21)
-  - [#22](https://github.com/ansible-lockdown/RHEL9-CIS/issues/22)
-
-## 0.3
-
-- update to auditd template
-  - uses facts and template new variable
-    - update_audit_template (default false)
-- sysctl template updates and idempotency improvements
-- container discovery usage improvements
-- 3.4.1.5 discovery improvement
-- 5.6.1.4 discovery improvement
-- logrotate process logrotate.timer
-- tidy up become:
-- logic improvements
-
 ## 0.2
 
 - not all controls work with rhel8 releases any longer

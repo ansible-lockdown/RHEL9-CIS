@@ -16,7 +16,7 @@
 
 - name: "4.3.2 | PATCH | Ensure logrotate is running and enabled"
   systemd:
-      name: logrotate.timer
+      name: logrotate
       state: started
       enabled: true
   when:

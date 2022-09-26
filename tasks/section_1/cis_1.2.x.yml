@@ -20,38 +20,12 @@
       - skip_ansible_lint  # Added as no_log still errors on ansuible-lint
 
 - name: "1.2.2 | AUDIT | Ensure GPG keys are configured"
-  block:
-      - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | list installed pubkey keys"
-        shell: "rpm -qa | grep {{ os_gpg_key_pubkey_name }}"
-        changed_when: false
-        failed_when: false
-        register: os_installed_pub_keys
-
-      - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | Query found keys"
-        shell: "rpm -q --queryformat \"%{PACKAGER} %{VERSION}\\n\" {{ os_gpg_key_pubkey_name }} | grep \"{{ os_gpg_key_pubkey_content }}\""
-        changed_when: false
-        failed_when: false
-        register: os_gpg_key_check
-        when: os_installed_pub_keys.rc == 0
-
-      - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | expected keys pass"
-        debug:
-            msg: "Congratulations !! - The installed gpg keys match expected values"
-        when:
-            - os_installed_pub_keys.rc == 0
-            - os_gpg_key_check.rc == 0
-
-      - name: "1.2.2 | AUDIT | Ensure GPG keys are configured | expected keys fail"
-        fail:
-            msg: Installed GPG Keys do not meet expected values or keys installed that are not expected
-        when:
-            - os_installed_pub_keys.rc == 1 or
-              os_gpg_key_check.rc == 1
+  shell: "PKG=`rpm -qf {{ rpm_gpg_key }}` && rpm -q --queryformat \"%{PACKAGER} %{SIGPGP:pgpsig}\\n\" \"${PKG}\" | grep \"^{{ rpm_packager }}.*Key.ID.{{ rpm_key }}\""
+  changed_when: false
   when:
       - rhel9cis_rule_1_2_2
       - ansible_distribution == "RedHat" or
-        ansible_distribution == "Rocky" or
-        ansible_distribution == "AlmaLinux"
+        ansible_distribution == "Rocky"
   tags:
       - level1-server
       - level1-workstation
@@ -71,7 +45,7 @@
       - name: "1.2.3 | PATCH | Ensure gpgcheck is globally activated | Update yum.repos"
         replace:
             name: "{{ item.path }}"
-            regexp: "^gpgcheck=0"
+            regexp: '^gpgcheck\s+=\s+0'
             replace: "gpgcheck=1"
         with_items:
             - "{{ yum_repos.files }}"
@@ -93,20 +67,15 @@
         changed_when: false
         failed_when: false
         register: dnf_configured
-        check_mode: false
+        check_mode: no
         args:
             warn: false
 
       - name: "1.2.4 | AUDIT | Ensure package manager repositories are configured | Display repo list"
         debug:
             msg:
-                - "Warning!! Below are the configured repos. Please review and make sure all align with site policy"
+                - "Warning! Below are the configured repos. Please review and make sure all align with site policy"
                 - "{{ dnf_configured.stdout_lines }}"
-
-      - name: "1.2.4 | AUDIT | Ensure package manager repositories are configured | Warn Count"
-        set_fact:
-            control_number: "{{ control_number }} + ['rule_1.2.4']"
-            warn_count: "{{ warn_count | int + 1 }}"
   when:
       - rhel9cis_rule_1_2_4
   tags:

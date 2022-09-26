@@ -39,9 +39,8 @@
   systemd:
       name: systemd-journal-upload
       state: started
-      enabled: true
+      enabled: yes
   when:
-      - rhel9cis_system_is_log_server
       - rhel9cis_rule_4_2_2_1_3
   tags:
       - level1-server
@@ -53,12 +52,11 @@
 
 - name: "4.2.2.1.4 | PATCH | Ensure journald is not configured to recieve logs from a remote client"
   systemd:
-      name: systemd-journal-remote.socket
+      name: systemd-journal-remote
       state: stopped
-      enabled: false
-      masked: true
+      enabled: no
+      masked: yes
   when:
-      - not rhel9cis_system_is_log_server
       - rhel9cis_rule_4_2_2_1_4
   tags:
       - level1-server
@@ -74,7 +72,7 @@
         systemd:
             name: systemd-journald
             state: started
-            enabled: true
+            enabled: yes
 
       - name: "4.2.2.2 | AUDIT | Ensure journald service is enabled | Capture status"
         shell: systemctl is-enabled systemd-journald.service
@@ -85,13 +83,7 @@
       - name: "4.2.2.2 | AUDIT | Ensure journald service is enabled | Alert on bad status"
         debug:
             msg:
-                - "Warning!! The status of systemd-journald should be static and it is not. Please investigate"
-        when: "'static' not in rhel9cis_4_2_2_2_status.stdout"
-
-      - name: "4.2.2.2 | AUDIT | Ensure journald service is enabled | Warn Count"
-        set_fact:
-            control_number: "{{ control_number }} + [ 'rule_4.2.2.2' ]"
-            warn_count: "{{ warn_count | int + 1 }}"
+                - "Warning! The status of systemd-journald should be static and it is not. Please investigate"
         when: "'static' not in rhel9cis_4_2_2_2_status.stdout"
   when:
       - rhel9cis_rule_4_2_2_2
@@ -142,6 +134,7 @@
   notify: restart systemd_journal_upload
   when:
       - rhel9cis_rule_4_2_2_5
+      - rhel9cis_preferred_log_capture == "journald"
   tags:
       - level1-server
       - level2-workstation
@@ -197,13 +190,9 @@
       - name: "4.2.2.7 | AUDIT | Ensure journald default file permissions configured | Display file settings"
         debug:
             msg:
-                - "Warning!! Below are the current default settings for journald, please confirm they align with your site policies"
+                - "Warning! Below are the current default settings for journald, please confirm they align with your site policies"
+                # - "{{ rhel9cis_4_2_2_7_override_settings.stdout_lines }}"
                 - "{{ (rhel9cis_4_2_2_7_override_status.matched >= 1) | ternary(rhel9cis_4_2_2_7_override_settings.stdout_lines, rhel9cis_4_2_2_7_notoverride_settings.stdout_lines) }}"
-
-      - name: "4.2.2.7 | AUDIT | Ensure journald default file permissions configured | Warn Count"
-        set_fact:
-            control_number: "{{ control_number }} + [ 'rule_4.2.2.7' ]"
-            warn_count: "{{ warn_count | int + 1 }}"
   when:
       - rhel9cis_rule_4_2_2_7
   tags:

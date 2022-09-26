@@ -1,23 +1,14 @@
 ---
 # handlers file for RHEL9-CIS
 
-- name: reload sysctl
-  shell: sysctl --system
-  args:
-      warn: false
-  when:
-      - sysctl_updated.changed
-
 - name: sysctl flush ipv4 route table
   become: true
   sysctl:
       name: net.ipv4.route.flush
       value: '1'
       sysctl_set: true
-  ignore_errors: true  # noqa ignore-errors
-  when:
-      - flush_ipv4_route
-      - not system_is_container
+  ignore_errors: true
+  when: ansible_virtualization_type != "docker"
   tags:
       - skip_ansible_lint
 
@@ -27,9 +18,35 @@
       name: net.ipv6.route.flush
       value: '1'
       sysctl_set: true
+  when: ansible_virtualization_type != "docker"
+
+- name: update sysctl
+  template:
+      src: "etc/sysctl.d/{{ item }}.j2"
+      dest: "/etc/sysctl.d/{{ item }}"
+      owner: root
+      group: root
+      mode: 0600
+  notify: reload sysctl
+  with_items:
+      - 60-kernel_sysctl.conf
+      - 60-disable_ipv6.conf
+      - 60-netipv4_sysctl.conf
+      - 60-netipv6_sysctl.conf
   when:
-      - flush_ipv6_route
-      - not system_is_container
+      - ansible_virtualization_type != "docker"
+      - "'procps-ng' in ansible_facts.packages"
+
+- name: reload sysctl
+  sysctl:
+      name: net.ipv4.route.flush
+      value: '1'
+      state: present
+      reload: true
+      ignoreerrors: true
+  when:
+      - ansible_virtualization_type != "docker"
+      - "'systemd' in ansible_facts.packages"
 
 - name: systemd restart tmp.mount
   become: true
@@ -55,30 +72,53 @@
       warn: false
 
 - name: restart firewalld
+  become: true
   service:
       name: firewalld
       state: restarted
 
 - name: restart sshd
+  become: true
   service:
       name: sshd
       state: restarted
 
 - name: restart postfix
+  become: true
   service:
       name: postfix
       state: restarted
 
 - name: reload dconf
+  become: true
   shell: dconf update
   args:
       warn: false
+
+- name: update auditd
+  template:
+      src: audit/99_auditd.rules.j2
+      dest: /etc/audit/rules.d/99_auditd.rules
+      owner: root
+      group: root
+      mode: 0600
+  notify: restart auditd
+
+- name: restart auditd
+  shell: /sbin/service auditd restart
+  changed_when: false
+  check_mode: false
+  failed_when: false
+  args:
+      warn: false
+  tags:
+      - skip_ansible_lint
 
 - name: grub2cfg
   shell: "grub2-mkconfig -o /boot/grub2/grub.cfg"
   args:
       warn: false
-  ignore_errors: true  # noqa ignore-errors
+  ignore_errors: True
   tags:
       - skip_ansible_lint
 
@@ -101,27 +141,6 @@
 - name: systemd_daemon_reload
   systemd:
       daemon-reload: true
-
-## Auditd tasks note order for handlers to run
-
-- name: auditd_immutable_check
-  shell: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
-  changed_when: false
-  register: auditd_immutable_check
-
-- name: audit_immutable_fact
-  debug:
-      msg: "Reboot required for auditd to apply new rules as immutable set"
-  notify: change_requires_reboot
-  when:
-      - auditd_immutable_check.stdout == '1'
-
-- name: restart auditd
-  shell: service auditd restart
-  args:
-      warn: false
-  tags:
-      - skip_ansible_lint
 
 - name: change_requires_reboot
   set_fact:

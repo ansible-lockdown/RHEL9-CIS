@@ -32,13 +32,10 @@
       - rule_1.5.2
 
 - name: "1.5.3 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
-  block:
-      - name: "1.5.3 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
-        set_fact:
-            sysctl_update: true
-      - name: "1.5.3 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
-        debug:
-            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
+  debug:
+      msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
+  notify:
+      - update sysctl
   when:
       - rhel9cis_rule_1_5_3
   tags:

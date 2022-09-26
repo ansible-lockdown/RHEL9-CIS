@@ -20,28 +20,6 @@
   tags:
       - always
 
-- name: "Check password set for {{ ansible_user }}"
-  block:
-      - name: Capture current password state of "{{ ansible_user }}"
-        shell: "grep {{ ansible_user }} /etc/shadow | awk -F: '{print $2}'"
-        changed_when: false
-        failed_when: false
-        check_mode: false
-        register: ansible_user_password_set
-
-      - name: "Assert that password set for {{ ansible_user }} and account not locked"
-        assert:
-            that: ansible_user_password_set.stdout | length != 0 and ansible_user_password_set.stdout != "!!"
-            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_user }} has no password set - It can break access"
-            success_msg: "You a password set for the {{ ansible_user }}"
-        vars:
-            sudo_password_rule: rhel9cis_rule_5_3_4
-  when:
-      - rhel9cis_rule_5_3_4
-      - not system_is_ec2
-  tags:
-      - user_passwd
-
 - name: Setup rules if container
   block:
       - name: Discover and set container variable if required
@@ -145,49 +123,49 @@
 
 - name: run Section 1 tasks
   import_tasks: section_1/main.yml
+  become: true
   when: rhel9cis_section1
   tags:
       - rhel9cis_section1
 
 - name: run Section 2 tasks
   import_tasks: section_2/main.yml
+  become: true
   when: rhel9cis_section2
   tags:
       - rhel9cis_section2
 
 - name: run Section 3 tasks
   import_tasks: section_3/main.yml
+  become: true
   when: rhel9cis_section3
   tags:
       - rhel9cis_section3
 
 - name: run Section 4 tasks
   import_tasks: section_4/main.yml
+  become: true
   when: rhel9cis_section4
   tags:
       - rhel9cis_section4
 
 - name: run Section 5 tasks
   import_tasks: section_5/main.yml
+  become: true
   when: rhel9cis_section5
   tags:
       - rhel9cis_section5
 
 - name: run Section 6 tasks
   import_tasks: section_6/main.yml
+  become: true
   when: rhel9cis_section6
   tags:
       - rhel9cis_section6
 
-- name: run auditd logic
-  import_tasks: auditd.yml
-  when:
-      - update_audit_template
-  tags:
-      - always
-
 - name: run post remediation tasks
   import_tasks: post.yml
+  become: true
   tags:
       - post_tasks
       - always
@@ -202,10 +180,3 @@
       msg: "{{ audit_results.split('\n') }}"
   when:
       - run_audit
-
-- name: If Warnings found Output count and control IDs affected
-  debug:
-      msg: "You have {{ warn_count }} Warning(s) that require investigating that are related to the following benchmark ID(s) {{ control_number }}"
-  when: warn_count != 0
-  tags:
-      - always

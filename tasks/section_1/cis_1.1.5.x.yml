@@ -4,19 +4,11 @@
   block:
       - name: "1.1.5.1 | AUDIT | Ensure separate partition exists for /var/log | Absent"
         debug:
-            msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
+            msg: "Warning! {{ required_mount }} doesn't exist. This is a manual task"
         register: var_log_mount_absent
         changed_when: var_log_mount_absent.skipped is undefined
         when:
             - required_mount not in mount_names
-
-      - name: "1.1.5.1 | AUDIT | Ensure separate partition exists for /var/log | Warn Count"
-        set_fact:
-            control_number: "{{ control_number }} + [ 'rule_1.1.5.1' ]"
-            warn_count: "{{ warn_count | int + 1 }}"
-        when:
-            - required_mount not in mount_names
-
       - name: "1.1.5.1 | AUDIT | Ensure separate partition exists for /var/log | Present"
         debug:
             msg: "Congratulations: {{ required_mount }} exists."
@@ -45,7 +37,7 @@
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
       state: present
-      opts: defaults,{% if rhel9cis_rule_1_1_5_3 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_5_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_5_4 %}nosuid{% endif %}
+      opts: defaults,{% if rhel9cis_rule_1_1_5_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_5_3 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_5_4 %}nosuid{% endif %}
   with_items:
       - "{{ ansible_mounts }}"
   loop_control:

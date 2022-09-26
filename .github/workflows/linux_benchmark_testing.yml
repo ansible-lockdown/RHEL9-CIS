@@ -81,9 +81,18 @@ jobs:
         working-directory: .github/workflows
         run: cat hosts.yml
 
-# Aws deployments taking a while to come up insert sleep or playbook fails
+# Centos 7 images take a while to come up insert sleep or playbook fails
 
-      - name: Sleep for 60 seconds
+      - name: Check if test os is rhel7
+        working-directory: .github/workflows
+        id: test_os
+        run: >-
+          echo "::set-output name=RHEL7::$(
+          grep -c RHEL7 OS.tfvars
+          )"
+
+      - name: if RHEL7 - Sleep for 60 seconds
+        #if: steps.test_os.outputs.RHEL7 >= 1
         run: sleep 60s
         shell: bash
 
@@ -108,4 +117,4 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform destroy -var-file "github_vars.tfvars" -var-file "OS.tfvars" --auto-approve -input=false
+        run: terraform destroy  -var-file "github_vars.tfvars" -var-file "OS.tfvars" --auto-approve -input=false

@@ -5,7 +5,6 @@
       name: nftables
       state: present
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_1
   tags:
       - level1-server
@@ -18,11 +17,22 @@
 # The control allows the service it be masked or not installed
 # We have chosen not installed
 - name: "3.4.2.2 | PATCH | Ensure firewalld is either not installed or masked with nftables"
-  package:
-      name: firewalld
-      state: absent
+  block:
+      - name: "3.4.2.2 | PATCH | Ensure firewalld is either not installed or masked with nftables | mask service"
+        systemd:
+            name: firewalld
+            masked: true
+            state: stopped
+        when:
+            - rhel9cis_nftables_firewalld_state == "masked"
+
+      - name: "3.4.2.2 | PATCH | Ensure firewalld is either not installed or masked with nftables | pkg removed"
+        package:
+            name: firewalld
+            state: absent
+        when:
+            - rhel9cis_nftables_firewalld_state == "absent"
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_2
   tags:
       - level1-server
@@ -39,7 +49,7 @@
             name: "{{ item }}"
             enabled: false
             masked: true
-        ignore_errors: true  # noqa ignore-errors
+        ignore_errors: true
         with_items:
             - iptables
             - ip6tables
@@ -49,7 +59,6 @@
             name: iptables-service
             state: absent
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_3
   tags:
       - level1-server
@@ -96,26 +105,17 @@
       - name: "3.4.2.5 | AUDIT | Ensure an nftables table exists | Alert on no tables"
         debug:
             msg:
-                - "Warning!! You currently have no nft tables, please review your setup"
+                - "Warning! You currently have no nft tables, please review your setup"
                 - 'Use the command "nft create table inet <table name>" to create a new table'
-        when:
-            - rhel9cis_3_4_2_5_nft_tables.stdout | length == 0
-            - not rhel9cis_nft_tables_autonewtable
-
-      - name: "3.4.2.5 | AUDIT | Ensure an nftables table exists | Alert on no tables | warning count"
-        set_fact:
-            control_number: "{{ control_number }} + [ 'rule_3.4.2.5' ]"
-            warn_count: "{{ warn_count | int + 1 }}"
         when:
             - rhel9cis_3_4_2_5_nft_tables.stdout | length == 0
             - not rhel9cis_nft_tables_autonewtable
 
       - name: "3.4.2.5 | PATCH | Ensure a table exists | Create table if needed"
         command: nft create table inet "{{ rhel9cis_nft_tables_tablename }}"
-        failed_when: false
+        failed_when: no
         when: rhel9cis_nft_tables_autonewtable
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_5
   tags:
       - level1-server
@@ -159,15 +159,14 @@
       - name: "3.4.2.6 | PATCH | Ensure nftables base chains exist | Create chains if needed"
         shell: "{{ item }}"
         args:
-            warn: false
-        failed_when: false
+            warn: no
+        failed_when: no
         with_items:
             - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" input { type filter hook input priority 0 \; }
             - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" forward { type filter hook forward priority 0 \; }
             - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" output { type filter hook output priority 0 \; }
         when: rhel9cis_nft_tables_autochaincreate
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_6
   tags:
       - level1-server
@@ -209,7 +208,6 @@
         command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input ip6 saddr ::1 counter drop
         when: '"ip6 saddr ::1 counter packets 0 bytes 0 drop" not in rhel9cis_3_4_2_7_ip6saddr.stdout'
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_7
   tags:
       - level1-server
@@ -257,7 +255,6 @@
         command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" output ip protocol icmp ct state new,related,established accept
         when: '"ip protocol icmp ct state established,related,new accept" not in rhel9cis_3_4_2_8_outconnectionrule.stdout'
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_8
   tags:
       - level1-server
@@ -309,7 +306,6 @@
         command: nft chain inet "{{ rhel9cis_nft_tables_tablename }}" output { policy drop \; }
         when: '"type filter hook output priority 0; policy drop;" not in rhel9cis_3_4_2_9_outputpolicy.stdout'
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_9
   tags:
       - level1-server
@@ -322,9 +318,8 @@
 - name: "3.4.2.10 | PATCH | Ensure nftables service is enabled"
   service:
       name: nftables
-      enabled: true
+      enabled: yes
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_10
   tags:
       - level1-server
@@ -337,11 +332,9 @@
 - name: "3.4.2.11 | PATCH | Ensure nftables rules are permanent"
   lineinfile:
       path: /etc/sysconfig/nftables.conf
-      state: present
       insertafter: EOF
       line: include "/etc/nftables/inet-{{ rhel9cis_nft_tables_tablename }}"
   when:
-      - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_11
   tags:
       - level1-server
