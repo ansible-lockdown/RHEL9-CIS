@@ -96,7 +96,7 @@
       - permissions
       - rule_6.1.4
 
-- name: "6.1.5 | PATCH |  Ensure permissions on /etc/group are configured"
+- name: "6.1.5 | PATCH | Ensure permissions on /etc/group are configured"
   file:
       dest: /etc/group-
       owner: root
@@ -299,7 +299,7 @@
         loop_control:
             label: "{{ item.mount }}"
 
-      - name: "6.1.14 | AUDIT | Audit SUID executables |  Alert no SUID executables exist"
+      - name: "6.1.14 | AUDIT | Audit SUID executables | Alert no SUID executables exist"
         debug:
             msg: "Good news! We have not found any SUID executable files on your system"
         failed_when: false
@@ -307,7 +307,7 @@
         when:
             - rhel_08_6_1_14_perms_results.stdout is not defined
 
-      - name: "6.1.14 | AUDIT | Audit SUID executables |  Alert SUID executables exist"
+      - name: "6.1.14 | AUDIT | Audit SUID executables | Alert SUID executables exist"
         debug:
             msg: "Manual intervention is required -- SUID set on items in {{ item.item.mount }}: {{ item.stout_lines | join(', ') }}"
         with_items: "{{ rhel_08_6_1_14_perms_results.stdout_lines }}"
@@ -334,7 +334,7 @@
         loop_control:
             label: "{{ item.mount }}"
 
-      - name: "6.1.15 | AUDIT | Audit SGID executables |  Alert no SGID executables exist"
+      - name: "6.1.15 | AUDIT | Audit SGID executables | Alert no SGID executables exist"
         debug:
             msg: "Good news! We have not found any SGID executable files on your system"
         failed_when: false
@@ -342,7 +342,7 @@
         when:
             - rhel_08_6_1_15_perms_results.stdout is not defined
 
-      - name: "6.1.15 | AUDIT | Audit SGID executables |  Alert SGID executables exist"
+      - name: "6.1.15 | AUDIT | Audit SGID executables | Alert SGID executables exist"
         debug:
             msg: "Manual intervention is required -- SGID set on items in {{ item.item.mount }}: {{ item.stout_lines | join(', ') }}"
         with_items: "{{ rhel_08_6_1_15_perms_results.stdout_lines }}"
