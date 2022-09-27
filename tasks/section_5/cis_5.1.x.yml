@@ -148,7 +148,7 @@
             dest: /etc/at.deny
             state: absent
 
-      - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users  | Check if at.allow exists"
+      - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | Check if at.allow exists"
         stat:
             path: "/etc/at.allow"
         register: rhel9cis_5_1_9_at_allow_state
