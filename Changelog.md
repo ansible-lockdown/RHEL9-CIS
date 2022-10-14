@@ -2,6 +2,8 @@
 
 ## 0.5
 
+- audit path updated and output file name
+
 ### Taken from RHEL8-CIS issues and PRs
 
 - #209 5.6.5 rewrite umask settings
