@@ -1,5 +1,19 @@
 # Changes to rhel9CIS
 
+## 0.5
+
+### Taken from RHEL8-CIS issues and PRs
+
+- #209 5.6.5 rewrite umask settings
+- #220 tidy up and align variables
+- #226 Thanks to Thulium-Drake
+  -Extended the auditd config required value for auditd space left percentage (not part of CIS Benchmark but required fopr auditd to run correctly in some cases)
+
+- #227 thanks to OscarElits
+  - chrony files now RH expected locations
+- #228 Thanks to benbulll
+  - audit binary copy var missing
+
 ## 0.4
 
 - Added assertion that ansible_user has password set for rule 5.3.4
