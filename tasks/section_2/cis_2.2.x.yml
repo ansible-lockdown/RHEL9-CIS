@@ -1,54 +1,38 @@
 ---
 
-- name: "2.2.1 | PATCH | Ensure xinetd is not installed"
-  package:
-      name: xinetd
-      state: absent
-  when:
-      - rhel9cis_rule_2_2_1
-      - not rhel9cis_xinetd_server
-      - "'xinetd' in ansible_facts.packages"
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_2.2.1
 
-- name: "2.2.2 | PATCH | Ensure xorg-x11-server-common is not installed"
-  package:
+- name: "2.2.1 | PATCH | Ensure xorg-x11-server-common is not installed"
+  ansible.builtin.package:
       name: xorg-x11-server-common
       state: absent
   when:
-      - rhel9cis_rule_2_2_2
+      - rhel9cis_rule_2_2_1
       - "'xorg-x11-server-common' in ansible_facts.packages"
   tags:
       - level1-server
-      - automated
       - patch
       - x11
-      - rule_2.2.2
+      - rule_2.2.1
 
-- name: "2.2.3 | PATCH | Ensure Avahi Server is not installed"
-  package:
+- name: "2.2.2 | PATCH | Ensure Avahi Server is not installed"
+  ansible.builtin.package:
       name:
           - avahi-autoipd
           - avahi
       state: absent
   when:
-      - rhel9cis_rule_2_2_3
+      - rhel9cis_rule_2_2_2
       - not rhel9cis_avahi_server
       - "'avahi' in ansible_facts.packages or 'avahi-autopd' in ansible_facts.packages"
   tags:
       - level1-server
       - level2-workstation
-      - automated
       - patch
       - avahi
-      - rule_2.2.3
+      - rule_2.2.2
 
-- name: "2.2.4 | PATCH | Ensure CUPS is not installed"
-  package:
+- name: "2.2.3 | PATCH | Ensure CUPS is not installed"
+  ansible.builtin.package:
       name: cups
       state: absent
   when:
@@ -57,124 +41,102 @@
       - rhel9cis_rule_2_2_3
   tags:
       - level1-server
-      - automated
       - patch
       - cups
       - rule_2.2.3
 
-- name: "2.2.5 | PATCH | Ensure DHCP Server is not installed"
-  package:
+- name: "2.2.4 | PATCH | Ensure DHCP Server is not installed"
+  ansible.builtin.package:
       name: dhcp-server
       state: absent
   when:
       - not rhel9cis_dhcp_server
       - "'dhcp-server' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_5
+      - rhel9cis_rule_2_2_4
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - dhcp
-      - rule_2.2.5
+      - rule_2.2.4
 
-- name: "2.2.6 | PATCH | Ensure DNS Server is not installed"
-  package:
+- name: "2.2.5 | PATCH | Ensure DNS Server is not installed"
+  ansible.builtin.package:
       name: bind
       state: absent
   when:
       - not rhel9cis_dns_server
       - "'bind' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_6
+      - rhel9cis_rule_2_2_5
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - dns
-      - rule_2.2.6
+      - rule_2.2.5
 
-- name: "2.2.7 | PATCH | Ensure FTP Server is not installed"
-  package:
-      name: ftp
-      state: absent
-  when:
-      - not rhel9cis_ftp_server
-      - "'ftp' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_7
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - ftp
-      - rule_2.2.7
-
-- name: "2.2.8 | PATCH | Ensure VSFTP Server is not installed"
-  package:
+- name: "2.2.6 | PATCH | Ensure VSFTP Server is not installed"
+  ansible.builtin.package:
       name: vsftpd
       state: absent
   when:
       - not rhel9cis_vsftpd_server
       - "'vsftpd' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_8
+      - rhel9cis_rule_2_2_6
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - vsftpd
-      - rule_2.2.8
+      - rule_2.2.6
 
-- name: "2.2.9 | PACH | Ensure TFTP Server is not installed"
-  package:
+- name: "2.2.7 | PACH | Ensure TFTP Server is not installed"
+  ansible.builtin.package:
       name: tftp-server
       state: absent
   when:
       - not rhel9cis_tftp_server
       - "'tftp-server' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_9
+      - rhel9cis_rule_2_2_7
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - tftp
-      - rule_2.2.9
+      - rule_2.2.7
 
-- name: "2.2.10 | PATCH | Ensure a web server is not installed"
+- name: "2.2.8 | PATCH | Ensure a web server is not installed"
   block:
-      - name: "2.2.10 | PATCH | Ensure a web server is not installed | Remove httpd server"
-        package:
+      - name: "2.2.8 | PATCH | Ensure a web server is not installed | Remove httpd server"
+        ansible.builtin.package:
             name: httpd
             state: absent
         when:
             - not rhel9cis_httpd_server
             - "'httpd' in ansible_facts.packages"
 
-      - name: "2.2.10 | PATCH | Ensure a web server is not installed | Remove nginx server"
-        package:
+      - name: "2.2.8 | PATCH | Ensure a web server is not installed | Remove nginx server"
+        ansible.builtin.package:
             name: nginx
             state: absent
         when:
             - not rhel9cis_nginx_server
             - "'nginx' in ansible_facts.packages"
   when:
-      - rhel9cis_rule_2_2_10
+      - rhel9cis_rule_2_2_8
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - httpd
       - nginx
       - webserver
-      - rule_2.2.9
+      - rule_2.2.8
 
-- name: "2.2.11 | PATCH | Ensure IMAP and POP3 server is not installed"
+- name: "2.2.9 | PATCH | Ensure IMAP and POP3 server is not installed"
   block:
-      - name: "2.2.11 | PATCH | Ensure IMAP and POP3 server is not installed"
-        package:
+      - name: "2.2.9 | PATCH | Ensure IMAP and POP3 server is not installed"
+        ansible.builtin.package:
             name:
                 - dovecot
             state: absent
@@ -182,8 +144,8 @@
             - not rhel9cis_dovecot_server
             - "'dovecot' in ansible_facts.packages"
 
-      - name: "2.2.11 | PATCH | Ensure IMAP and POP3 server is not installed"
-        package:
+      - name: "2.2.9 | PATCH | Ensure IMAP and POP3 server is not installed"
+        ansible.builtin.package:
             name:
                 - cyrus-imapd
             state: absent
@@ -192,99 +154,94 @@
             - "'cyrus-imapd' in ansible_facts.packages"
 
   when:
-      - rhel9cis_rule_2_2_11
+      - rhel9cis_rule_2_2_9
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - dovecot
       - imap
       - pop3
-      - rule_2.2.11
+      - rule_2.2.9
 
-- name: "2.2.12 | PATCH | Ensure Samba is not enabled"
-  package:
+- name: "2.2.10 | PATCH | Ensure Samba is not enabled"
+  ansible.builtin.package:
       name: samba
       state: absent
   when:
       - not rhel9cis_samba_server
       - "'samba' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_12
+      - rhel9cis_rule_2_2_10
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - samba
-      - rule_2.2.12
+      - rule_2.2.10
 
-- name: "2.2.13 | PATCH | Ensure HTTP Proxy Server is not installed"
-  package:
+- name: "2.2.11 | PATCH | Ensure HTTP Proxy Server is not installed"
+  ansible.builtin.package:
       name: squid
       state: absent
   when:
       - not rhel9cis_squid_server
       - "'squid' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_6
+      - rhel9cis_rule_2_2_11
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - squid
-      - rule_2.2.13
+      - rule_2.2.11
 
-- name: "2.2.14 | PATCH | Ensure net-snmp is not installed"
-  package:
+- name: "2.2.12 | PATCH | Ensure net-snmp is not installed"
+  ansible.builtin.package:
       name: net-snmp
       state: absent
   when:
       - not rhel9cis_snmp_server
       - "'net-snmp' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_14
+      - rhel9cis_rule_2_2_12
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - snmp
-      - rule_2.2.14
+      - rule_2.2.12
 
-- name: "2.2.15 | PATCH | Ensure NIS Server is not installed"
-  package:
-      name: ypserv
-      state: absent
-  when:
-      - not rhel9cis_nis_server
-      - "'ypserv' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_17
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - nis
-      - rule_2.2.17
-
-- name: "2.2.16 | PATCH | Ensure telnet-server is not installed"
-  package:
+- name: "2.2.13 | PATCH | Ensure telnet-server is not installed"
+  ansible.builtin.package:
       name: telnet-server
       state: absent
   when:
       - not rhel9cis_telnet_server
       - "'telnet-server' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_16
+      - rhel9cis_rule_2_2_13
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - telnet
-      - rule_2.2.16
+      - rule_2.2.13
 
-- name: "2.2.17 | PATCH | Ensure mail transfer agent is configured for local-only mode"
-  lineinfile:
+- name: "2.2.14 | PATCH | Ensure dnsmasq is not installed"
+  ansible.builtin.package:
+      name: dnsmasq
+      state: absent
+  notify: restart postfix
+  when:
+      - not rhel9cis_is_mail_server
+      - "'dnsmasq' in ansible_facts.packages"
+      - rhel9cis_rule_2_2_14
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - dnsmasq
+      - rule_2.2.14
+
+- name: "2.2.15 | PATCH | Ensure mail transfer agent is configured for local-only mode"
+  ansible.builtin.lineinfile:
       path: /etc/postfix/main.cf
       regexp: "^(#)?inet_interfaces"
       line: "inet_interfaces = loopback-only"
@@ -292,29 +249,28 @@
   when:
       - not rhel9cis_is_mail_server
       - "'postfix' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_17
+      - rhel9cis_rule_2_2_15
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - postfix
-      - rule_2.2.17
+      - rule_2.2.15
 
 # The name title of the service says mask the service, but the fix allows for both options
 # Options available in default/main if to remove the package default is false just mask the server service
-- name: "2.2.18 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked"
+- name: "2.2.16 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked"
   block:
-      - name: "2.2.18 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked | remove package"
-        package:
+      - name: "2.2.16 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked | remove package"
+        ansible.builtin.package:
             name: nfs-utils
             state: absent
         when:
             - not rhel9cis_use_nfs_server
             - not rhel9cis_use_nfs_service
 
-      - name: "2.2.18 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked | mask service"
-        systemd:
+      - name: "2.2.16 | PATCH | Ensure nfs-utils is not installed or the nfs-server service is masked | mask service"
+        ansible.builtin.systemd:
             name: nfs-server
             masked: true
             state: stopped
@@ -323,30 +279,29 @@
             - rhel9cis_use_nfs_service
   when:
       - "'nfs-utils' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_18
+      - rhel9cis_rule_2_2_16
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - nfs
       - services
-      - rule_2.2.18
+      - rule_2.2.16
 
 # The name title of the service says mask the service, but the fix allows for both options
 # Options available in default/main if to remove the package default is false just mask the server service
-- name: "2.2.19 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked"
+- name: "2.2.17 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked"
   block:
-      - name: "2.2.19 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked | remove package"
-        package:
+      - name: "2.2.17 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked | remove package"
+        ansible.builtin.package:
             name: rpcbind
             state: absent
         when:
             - not rhel9cis_use_rpc_server
             - not rhel9cis_use_rpc_service
 
-      - name: "2.2.19 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked | mask service"
-        systemd:
+      - name: "2.2.17 | PATCH | Ensure rpcbind is not installed or the rpcbind services are masked | mask service"
+        ansible.builtin.systemd:
             name: rpcbind.socket
             masked: true
             state: stopped
@@ -355,29 +310,28 @@
             - not rhel9cis_use_rpc_service
   when:
       - "'rpcbind' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_19
+      - rhel9cis_rule_2_2_17
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - rpc
-      - rule_2.2.19
+      - rule_2.2.17
 
 # The name title of the service says mask the service, but the fix allows for both options
 # Options available in default/main if to remove the package default is false just mask the server service
-- name: "2.2.20 | PATCH | Ensure rsync service is not enabled "
+- name: "2.2.18 | PATCH | Ensure rsync service is not enabled "
   block:
-      - name: "2.2.20 | PATCH | Ensure rsync service is not enabled | remove package"
-        package:
-            name: rsync
+      - name: "2.2.18 | PATCH | Ensure rsync-daemon is not installed or the rsync service is masked | remove package"
+        ansible.builtin.package:
+            name: rsync-daemon
             state: absent
         when:
             - not rhel9cis_use_rsync_server
             - not rhel9cis_use_rsync_service
 
-      - name: "2.2.20 | PATCH | Ensure rsync service is not enabled | mask service"
-        systemd:
+      - name: "2.2.18 | PATCH | Ensure rsync service is not enabled | mask service"
+        ansible.builtin.systemd:
             name: rsyncd
             masked: true
             state: stopped
@@ -386,11 +340,10 @@
             - not rhel9cis_use_rsync_service
   when:
       - "'rsync' in ansible_facts.packages"
-      - rhel9cis_rule_2_2_20
+      - rhel9cis_rule_2_2_18
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - rsync
-      - rule_2.2.20
+      - rule_2.2.18
