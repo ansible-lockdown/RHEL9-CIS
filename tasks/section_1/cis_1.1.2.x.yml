@@ -3,13 +3,13 @@
 - name: "1.1.2.1 | PATCH | Ensure /tmp is a separate partition"
   block:
       - name: "1.1.2.1 | PATCH | Ensure /tmp is a separate partition | Absent"
-        debug:
+        ansible.builtin.debug:
             msg: "Warning!! /tmp is not mounted on a separate partition"
         when:
             - required_mount not in mount_names
 
       - name: "1.1.2.1 | PATCH | Ensure /tmp is a separate partition | Warn Count"
-        set_fact:
+        ansible.builtin.set_fact:
             control_number: "{{ control_number }} + [ 'rule_1.1.2.1' ]"
             warn_count: "{{ warn_count | int + 1 }}"
         when:
@@ -28,7 +28,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - audit
       - mounts
       - rule_1.1.2.1
@@ -38,7 +37,7 @@
         "1.1.2.2 | PATCH | Ensure nodev option set on /tmp partition"
         "1.1.2.3 | PATCH | Ensure noexec option set on /tmp partition"
         "1.1.2.4 | PATCH | Ensure nosuid option set on /tmp partition"
-  mount:
+  ansible.builtin.mount:
       name: /tmp
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
@@ -58,7 +57,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - mounts
       - rule_1.1.2.2
@@ -71,7 +69,7 @@
         "1.1.2.2 | PATCH | Ensure nodev option set on /tmp partition"
         "1.1.2.3 | PATCH | Ensure noexec option set on /tmp partition"
         "1.1.2.4 | PATCH | Ensure nosuid option set on /tmp partition"
-  template:
+  ansible.builtin.template:
       src: etc/systemd/system/tmp.mount.j2
       dest: /etc/systemd/system/tmp.mount
       owner: root

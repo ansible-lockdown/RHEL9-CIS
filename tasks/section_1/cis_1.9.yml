@@ -1,7 +1,7 @@
 ---
 
 - name: "1.9 | PATCH | Ensure updates, patches, and additional security software are installed"
-  package:
+  ansible.builtin.package:
       name: "*"
       state: latest
   notify: change_requires_reboot
@@ -11,7 +11,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - rule_1.9
       - skip_ansible_lint

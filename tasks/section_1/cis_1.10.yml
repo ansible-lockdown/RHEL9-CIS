@@ -1,7 +1,7 @@
 ---
 
 - name: "1.10 | PATCH | Ensure system-wide crypto policy is not legacy"
-  shell: |
+  ansible.builtin.shell: |
       update-crypto-policies --set "{{ rhel9cis_crypto_policy }}"
       update-crypto-policies
   notify: change_requires_reboot
@@ -11,7 +11,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - no system_is_ec2
       - patch
       - rule_1.10

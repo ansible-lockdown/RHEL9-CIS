@@ -3,7 +3,7 @@
 - name: "1.1.6.1 | AUDIT | Ensure separate partition exists for /var/log/audit"
   block:
       - name: "1.1.6.1 | AUDIT | Ensure separate partition exists for /var/log/audit | Absent"
-        debug:
+        ansible.builtin.debug:
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
         register: var_log_audit_mount_absent
         changed_when: var_log_audit_mount_absent.skipped is undefined
@@ -11,14 +11,14 @@
             - required_mount not in mount_names
 
       - name: "1.1.6.1 | AUDIT | Ensure separate partition exists for /var/log/audit | Warn Count"
-        set_fact:
+        ansible.builtin.set_fact:
             control_number: "{{ control_number }} + [ 'rule_1.1.6.1' ]"
             warn_count: "{{ warn_count | int + 1 }}"
         when:
             - required_mount not in mount_names
 
       - name: "1.1.6.1 | AUDIT | Ensure separate partition exists for /var/log/audit | Present"
-        debug:
+        ansible.builtin.debug:
             msg: "Congratulations: {{ required_mount }} exists."
         register: var_log_audit_mount_present
         when:
@@ -30,7 +30,6 @@
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - audit
       - mounts
       - rule_1.1.6.1
@@ -39,7 +38,7 @@
           "1.1.6.2 | PATCH | Ensure noexec option set on /var/log/audit partition"
           "1.1.6.3 | PATCH | Ensure nodev option set on /var/log/audit partition"
           "1.1.6.4 | PATCH | Ensure nosuid option set on /var/log/audit partition"
-  mount:
+  ansible.builtin.mount:
       name: /var/log/audit
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
@@ -60,7 +59,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - mounts
       - skip_ansible_lint

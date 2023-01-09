@@ -1,26 +1,9 @@
 ---
 
-- name: "1.1.9 | PATCH | Disable Automounting"
-  service:
-      name: autofs
-      enabled: false
-  when:
-      - not rhel9cis_allow_autofs
-      - "'autofs' in ansible_facts.packages"
-      - rhel9cis_rule_1_1_9
-  tags:
-      - level1-server
-      - level2-workstation
-      - automated
-      - patch
-      - mounts
-      - automounting
-      - rule_1.1.9
-
-- name: "1.1.10 | PATCH | Disable USB Storage"
+- name: "1.1.9 | PATCH | Disable USB Storage"
   block:
-      - name: "1.1.10 | PATCH | Disable USB Storage | Edit modprobe config"
-        lineinfile:
+      - name: "1.1.9 | PATCH | Disable USB Storage | Edit modprobe config"
+        ansible.builtin.lineinfile:
             path: /etc/modprobe.d/CIS.conf
             regexp: "^(#)?install usb-storage(\\s|$)"
             line: "install usb-storage /bin/true"
@@ -29,12 +12,12 @@
             group: root
             mode: 0600
 
-      - name: "1.1.10 | PATCH | Disable USB Storage | Edit modprobe config"
-        modprobe:
+      - name: "1.1.9 | PATCH | Disable USB Storage | Edit modprobe config"
+        ansible.builtin.modprobe:
             name: usb-storage
             state: absent
   when:
-      - rhel9cis_rule_1_1_10
+      - rhel9cis_rule_1_1_9
   tags:
       - level1-server
       - level2-workstation
@@ -42,4 +25,4 @@
       - patch
       - mounts
       - removable_storage
-      - rule_1.1.10
+      - rule_1.1.9

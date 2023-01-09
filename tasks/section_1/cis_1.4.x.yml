@@ -1,7 +1,7 @@
 ---
 
 - name: "1.4.1 | PATCH | Ensure bootloader password is set"
-  copy:
+  ansible.builtin.copy:
       dest: /boot/grub2/user.cfg
       content: "GRUB2_PASSWORD={{ rhel9cis_bootloader_password_hash }}"  # noqa template-instead-of-copy
       owner: root
@@ -14,7 +14,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - grub
       - patch
       - rule_1.4.1
@@ -22,51 +21,21 @@
 - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
   block:
       - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
-        file:
+        ansible.builtin.file:
             path: /boot/grub2/grub.cfg
             owner: root
             group: root
             mode: 0600
+        loop:
+            - grub.cfg
+            - grubenv
+            - user.cfg
 
-      - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | UEFI"
-        mount:
-            name: /boot/efi
-            src: "UUID={{ item.uuid }}"
-            fstype: vfat
-            state: present
-            opts: defaults,umask=0027,fmask=0077,uid=0,gid=0
-            passno: '0'
-        with_items:
-            - "{{ ansible_mounts }}"
-        loop_control:
-            label: "{{ item.mount }}"
-        when:
-            - not rhel9cis_legacy_boot
-            - item.mount == "/boot/efi"
   when:
       - rhel9cis_rule_1_4_2
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - grub
       - patch
       - rule_1.4.2
-
-- name: "1.4.3 | PATCH | Ensure authentication is required when booting into rescue mode"
-  lineinfile:
-      path: /etc/systemd/system/rescue.service.d/00-require-auth.conf
-      regexp: '^ExecStart='
-      line: "ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue"
-      create: true
-      owner: root
-      group: root
-      mode: 0644
-  when:
-      - rhel9cis_rule_1_4_3
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - rule_1.4.3
