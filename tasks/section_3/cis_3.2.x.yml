@@ -28,7 +28,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - sysctl
       - patch
       - rule_3.2.1
@@ -48,7 +47,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sysctl
       - rule_3.2.2
