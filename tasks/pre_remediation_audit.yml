@@ -76,15 +76,11 @@
   environment: "{{ audit_run_script_environment | default({}) }}"
   changed_when: audit_run_pre_remediation.rc == 0
   register: audit_run_pre_remediation
-  args:
-      warn: false
 
 - name: Pre Audit | Capture audit data if json format
   block:
   - name: "Pre Audit | capture data {{ pre_audit_outfile }}"
     shell: "cat {{ pre_audit_outfile }}"
-    args:
-        warn: false
     register: pre_audit
     changed_when: false
 
@@ -100,8 +96,6 @@
   block:
   - name: "Pre Audit | capture data {{ pre_audit_outfile }}"
     shell: "tail -2 {{ pre_audit_outfile }}"
-    args:
-        warn: false
     register: pre_audit
     changed_when: false
 

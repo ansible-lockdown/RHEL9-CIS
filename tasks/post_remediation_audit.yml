@@ -5,8 +5,6 @@
   environment: "{{ audit_run_script_environment | default({}) }}"
   changed_when: audit_run_post_remediation.rc == 0
   register: audit_run_post_remediation
-  args:
-      warn: false
 
 - name: Post Audit | ensure audit files readable by users
   file:
@@ -21,8 +19,6 @@
   block:
       - name: "capture data {{ post_audit_outfile }}"
         shell: "cat {{ post_audit_outfile }}"
-        args:
-            warn: false
         register: post_audit
         changed_when: false
 
@@ -38,8 +34,6 @@
   block:
       - name: "Post Audit | capture data {{ post_audit_outfile }}"
         shell: "tail -2 {{ post_audit_outfile }}"
-        args:
-            warn: false
         register: post_audit
         changed_when: false
 
