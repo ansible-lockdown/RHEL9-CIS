@@ -1,9 +1,18 @@
 ---
 
 - name: "4.2.3 | PATCH | Ensure permissions on all logfiles are configured"
-  command: find /var/log -type f -exec chmod g-wx,o-rwx "{}" +
-  changed_when: false
-  failed_when: false
+  block:
+      - name: "4.2.3 | AUDIT | Ensure permissions on all logfiles are configured | find files"
+        ansible.builtin.find: 
+            paths: "/var/log"
+            type: file
+        register: logfiles
+
+      - name: "4.2.3 | AUDIT | Ensure permissions on all logfiles are configured | find files"
+        ansible.builtin.file:
+            paths: "{{ item.path }}"
+            mode: 0640
+        register: logfiles
   when:
       - rhel9cis_rule_4_2_3
   tags:

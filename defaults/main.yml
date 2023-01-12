@@ -71,7 +71,6 @@ audit_cmd_timeout: 60000
 # Section 1 rules
 rhel9cis_rule_1_1_1_1: true
 rhel9cis_rule_1_1_1_2: true
-rhel9cis_rule_1_1_1_3: true
 rhel9cis_rule_1_1_2_1: true
 rhel9cis_rule_1_1_2_2: true
 rhel9cis_rule_1_1_2_3: true
@@ -79,7 +78,6 @@ rhel9cis_rule_1_1_2_4: true
 rhel9cis_rule_1_1_3_1: true
 rhel9cis_rule_1_1_3_2: true
 rhel9cis_rule_1_1_3_3: true
-rhel9cis_rule_1_1_3_4: true
 rhel9cis_rule_1_1_4_1: true
 rhel9cis_rule_1_1_4_2: true
 rhel9cis_rule_1_1_4_3: true
@@ -95,26 +93,24 @@ rhel9cis_rule_1_1_6_4: true
 rhel9cis_rule_1_1_7_1: true
 rhel9cis_rule_1_1_7_2: true
 rhel9cis_rule_1_1_7_3: true
-rhel9cis_rule_1_1_7_4: true
-rhel9cis_rule_1_1_7_5: true
 rhel9cis_rule_1_1_8_1: true
 rhel9cis_rule_1_1_8_2: true
 rhel9cis_rule_1_1_8_3: true
+rhel9cis_rule_1_1_8_4: true
 rhel9cis_rule_1_1_18: true
 rhel9cis_rule_1_1_19: true
 rhel9cis_rule_1_1_20: true
 rhel9cis_rule_1_1_21: true
 rhel9cis_rule_1_1_9: true
-rhel9cis_rule_1_1_10: true
 rhel9cis_rule_1_2_1: true
 rhel9cis_rule_1_2_2: true
 rhel9cis_rule_1_2_3: true
 rhel9cis_rule_1_2_4: true
 rhel9cis_rule_1_3_1: true
 rhel9cis_rule_1_3_2: true
+rhel9cis_rule_1_3_3: true
 rhel9cis_rule_1_4_1: true
 rhel9cis_rule_1_4_2: true
-rhel9cis_rule_1_4_3: true
 rhel9cis_rule_1_5_1: true
 rhel9cis_rule_1_5_2: true
 rhel9cis_rule_1_5_3: true
@@ -125,6 +121,7 @@ rhel9cis_rule_1_6_1_4: true
 rhel9cis_rule_1_6_1_5: true
 rhel9cis_rule_1_6_1_6: true
 rhel9cis_rule_1_6_1_7: true
+rhel9cis_rule_1_6_1_8: true
 rhel9cis_rule_1_7_1: true
 rhel9cis_rule_1_7_2: true
 rhel9cis_rule_1_7_3: true
@@ -136,6 +133,11 @@ rhel9cis_rule_1_8_2: true
 rhel9cis_rule_1_8_3: true
 rhel9cis_rule_1_8_4: true
 rhel9cis_rule_1_8_5: true
+rhel9cis_rule_1_8_6: true
+rhel9cis_rule_1_8_7: true
+rhel9cis_rule_1_8_8: true
+rhel9cis_rule_1_8_9: true
+rhel9cis_rule_1_8_10: true
 rhel9cis_rule_1_9: true
 rhel9cis_rule_1_10: true
 
@@ -160,21 +162,16 @@ rhel9cis_rule_2_2_15: true
 rhel9cis_rule_2_2_16: true
 rhel9cis_rule_2_2_17: true
 rhel9cis_rule_2_2_18: true
-rhel9cis_rule_2_2_19: true
-rhel9cis_rule_2_2_20: true
 rhel9cis_rule_2_3_1: true
 rhel9cis_rule_2_3_2: true
 rhel9cis_rule_2_3_3: true
 rhel9cis_rule_2_3_4: true
-rhel9cis_rule_2_3_5: true
-rhel9cis_rule_2_3_6: true
 rhel9cis_rule_2_4: true
 
  Section 3 rules
 rhel9cis_rule_3_1_1: true
 rhel9cis_rule_3_1_2: true
 rhel9cis_rule_3_1_3: true
-rhel9cis_rule_3_1_4: true
 rhel9cis_rule_3_2_1: true
 rhel9cis_rule_3_2_2: true
 rhel9cis_rule_3_3_1: true
@@ -188,11 +185,6 @@ rhel9cis_rule_3_3_8: true
 rhel9cis_rule_3_3_9: true
 rhel9cis_rule_3_4_1_1: true
 rhel9cis_rule_3_4_1_2: true
-rhel9cis_rule_3_4_1_3: true
-rhel9cis_rule_3_4_1_4: true
-rhel9cis_rule_3_4_1_5: true
-rhel9cis_rule_3_4_1_6: true
-rhel9cis_rule_3_4_1_7: true
 rhel9cis_rule_3_4_2_1: true
 rhel9cis_rule_3_4_2_2: true
 rhel9cis_rule_3_4_2_3: true
@@ -200,11 +192,6 @@ rhel9cis_rule_3_4_2_4: true
 rhel9cis_rule_3_4_2_5: true
 rhel9cis_rule_3_4_2_6: true
 rhel9cis_rule_3_4_2_7: true
-rhel9cis_rule_3_4_2_8: true
-rhel9cis_rule_3_4_2_9: true
-rhel9cis_rule_3_4_2_10: true
-rhel9cis_rule_3_4_2_11: true
-
 
 # Section 4 rules
 rhel9cis_rule_4_1_1_1: true
@@ -235,6 +222,16 @@ rhel9cis_rule_4_1_3_18: true
 rhel9cis_rule_4_1_3_19: true
 rhel9cis_rule_4_1_3_20: true
 rhel9cis_rule_4_1_3_21: true
+rhel9cis_rule_4_1_4_1: true
+rhel9cis_rule_4_1_4_2: true
+rhel9cis_rule_4_1_4_3: true
+rhel9cis_rule_4_1_4_4: true
+rhel9cis_rule_4_1_4_5: true
+rhel9cis_rule_4_1_4_6: true
+rhel9cis_rule_4_1_4_7: true
+rhel9cis_rule_4_1_4_8: true
+rhel9cis_rule_4_1_4_9: true
+rhel9cis_rule_4_1_4_10: true
 rhel9cis_rule_4_2_1_1: true
 rhel9cis_rule_4_2_1_2: true
 rhel9cis_rule_4_2_1_3: true
@@ -253,9 +250,7 @@ rhel9cis_rule_4_2_2_5: true
 rhel9cis_rule_4_2_2_6: true
 rhel9cis_rule_4_2_2_7: true
 rhel9cis_rule_4_2_3: true
-rhel9cis_rule_4_3_1: true
-rhel9cis_rule_4_3_2: true
-rhel9cis_rule_4_3_3: true
+rhel9cis_rule_4_3: true
 
 # Section 5 rules
 rhel9cis_rule_5_1_1: true
@@ -400,6 +395,8 @@ rhel9cis_aide_cron:
 
 # SELinux policy
 rhel9cis_selinux_pol: targeted
+# chose onf or enfocing or permissive
+rhel9cis_selinux_enforce: enforcing
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
 
@@ -417,13 +414,12 @@ rhel9cis_chrony_server_options: "minpoll 8"
 
 ### 2.2 Special Purposes
 ##### Service configuration booleans set true to keep service
-rhel9cis_xinetd_server: false
 rhel9cis_gui: false
 rhel9cis_avahi_server: false
 rhel9cis_cups_server: false
 rhel9cis_dhcp_server: false
 rhel9cis_dns_server: false
-rhel9cis_ftp_server: false
+rhel9cis_dnsmasq_server: false
 rhel9cis_vsftpd_server: false
 rhel9cis_tftp_server: false
 rhel9cis_httpd_server: false
@@ -433,7 +429,6 @@ rhel9cis_imap_server: false
 rhel9cis_samba_server: false
 rhel9cis_squid_server: false
 rhel9cis_snmp_server: false
-rhel9cis_nis_server: false
 rhel9cis_telnet_server: false
 rhel9cis_is_mail_server: false
 # Note the options
@@ -450,12 +445,10 @@ rhel9cis_use_rsync_server: false
 rhel9cis_use_rsync_service: false
 
 #### 2.3 Service clients
-rhel9cis_ypbind_required: false
-rhel9cis_rsh_required: false
-rhel9cis_talk_required: false
 rhel9cis_telnet_required: false
 rhel9cis_openldap_clients_required: false
 rhel9cis_tftp_client: false
+rhel9cis_ftp_client: false
 
 
 ## Section3 vars
@@ -473,15 +466,29 @@ rhel9cis_firewall: firewalld
 
 ##### firewalld
 rhel9cis_default_zone: public
-rhel9cis_firewalld_nftables_state: masked  # Note if absent removes the firewalld pkg dependancy
+
+# These are the default service add accordingly
+rhel9_firewalld_service:
+    - ssh
+    - dhcpv6-client
+# These are added to demonstrate how this can be done
+rhel9cis_firewalld_ports:
+    - number: 80
+      protocol: tcp
 
 #### nftables
-rhel9cis_nftables_firewalld_state: masked
 rhel9cis_nft_tables_autonewtable: true
 rhel9cis_nft_tables_tablename: filter
 rhel9cis_nft_tables_autochaincreate: true
-
-
+rhel9_nftables_ports:
+    - port: ssh
+      protocol: tcp
+      type: dport
+      rule: accept
+    - port: igmp
+      protocol: ip
+      type: protocol
+      rule: accept
 # Warning Banner Content (issue, issue.net, motd)
 rhel9cis_warning_banner: |
     Authorized uses only. All activity may be monitored and reported.
@@ -522,6 +529,10 @@ rhel9cis_preferred_log_capture: rsyslog
 
 #### 4.2.1.6 remote and destation log server name
 rhel9cis_remote_log_server: logagg.example.com
+rhel9cis_remote_log_port: 514
+rhel9cis_remote_log_protocol: tcp
+rhel9cis_remote_log_retrycount: 100
+rhel9cis_remote_log_queuesize: 1000
 
 #### 4.2.1.7
 rhel9cis_system_is_log_server: false

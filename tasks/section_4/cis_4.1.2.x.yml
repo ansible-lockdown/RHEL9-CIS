@@ -27,7 +27,6 @@
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - auditd
       - rule_4.1.2.2
@@ -47,7 +46,6 @@
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - auditd
       - rule_4.1.2.3
@@ -64,6 +62,5 @@
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - auditd
