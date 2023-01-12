@@ -3,7 +3,7 @@
 - name: "4.2.3 | PATCH | Ensure permissions on all logfiles are configured"
   block:
       - name: "4.2.3 | AUDIT | Ensure permissions on all logfiles are configured | find files"
-        ansible.builtin.find: 
+        ansible.builtin.find:
             paths: "/var/log"
             type: file
         register: logfiles

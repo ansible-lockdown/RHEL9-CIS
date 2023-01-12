@@ -1,7 +1,7 @@
 ---
 
 - name: "3.4.1.1 | PATCH | Ensure nftables is installed"
-  package:
+  ansible.builtin.package:
       name:
           - nftables
       state: present
@@ -38,7 +38,7 @@
             - rhel9cis_firewall == 'firewalld'
 
       - name: "3.4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | {{ rhel9cis_firewall }} started and enabled"
-        systemd:
+        ansible.builtin.systemd:
             name: "{{ rhel9cis_firewall }}"
             enabled: true
             state: started
