@@ -3,8 +3,6 @@
 
 - name: reload sysctl
   shell: sysctl --system
-  args:
-      warn: false
   when:
       - sysctl_updated.changed
 
@@ -50,9 +48,9 @@
       state: reloaded
 
 - name: remount tmp
-  shell: mount -o remount /tmp
-  args:
-      warn: false
+  ansible.posix.mount: 
+    path: /tmp
+    state: remounted
 
 - name: restart firewalld
   service:
@@ -71,13 +69,9 @@
 
 - name: reload dconf
   shell: dconf update
-  args:
-      warn: false
 
 - name: grub2cfg
   shell: "grub2-mkconfig -o /boot/grub2/grub.cfg"
-  args:
-      warn: false
   ignore_errors: true  # noqa ignore-errors
   tags:
       - skip_ansible_lint
@@ -118,8 +112,6 @@
 
 - name: restart auditd
   shell: service auditd restart
-  args:
-      warn: false
   tags:
       - skip_ansible_lint
 
