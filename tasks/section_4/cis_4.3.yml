@@ -7,7 +7,7 @@
             name: rsyslog-logrotate
             state: present
 
-      - name: "4.3.2 | PATCH | Ensure logrotate is configured | scheduled"
+      - name: "4.3 | PATCH | Ensure logrotate is configured | scheduled"
         ansible.builtin.systemd:
             name: logrotate.timer
             state: started
@@ -36,4 +36,4 @@
       - manual
       - patch
       - logrotate
-      - rule_4.3.1
+      - rule_4.3
