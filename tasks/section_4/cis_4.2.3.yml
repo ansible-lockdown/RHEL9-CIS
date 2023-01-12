@@ -5,14 +5,17 @@
       - name: "4.2.3 | AUDIT | Ensure permissions on all logfiles are configured | find files"
         ansible.builtin.find:
             paths: "/var/log"
-            type: file
+            file_type: file
+            recurse: true
         register: logfiles
 
       - name: "4.2.3 | AUDIT | Ensure permissions on all logfiles are configured | find files"
         ansible.builtin.file:
-            paths: "{{ item.path }}"
+            path: "{{ item.path }}"
             mode: 0640
-        register: logfiles
+        loop: "{{ logfiles.files }}"
+        loop_control:
+            label: "{{ item.path }}"
   when:
       - rhel9cis_rule_4_2_3
   tags:
