@@ -9,12 +9,8 @@
 - name: "SECTION | 3.3.x | Network Parameters (host and Router)"
   import_tasks: cis_3.3.x.yml
 
-- name: "SECTION | 3.4.1.x | Configure firewalld"
+- name: "SECTION | 3.4.1.x | Firewall configuration"
   import_tasks: cis_3.4.1.x.yml
-  when:
-  - rhel9cis_firewall == "firewalld"
 
-- name: "SECTION | 3.4.2.x | Configure nftables"
+- name: "SECTION | 3.4.2.x | Configure firewall"
   include_tasks: cis_3.4.2.x.yml
-  when:
-  - rhel9cis_firewall == "nftables"
