@@ -57,25 +57,16 @@
       - rule_4.1.4.4
 
 - name: "4.1.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive"
-  block:
-
-      - name: "4.1.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive | get permissions"
-        ansible.builtin.stat:
-            path: "{{ item.path }}"
-        register: item_file
-        loop: "{{ audit_conf_files.results | map(attribute='files') | flatten }}"
-        loop_control:
-            label: "{{ item.path }}"
-
-      - name: "4.1.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive | set permissions"
-        ansible.builtin.file:
-            path: "{{ audit_logfile.stdout | dirname }}"
-            state: file
-            mode: 0640
-        loop: "{{ audit_config_files }}"
-        when: not item_file.stat.mode is match('06(0|4)0')
-  when:
-      - rhel9cis_rule_4_1_4_5
+  ansible.builtin.file:
+      path: "{{ item.path }}"
+      state: file
+      mode: 0640
+  loop: "{{ auditd_conf_files.files }}"
+  loop_control:
+      label: "{{ item.path }}"
+  when: 
+       - item.mode != '06(0|4)0'
+       - rhel9cis_rule_4_1_4_5
   tags:
       - level2-server
       - level2-workstation
@@ -85,10 +76,12 @@
 
 - name: "4.1.4.6 | PATCH | Ensure audit configuration files are owned by root"
   ansible.builtin.file:
-      path: "{{ audit_logfile.stdout | dirname }}"
+      path: "{{ item.path }}"
       state: file
       owner: root
-  loop: "{{ audit_config_files }}"
+  loop: "{{ auditd_conf_files.files }}"
+  loop_control:
+      label: "{{ item.path }}"
   when:
       - rhel9cis_rule_4_1_4_6
   tags:
@@ -100,10 +93,12 @@
 
 - name: "4.1.4.7 | PATCH | Ensure audit configuration files belong to group root"
   ansible.builtin.file:
-      path: "{{ audit_logfile.stdout | dirname }}"
+      path: "{{ item.path }}"
       state: file
       group: root
-  loop: "{{ audit_config_files }}"
+  loop: "{{ auditd_conf_files.files }}"
+  loop_control:
+      label: "{{ item.path }}"
   when:
       - rhel9cis_rule_4_1_4_7
   tags:
@@ -115,7 +110,7 @@
 
 - name: "4.1.4.8 | PATCH | Ensure audit tools are 755 or more restrictive"
   block:
-      - name: "PRELIM | 4.1.4.8 | Get audit binarty file stat | get current mode"
+      - name: "PRELIM | 4.1.4.8 | Get audit binary file stat | get current mode"
         ansible.builtin.stat:
             path: "{{ item }}"
         register: "audit_bins"
@@ -127,14 +122,19 @@
             - /sbin/auditd
             - /sbin/augenrules
 
+      - debug:
+           msg: "{{ audit_bins }}"
+
       - name: "4.1.4.8 | PATCH | Ensure audit tools are 755 or more restrictive | set if required"
         ansible.builtin.file:
-            path: "{{ item }}"
+            path: "{{ item.item }}"
             state: file
             mode: 0750
         register: "audit_bins"
-        loop: "{{ audit_bins.results.stat.path }}"
-        when: not audit_bins.stat.mode is match('07(0|5)(0|5)')
+        loop: "{{ audit_bins.results }}"
+        loop_control:
+            label: "{{ item.item }}"
+        when: not item.stat.mode is match('07(0|5)0')
   when:
       - rhel9cis_rule_4_1_4_8
   tags:
