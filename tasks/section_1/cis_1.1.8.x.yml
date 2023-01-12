@@ -1,9 +1,9 @@
 ---
 
 # Skips if mount is absent
-- name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a sepretae partition"
+- name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition"
   block:
-      - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a sepretae partition | Absent"
+      - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition | Absent"
         ansible.builtin.debug:
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
         register: home_mount_absent
