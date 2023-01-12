@@ -114,16 +114,25 @@
       - rule_4.1.1.1
       - auditd
 
-- name: "PRELIM | 4.1.12 | Ensure successful file system mounts are collected"
-  shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null; done
-  changed_when: false
-  failed_when: false
-  check_mode: false
-  register: priv_procs
+- name: "PRELIM | 4.1.4.5 | Audit conf and rules files | list files"
+  ansible.builtin.find:
+      path: /etc/audit
+      file_type: file
+      recurse: true
+      patterns: '*.conf,*.rules'
+  register: auditd_conf_files
+  when:
+      - rhel9cis_rule_4_1_4_5 or
+        rhel9cis_rule_4_1_4_6 or
+        rhel9cis_rule_4_1_4_7
   tags:
-      - level1-server
-      - level1-workstation
-      - always
+      - level2-server
+      - level2-workstation
+      - patch
+      - auditd
+      - rule_4.1.4.5
+      - rule_4.1.4.6
+      - rule_4.1.4.7
 
 - name: "PRELIM | Section 5.1 | Configure cron"
   package:
