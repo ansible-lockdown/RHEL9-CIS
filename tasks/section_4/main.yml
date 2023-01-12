@@ -11,6 +11,9 @@
 - name: "SECTION | 4.1.3 | Configure Auditd rules"
   import_tasks: cis_4.1.3.x.yml
 
+- name: "SECTION | 4.1.4 | Configure Audit files"
+  import_tasks: cis_4.1.4.x.yml
+
 - name: "SECTION | 4.2 | Configure Logging"
   import_tasks: cis_4.2.1.x.yml
   when: rhel9cis_syslog == 'rsyslog'
