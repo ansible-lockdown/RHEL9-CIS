@@ -11,7 +11,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - telnet
       - rule_2.3.1
@@ -27,7 +26,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ldap
       - rule_2.3.2
@@ -43,7 +41,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - tftp
       - rule_2.3.3
@@ -59,7 +56,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ftp
       - rule_2.3.4

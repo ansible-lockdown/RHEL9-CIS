@@ -21,7 +21,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - logfiles
       - rule_4.2.3

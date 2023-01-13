@@ -63,7 +63,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - journald
       - rule_4.2.2.1.4
@@ -98,7 +97,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - audit
       - journald
       - rule_4.2.2.2
@@ -114,7 +112,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - journald
       - rule_4.2.2.3
@@ -130,7 +127,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - journald
       - rule_4.2.2.4
@@ -184,7 +180,7 @@
       - name: "4.2.2.7 | AUDIT | Ensure journald default file permissions configured | Set live file"
         ansible.builtin.set_fact:
             systemd_conf_file: /etc/tmpfiles.d/systemd.conf
-        when: rhel9cis_4_2_2_7_override_stat.exists
+        when: rhel9cis_4_2_2_7_override.stat.exists
 
       - name: "4.2.2.7 | PATCH | Ensure journald default file permissions configured | Set permission"
         ansible.builtin.lineinfile:

@@ -142,7 +142,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - files
       - permissions
