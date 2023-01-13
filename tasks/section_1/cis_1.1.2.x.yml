@@ -32,7 +32,7 @@
       fstype: "{{ item.fstype }}"
       state: present
       opts: defaults,{% if rhel9cis_rule_1_1_2_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_2_3 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_2_4 %}nosuid{% endif %}
-  notify: remount tmp
+  notify: Remount tmp
   with_items:
       - "{{ ansible_mounts }}"
   loop_control:
@@ -64,7 +64,7 @@
       owner: root
       group: root
       mode: 0644
-  notify: systemd restart tmp.mount
+  notify: Systemd restart tmp.mount
   when:
       - rhel9cis_tmp_svc
       - rhel9cis_rule_1_1_2_1 or

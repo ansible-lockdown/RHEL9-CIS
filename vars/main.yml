@@ -8,5 +8,5 @@ rhel9cis_allowed_crypto_policies:
     - 'FIPS'
 
 # Used to control warning summary
-control_number: ""
+warn_control_list: ""
 warn_count: 0

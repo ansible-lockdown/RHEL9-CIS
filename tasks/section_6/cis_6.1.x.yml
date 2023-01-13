@@ -207,7 +207,7 @@
         when:
             - item.stdout_lines is defined
             - item.stdout_lines | length > 0
-       
+
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | warning"
         ansible.builtin.import_tasks: warning_facts.yml
         vars:

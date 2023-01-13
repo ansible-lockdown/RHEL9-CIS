@@ -10,8 +10,8 @@
         ansible.builtin.import_tasks: warning_facts.yml
 
   vars:
-       warn_control_id: '1.1.6.1'
-       required_mount: '/var/log/audit'
+      warn_control_id: '1.1.6.1'
+      required_mount: '/var/log/audit'
   when:
       - required_mount not in mount_names
       - rhel9cis_rule_1_1_6_1
@@ -36,7 +36,7 @@
       - "{{ ansible_mounts }}"
   loop_control:
       label: "{{ item.device }}"
-  notify: change_requires_reboot
+  notify: Change_requires_reboot
   when:
       - var_log_audit_mount_present is defined
       - item.mount == "/var/log/audit"

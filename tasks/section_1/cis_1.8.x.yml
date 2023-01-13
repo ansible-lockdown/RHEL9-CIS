@@ -25,7 +25,7 @@
       owner: root
       group: root
       mode: 0644
-  notify: reload dconf
+  notify: Reload dconf
   with_items:
       - { file: '/etc/dconf/profile/gdm', regexp: 'user-db', line: 'user-db:user' }
       - { file: '/etc/dconf/profile/gdm', regexp: 'system-db', line: 'system-db:gdm' }
@@ -54,7 +54,7 @@
       owner: root
       group: root
       mode: 0644
-  notify: reload dconf
+  notify: Reload dconf
   with_items:
       - { file: '/etc/dconf/profile/gdm', regexp: 'user-db', line: 'user-db:user' }
       - { file: '/etc/dconf/profile/gdm', regexp: 'system-db', line: 'system-db:gdm' }
@@ -81,7 +81,7 @@
       owner: root
       group: root
       mode: 0644
-  notify: reload dconf
+  notify: Reload dconf
   with_items:
       - { regex: '\[org\/gnome\/desktop\/media-handling\]', line: '[org/gnome/desktop/media-handling]' }
       - { regex: 'automount=', line: 'automount=false' }

@@ -32,10 +32,10 @@
       path: /etc/systemd/journald.conf
       regexp: "^#ForwardToSyslog=|^ForwardToSyslog="
       line: ForwardToSyslog=yes
-  notify: restart rsyslog
+  notify: Restart rsyslog
   when:
       - rhel9cis_rule_4_2_1_3
-      - rhel9cis_preferred_log_capture == "rsyslog"
+      - rhel9cis_syslog == "rsyslog"
   tags:
       - level1-server
       - level1-workstation
@@ -47,7 +47,7 @@
       path: /etc/rsyslog.conf
       regexp: '^\$FileCreateMode'
       line: '$FileCreateMode 0640'
-  notify: restart rsyslog
+  notify: Restart rsyslog
   when:
       - rhel9cis_rule_4_2_1_4
   tags:
@@ -60,7 +60,7 @@
 - name: "4.2.1.5 | PATCH | Ensure logging is configured"
   block:
       - name: "4.2.1.5 | AUDIT | Ensure logging is configured | rsyslog current config message out"
-        ansible.builtin.command: cat /etc/rsyslog.conf
+        ansible.builtin.shell: cat /etc/rsyslog.conf
         changed_when: false
         failed_when: false
         check_mode: false
@@ -84,7 +84,7 @@
               mail.warning                                            -/var/log/mail.warning
               mail.err                                                /var/log/mail.err
             insertafter: '# Log all the mail messages in one place.'
-        notify: restart rsyslog
+        notify: Restart rsyslog
         when: rhel9cis_rsyslog_ansiblemanaged
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | news.crit log setting"
@@ -97,7 +97,7 @@
               news.crit                                               -/var/log/news/news.crit
               news.notice                                             -/var/log/news/news.crit
             insertafter: '# Save news errors of level crit and higher in a special file.'
-        notify: restart rsyslog
+        notify: Restart rsyslog
         when: rhel9cis_rsyslog_ansiblemanaged
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | Misc. log setting"
@@ -111,7 +111,7 @@
               *.crit                                                   /var/log/warn
               *.*;mail.none;news.none                                  /var/log/messages
             insertafter: '#### RULES ####'
-        notify: restart rsyslog
+        notify: Restart rsyslog
         when: rhel9cis_rsyslog_ansiblemanaged
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | Local log settings"
@@ -127,7 +127,7 @@
               local6,local7.*                                          -/var/log/localmessages
               *.emrg                                                    :omusrmsg:*
             insertafter: '#### RULES ####'
-        notify: restart rsyslog
+        notify: Restart rsyslog
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | Auth Settings"
         ansible.builtin.blockinfile:
@@ -138,7 +138,7 @@
               # Private settings to meet CIS standards
               auth,authpriv.*                                           /var/log/secure
             insertafter: '#### RULES ####'
-        notify: restart rsyslog
+        notify: Restart rsyslog
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | Cron Settings"
         ansible.builtin.blockinfile:
@@ -149,7 +149,7 @@
               # Cron settings to meet CIS standards
               cron.*                                                   /var/log/cron
             insertafter: '#### RULES ####'
-        notify: restart rsyslog
+        notify: Restart rsyslog
   when:
       - rhel9cis_rule_4_2_1_5
   tags:
@@ -171,7 +171,7 @@
   failed_when:
       - result is failed
       - result.rc != 257
-  notify: restart rsyslog
+  notify: Restart rsyslog
   when:
       - rhel9cis_rule_4_2_1_6
       - rhel9cis_remote_log_server
@@ -189,7 +189,7 @@
             path: /etc/rsyslog.conf
             regexp: '{{ item }}'
             replace: '#\1'
-        notify: restart rsyslog
+        notify: Restart rsyslog
         loop:
             - '^(\$ModLoad imtcp)'
             - '^(\$InputTCPServerRun)'
@@ -202,7 +202,7 @@
             path: /etc/rsyslog.conf
             regexp: '^#(.*{{ item }}.*)'
             replace: '\1'
-        notify: restart rsyslog
+        notify: Restart rsyslog
         loop:
             - 'ModLoad imtcp'
             - 'InputTCPServerRun'

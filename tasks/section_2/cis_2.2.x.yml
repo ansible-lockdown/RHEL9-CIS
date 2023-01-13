@@ -228,7 +228,7 @@
   ansible.builtin.package:
       name: dnsmasq
       state: absent
-  notify: restart postfix
+  notify: Restart postfix
   when:
       - not rhel9cis_is_mail_server
       - "'dnsmasq' in ansible_facts.packages"
@@ -245,7 +245,7 @@
       path: /etc/postfix/main.cf
       regexp: "^(#)?inet_interfaces"
       line: "inet_interfaces = loopback-only"
-  notify: restart postfix
+  notify: Restart postfix
   when:
       - not rhel9cis_is_mail_server
       - "'postfix' in ansible_facts.packages"

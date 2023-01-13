@@ -3,7 +3,7 @@
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
 - name: "PRELIM | List users accounts"
-  shell: "awk -F: '{print $1}' /etc/passwd"
+  ansible.builtin.shell: "awk -F: '{print $1}' /etc/passwd"
   changed_when: false
   check_mode: false
   register: users
@@ -13,7 +13,7 @@
       - users
 
 - name: "PRELIM | Gather accounts with empty password fields"
-  shell: "cat /etc/shadow | awk -F: '($2 == \"\" ) {j++;print $1; } END {exit j}'"
+  ansible.builtin.shell: "cat /etc/shadow | awk -F: '($2 == \"\" ) {j++;print $1; } END {exit j}'"
   changed_when: false
   check_mode: false
   register: empty_password_accounts
@@ -23,7 +23,7 @@
       - passwords
 
 - name: "PRELIM | Gather UID 0 accounts other than root"
-  shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
+  ansible.builtin.shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
   changed_when: false
   check_mode: false
   register: rhel9cis_uid_zero_accounts_except_root
@@ -36,14 +36,14 @@
 - name: "PRELIM | Setup crypto-policy"
   block:
       - name: "PRELIM | Install crypto-policies"
-        dnf:
+        ansible.builtin.package:
             name:
                 - crypto-policies
                 - crypto-policies-scripts
             state: present
 
       - name: "PRELIM | Gather system-wide crypto-policy"
-        shell: update-crypto-policies --show
+        ansible.builtin.shell: update-crypto-policies --show
         changed_when: false
         check_mode: false
         register: system_wide_crypto_policy
@@ -56,7 +56,7 @@
       - crypto
 
 - name: "PRELIM | if systemd coredump"
-  stat:
+  ansible.builtin.stat:
       path: /etc/systemd/coredump.conf
   register: systemd_coredump
   when:
@@ -68,14 +68,14 @@
       - systemd
 
 - name: "PRELIM | Section 1.1 | Create list of mount points"
-  set_fact:
+  ansible.builtin.set_fact:
       mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
   tags:
       - level1-server
       - level1-workstation
 
 - name: "PRELIM | Ensure python3-libselinux is installed"
-  package:
+  ansible.builtin.package:
       name: python3-libselinux
       state: present
   when:
@@ -84,23 +84,23 @@
 - name: "PRELIM | Set facts based on boot type"
   block:
       - name: "PRELIM | Check whether machine is UEFI-based"
-        stat:
+        ansible.builtin.stat:
             path: /sys/firmware/efi
         register: rhel_09_efi_boot
 
       - name: "PRELIM | AUDIT | set legacy boot and grub path | Bios"
-        set_fact:
+        ansible.builtin.set_fact:
             rhel9cis_legacy_boot: true
             grub2_path: /etc/grub2.cfg
         when: not rhel_09_efi_boot.stat.exists
 
       - name: "PRELIM | set grub fact | UEFI"
-        set_fact:
+        ansible.builtin.set_fact:
             grub2_path: /etc/grub2-efi.cfg
         when: rhel_09_efi_boot.stat.exists
 
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
-  package:
+  ansible.builtin.package:
       name: audit
       state: present
   become: true
@@ -135,7 +135,7 @@
       - rule_4.1.4.7
 
 - name: "PRELIM | Section 5.1 | Configure cron"
-  package:
+  ansible.builtin.package:
       name: cronie
       state: present
   become: true
@@ -149,7 +149,7 @@
       - cron
 
 - name: "PRELIM | Install authconfig"
-  package:
+  ansible.builtin.package:
       name: authconfig
       state: present
   become: true
@@ -170,7 +170,7 @@
       - auditd
 
 - name: "PRELIM | 5.3.4 | Find all sudoers files."
-  command: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
+  ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
   changed_when: false
   failed_when: false
   check_mode: false
@@ -183,7 +183,7 @@
       - rule_5.3.5
 
 - name: "PRELIM | Check for rhnsd service"
-  shell: "systemctl show rhnsd | grep LoadState | cut -d = -f 2"
+  ansible.builtin.shell: "systemctl show rhnsd | grep LoadState | cut -d = -f 2"
   changed_when: false
   check_mode: false
   become: true
@@ -198,28 +198,28 @@
 - name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
   block:
       - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
-        shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+        ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
         changed_when: false
         register: uid_min_id
 
       - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
-        shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+        ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
         changed_when: false
         register: uid_max_id
 
       - name: "PRELIM | AUDIT | Capture GID_MIN information from logins.def"
-        shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
+        ansible.builtin.shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
         changed_when: false
         register: gid_min_id
 
       - name: "PRELIM | AUDIT | set_facts for interactive uid/gid"
-        set_fact:
+        ansible.builtin.set_fact:
             min_int_uid: "{{ uid_min_id.stdout }}"
             max_int_uid: "{{ uid_max_id.stdout }}"
             min_int_gid: "{{ gid_min_id.stdout }}"
 
 - name: Output of uid findings
-  debug:
+  ansible.builtin.debug:
       msg: "{{ min_int_uid }} {{ max_int_uid }}"
 
   when:

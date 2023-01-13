@@ -19,7 +19,7 @@
       path: /etc/systemd/journal-upload.conf
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
-  notify: restart systemd_journal_upload
+  notify: Restart systemd_journal_upload
   with_items:
       - { regexp: 'URL=', line: 'URL={{ rhel9cis_journal_upload_url }}'}
       - { regexp: 'ServerKeyFile=', line: 'ServerKeyFile={{ rhel9cis_journal_upload_serverkeyfile }}'}
@@ -92,7 +92,7 @@
         ansible.builtin.import_tasks: warning_facts.yml
         when: "'static' not in rhel9cis_4_2_2_2_status.stdout"
   vars:
-     warn_control_id: '4.2.2.2'
+      warn_control_id: '4.2.2.2'
   when:
       - rhel9cis_rule_4_2_2_2
   tags:
@@ -108,7 +108,7 @@
       path: /etc/systemd/journald.conf
       regexp: "^#Compress=|^Compress="
       line: Compress=yes
-  notify: restart systemd_journal_upload
+  notify: Restart systemd_journal_upload
   when:
       - rhel9cis_rule_4_2_2_3
   tags:
@@ -124,7 +124,7 @@
       path: /etc/systemd/journald.conf
       regexp: "^#Storage=|^Storage="
       line: Storage=persistent
-  notify: restart systemd_journal_upload
+  notify: Restart systemd_journal_upload
   when:
       - rhel9cis_rule_4_2_2_4
   tags:
@@ -141,7 +141,7 @@
       path: /etc/systemd/journald.conf
       regexp: "^ForwardToSyslog="
       line: "#ForwardToSyslog=yes"
-  notify: restart systemd_journal_upload
+  notify: Restart systemd_journal_upload
   when:
       - rhel9cis_rule_4_2_2_5
   tags:
@@ -157,7 +157,7 @@
       path: /etc/systemd/journald.conf
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
-  notify: restart journald
+  notify: Restart systemd_journal_upload
   with_items:
       - { regexp: '^#SystemMaxUse=|^SystemMaxUse=', line: 'SystemMaxUse={{ rhel9cis_journald_systemmaxuse }}'}
       - { regexp: '^#SystemKeepFree=|^SystemKeepFree=', line: 'SystemKeepFree={{ rhel9cis_journald_systemkeepfree }}' }

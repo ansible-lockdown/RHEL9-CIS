@@ -64,9 +64,9 @@
   loop: "{{ auditd_conf_files.files }}"
   loop_control:
       label: "{{ item.path }}"
-  when: 
-       - item.mode != '06(0|4)0'
-       - rhel9cis_rule_4_1_4_5
+  when:
+      - item.mode != '06(0|4)0'
+      - rhel9cis_rule_4_1_4_5
   tags:
       - level2-server
       - level2-workstation
