@@ -305,6 +305,7 @@ rhel9cis_rule_5_6_2: true
 rhel9cis_rule_5_6_3: true
 rhel9cis_rule_5_6_4: true
 rhel9cis_rule_5_6_5: true
+rhel9cis_rule_5_6_6: true
 
 # Section 6 rules
 rhel9cis_rule_6_1_1: true
