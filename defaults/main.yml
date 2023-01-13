@@ -526,7 +526,8 @@ rhel9cis_auditd_extra_conf: {}
 ## Preferred method of logging
 ## Whether rsyslog or journald preferred method for local logging
 ## Affects rsyslog cis 4.2.1.3 and journald cis 4.2.2.5
-rhel9cis_preferred_log_capture: rsyslog
+rhel9cis_syslog: rsyslog
+rhel9cis_rsyslog_ansiblemanaged: true
 
 #### 4.2.1.6 remote and destation log server name
 rhel9cis_remote_log_server: logagg.example.com
@@ -600,9 +601,6 @@ rhel9cis_pass:
     max_days: 365
     min_days: 7
     warn_age: 7
-# Syslog system - either rsyslog or syslog-ng
-rhel9cis_syslog: rsyslog
-rhel9cis_rsyslog_ansiblemanaged: true
 
 # 5.5.1
 ## PAM
