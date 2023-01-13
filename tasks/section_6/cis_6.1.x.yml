@@ -1,68 +1,38 @@
 ---
 
-- name: "6.1.1 | AUDIT | Audit system file permissions"
-  block:
-      - name: "6.1.1 | AUDIT | Audit system file permissions | Audit the packages"
-        shell: rpm -Va --nomtime --nosize --nomd5 --nolinkto
-        changed_when: false
-        failed_when: false
-        register: rhel9cis_6_1_1_packages_rpm
-
-      - name: "6.1.1 | AUDIT | Audit system file permissions | Create list and warning"
-        block:
-            - name: "6.1.1 | AUDIT | Audit system file permissions | Add file discrepancy list to system"
-              copy:
-                  dest: "{{ rhel9cis_rpm_audit_file }}"  # noqa template-instead-of-copy
-                  content: "{{ rhel9cis_6_1_1_packages_rpm.stdout }}"
-                  owner: root
-                  group: root
-                  mode: 0640
-
-            - name: "6.1.1 | AUDIT | Audit system file permissions | Message out alert for package descrepancies"
-              debug:
-                  msg: |
-                     "Warning!! You have some package descrepancies issues.
-                      The file list can be found in {{ rhel9cis_rpm_audit_file }}"
-
-            - name: "6.1.1 | AUDIT | Audit system file permissions | warning count"
-              set_fact:
-                  control_number: "{{ control_number }} + [ 'rule_6.1.1' ]"
-                  warn_count: "{{ warn_count | int + 1 }}"
-        when: rhel9cis_6_1_1_packages_rpm.stdout|length > 0
-
-      - name: "6.1.1 | AUDIT | Audit system file permissions | Message out no package descrepancies"
-        debug:
-            msg: "Good News! There are no package descrepancies"
-        when: rhel9cis_6_1_1_packages_rpm.stdout|length == 0
+- name: "6.1.1 | PATCH | Ensure permissions on /etc/passwd are configured"
+  ansible.builtin.file:
+      dest: /etc/passwd
+      owner: root
+      group: root
+      mode: 0644
   when:
       - rhel9cis_rule_6_1_1
   tags:
-      - level2-server
-      - level2-workstation
-      - manual
-      - audit
+      - level1-server
+      - level1-workstation
+      - patch
       - permissions
       - rule_6.1.1
 
-- name: "6.1.2 | PATCH | Ensure sticky bit is set on all world-writable directories"
-  shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
-  changed_when: false
-  failed_when: false
+- name: "6.1.2 | PATCH | Ensure permissions on /etc/passwd- are configured"
+  ansible.builtin.file:
+      dest: /etc/passwd-
+      owner: root
+      group: root
+      mode: 0644
   when:
       - rhel9cis_rule_6_1_2
   tags:
-      - skip_ansible_lint
       - level1-server
       - level1-workstation
-      - automated
       - patch
-      - stickybits
-      - permissons
-      - rule_1.1.21
+      - permissions
+      - rule_6.1.2
 
-- name: "6.1.3 | PATCH | Ensure permissions on /etc/passwd are configured"
-  file:
-      dest: /etc/passwd
+- name: "6.1.3 | PATCH | Ensure permissions on /etc/group are configured"
+  ansible.builtin.file:
+      dest: /etc/group-
       owner: root
       group: root
       mode: 0644
@@ -71,77 +41,42 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - permissions
       - rule_6.1.3
 
-- name: "6.1.4 | PATCH | Ensure permissions on /etc/shadow are configured"
-  file:
-      dest: /etc/shadow
-      owner: root
-      group: root
-      mode: 0000
-  when:
-      - rhel9cis_rule_6_1_4
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - permissions
-      - rule_6.1.4
-
-- name: "6.1.5 | PATCH | Ensure permissions on /etc/group are configured"
-  file:
+- name: "6.1.4 | PATCH | Ensure permissions on /etc/group- are configured"
+  ansible.builtin.file:
       dest: /etc/group-
       owner: root
       group: root
       mode: 0644
   when:
-      - rhel9cis_rule_6_1_5
+      - rhel9cis_rule_6_1_4
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
-      - permissions
-      - rule_6.1.5
+      - permissionss
+      - rule_6.1.4
 
-- name: "6.1.6 | PATCH | Ensure permissions on /etc/gshadow are configured"
-  file:
-      dest: /etc/gshadow
+- name: "6.1.5 | PATCH | Ensure permissions on /etc/shadow are configured"
+  ansible.builtin.file:
+      dest: /etc/shadow
       owner: root
       group: root
       mode: 0000
   when:
-      - rhel9cis_rule_6_1_6
+      - rhel9cis_rule_6_1_5
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - permissions
-      - rule_6.1.6
-
-- name: "6.1.7 | PATCH | Ensure permissions on /etc/passwd- are configured"
-  file:
-      dest: /etc/passwd-
-      owner: root
-      group: root
-      mode: 0644
-  when:
-      - rhel9cis_rule_6_1_7
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - permissions
-      - rule_6.1.7
+      - rule_6.1.5
 
 - name: "6.1.6 | PATCH | Ensure permissions on /etc/shadow- are configured"
-  file:
+  ansible.builtin.file:
       dest: /etc/shadow-
       owner: root
       group: root
@@ -151,17 +86,63 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - permissions
       - rule_6.1.6
 
-- name: "6.1.9 | PATCH | Ensure permissions on /etc/group- are configured"
-  file:
-      dest: /etc/group-
+- name: "6.1.7 | PATCH | Ensure permissions on /etc/gshadow are configured"
+  ansible.builtin.file:
+      dest: /etc/gshadow
       owner: root
       group: root
-      mode: 0644
+      mode: 0000
+  when:
+      - rhel9cis_rule_6_1_7
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - permissions
+      - rule_6.1.7
+
+- name: "6.1.8 | PATCH | Ensure permissions on /etc/gshadow- are configured"
+  ansible.builtin.file:
+      dest: /etc/gshadow-
+      owner: root
+      group: root
+      mode: 0000
+  when:
+      - rhel9cis_rule_6_1_8
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - permissions
+      - rule_6.1.10
+
+- name: "6.1.9 | PATCH | Ensure no world writable files exist"
+  block:
+      - name: "6.1.9 | AUDIT | Ensure no world writable files exist | Get list of world-writable files"
+        ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
+        failed_when: false
+        changed_when: false
+        register: rhel_08_6_1_9_perms_results
+
+      - name: "6.1.9 | AUDIT | Ensure no world writable files exist | Alert no world-writable files exist"
+        ansible.builtin.debug:
+            msg: "Good news! We have not found any world-writable files on your system"
+        when:
+            - rhel_08_6_1_9_perms_results.stdout is not defined
+
+      - name: "6.1.9 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
+        ansible.builtin.file:
+            path: '{{ item }}'
+            mode: o-w
+            state: touch
+        with_items: "{{ rhel_08_6_1_9_perms_results.stdout_lines }}"
+        when:
+            - rhel_08_6_1_9_perms_results.stdout_lines is defined
+            - rhel9cis_no_world_write_adjust
   when:
       - rhel9cis_rule_6_1_9
   tags:
@@ -169,125 +150,123 @@
       - level1-workstation
       - automated
       - patch
-      - permissionss
+      - files
+      - permissions
       - rule_6.1.9
 
-- name: "6.1.10 | PATCH | Ensure permissions on /etc/gshadow- are configured"
-  file:
-      dest: /etc/gshadow-
-      owner: root
-      group: root
-      mode: 0000
+- name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist"
+  block:
+      - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Finding all unowned files or directories"
+        ansible.builtin.shell: find "{{ item.mount }}" -xdev -nouser
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: rhel_08_6_1_10_audit
+        with_items: "{{ ansible_mounts }}"
+        loop_control:
+            label: "{{ item.mount }}"
+        when: item['device'].startswith('/dev') and not 'bind' in item['options']
+
+      - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Displaying any unowned files or directories"
+        ansible.builtin.debug:
+            msg: "Manual intervention is required -- missing owner on items in {{ item.item.mount }}: {{ item.stdout_lines | join(', ') }}"
+        with_items: "{{ rhel_08_6_1_10_audit.results }}"
+        when:
+            - item.stdout_lines is defined
+            - item.stdout_lines | length > 0
   when:
       - rhel9cis_rule_6_1_10
   tags:
       - level1-server
       - level1-workstation
-      - automated
-      - patch
+      - audit
+      - files
       - permissions
       - rule_6.1.10
 
-- name: "6.1.11 | PATCH | Ensure no world writable files exist"
+- name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist"
   block:
-      - name: "6.1.11 | AUDIT | Ensure no world writable files exist | Get list of world-writable files"
-        shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
+      - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Finding all ungrouped files or directories"
+        ansible.builtin.shell: find "{{ item.mount }}" -xdev -nogroup
+        check_mode: false
         failed_when: false
         changed_when: false
-        register: rhel_08_6_1_11_perms_results
+        register: rhel_08_6_1_11_audit
+        with_items: "{{ ansible_mounts }}"
+        loop_control:
+            label: "{{ item.mount }}"
+        when: item['device'].startswith('/dev') and not 'bind' in item['options']
 
-      - name: "6.1.11 | AUDIT | Ensure no world writable files exist | Alert no world-writable files exist"
-        debug:
-            msg: "Good news! We have not found any world-writable files on your system"
+      - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Displaying all ungrouped files or directories"
+        ansible.builtin.debug:
+            msg: "Manual intervention is required -- missing group on items in {{ item.item.mount }}: {{ item.stdout_lines | join(', ') }}"
+        with_items: "{{ rhel_08_6_1_11_audit.results }}"
         when:
-            - rhel_08_6_1_11_perms_results.stdout is not defined
-
-      - name: "6.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
-        file:
-            path: '{{ item }}'
-            mode: o-w
-            state: touch
-        with_items: "{{ rhel_08_6_1_11_perms_results.stdout_lines }}"
-        when:
-            - rhel_08_6_1_11_perms_results.stdout_lines is defined
-            - rhel9cis_no_world_write_adjust
+            - item.stdout_lines is defined
+            - item.stdout_lines | length > 0
   when:
       - rhel9cis_rule_6_1_11
   tags:
       - level1-server
       - level1-workstation
-      - automated
-      - patch
+      - audit
       - files
       - permissions
       - rule_6.1.11
 
-- name: "6.1.12 | AUDIT | Ensure no unowned files or directories exist"
-  block:
-      - name: "6.1.12 | AUDIT | Ensure no unowned files or directories exist | Finding all unowned files or directories"
-        command: find "{{ item.mount }}" -xdev -nouser
-        changed_when: false
-        failed_when: false
-        check_mode: false
-        register: rhel_08_6_1_12_audit
-        with_items: "{{ ansible_mounts }}"
-        loop_control:
-            label: "{{ item.mount }}"
-        when: item['device'].startswith('/dev') and not 'bind' in item['options']
-
-      - name: "6.1.12 | AUDIT | Ensure no unowned files or directories exist | Displaying any unowned files or directories"
-        debug:
-            msg: "Manual intervention is required -- missing owner on items in {{ item.item.mount }}: {{ item.stdout_lines | join(', ') }}"
-        with_items: "{{ rhel_08_6_1_12_audit.results }}"
-        when:
-            - item.stdout_lines is defined
-            - item.stdout_lines | length > 0
+- name: "6.1.12 | PATCH | Ensure sticky bit is set on all world-writable directories"
+  ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+  changed_when: false
+  failed_when: false
   when:
       - rhel9cis_rule_6_1_12
   tags:
       - level1-server
       - level1-workstation
-      - automated
-      - audit
-      - files
-      - permissions
-      - rule_6.1.12
+      - patch
+      - stickybits
+      - permissons
+      - rule_1.1.21
 
-- name: "6.1.13 | AUDIT | Ensure no ungrouped files or directories exist"
+- name: "6.1.13 | AUDIT | Audit SUID executables"
   block:
-      - name: "6.1.13 | AUDIT | Ensure no ungrouped files or directories exist | Finding all ungrouped files or directories"
-        command: find "{{ item.mount }}" -xdev -nogroup
-        check_mode: false
+      - name: "6.1.13 | AUDIT | Audit SUID executables | Find all SUID executables"
+        ansible.builtin.shell: df {{ item.mount }} -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -4000
         failed_when: false
         changed_when: false
-        register: rhel_08_6_1_13_audit
+        register: rhel_08_6_1_13_perms_results
         with_items: "{{ ansible_mounts }}"
         loop_control:
             label: "{{ item.mount }}"
-        when: item['device'].startswith('/dev') and not 'bind' in item['options']
 
-      - name: "6.1.13 | AUDIT | Ensure no ungrouped files or directories exist | Displaying all ungrouped files or directories"
-        debug:
-            msg: "Manual intervention is required -- missing group on items in {{ item.item.mount }}: {{ item.stdout_lines | join(', ') }}"
-        with_items: "{{ rhel_08_6_1_13_audit.results }}"
+      - name: "6.1.13 | AUDIT | Audit SUID executables | Alert no SUID executables exist"
+        ansible.builtin.debug:
+            msg: "Good news! We have not found any SUID executable files on your system"
+        failed_when: false
+        changed_when: false
         when:
-            - item.stdout_lines is defined
-            - item.stdout_lines | length > 0
+            - rhel_08_6_1_13_perms_results.stdout is not defined
+
+      - name: "6.1.13 | AUDIT | Audit SUID executables | Alert SUID executables exist"
+        ansible.builtin.debug:
+            msg: "Manual intervention is required -- SUID set on items in {{ item.item.mount }}: {{ item.stout_lines | join(', ') }}"
+        with_items: "{{ rhel_08_6_1_13_perms_results.stdout_lines }}"
+        when:
+            - rhel_08_6_1_13_perms_results.stdout is defined
   when:
       - rhel9cis_rule_6_1_13
   tags:
       - level1-server
       - level1-workstation
-      - automated
+      - manual
       - audit
       - files
-      - permissions
       - rule_6.1.13
 
-- name: "6.1.14 | AUDIT | Audit SUID executables"
+- name: "6.1.14 | AUDIT | Audit SGID executables"
   block:
-      - name: "6.1.14 | AUDIT | Audit SUID executables | Find all SUID executables"
-        shell: df {{ item.mount }} -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -4000
+      - name: "6.1.14 | AUDIT | Audit SGID executables | Find all SGID executables"
+        ansible.builtin.shell: df {{ item.mount }} -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -2000
         failed_when: false
         changed_when: false
         register: rhel_08_6_1_14_perms_results
@@ -295,17 +274,17 @@
         loop_control:
             label: "{{ item.mount }}"
 
-      - name: "6.1.14 | AUDIT | Audit SUID executables | Alert no SUID executables exist"
-        debug:
-            msg: "Good news! We have not found any SUID executable files on your system"
+      - name: "6.1.14 | AUDIT | Audit SGID executables | Alert no SGID executables exist"
+        ansible.builtin.debug:
+            msg: "Good news! We have not found any SGID executable files on your system"
         failed_when: false
         changed_when: false
         when:
             - rhel_08_6_1_14_perms_results.stdout is not defined
 
-      - name: "6.1.14 | AUDIT | Audit SUID executables | Alert SUID executables exist"
-        debug:
-            msg: "Manual intervention is required -- SUID set on items in {{ item.item.mount }}: {{ item.stout_lines | join(', ') }}"
+      - name: "6.1.14 | AUDIT | Audit SGID executables | Alert SGID executables exist"
+        ansible.builtin.debug:
+            msg: "Manual intervention is required -- SGID set on items in {{ item.item.mount }}: {{ item.stout_lines | join(', ') }}"
         with_items: "{{ rhel_08_6_1_14_perms_results.stdout_lines }}"
         when:
             - rhel_08_6_1_14_perms_results.stdout is defined
@@ -319,37 +298,46 @@
       - files
       - rule_6.1.14
 
-- name: "6.1.15 | AUDIT | Audit SGID executables"
+- name: "6.1.15 | AUDIT | Audit system file permissions"
   block:
-      - name: "6.1.15 | AUDIT | Audit SGID executables | Find all SGID executables"
-        shell: df {{ item.mount }} -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -2000
-        failed_when: false
+      - name: "6.1.15 | AUDIT | Audit system file permissions | Audit the packages"
+        ansible.builtin.shell: rpm -Va --nomtime --nosize --nomd5 --nolinkto
         changed_when: false
-        register: rhel_08_6_1_15_perms_results
-        with_items: "{{ ansible_mounts }}"
-        loop_control:
-            label: "{{ item.mount }}"
-
-      - name: "6.1.15 | AUDIT | Audit SGID executables | Alert no SGID executables exist"
-        debug:
-            msg: "Good news! We have not found any SGID executable files on your system"
         failed_when: false
-        changed_when: false
-        when:
-            - rhel_08_6_1_15_perms_results.stdout is not defined
+        register: rhel9cis_6_1_15_packages_rpm
 
-      - name: "6.1.15 | AUDIT | Audit SGID executables | Alert SGID executables exist"
-        debug:
-            msg: "Manual intervention is required -- SGID set on items in {{ item.item.mount }}: {{ item.stout_lines | join(', ') }}"
-        with_items: "{{ rhel_08_6_1_15_perms_results.stdout_lines }}"
-        when:
-            - rhel_08_6_1_15_perms_results.stdout is defined
+      - name: "6.1.15 | AUDIT | Audit system file permissions | Create list and warning"
+        block:
+            - name: "6.1.15 | AUDIT | Audit system file permissions | Add file discrepancy list to system"
+              ansible.builtin.copy:
+                  dest: "{{ rhel9cis_rpm_audit_file }}"  # noqa template-instead-of-copy
+                  content: "{{ rhel9cis_6_1_15_packages_rpm.stdout }}"
+                  owner: root
+                  group: root
+                  mode: 0640
+
+            - name: "6.1.15 | AUDIT | Audit system file permissions | Message out alert for package descrepancies"
+              ansible.builtin.debug:
+                  msg: |
+                     "Warning!! You have some package descrepancies issues.
+                      The file list can be found in {{ rhel9cis_rpm_audit_file }}"
+
+            - name: "6.1.15 | AUDIT | Audit system file permissions | warning count"
+              ansible.builtin.set_fact:
+                  control_number: "{{ control_number }} + [ 'rule_6.1.1' ]"
+                  warn_count: "{{ warn_count | int + 1 }}"
+        when: rhel9cis_6_1_15_packages_rpm.stdout|length > 0
+
+      - name: "6.1.15 | AUDIT | Audit system file permissions | Message out no package descrepancies"
+        ansible.builtin.debug:
+            msg: "Good News! There are no package descrepancies"
+        when: rhel9cis_6_1_15_packages_rpm.stdout|length == 0
   when:
       - rhel9cis_rule_6_1_15
   tags:
-      - level1-server
-      - level1-workstation
+      - level2-server
+      - level2-workstation
       - manual
       - audit
-      - files
+      - permissions
       - rule_6.1.15
