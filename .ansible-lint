@@ -3,9 +3,7 @@ quiet: true
 skip_list:
   - 'schema'
   - 'no-changed-when'
-  - 'fqcn-builtins'
   - 'experimental'
-  - 'name[casing]'
   - 'name[template]'
   - 'jinja[spacing]'
   - '204'
