@@ -12,7 +12,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - permissions
@@ -43,7 +42,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - permissions
@@ -74,7 +72,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.3
@@ -121,7 +118,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.4
@@ -137,7 +133,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sshs
       - rule_5.2.5
@@ -153,7 +148,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.6
@@ -169,7 +163,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.7
@@ -185,7 +178,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.8
@@ -201,7 +193,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.9
@@ -217,7 +208,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.10
@@ -233,7 +223,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.11
@@ -249,7 +238,6 @@
   tags:
       - level2-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.12
@@ -265,7 +253,6 @@
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.13
@@ -287,7 +274,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.14
@@ -302,7 +288,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.15
@@ -318,7 +303,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.16
@@ -334,7 +318,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.17
@@ -350,7 +333,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.18
@@ -366,7 +348,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.19
@@ -391,7 +372,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ssh
       - rule_5.2.20

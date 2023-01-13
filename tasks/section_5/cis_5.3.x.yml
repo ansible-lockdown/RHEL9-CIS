@@ -9,7 +9,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.1
@@ -24,7 +23,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.2
@@ -40,7 +38,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.3
@@ -58,7 +55,6 @@
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.4
@@ -76,7 +72,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.5
@@ -111,7 +106,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.6
@@ -133,7 +127,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.7

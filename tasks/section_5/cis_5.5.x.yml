@@ -1,6 +1,6 @@
 ---
 
-- name: "5.5.1 | PATCH | "
+- name: "5.5.1 | PATCH | Ensure password creation requirements are configured"
   block:
       - name: "5.5.1 | PATCH | Ensure password creation requirements are configured | Set pwquality config settings"
         ansible.builtin.lineinfile:
@@ -32,7 +32,7 @@
       - patch
       - rule_5.5.1
 
-- name: "5.5.2 | PATCH | Ensure system accounts are secured"
+- name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured"
   ansible.builtin.lineinfile:
       path: /etc/security/faillock.conf
       regexp: "{{ item.regexp }}"
@@ -45,7 +45,7 @@
 
 - name: "5.5.3 | PATCH | Ensure password reuse is limited"
   block:
-      - name: "5.5.3 | PATCH | Ensure password reuse is limited | pwhistory"
+      - name: "5.5.3 | PATCH | Ensure password reuse is limited | pwquality"
         ansible.builtin.lineinfile:
             path: /etc/pam.d/system-auth
             line: "password    requisite     pam_pwhistory.so try_first_pass local_users_only enforce_for_root retry=3 remember={{ rhel9cis_pam_faillock.remember }}"
@@ -54,8 +54,8 @@
       - name: "5.5.3 | PATCH | Ensure password reuse is limited | pam_unix"
         ansible.builtin.replace:
             path: /etc/pam.d/system-auth
-            regexp: '^password\s*sufficient\s*pam_unix.so.*$'
-            replace: 'password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
+            regexp: '^password\s*(sufficient|requisite|sufficient)\s*pam_unix.so.*$'
+            replace: 'password    requisite    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
   when:
       - rhel9cis_rule_5_5_3
   tags:
@@ -64,7 +64,7 @@
       - patch
       - rule_5.5.3
 
-- name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512"
+- name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 or yescrypt"
   block:
       - name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 | libuser.conf"
         ansible.builtin.replace:
