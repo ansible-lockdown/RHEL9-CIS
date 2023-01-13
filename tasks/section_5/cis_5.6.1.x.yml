@@ -90,11 +90,6 @@
         check_mode: false
         register: rhel9cis_5_6_1_5_user_list
 
-      - name: "5.6.1.5 | AUDIT | Ensure all users last password change date is in the past | Alert no pw change in the future exist"
-        ansible.builtin.debug:
-            msg: "Good News! All accounts have PW change dates that are in the past"
-        when: rhel9cis_5_6_1_5_user_list.stdout | length == 0
-
       - name: "5.6.1.5 | AUDIT | Ensure all users last password change date is in the past | Alert on accounts with pw change in the future"
         ansible.builtin.debug:
             msg: "Warning!! The following accounts have the last PW change date in the future: {{ rhel9cis_5_6_1_5_user_list.stdout_lines }}"
@@ -103,9 +98,7 @@
             - not rhel9cis_futurepwchgdate_autofix
 
       - name: "5.6.1.5 | AUDIT | Ensure all users last password change date is in the past | warning count"
-        ansible.builtin.set_fact:
-            control_number: "{{ control_number }} + [ 'rule_5.6.1.5' ]"
-            warn_count: "{{ warn_count | int + 1 }}"
+        ansible.builtin.import_tasks: warning_facts.yml
         when:
             - rhel9cis_5_6_1_5_user_list.stdout | length > 0
             - not rhel9cis_futurepwchgdate_autofix
@@ -117,6 +110,8 @@
             - rhel9cis_futurepwchgdate_autofix
         with_items:
             - "{{ rhel9cis_5_6_1_5_user_list.stdout_lines }}"
+  vars:
+      warn_control_id: '5.6.1.5'
   when:
       - rhel9cis_rule_5_6_1_5
   tags:

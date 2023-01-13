@@ -25,9 +25,9 @@
                 - "{{ rhel9cis_2_4_sockets.stdout_lines }}"
 
       - name: "2.4 | AUDIT | Ensure nonessential services listening on the system are removed or masked | Warn Count"
-        ansible.builtin.set_fact:
-            control_number: "{{ control_number }} + ['rule_2.4']"
-            warn_count: "{{ warn_count | int + 1 }}"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '2.4'
   when:
       - rhel9cis_rule_2_4
   tags:

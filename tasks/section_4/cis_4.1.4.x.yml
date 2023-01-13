@@ -122,9 +122,6 @@
             - /sbin/auditd
             - /sbin/augenrules
 
-      - debug:
-           msg: "{{ audit_bins }}"
-
       - name: "4.1.4.8 | PATCH | Ensure audit tools are 755 or more restrictive | set if required"
         ansible.builtin.file:
             path: "{{ item.item }}"

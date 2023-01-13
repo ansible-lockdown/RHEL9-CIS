@@ -4,26 +4,15 @@
   block:
       - name: "1.1.2.1 | PATCH | Ensure /tmp is a separate partition | Absent"
         ansible.builtin.debug:
-            msg: "Warning!! /tmp is not mounted on a separate partition"
-        when:
-            - required_mount not in mount_names
+            msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
-      - name: "1.1.2.1 | PATCH | Ensure /tmp is a separate partition | Warn Count"
-        ansible.builtin.set_fact:
-            control_number: "{{ control_number }} + [ 'rule_1.1.2.1' ]"
-            warn_count: "{{ warn_count | int + 1 }}"
-        when:
-            - required_mount not in mount_names
-
-      - name: "1.1.2.1 | AUDIT | Ensure separate partition exists for /var | Present"
-        ansible.builtin.debug:
-            msg: "Congratulations: {{ required_mount }} exists."
-        register: var_mount_present
-        when:
-            - required_mount in mount_names
+      - name: "1.1.2.1 | PATCH | Ensure /tmp is a separate partition | warning"
+        ansible.builtin.import_tasks: warning_facts.yml
   vars:
+      warn_control_id: '1.1.2.1'
       required_mount: '/tmp'
   when:
+      - required_mount not in mount_names
       - rhel9cis_rule_1_1_2_1
   tags:
       - level1-server

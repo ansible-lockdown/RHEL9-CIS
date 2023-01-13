@@ -89,10 +89,10 @@
         when: "'static' not in rhel9cis_4_2_2_2_status.stdout"
 
       - name: "4.2.2.2 | AUDIT | Ensure journald service is enabled | Warn Count"
-        ansible.builtin.set_fact:
-            control_number: "{{ control_number }} + [ 'rule_4.2.2.2' ]"
-            warn_count: "{{ warn_count | int + 1 }}"
+        ansible.builtin.import_tasks: warning_facts.yml
         when: "'static' not in rhel9cis_4_2_2_2_status.stdout"
+  vars:
+     warn_control_id: '4.2.2.2'
   when:
       - rhel9cis_rule_4_2_2_2
   tags:

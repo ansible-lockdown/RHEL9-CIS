@@ -47,9 +47,7 @@
             - not rhel9cis_nft_tables_autonewtable
 
       - name: "3.4.2.2 | AUDIT | Ensure an nftables table exists | Alert on no tables | warning count"
-        ansible.builtin.set_fact:
-            control_number: "{{ control_number }} + [ 'rule_3.4.2.2' ]"
-            warn_count: "{{ warn_count | int + 1 }}"
+        ansible.builtin.import_tasks: warning_facts.yml
         when:
             - rhel9cis_3_4_2_2_nft_tables.stdout | length == 0
             - not rhel9cis_nft_tables_autonewtable
@@ -58,6 +56,8 @@
         ansible.builtin.command: nft create table inet "{{ rhel9cis_nft_tables_tablename }}"
         failed_when: false
         when: rhel9cis_nft_tables_autonewtable
+  vars:
+      warn_control_id: '3.4.2.2'
   when:
       - rhel9cis_firewall == "nftables"
       - rhel9cis_rule_3_4_2_2
