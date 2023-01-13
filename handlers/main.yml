@@ -77,7 +77,7 @@
       name: systemd-journal-upload
       state: restarted
 
-- name: Systemd_daemon_Reload
+- name: Systemd_daemon_reload
   ansible.builtin.systemd:
       daemon-reload: true
 
@@ -91,7 +91,7 @@
 - name: Audit_immutable_fact
   ansible.builtin.debug:
       msg: "Reboot required for auditd to apply new rules as immutable set"
-  notify: change_requires_reboot
+  notify: Change_requires_reboot
   when:
       - auditd_immutable_check.stdout == '1'
 
