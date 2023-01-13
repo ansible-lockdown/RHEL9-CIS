@@ -99,6 +99,13 @@
             grub2_path: /etc/grub2-efi.cfg
         when: rhel_09_efi_boot.stat.exists
 
+- name: "PRELIM | Update to latest gpg keys"
+  ansible.builtin.package:
+      name: "{{ ansible_distribution | lower }}-gpg-keys"
+      state: latest
+  when:
+      - rhel9cis_rule_1_2_4
+
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   ansible.builtin.package:
       name: audit
