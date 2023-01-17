@@ -10,11 +10,20 @@
             create: true
             mode: 0600
 
+      - name: "1.1.1.1 | PATCH | Ensure mounting of squashfs filesystems is disabled | blacklist"
+        lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist squashfs(\\s|$)"
+            line: "blacklist squashfs"
+            create: true
+            mode: 0600
+
       - name: "1.1.1.1 | PATCH | Ensure mounting of squashfs filesystems is disabled | Disable squashfs"
         modprobe:
             name: squashfs
             state: absent
         when: not system_is_container
+
   when:
       - rhel9cis_rule_1_1_1_1
   tags:
@@ -31,6 +40,14 @@
             path: /etc/modprobe.d/CIS.conf
             regexp: "^(#)?install udf(\\s|$)"
             line: "install udf /bin/true"
+            create: true
+            mode: 0600
+
+      - name: "1.1.1.2 | PATCH | Ensure mounting of udf filesystems is disabled | blacklist"
+        lineinfile:
+            path: /etc/modprobe.d/blacklist.conf
+            regexp: "^(#)?blacklist udf(\\s|$)"
+            line: "blacklist udf"
             create: true
             mode: 0600
 
