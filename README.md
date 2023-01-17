@@ -10,10 +10,9 @@
 ![Build Status](https://img.shields.io/github/workflow/status/ansible-lockdown/RHEL9-CIS/DevelToMain?label=Main%20Build%20Status&style=plastic)
 ![Release](https://img.shields.io/github/v/release/ansible-lockdown/RHEL9-CIS?style=plastic)
 
-Configure RHEL 9 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant with RHEL8 settings (RHEL9 not yet released)
-Based on v2.0.0 RHEL8
+Configure RHEL 9 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/)
 
-Based on [CIS RedHat Enterprise Linux 8 Benchmark v2.0.0. - 02-23-2022 ](https://www.cisecurity.org/cis-benchmarks/)
+Based on [CIS RedHat Enterprise Linux 9 Benchmark v1.0.0. - 11-30-2022 ](https://www.cisecurity.org/cis-benchmarks/)
 
 ## Join us
 
