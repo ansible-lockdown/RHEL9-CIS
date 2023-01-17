@@ -22,14 +22,14 @@
   block:
       - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
         ansible.builtin.file:
-            path: /boot/grub2/grub.cfg
+            path: "/boot/grub2/{{ item.path }}"
             owner: root
             group: root
-            mode: 0600
+            mode: "{{ item.mode }}"
         loop:
-            - grub.cfg
-            - grubenv
-            - user.cfg
+            - { path: 'grub.cfg', mode: '0700' }
+            - { path: 'grubenv', mode: '0600' }
+            - { path: 'user.cfg', mode: '0600' }
 
   when:
       - rhel9cis_rule_1_4_2
