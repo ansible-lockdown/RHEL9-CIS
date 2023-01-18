@@ -140,6 +140,7 @@
       - rule_6.2.11
       - rhel9cis_section5
       - rhel9cis_section6
+      - level1-server
 
 - name: run Section 1 tasks
   ansible.builtin.import_tasks: section_1/main.yml
