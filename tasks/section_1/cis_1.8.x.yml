@@ -69,6 +69,44 @@
       - gui
       - rule_1.8.3
 
+- name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle"
+  copy:
+      dest: /etc/dconf/db/local.d/00-screensaver
+      content: |
+          [org/gnome/desktop/session]
+          idle-delay=uint32 300
+          [org/gnome/desktop/screensaver]
+          lock-delay=uint32 5
+      mode: '0644'
+  notify: Reload dconf
+  when:
+      - rhel9cis_rule_1_8_4
+      - rhel9cis_gui
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - gui
+      - rule_1.8.4
+
+- name: "1.8.5 PATCH | Ensure GDM screen locks cannot be overridden"
+  lineinfile:
+      path: /etc/dconf/db/local.d/locks/session
+      create: true
+      line: /org/gnome/desktop/screensaver/lock-delay
+      owner: root
+      group: root
+      mode: 0640
+  when:
+      - rhel9cis_rule_1_8_5
+      - rhel9cis_gui
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - gui
+      - rule_1.8.3
+
 - name: "1.8.6 | PATCH | Ensure automatic mounting of removable media is disabled"
   ansible.builtin.lineinfile:
       path: /etc/dconf/db/local.d/00-media-automount
