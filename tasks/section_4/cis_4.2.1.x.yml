@@ -206,8 +206,6 @@
         loop:
             - 'ModLoad imtcp'
             - 'InputTCPServerRun'
-            - 'module\(load="imtcp"\)'
-            - 'input\(type="imtcp"'
         when: rhel9cis_system_is_log_server
   when:
       - rhel9cis_rule_4_2_1_7
