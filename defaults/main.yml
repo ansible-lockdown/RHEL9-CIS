@@ -366,9 +366,9 @@ rhel9cis_rh_sub_password: password
 rhel9cis_rhnsd_required: false
 
 # 1.4.2 Bootloader password
-rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'
+rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.10000.5783BF1560E32718E85FEC2E1B8D4D7FFCA39A409EE47995A515E3F22B9347131E627F8B42CE987535152103D82631E11F9C953E26B8C02A5C99787CBC395DD9.AF8C36AAA5FE5F3B4CE2B436F079F03645C7A87DD3301D083F7AD05B8C25770DB1DDB75BF329382B282C8AADE19206479FDA94BB63A4567C58C70DF126DC82DA'
 rhel9cis_bootloader_password: random
-rhel9cis_set_boot_pass: false
+rhel9cis_set_boot_pass: true
 
 
 # 1.10 Set crypto policy DEFAULT
@@ -660,14 +660,14 @@ audit_run_script_environment:
 
 ### Goss binary settings ###
 goss_version:
-    release: v0.3.18
-    checksum: 'sha256:432308ebca0caf8165d45bd27e3262126aad9d15572ac8cb3149b3c91f75aace'
+    release: v0.3.21
+    checksum: 'sha256:9a9200779603acf0353d2c0e85ae46e083596c10838eaf4ee050c924678e4fe3'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json
 
 # if get_goss_file == download change accordingly
-goss_url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version.release }}/goss-linux-amd64"
+goss_url: "https://github.com/goss-org/goss/releases/download/{{ goss_version.release }}/goss-linux-amd64"
 
 ## if get_goss_file - copy the following needs to be updated for your environment
 ## it is expected that it will be copied from somewhere accessible to the control node
