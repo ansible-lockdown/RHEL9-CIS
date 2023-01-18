@@ -4,7 +4,6 @@ skip_list:
     - 'schema'
     - 'no-changed-when'
     - 'var-spacing'
-    - 'fqcn-builtins'
     - 'experimental'
     - 'name[casing]'
     - 'name[template]'
