@@ -332,13 +332,14 @@
       - item.uid >= min_int_uid | int
       - item.id != 'nobody'
       - (item.id != 'tss' and item.dir != '/dev/null')
+      - item.shell != '/sbin/nologin'
       - rhel9cis_rule_6_2_11
   tags:
       - level1-server
       - level1-workstation
       - patch
       - users
-      - rule_6.2.10
+      - rule_6.2.11
 
 - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive"
   block:
@@ -408,10 +409,10 @@
 
 - name: "6.2.13 | PATCH | Ensure no local interactive user has .netrc files"
   ansible.builtin.file:
-      path: "~{{ item }}/.netrc"
+      path: "{{ item }}/.netrc"
       state: absent
   with_items:
-      - "{{ users.stdout_lines }}"
+      - "{{ interactive_users_home.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_13
   tags:
@@ -424,10 +425,10 @@
 
 - name: "6.2.14 | PATCH | Ensure no local interactive user has .forward files"
   ansible.builtin.file:
-      path: "~{{ item }}/.forward"
+      path: "{{ item }}/.forward"
       state: absent
   with_items:
-      - "{{ users.stdout_lines }}"
+      - "{{ interactive_users_home.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_14
   tags:
@@ -438,12 +439,12 @@
       - files
       - rule_6.2.14
 
-- name: "6.2.15 | PATCH | Ensure no users have .rhosts files"
+- name: "6.2.15 | PATCH | Ensure no local interactive user has .rhosts files"
   ansible.builtin.file:
       path: "~{{ item }}/.rhosts"
       state: absent
   with_items:
-      - "{{ users.stdout_lines }}"
+      - "{{ interactive_users_home.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_15
   tags:
@@ -456,26 +457,26 @@
 
 - name: "6.2.16 | PATCH | Ensure local interactive user dot files are not group or world writable"
   block:
+
       - name: "6.2.16 | AUDIT | Ensure local interactive user dot files are not group or world writable | Check for files"
-        ansible.builtin.shell: find /home/ -maxdepth 2 -name "\.*" -perm /g+w,o+w
-        changed_when: false
-        failed_when: false
-        register: rhel9cis_6_2_16_audit
+        ansible.builtin.find:
+            path: "{{ item }}"
+            depth: 3
+            patterns: ".*"
+            hidden: true
+            recurse: true
+            file_type: file
+        register: user_dot_files
+        loop: "{{ interactive_users_home.stdout_lines }}"
 
-      - name: "6.2.16 | AUDIT | Ensure local interactive user dot files are not group or world writable | Alert on files found"
-        ansible.builtin.debug:
-            msg: "Good news! We have not found any group or world-writable dot files on your sytem"
-        when:
-            - rhel9cis_6_2_16_audit.stdout is not defined
-
-      - name: "6.2.16 | PATCH | Ensure local interactive user dot files are not group or world writable | Changes files if configured"
+      - name: "6.2.16 | AUDIT | Ensure local interactive user dot files are not group or world writable | update permissions"
         ansible.builtin.file:
-            path: '{{ item }}'
+            path: "{{ item.path }}"
             mode: go-w
-        with_items: "{{ rhel9cis_6_2_16_audit.stdout_lines }}"
-        when:
-            - rhel9cis_6_2_16_audit.stdout is defined
-            - rhel9cis_dotperm_ansiblemanaged
+        loop: "{{ user_dot_files.files }}"
+        loop_control:
+            label: "{{ item.path }}"
+
   when:
       - rhel9cis_rule_6_2_16
   tags:
