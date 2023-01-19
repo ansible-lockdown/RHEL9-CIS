@@ -6,7 +6,7 @@
         ansible.builtin.debug:
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
-      - name: "1.1.3.1 | AUDIT | Ensure separate partition exists for /var | warning"
+      - name: "1.1.3.1 | AUDIT | Ensure separate partition exists for /var | Present"
         ansible.builtin.import_tasks: warning_facts.yml
   vars:
       warn_control_id: '1.1.3.1'
@@ -37,9 +37,7 @@
       label: "{{ item.device }}"
   notify: Change_requires_reboot
   when:
-      - var_mount_present is defined
       - item.mount == "/var"
-      - rhel9cis_rule_1_1_3_1  # This is required so the check takes place
       - rhel9cis_rule_1_1_3_2 or
         rhel9cis_rule_1_1_3_3 
   tags:

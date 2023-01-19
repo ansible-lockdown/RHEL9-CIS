@@ -7,7 +7,7 @@
         ansible.builtin.debug:
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
-      - name: "1.1.4.1 | AUDIT | Ensure separate partition exists for /var/tmp | Absent"
+      - name: "1.1.4.1 | AUDIT | Ensure separate partition exists for /var/tmp | Present"
         ansible.builtin.import_tasks: warning_facts.yml
   vars:
       warn_control_id: '1.1.4.1'
@@ -32,16 +32,14 @@
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
       state: present
-      opts: defaults,{% if rhel9cis_rule_1_1_4_2 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_4_3 %}nosuid,{% endif %}{% if rhel9cis_rule_1_1_4_3 %}nodev{% endif %}
+      opts: defaults,{% if rhel9cis_rule_1_1_4_2 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_4_3 %}nosuid,{% endif %}{% if rhel9cis_rule_1_1_4_4 %}nodev{% endif %}
   with_items:
       - "{{ ansible_mounts }}"
   loop_control:
       label: "{{ item.device }}"
   notify: Change_requires_reboot
   when:
-      - var_tmp_mount_present is defined
       - item.mount == "/var/tmp"
-      - rhel9cis_rule_1_1_4_1  # This is required so the check takes place
       - rhel9cis_rule_1_1_4_2 or
         rhel9cis_rule_1_1_4_3 or
         rhel9cis_rule_1_1_4_4
