@@ -530,11 +530,13 @@ rhel9cis_syslog: rsyslog
 rhel9cis_rsyslog_ansiblemanaged: true
 
 #### 4.2.1.6 remote and destation log server name
-rhel9cis_remote_log_server: logagg.example.com
+rhel9cis_remote_log_server: false
+rhel9cis_remote_log_host: logagg.example.com
 rhel9cis_remote_log_port: 514
 rhel9cis_remote_log_protocol: tcp
 rhel9cis_remote_log_retrycount: 100
 rhel9cis_remote_log_queuesize: 1000
+
 
 #### 4.2.1.7
 rhel9cis_system_is_log_server: false

@@ -448,8 +448,16 @@ rhel9cis_nft_tables_autochaincreate: {{ rhel9cis_nft_tables_autochaincreate }}
 
 # Section 4
 
-## Set if server is logserver
+## Set if host is a logserver
 rhel9cis_remote_log_server: {{ rhel9cis_remote_log_server }}
+
+# Remote logserver settings
+rhel9cis_remote_log_host: {{ rhel9cis_remote_log_host }}
+rhel9cis_remote_log_port: {{ rhel9cis_remote_log_port }}
+rhel9cis_remote_log_protocol: {{ rhel9cis_remote_log_protocol }}
+rhel9cis_remote_log_retrycount: {{ rhel9cis_remote_log_retrycount }}
+rhel9cis_remote_log_queuesize: {{ rhel9cis_remote_log_queuesize }}
+
 ## syslog
 rhel9cis_syslog: {{ rhel9cis_syslog }}
 

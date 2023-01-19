@@ -165,7 +165,7 @@
       state: present
       block: |
         # target can be IP or FQDN
-        *.* action(type="omfwd" target="{{ rhel9cis_remote_log_server }}" port="{{ rhel9cis_remote_log_port }}" protocol="{{ rhel9cis_remote_log_protocol }}" action.resumeRetryCount="{{ rhel9cis_remote_log_retrycount }}" queue.type="LinkedList" queue.size="{{ rhel9cis_remote_log_queuesize }}")
+        *.* action(type="omfwd" target="{{ rhel9cis_remote_log_host }}" port="{{ rhel9cis_remote_log_port }}" protocol="{{ rhel9cis_remote_log_protocol }}" action.resumeRetryCount="{{ rhel9cis_remote_log_retrycount }}" queue.type="LinkedList" queue.size="{{ rhel9cis_remote_log_queuesize }}")
       insertafter: EOF
   register: result
   failed_when:
