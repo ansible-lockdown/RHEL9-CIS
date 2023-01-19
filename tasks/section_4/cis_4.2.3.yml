@@ -9,13 +9,17 @@
             recurse: true
         register: logfiles
 
-      - name: "4.2.3 | AUDIT | Ensure permissions on all logfiles are configured | find files"
+      - name: "4.2.3 | PATCH | Ensure permissions on all logfiles are configured | change permissions"
         ansible.builtin.file:
             path: "{{ item.path }}"
             mode: 0640
         loop: "{{ logfiles.files }}"
         loop_control:
             label: "{{ item.path }}"
+        when:
+            - item.path != "/var/log/btmp"
+            - item.path != "/var/log/utmp"
+            - item.path != "/var/log/wtmp"
   when:
       - rhel9cis_rule_4_2_3
   tags:
