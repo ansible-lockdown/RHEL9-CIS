@@ -460,14 +460,13 @@
 
       - name: "6.2.16 | AUDIT | Ensure local interactive user dot files are not group or world writable | Check for files"
         ansible.builtin.find:
-            path: "{{ item }}"
+            path: /home
             depth: 3
             patterns: ".*"
             hidden: true
             recurse: true
             file_type: file
         register: user_dot_files
-        loop: "{{ interactive_users_home.stdout_lines }}"
 
       - name: "6.2.16 | AUDIT | Ensure local interactive user dot files are not group or world writable | update permissions"
         ansible.builtin.file:
