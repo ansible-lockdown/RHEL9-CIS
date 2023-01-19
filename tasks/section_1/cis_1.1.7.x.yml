@@ -1,8 +1,5 @@
 ---
 
-- ansible.builtin.debug:
-    msg: "{{ mount_names }}"
-
 - name: "1.1.7.1 | AUDIT | Ensure separate partition exists for /home"
   block:
       - name: "1.1.7.1 | AUDIT | Ensure separate partition exists for /home | Absent"

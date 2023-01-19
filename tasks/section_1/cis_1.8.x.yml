@@ -70,7 +70,7 @@
       - rule_1.8.3
 
 - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle"
-  copy:
+  ansible.builtin.copy:
       dest: /etc/dconf/db/local.d/00-screensaver
       content: |
           [org/gnome/desktop/session]
@@ -90,7 +90,7 @@
       - rule_1.8.4
 
 - name: "1.8.5 PATCH | Ensure GDM screen locks cannot be overridden"
-  lineinfile:
+  ansible.builtin.lineinfile:
       path: /etc/dconf/db/local.d/locks/session
       create: true
       line: /org/gnome/desktop/screensaver/lock-delay

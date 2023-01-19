@@ -18,7 +18,7 @@
             state: absent
 
       - name: "1.1.9 | PATCH | Disable USB Storage | blacklist"
-        lineinfile:
+        ansible.builtin.lineinfile:
             path: /etc/modprobe.d/blacklist.conf
             regexp: "^(#)?blacklist usb-storage(\\s|$)"
             line: "blacklist usb-storage"
