@@ -637,7 +637,7 @@ rhel9cis_futurepwchgdate_autofix: true
 # 5.7
 # rhel9cis_sugroup: sugroup  # change accordingly wheel is default
 
-# wheel users list
+# wheel users list please supply comma seperated e.g. "vagrant,root"
 rhel9cis_sugroup_users: "root"
 
 ## Section6 vars

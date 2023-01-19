@@ -120,8 +120,9 @@
 
       - name: "5.3.7 | PATCH | Ensure access to the su command is restricted | wheel group contains root"
         ansible.builtin.user:
-            name: "{{ rhel9cis_sugroup_users }}"
+            name: "{{ item }}"
             groups: "{{ rhel9cis_sugroup | default('wheel') }}"
+        loop: "{{ rhel9cis_sugroup_users | split (',') }}"
   when:
       - rhel9cis_rule_5_3_7
   tags:
