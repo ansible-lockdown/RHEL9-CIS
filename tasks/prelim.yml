@@ -12,6 +12,13 @@
       - level1-workstation
       - users
 
+- name: "PRELIM | Interactive User accounts"
+  ansible.builtin.shell: 'cat /etc/passwd | grep -Ev "nologin|/sbin" | cut -d: -f6'
+  changed_when: false
+  register: interactive_users_home
+  tags:
+      - always
+
 - name: "PRELIM | Gather accounts with empty password fields"
   ansible.builtin.shell: "cat /etc/shadow | awk -F: '($2 == \"\" ) {j++;print $1; } END {exit j}'"
   changed_when: false
