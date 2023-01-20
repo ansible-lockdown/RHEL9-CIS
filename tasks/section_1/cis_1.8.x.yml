@@ -124,19 +124,19 @@
   block:
       - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | make lock directory"
         ansible.builtin.file:
-          path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
-          owner: root
-          group: root
-          mode: 0755
-          state: directory
+            path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
+            owner: root
+            group: root
+            mode: 0755
+            state: directory
 
       - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | make lockfile"
         ansible.builtin.template:
-          src: etc/dconf/db/00-screensaver_lock.j2
-          dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-screensaver"
-          owner: root
-          group: root
-          mode: 0644
+            src: etc/dconf/db/00-screensaver_lock.j2
+            dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-screensaver"
+            owner: root
+            group: root
+            mode: 0644
   notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_5
@@ -226,19 +226,19 @@
   block:
       - name: "1.8.9 | PATCH | Ensure GDM autorun-never is not overridden | Make lock directory"
         ansible.builtin.file:
-          path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
-          owner: root
-          group: root
-          mode: 0755
-          state: directory
+            path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
+            owner: root
+            group: root
+            mode: 0755
+            state: directory
 
       - name: "1.8.9 | PATCH | Ensure GDM autorun-never is not overridden | Make lockfile"
         ansible.builtin.template:
-          src: etc/dconf/db/00-autorun_lock.j2
-          dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-autorun_lock"
-          owner: root
-          group: root
-          mode: 0644
+            src: etc/dconf/db/00-autorun_lock.j2
+            dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-autorun_lock"
+            owner: root
+            group: root
+            mode: 0644
         notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_9
