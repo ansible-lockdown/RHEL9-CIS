@@ -8,6 +8,7 @@
   when:
       - rhel9cis_rule_2_2_1
       - "'xorg-x11-server-common' in ansible_facts.packages"
+      - not rhel9cis_gui
   tags:
       - level1-server
       - patch
