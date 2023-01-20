@@ -102,7 +102,7 @@
             mode: 0755
             state: directory
 
-      - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle | screensaver"
+      - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle | Make conf file"
         ansible.builtin.template:
             src: etc/dconf/db/00-screensaver.j2
             dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/00-screensaver"
@@ -122,7 +122,7 @@
 
 - name: "1.8.5 PATCH | Ensure GDM screen locks cannot be overridden"
   block:
-      - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | make lock directory"
+      - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | Make lock directory"
         ansible.builtin.file:
             path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
             owner: root
@@ -130,7 +130,7 @@
             mode: 0755
             state: directory
 
-      - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | make lockfile"
+      - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | Make lock file"
         ansible.builtin.template:
             src: etc/dconf/db/00-screensaver_lock.j2
             dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-screensaver"
