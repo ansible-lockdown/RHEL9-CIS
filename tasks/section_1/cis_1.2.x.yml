@@ -101,16 +101,17 @@
         register: repo_files
 
       - name: "1.2.4 | PATCH | Ensure repo_gpgcheck is globally activated | amend repo files"
-        ansible.builtin.lineinfile:
+        ansible.builtin.replace:
           path: "{{ item.path }}"
-          regexp: '^repo_gpgcheck'
-          line: repo_gpgcheck=1
+          regexp: '^repo_gpgcheck( |)=( |)0'
+          replace: repo_gpgcheck=1
         loop: "{{ repo_files.files }}"
         loop_control:
             label: "{{ item.path }}"
 
   when:
       - rhel9cis_rule_1_2_4
+      - not rhel9cis_rhel_default_repo or ansible_distribution != 'RedHat'
   tags:
       - level1-server
       - level1-workstation
