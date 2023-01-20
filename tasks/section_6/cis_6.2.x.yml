@@ -4,6 +4,7 @@
   block:
       - name: "6.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | discover"
         ansible.builtin.shell: awk -F':' '($2 != "x" ) { print $1 " is not set to shadowed passwords "}' /etc/passwd
+        changed_when: false
         register: shadow_passwd
 
       - name: "6.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | Output"
