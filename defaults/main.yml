@@ -370,6 +370,10 @@ rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.10000.9306A36764A7BEA3BF4
 rhel9cis_bootloader_password: random
 rhel9cis_set_boot_pass: true
 
+# 1.8 Gnome Desktop
+rhel9cis_dconf_db_name: local
+rhel9cis_screensaver_idle_delay: 900  # Set max value for idle-delay in seconds (between 1 and 900)
+rhel9cis_screensaver_lock_delay: 5  # Set max value for lock-delay in seconds (between 0 and 5)
 
 # 1.10 Set crypto policy DEFAULT
 # Control 1.10 states not to use LEGACY

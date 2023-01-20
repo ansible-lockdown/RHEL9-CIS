@@ -70,14 +70,35 @@
       - rule_1.8.3
 
 - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle"
-  ansible.builtin.copy:
-      dest: /etc/dconf/db/local.d/00-screensaver
-      content: |
-          [org/gnome/desktop/session]
-          idle-delay=uint32 300
-          [org/gnome/desktop/screensaver]
-          lock-delay=uint32 5
-      mode: '0644'
+  block:
+      - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle | User profile"
+        ansible.builtin.lineinfile:
+            path: /etc/dconf/profile/user
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+            create: true
+            user: root
+            group: root
+            mode: 0644
+        loop:
+            - { regexp: '^user-db', line: 'user-db: user' }
+            - { regexp: '^system-db', line: 'system-db: local' }
+
+      - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle | Make db directory"
+        ansible.builtin.file:
+            path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d"
+            owner: root
+            group: root
+            mode: 0755
+            state: directory
+
+      - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle | screensaver"
+        ansible.builtin.template:
+            src: etc/dconf/db/00-screensaver.j2
+            dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/00-screensaver"
+            owner: root
+            group: root
+            mode: '0644'
   notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_4
@@ -90,13 +111,23 @@
       - rule_1.8.4
 
 - name: "1.8.5 PATCH | Ensure GDM screen locks cannot be overridden"
-  ansible.builtin.lineinfile:
-      path: /etc/dconf/db/local.d/locks/session
-      create: true
-      line: /org/gnome/desktop/screensaver/lock-delay
-      owner: root
-      group: root
-      mode: 0640
+  block:
+      - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | make lock directory"
+        ansible.builtin.file:
+          path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
+          owner: root
+          group: root
+          mode: 0755
+          state: directory
+
+      - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | make lockfile"
+        ansible.builtin.template:
+          src: etc/dconf/db/00-screensaver_lock.j2
+          dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-screensaver"
+          owner: root
+          group: root
+          mode: 0644
+  notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_5
       - rhel9cis_gui
@@ -105,22 +136,16 @@
       - level1-workstation
       - patch
       - gui
-      - rule_1.8.3
+      - rule_1.8.5
 
-- name: "1.8.6 | PATCH | Ensure automatic mounting of removable media is disabled"
-  ansible.builtin.lineinfile:
-      path: /etc/dconf/db/local.d/00-media-automount
-      regexp: "{{ item.regex }}"
-      line: "{{ item.line }}"
-      create: true
+- name: "1.8.6 | PATCH | Ensure GDM automatic mounting of removable media is disabled"
+  ansible.builtin.template:
+      src: etc/dconf/db/00-media-automount.j2
+      dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/00-media-automount"
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   notify: Reload dconf
-  with_items:
-      - { regex: '\[org\/gnome\/desktop\/media-handling\]', line: '[org/gnome/desktop/media-handling]' }
-      - { regex: 'automount=', line: 'automount=false' }
-      - { regex: 'automount-open=', line: 'automount-open=false'}
   when:
       - rhel9cis_rule_1_8_6
       - rhel9cis_gui
@@ -131,6 +156,89 @@
       - gui
       - rule_1.8.6
 
+- name: "1.8.7 | PATCH | Ensure GDM disabling automatic mounting of removable media is not overridden"
+  block:
+      - name: "1.8.7 | PATCH | Ensure GDM disabling automatic mounting of removable media is not overridden | Make lock directory"
+        ansible.builtin.file:
+            path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
+            owner: root
+            group: root
+            mode: 0755
+            state: directory
+
+      - name: "1.8.7 | PATCH | Ensure GDM disabling automatic mounting of removable media is not overridden | Make lock file"
+        ansible.builtin.template:
+            src: etc/dconf/db/00-automount_lock.j2
+            dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-automount_lock"
+            owner: root
+            group: root
+            mode: 0644
+        notify: Reload dconf
+  when:
+      - rhel9cis_rule_1_8_7
+      - rhel9cis_gui
+  tags:
+      - level1-server
+      - level2-workstation
+      - patch
+      - gui
+      - rule_1.8.7
+
+- name: "1.8.8 | PATCH | Ensure GDM autorun-never is enabled"
+  block:
+      - name: "1.8.8 | PATCH | Ensure GDM autorun-never is enabled | Make directory"
+        ansible.builtin.file:
+            path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d"
+            owner: root
+            group: root
+            mode: 0755
+            state: directory
+
+      - name: "1.8.8 | PATCH | Ensure GDM autorun-never is enabled | Make conf file"
+        ansible.builtin.template:
+            src: etc/dconf/db/00-media-autorun.j2
+            dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/00-media-autorun"
+            owner: root
+            group: root
+            mode: '0644'
+        notify: Reload dconf
+  when:
+      - rhel9cis_rule_1_8_8
+      - rhel9cis_gui
+  tags:
+      - level1-server
+      - level2-workstation
+      - patch
+      - gui
+      - rule_1.8.8
+
+- name: "1.8.9 | PATCH | Ensure GDM autorun-never is not overridden"
+  block:
+      - name: "1.8.9 | PATCH | Ensure GDM autorun-never is not overridden | Make lock directory"
+        ansible.builtin.file:
+          path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
+          owner: root
+          group: root
+          mode: 0755
+          state: directory
+
+      - name: "1.8.9 | PATCH | Ensure GDM autorun-never is not overridden | Make lockfile"
+        ansible.builtin.template:
+          src: etc/dconf/db/00-autorun_lock.j2
+          dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-autorun_lock"
+          owner: root
+          group: root
+          mode: 0644
+        notify: Reload dconf
+  when:
+      - rhel9cis_rule_1_8_9
+      - rhel9cis_gui
+  tags:
+      - level1-server
+      - level2-workstation
+      - patch
+      - gui
+      - rule_1.8.9
 
 - name: "1.8.10 | PATCH | Ensure XDMCP is not enabled"
   ansible.builtin.lineinfile:
