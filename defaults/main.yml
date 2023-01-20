@@ -495,8 +495,7 @@ rhel9_nftables_ports:
       type: protocol
       rule: accept
 # Warning Banner Content (issue, issue.net, motd)
-rhel9cis_warning_banner: |
-    Authorized uses only. All activity may be monitored and reported.
+rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
 # End Banner
 
 ## Section4 vars
