@@ -7,6 +7,7 @@
   when:
       - rhel9cis_rule_1_8_1
       - "'gdm' in ansible_facts.packages"
+      - not rhel9cis_gui
   tags:
       - level2-server
       - patch
@@ -15,23 +16,32 @@
       - rule_1.8.1
 
 - name: "1.8.2 | PATCH | Ensure GDM login banner is configured"
-  ansible.builtin.lineinfile:
-      path: "{{ item.file }}"
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
-      state: present
-      create: true
-      owner: root
-      group: root
-      mode: 0644
+  block:
+      - name: "1.8.2 | PATCH | Ensure GDM login banner is configured | gdm profile"
+        ansible.builtin.lineinfile:
+            path: /etc/dconf/profile/gdm
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+            state: present
+            create: true
+            owner: root
+            group: root
+            mode: 0644
+        notify: Reload dconf
+        with_items:
+            - { regexp: 'user-db', line: 'user-db:user' }
+            - { regexp: 'system-db', line: 'system-db:gdm' }
+            - { regexp: 'file-db', line: 'file-db:/usr/share/gdm/greeter-dconf-defaults' }
+
+      - name: "1.8.2 | PATCH | Ensure GDM login banner is configured | gdm profile"
+        ansible.builtin.template:
+            src: etc/dconf/db/gdm.d/01-banner-message.j2
+            dest: /etc/dconf/db/gdm.d/01-banner-message
+            owner: root
+            group: root
+            mode: 0644
+
   notify: Reload dconf
-  with_items:
-      - { file: '/etc/dconf/profile/gdm', regexp: 'user-db', line: 'user-db:user' }
-      - { file: '/etc/dconf/profile/gdm', regexp: 'system-db', line: 'system-db:gdm' }
-      - { file: '/etc/dconf/profile/gdm', regexp: 'file-db', line: 'file-db:/usr/share/gdm/greeter-dconf-defaults' }
-      - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]' }
-      - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp: 'banner-message-enable', line: 'banner-message-enable=true' }
-      - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp: 'banner-message-text', line: "banner-message-text='{{ rhel9cis_warning_banner }}' " }
   when:
       - rhel9cis_rule_1_8_2
       - rhel9cis_gui
@@ -77,7 +87,7 @@
             regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
             create: true
-            user: root
+            owner: root
             group: root
             mode: 0644
         loop:
