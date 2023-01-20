@@ -116,6 +116,7 @@
   block:
       - name: "5.6.6 | PATCH | Ensure root password is set"
         ansible.builtin.shell: passwd -S root | grep "Password set, SHA512 crypt"
+        changed_when: false
         register: root_passwd
 
       - name: "5.6.6 | PATCH | Ensure root password is set"
