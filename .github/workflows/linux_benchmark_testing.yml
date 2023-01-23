@@ -87,6 +87,12 @@ jobs:
         run: sleep 60s
         shell: bash
 
+# Set up requirements for random root password CIS 5.6.6
+      - name: add urandom passwd to root account
+        shell: bash
+        run: |
+         ANSIBLE_HOST_KEY_CHECKING=False && ansible all -i .github/workflows/hosts.yml -m shell -a "cat /dev/urandom | tr -dc ‘[:print:]’ | head -c50 | passwd --stdin root" --private-key ${{ secrets.SSH_PRV_KEY }} -b
+
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
         uses: arillso/action.playbook@master
