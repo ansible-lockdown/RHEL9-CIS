@@ -1,4 +1,4 @@
-.PHONY: all galaxy-install ansible-list yamllint pip-requirements help
+.PHONY: all help galaxy-install ansible-list yamllint pip-requirements
 
 
 GALAXY=ansible-galaxy
