@@ -1,10 +1,7 @@
-# Development Only
 
-## RHEL 9 CIS (predicted) - Beta - CIS baselines or OS not yet GA
+# RHEL 9 CIS
 
-## Testing if you have access to the RH developer branches
-
-### This should work on RHEL8 and derivatives currently
+## v1.0.0 - released Dec 2022
 
 ![Build Status](https://img.shields.io/github/workflow/status/ansible-lockdown/RHEL9-CIS/CommunityToDevel?label=Devel%20Build%20Status&style=plastic)
 ![Build Status](https://img.shields.io/github/workflow/status/ansible-lockdown/RHEL9-CIS/DevelToMain?label=Main%20Build%20Status&style=plastic)
@@ -42,7 +39,9 @@ Rocky 9
 
 - Access to download or add the goss binary and content to the system if using auditing (other options are available on how to get the content to the system.)
 
-**General:**
+- makefile - this is there purely for testing and initial setup purposes.
+
+## General
 
 - Basic knowledge of Ansible, below are some links to the Ansible documentation to help get started if you are unfamiliar with Ansible
   - [Main Ansible documentation page](https://docs.ansible.com)
@@ -60,7 +59,9 @@ Rocky 9
 - Ansible 2.9+
 - python-def (should be included in RHEL 9)
 - libselinux-python
-- jmespath
+- pip packages
+  - jmespath ( complete list found in requirements.txt)
+- collections found in collections/requirememnts.yml
 
 ## Role Variables
 
