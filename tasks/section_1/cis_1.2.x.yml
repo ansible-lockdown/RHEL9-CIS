@@ -90,9 +90,9 @@
   block:
       - name: "1.2.4 | PATCH | Ensure repo_gpgcheck is globally activated | dnf.conf"
         ansible.builtin.lineinfile:
-          path: /etc/dnf/dnf.conf
-          regexp: '^repo_gpgcheck'
-          line: repo_gpgcheck=1
+            path: /etc/dnf/dnf.conf
+            regexp: '^repo_gpgcheck'
+            line: repo_gpgcheck=1
 
       - name: "1.2.4 | AUDIT| Ensure repo_gpgcheck is globally activated | get repo files"
         ansible.builtin.find:
@@ -102,9 +102,9 @@
 
       - name: "1.2.4 | PATCH | Ensure repo_gpgcheck is globally activated | amend repo files"
         ansible.builtin.replace:
-          path: "{{ item.path }}"
-          regexp: '^repo_gpgcheck( |)=( |)0'
-          replace: repo_gpgcheck=1
+            path: "{{ item.path }}"
+            regexp: '^repo_gpgcheck( |)=( |)0'
+            replace: repo_gpgcheck=1
         loop: "{{ repo_files.files }}"
         loop_control:
             label: "{{ item.path }}"
