@@ -475,10 +475,7 @@ rhel9cis_firewall: firewalld
 ##### firewalld
 rhel9cis_default_zone: public
 
-# These are the default service add accordingly
-rhel9_firewalld_service:
-    - ssh
-    - dhcpv6-client
+
 # These are added to demonstrate how this can be done
 rhel9cis_firewalld_ports:
     - number: 80
@@ -488,15 +485,7 @@ rhel9cis_firewalld_ports:
 rhel9cis_nft_tables_autonewtable: true
 rhel9cis_nft_tables_tablename: filter
 rhel9cis_nft_tables_autochaincreate: true
-rhel9_nftables_ports:
-    - port: ssh
-      protocol: tcp
-      type: dport
-      rule: accept
-    - port: igmp
-      protocol: ip
-      type: protocol
-      rule: accept
+
 # Warning Banner Content (issue, issue.net, motd)
 rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
 # End Banner
