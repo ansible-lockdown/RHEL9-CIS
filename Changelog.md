@@ -1,8 +1,10 @@
 # Changes to rhel9CIS
 
-## CIS v1.0.0 - Dec 2022
+## Initial CIS v1.0.0 - released Dec 2022
 
 ### Official CIS release
+
+Jan-2023 release
 
 - Lint file updates and improvements
 - Many controls moved ID references
@@ -12,6 +14,9 @@
 - makefile added (hopefully help some)
 - fqcn added to all controls
 - some controls rewritten using module rather than shell
+- incorporates issues
+  - #23
+  - #24
 
 ## 0.5
 
