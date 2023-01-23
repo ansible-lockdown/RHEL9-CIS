@@ -1,5 +1,18 @@
 # Changes to rhel9CIS
 
+## CIS v1.0.0 - Dec 2022
+
+### Official CIS release
+
+- Lint file updates and improvements
+- Many controls moved ID references
+- Audit updates aligned
+- Command warn arg removed
+- Ansible 2.14 now supported
+- makefile added (hopefully help some)
+- fqcn added to all controls
+- some controls rewritten using module rather than shell
+
 ## 0.5
 
 - audit path updated and output file name
