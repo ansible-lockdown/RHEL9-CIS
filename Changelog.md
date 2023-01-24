@@ -14,6 +14,8 @@ Jan-2023 release
 - makefile added (hopefully help some)
 - fqcn added to all controls
 - some controls rewritten using module rather than shell
+- typo fixes from rhel_08 inheritance
+- workfolw update for 5.6.6 to set random root password to allow for testing
 - incorporates issues
   - #23
   - #24
