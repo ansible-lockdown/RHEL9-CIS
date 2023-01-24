@@ -53,11 +53,6 @@
         check_mode: false
         register: rhel9cis_6_2_3_passwd_gid_check
 
-      - name: "6.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print message that all groups match between passwd and group files"
-        ansible.builtin.debug:
-            msg: "Good News! There are no users that have non-existent GUIDs (Groups)"
-        when: rhel9cis_6_2_3_passwd_gid_check.stdout | length == 0
-
       - name: "6.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print warning about users with invalid GIDs missing GID entries in /etc/group"
         ansible.builtin.debug:
             msg: "Warning!! The following users have non-existent GIDs (Groups): {{ rhel9cis_6_2_2_passwd_gid_check.stdout_lines | join (', ') }}"
