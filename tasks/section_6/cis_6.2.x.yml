@@ -55,7 +55,7 @@
 
       - name: "6.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print warning about users with invalid GIDs missing GID entries in /etc/group"
         ansible.builtin.debug:
-            msg: "Warning!! The following users have non-existent GIDs (Groups): {{ rhel9cis_6_2_2_passwd_gid_check.stdout_lines | join (', ') }}"
+            msg: "Warning!! The following users have non-existent GIDs (Groups): {{ rhel9cis_6_2_3_passwd_gid_check.stdout_lines | join (', ') }}"
         when: rhel9cis_6_2_3_passwd_gid_check.stdout | length >= 1
 
       - name: "6.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | warning count"
@@ -64,7 +64,7 @@
             warn_control_id: '6.2.3'
         when: rhel9cis_6_2_3_passwd_gid_check.stdout | length >= 1
   when:
-      - rhel9cis_rule_6_2_2
+      - rhel9cis_rule_6_2_3
   tags:
       - level1-server
       - level1-workstation
@@ -140,7 +140,7 @@
 
       - name: "6.2.6 | AUDIT | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
         ansible.builtin.debug:
-            msg: "Warning!! The following user names are duplicates: {{ rhel9cis_6_2_5_user_username_check.stdout_lines }}"
+            msg: "Warning!! The following user names are duplicates: {{ rhel9cis_6_2_6_user_username_check.stdout_lines }}"
         when: rhel9cis_6_2_6_user_username_check.stdout | length >= 1
 
       - name: "6.2.6 | AUDIT | Ensure no duplicate user names exist | warning count"
@@ -256,20 +256,20 @@
       - name: "6.2.10 | AUDIT | Ensure local interactive user home directories exist"
         ansible.builtin.stat:
             path: "{{ item }}"
-        register: rhel_08_6_2_10_audit
+        register: rhel_09_6_2_10_audit
         with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | map(attribute='dir') | list }}"
 
       - name: "6.2.10 | AUDIT | Ensure local interactive user home directories exist"
         ansible.builtin.shell: find -H {{ item.0 | quote }} -not -type l -perm /027
         check_mode: false
-        changed_when: rhel_08_6_2_10_patch_audit.stdout | length > 0
-        register: rhel_08_6_2_10_patch_audit
+        changed_when: rhel_09_6_2_10_patch_audit.stdout | length > 0
+        register: rhel_09_6_2_10_patch_audit
         when:
             - ansible_check_mode
             - item.1.exists
         with_together:
-            - "{{ rhel_08_6_2_10_audit.results | map(attribute='item') | list }}"
-            - "{{ rhel_08_6_2_10_audit.results | map(attribute='stat') | list }}"
+            - "{{ rhel_09_6_2_10_audit.results | map(attribute='item') | list }}"
+            - "{{ rhel_09_6_2_10_audit.results | map(attribute='stat') | list }}"
         loop_control:
             label: "{{ item.0 }}"
 
@@ -278,13 +278,13 @@
             path: "{{ item.0 }}"
             recurse: true
             mode: a-st,g-w,o-rwx
-        register: rhel_08_6_2_10_patch
+        register: rhel_09_6_2_10_patch
         when:
             - not ansible_check_mode
             - item.1.exists
         with_together:
-            - "{{ rhel_08_6_2_10_audit.results | map(attribute='item') | list }}"
-            - "{{ rhel_08_6_2_10_audit.results | map(attribute='stat') | list }}"
+            - "{{ rhel_09_6_2_10_audit.results | map(attribute='item') | list }}"
+            - "{{ rhel_09_6_2_10_audit.results | map(attribute='stat') | list }}"
         loop_control:
             label: "{{ item.0 }}"
 
@@ -300,7 +300,7 @@
         when:
             - not system_is_container
         with_nested:
-            - "{{ (ansible_check_mode | ternary(rhel_08_6_2_10_patch_audit, rhel_08_6_2_10_patch)).results |
+            - "{{ (ansible_check_mode | ternary(rhel_09_6_2_10_patch_audit, rhel_09_6_2_10_patch)).results |
               rejectattr('skipped', 'defined') | map(attribute='item') | map('first') | list }}"
             -
                 - etype: group
@@ -343,19 +343,19 @@
         ansible.builtin.stat:
             path: "{{ item }}"
         with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int) | selectattr('uid', '<=', max_int_uid | int) | map(attribute='dir') | list }}"
-        register: rhel_08_6_2_12_audit
+        register: rhel_09_6_2_12_audit
 
       - name: "6.2.12 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
         ansible.builtin.shell: find -H {{ item.0 | quote }} -not -type l -perm /027
         check_mode: false
-        changed_when: rhel_08_6_2_12_patch_audit.stdout | length > 0
-        register: rhel_08_6_2_12_patch_audit
+        changed_when: rhel_09_6_2_12_patch_audit.stdout | length > 0
+        register: rhel_09_6_2_12_patch_audit
         when:
             - ansible_check_mode
             - item.1.exists
         with_together:
-            - "{{ rhel_08_6_2_12_audit.results | map(attribute='item') | list }}"
-            - "{{ rhel_08_6_2_12_audit.results | map(attribute='stat') | list }}"
+            - "{{ rhel_09_6_2_12_audit.results | map(attribute='item') | list }}"
+            - "{{ rhel_09_6_2_12_audit.results | map(attribute='stat') | list }}"
         loop_control:
             label: "{{ item.0 }}"
 
@@ -364,13 +364,13 @@
             path: "{{ item.0 }}"
             recurse: true
             mode: a-st,g-w,o-rwx
-        register: rhel_08_6_2_12_patch
+        register: rhel_09_6_2_12_patch
         when:
             - not ansible_check_mode
             - item.1.exists
         with_together:
-            - "{{ rhel_08_6_2_12_audit.results | map(attribute='item') | list }}"
-            - "{{ rhel_08_6_2_12_audit.results | map(attribute='stat') | list }}"
+            - "{{ rhel_09_6_2_12_audit.results | map(attribute='item') | list }}"
+            - "{{ rhel_09_6_2_12_audit.results | map(attribute='stat') | list }}"
         loop_control:
             label: "{{ item.0 }}"
 
@@ -386,7 +386,7 @@
         when:
             - not system_is_container
         with_nested:
-            - "{{ (ansible_check_mode | ternary(rhel_08_6_2_12_patch_audit, rhel_08_6_2_12_patch)).results |
+            - "{{ (ansible_check_mode | ternary(rhel_09_6_2_12_patch_audit, rhel_09_6_2_12_patch)).results |
               rejectattr('skipped', 'defined') | map(attribute='item') | map('first') | list }}"
             -
                 - etype: group
