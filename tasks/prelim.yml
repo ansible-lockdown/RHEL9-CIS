@@ -217,19 +217,6 @@
   tags:
       - rule_5.7
 
-- name: "PRELIM | Check for rhnsd service"
-  ansible.builtin.shell: "systemctl show rhnsd | grep LoadState | cut -d = -f 2"
-  changed_when: false
-  check_mode: false
-  become: true
-  register: rhnsd_service_status
-  when:
-      - rhel9cis_rule_1_2_2
-      - ansible_distribution == "RedHat"
-  tags:
-      - rule_1.2.2
-      - skip_ansible_lint
-
 - name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
   block:
       - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
