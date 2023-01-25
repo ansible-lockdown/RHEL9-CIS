@@ -21,7 +21,8 @@
         ansible.builtin.systemd:
             name: "{{ item }}"
             masked: true
-        loop: firewalld
+        loop:
+        - firewalld
         when:
             - item in ansible_facts.packages
             - rhel9cis_firewall == 'nftables'
@@ -30,7 +31,8 @@
         ansible.builtin.systemd:
             name: "{{ item }}"
             masked: true
-        loop: nftables
+        loop:
+        - nftables
         when:
             - item in ansible_facts.packages
             - rhel9cis_firewall == 'firewalld'

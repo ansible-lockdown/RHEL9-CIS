@@ -62,7 +62,9 @@
             mode: "0600"
             owner: root
             group: root
-        loop: tipc  # note the item used in the template
+        loop:
+        - tipc
+        # note the item used in the template
 
       - name: "3.1.3 | PATCH | Ensure TIPC is disabled | blacklist"
         ansible.builtin.lineinfile:

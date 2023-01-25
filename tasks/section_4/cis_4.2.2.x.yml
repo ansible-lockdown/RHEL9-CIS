@@ -20,7 +20,7 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
   notify: Restart systemd_journal_upload
-  with_items:
+  loop:
       - { regexp: 'URL=', line: 'URL={{ rhel9cis_journal_upload_url }}'}
       - { regexp: 'ServerKeyFile=', line: 'ServerKeyFile={{ rhel9cis_journal_upload_serverkeyfile }}'}
       - { regexp: 'ServerCertificateFile=', line: 'ServerCertificateFile={{ rhel9cis_journal_servercertificatefile }}'}
@@ -154,7 +154,7 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
   notify: Restart systemd_journal_upload
-  with_items:
+  loop:
       - { regexp: '^#SystemMaxUse=|^SystemMaxUse=', line: 'SystemMaxUse={{ rhel9cis_journald_systemmaxuse }}'}
       - { regexp: '^#SystemKeepFree=|^SystemKeepFree=', line: 'SystemKeepFree={{ rhel9cis_journald_systemkeepfree }}' }
       - { regexp: '^#RuntimeMaxUse=|^RuntimeMaxUse=', line: 'RuntimeMaxUse={{ rhel9cis_journald_runtimemaxuse }}'}
