@@ -103,24 +103,6 @@
   when:
       - run_audit
 
-- name: Gather the package facts after prelim
-  ansible.builtin.package_facts:
-      manager: auto
-  tags:
-      - always
-
-- name: capture /etc/password variables
-  ansible.builtin.include_tasks: parse_etc_password.yml
-  tags:
-      - rule_5.5.2
-      - rule_5.6.2
-      - rule_6.2.9
-      - rule_6.2.10
-      - rule_6.2.11
-      - rhel9cis_section5
-      - rhel9cis_section6
-      - level1-server
-
 - name: run Section 1 tasks
   ansible.builtin.import_tasks: section_1/main.yml
   when: rhel9cis_section1

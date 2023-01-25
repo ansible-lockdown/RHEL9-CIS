@@ -12,6 +12,18 @@
       - level1-workstation
       - users
 
+- name: "PRELIM | capture /etc/password variables"
+  ansible.builtin.include_tasks: parse_etc_password.yml
+  tags:
+      - rule_5.5.2
+      - rule_5.6.2
+      - rule_6.2.9
+      - rule_6.2.10
+      - rule_6.2.11
+      - rhel9cis_section5
+      - rhel9cis_section6
+      - level1-server
+
 - name: "PRELIM | Interactive User accounts"
   ansible.builtin.shell: 'cat /etc/passwd | grep -Ev "nologin|/sbin" | cut -d: -f6'
   changed_when: false
@@ -95,7 +107,7 @@
             path: /sys/firmware/efi
         register: rhel_09_efi_boot
 
-      - name: "PRELIM | AUDIT | set legacy boot and grub path | Bios"
+      - name: "PRELIM | set legacy boot and grub path | Bios"
         ansible.builtin.set_fact:
             rhel9cis_legacy_boot: true
             grub2_path: /etc/grub2.cfg
@@ -197,9 +209,9 @@
       - rule_5.3.4
       - rule_5.3.5
 
-- name: Check sugroup exists if used
+- name: "PRELIM | Check sugroup exists if used"
   block:
-      - name: "Check su group exists if defined"
+      - name: "PRELIM | Check su group exists if defined"
         ansible.builtin.shell: grep -w "{{ rhel9cis_sugroup }}" /etc/group
         register: sugroup_exists
         changed_when: false
@@ -207,7 +219,7 @@
         tags:
             - skip_ansible_lint
 
-      - name: Check sugroup if defined exists before continuing
+      - name: "PRELIM | Check sugroup if defined exists before continuing"
         ansible.builtin.assert:
             that: sugroup_exists.rc == 0
             msg: "The variable rhel9cis_sugroup is defined but does not exist please rectify"
@@ -217,32 +229,38 @@
   tags:
       - rule_5.7
 
-- name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
+- name: "PRELIM | Discover Interactive UID MIN and MIN from logins.def"
   block:
-      - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
+      - name: "PRELIM | Capture UID_MIN information from logins.def"
         ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
         changed_when: false
         register: uid_min_id
 
-      - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
+      - name: "PRELIM | Capture UID_MAX information from logins.def"
         ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
         changed_when: false
         register: uid_max_id
 
-      - name: "PRELIM | AUDIT | Capture GID_MIN information from logins.def"
+      - name: "PRELIM | Capture GID_MIN information from logins.def"
         ansible.builtin.shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
         changed_when: false
         register: gid_min_id
 
-      - name: "PRELIM | AUDIT | set_facts for interactive uid/gid"
+      - name: "PRELIM | set_facts for interactive uid/gid"
         ansible.builtin.set_fact:
             min_int_uid: "{{ uid_min_id.stdout }}"
             max_int_uid: "{{ uid_max_id.stdout }}"
             min_int_gid: "{{ gid_min_id.stdout }}"
 
-- name: Output of uid findings
+- name: "PRELIM | Output of uid findings"
   ansible.builtin.debug:
       msg: "{{ min_int_uid }} {{ max_int_uid }}"
 
   when:
       - not discover_int_uid
+
+- name: "PRELIM | Gather the package facts after prelim"
+  ansible.builtin.package_facts:
+      manager: auto
+  tags:
+      - always
