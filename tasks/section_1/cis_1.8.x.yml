@@ -27,7 +27,7 @@
             group: root
             mode: 0644
         notify: Reload dconf
-        with_items:
+        loop:
             - { regexp: 'user-db', line: 'user-db:user' }
             - { regexp: 'system-db', line: 'system-db:gdm' }
             - { regexp: 'file-db', line: 'file-db:/usr/share/gdm/greeter-dconf-defaults' }
@@ -62,7 +62,7 @@
       group: root
       mode: 0644
   notify: Reload dconf
-  with_items:
+  loop:
       - { file: '/etc/dconf/profile/gdm', regexp: 'user-db', line: 'user-db:user' }
       - { file: '/etc/dconf/profile/gdm', regexp: 'system-db', line: 'system-db:gdm' }
       - { file: '/etc/dconf/profile/gdm', regexp: 'file-db', line: 'file-db:/usr/share/gdm/greeter-dconf-defaults'}
