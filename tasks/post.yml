@@ -1,11 +1,6 @@
 ---
 # Post tasks
 
-- name: Perform DNF package cleanup
-  ansible.builtin.package:
-      autoremove: true
-  changed_when: false
-
 - name: Gather the package facts after remediation
   ansible.builtin.package_facts:
       manager: auto
