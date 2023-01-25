@@ -36,7 +36,7 @@
             dest: /etc/default/grub
             regexp: 'audit=.'
             replace: 'audit=1'
-        notify: grub2cfg
+        notify: Grub2cfg
         when: "'audit=' in rhel9cis_4_1_1_2_grub_cmdline_linux.stdout"
 
       - name: "4.1.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Add audit setting if missing"
@@ -44,7 +44,7 @@
             path: /etc/default/grub
             regexp: '^GRUB_CMDLINE_LINUX='
             line: '{{ rhel9cis_4_1_1_2_grub_cmdline_linux.stdout }} audit=1"'
-        notify: grub2cfg
+        notify: Grub2cfg
         when: "'audit=' not in rhel9cis_4_1_1_2_grub_cmdline_linux.stdout"
   when:
       - rhel9cis_rule_4_1_1_2
@@ -70,7 +70,7 @@
             dest: /etc/default/grub
             regexp: 'audit_backlog_limit=\d+'
             replace: 'audit_backlog_limit={{ rhel9cis_audit_back_log_limit }}'
-        notify: grub2cfg
+        notify: Grub2cfg
         when: "'audit_backlog_limit=' in rhel9cis_4_1_1_3_grub_cmdline_linux.stdout"
 
       - name: "4.1.1.3 | PATCH | Ensure audit_backlog_limit is sufficient | Add audit_backlog_limit setting if missing"
@@ -78,7 +78,7 @@
             path: /etc/default/grub
             regexp: '^GRUB_CMDLINE_LINUX='
             line: '{{ rhel9cis_4_1_1_3_grub_cmdline_linux.stdout }} audit_backlog_limit={{ rhel9cis_audit_back_log_limit }}"'
-        notify: grub2cfg
+        notify: Grub2cfg
         when: "'audit_backlog_limit=' not in rhel9cis_4_1_1_3_grub_cmdline_linux.stdout"
   when:
       - rhel9cis_rule_4_1_1_3

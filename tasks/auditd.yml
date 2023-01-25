@@ -9,8 +9,8 @@
       mode: 0640
   register: audit_rules_updated
   notify:
-      - Auditd_immutable_check
-      - Audit_immutable_fact
+      - Auditd immutable check
+      - Audit immutable fact
       - Restart auditd
 
 - name: POST | Set up auditd user logging exceptions

@@ -22,7 +22,7 @@
       - enforcing=0
   register: selinux_grub_patch
   ignore_errors: true  # noqa ignore-errors
-  notify: grub2cfg
+  notify: Grub2cfg
   when:
       - rhel9cis_rule_1_6_1_2
   tags:

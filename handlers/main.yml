@@ -56,7 +56,7 @@
 - name: Reload dconf
   ansible.builtin.shell: dconf update
 
-- name: grub2cfg
+- name: Grub2cfg
   ansible.builtin.shell: "grub2-mkconfig -o /boot/grub2/grub.cfg"
   ignore_errors: true  # noqa ignore-errors
   tags:
@@ -77,18 +77,18 @@
       name: systemd-journal-upload
       state: restarted
 
-- name: Systemd_daemon_reload
+- name: Systemd daemon reload
   ansible.builtin.systemd:
       daemon-reload: true
 
 ## Auditd tasks note order for handlers to run
 
-- name: Auditd_immutable_check
+- name: Auditd immutable check
   ansible.builtin.shell: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
   changed_when: false
   register: auditd_immutable_check
 
-- name: Audit_immutable_fact
+- name: Audit immutable fact
   ansible.builtin.debug:
       msg: "Reboot required for auditd to apply new rules as immutable set"
   notify: Change_requires_reboot
