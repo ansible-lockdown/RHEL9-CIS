@@ -133,7 +133,7 @@
             path: '{{ item }}'
             mode: o-w
             state: touch
-        with_items: "{{ rhel_09_6_1_9_perms_results.stdout_lines }}"
+        loop: "{{ rhel_09_6_1_9_perms_results.stdout_lines }}"
         when:
             - rhel_09_6_1_9_perms_results.stdout_lines is defined
             - rhel9cis_no_world_write_adjust
@@ -155,7 +155,7 @@
         failed_when: false
         check_mode: false
         register: rhel_09_6_1_10_audit
-        with_items: "{{ ansible_mounts }}"
+        loop: "{{ ansible_mounts }}"
         loop_control:
             label: "{{ item.mount }}"
         when: item['device'].startswith('/dev') and not 'bind' in item['options']
@@ -163,7 +163,7 @@
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Displaying any unowned files or directories"
         ansible.builtin.debug:
             msg: "Warning !! Manual intervention is required -- missing owner on items in {{ item.item.mount }}: {{ item.stdout_lines | join(', ') }}"
-        with_items: "{{ rhel_09_6_1_10_audit.results }}"
+        loop: "{{ rhel_09_6_1_10_audit.results }}"
         when:
             - item.stdout_lines is defined
             - item.stdout_lines | length > 0
@@ -194,7 +194,7 @@
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_11_audit
-        with_items: "{{ ansible_mounts }}"
+        loop: "{{ ansible_mounts }}"
         loop_control:
             label: "{{ item.mount }}"
         when: item['device'].startswith('/dev') and not 'bind' in item['options']
@@ -202,7 +202,7 @@
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Displaying all ungrouped files or directories"
         ansible.builtin.debug:
             msg: "Warning !! Manual intervention is required -- missing group on items in {{ item.item.mount }}: {{ item.stdout_lines | join(', ') }}"
-        with_items: "{{ rhel_09_6_1_11_audit.results }}"
+        loop: "{{ rhel_09_6_1_11_audit.results }}"
         when:
             - item.stdout_lines is defined
             - item.stdout_lines | length > 0
@@ -245,14 +245,14 @@
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_13_perms_results
-        with_items: "{{ ansible_mounts }}"
+        loop: "{{ ansible_mounts }}"
         loop_control:
             label: "{{ item.mount }}"
 
       - name: "6.1.13 | AUDIT | Audit SUID executables | Alert SUID executables exist"
         ansible.builtin.debug:
             msg: "Warning!! Manual intervention is required -- SUID set on items in {{ item.item.mount }}: {{ item.stout_lines | join(', ') }}"
-        with_items: "{{ rhel_09_6_1_13_perms_results.stdout_lines }}"
+        loop: "{{ rhel_09_6_1_13_perms_results.stdout_lines }}"
         when:
             - rhel_09_6_1_13_perms_results.stdout is defined
 
@@ -279,14 +279,14 @@
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_14_perms_results
-        with_items: "{{ ansible_mounts }}"
+        loop: "{{ ansible_mounts }}"
         loop_control:
             label: "{{ item.mount }}"
 
       - name: "6.1.14 | AUDIT | Audit SGID executables | Alert SGID executables exist"
         ansible.builtin.debug:
             msg: "Manual intervention is required -- SGID set on items in {{ item.item.mount }}: {{ item.stout_lines | join(', ') }}"
-        with_items: "{{ rhel_09_6_1_14_perms_results.stdout_lines }}"
+        loop: "{{ rhel_09_6_1_14_perms_results.stdout_lines }}"
         when:
             - rhel_09_6_1_14_perms_results.stdout is defined
 

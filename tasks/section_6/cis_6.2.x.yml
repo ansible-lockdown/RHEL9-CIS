@@ -33,7 +33,7 @@
   ansible.builtin.shell: passwd -l {{ item }}
   changed_when: false
   failed_when: false
-  with_items: "{{ empty_password_accounts.stdout_lines }}"
+  loop: "{{ empty_password_accounts.stdout_lines }}"
   when:
       - empty_password_accounts.rc
       - rhel9cis_rule_6_2_2
@@ -225,7 +225,7 @@
           state=directory
           owner=root
           mode='o-w,g-w'
-        with_items: "{{ rhel9cis_6_2_8_dot_in_path.stdout_lines }}"
+        loop: "{{ rhel9cis_6_2_8_dot_in_path.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_8
   tags:
@@ -239,7 +239,7 @@
   ansible.builtin.shell: passwd -l {{ item }}
   changed_when: false
   failed_when: false
-  with_items: "{{ rhel9cis_uid_zero_accounts_except_root.stdout_lines }}"
+  loop: "{{ rhel9cis_uid_zero_accounts_except_root.stdout_lines }}"
   when:
       - rhel9cis_uid_zero_accounts_except_root.rc
       - rhel9cis_rule_6_2_9
@@ -257,7 +257,7 @@
         ansible.builtin.stat:
             path: "{{ item }}"
         register: rhel_09_6_2_10_audit
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | map(attribute='dir') | list }}"
+        loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | map(attribute='dir') | list }}"
 
       - name: "6.2.10 | AUDIT | Ensure local interactive user home directories exist"
         ansible.builtin.shell: find -H {{ item.0 | quote }} -not -type l -perm /027
@@ -321,7 +321,7 @@
       path: "{{ item.dir }}"
       owner: "{{ item.id }}"
       state: directory
-  with_items: "{{ rhel9cis_passwd }}"
+  loop: "{{ rhel9cis_passwd }}"
   loop_control:
       label: "{{ rhel9cis_passwd_label }}"
   when:
@@ -342,7 +342,7 @@
       - name: "6.2.12 | AUDIT | Ensure local interactive user home directories are mode 750 or more restrictive"
         ansible.builtin.stat:
             path: "{{ item }}"
-        with_items: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int) | selectattr('uid', '<=', max_int_uid | int) | map(attribute='dir') | list }}"
+        loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int) | selectattr('uid', '<=', max_int_uid | int) | map(attribute='dir') | list }}"
         register: rhel_09_6_2_12_audit
 
       - name: "6.2.12 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
@@ -365,14 +365,14 @@
             recurse: true
             mode: a-st,g-w,o-rwx
         register: rhel_09_6_2_12_patch
-        when:
-            - not ansible_check_mode
-            - item.1.exists
         with_together:
             - "{{ rhel_09_6_2_12_audit.results | map(attribute='item') | list }}"
             - "{{ rhel_09_6_2_12_audit.results | map(attribute='stat') | list }}"
         loop_control:
             label: "{{ item.0 }}"
+        when:
+            - not ansible_check_mode
+            - item.1.exists
 
       # set default ACLs so the homedir has an effective umask of 0027
       - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive"
@@ -407,8 +407,7 @@
   ansible.builtin.file:
       path: "{{ item }}/.netrc"
       state: absent
-  with_items:
-      - "{{ interactive_users_home.stdout_lines }}"
+  loop: "{{ interactive_users_home.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_13
   tags:
@@ -423,8 +422,7 @@
   ansible.builtin.file:
       path: "{{ item }}/.forward"
       state: absent
-  with_items:
-      - "{{ interactive_users_home.stdout_lines }}"
+  loop: "{{ interactive_users_home.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_14
   tags:
@@ -439,8 +437,7 @@
   ansible.builtin.file:
       path: "~{{ item }}/.rhosts"
       state: absent
-  with_items:
-      - "{{ interactive_users_home.stdout_lines }}"
+  loop: "{{ interactive_users_home.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_15
   tags:
