@@ -22,7 +22,6 @@
             path: /etc/dconf/profile/gdm
             regexp: "{{ item.regexp }}"
             line: "{{ item.line }}"
-            state: present
             create: true
             owner: root
             group: root
