@@ -102,7 +102,7 @@
       - name: "3.4.2.3 | PATCH | Ensure nftables base chains exist | Create chains if needed"
         ansible.builtin.shell: "{{ item }}"
         failed_when: false
-        with_items:
+        loop:
             - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" input { type filter hook input priority 0 \; }
             - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" forward { type filter hook forward priority 0 \; }
             - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" output { type filter hook output priority 0 \; }
