@@ -197,6 +197,26 @@
       - rule_5.3.4
       - rule_5.3.5
 
+- name: Check sugroup exists if used
+  block:
+      - name: "Check su group exists if defined"
+        ansible.builtin.shell: grep -w "{{ rhel9cis_sugroup }}" /etc/group
+        register: sugroup_exists
+        changed_when: false
+        failed_when: sugroup_exists.rc >= 2
+        tags:
+            - skip_ansible_lint
+
+      - name: Check sugroup if defined exists before continuing
+        ansible.builtin.assert:
+            that: sugroup_exists.rc == 0
+            msg: "The variable rhel9cis_sugroup is defined but does not exist please rectify"
+  when:
+      - rhel9cis_sugroup is defined
+      - rhel9cis_rule_5_7
+  tags:
+      - rule_5.7
+
 - name: "PRELIM | Check for rhnsd service"
   ansible.builtin.shell: "systemctl show rhnsd | grep LoadState | cut -d = -f 2"
   changed_when: false
