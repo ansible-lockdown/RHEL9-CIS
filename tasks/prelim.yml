@@ -35,7 +35,7 @@
   check_mode: false
   register: rhel9cis_uid_zero_accounts_except_root
   tags:
-      - rule_6.2.8
+      - rule_6.2.9
       - level1-server
       - level1-workstation
       - users
