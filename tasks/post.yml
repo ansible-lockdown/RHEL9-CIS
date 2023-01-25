@@ -16,7 +16,7 @@
       mode: 0600
   register: sysctl_updated
   notify: Reload sysctl
-  with_items:
+  loop:
       - 60-kernel_sysctl.conf
       - 60-disable_ipv6.conf
       - 60-netipv4_sysctl.conf
