@@ -216,24 +216,26 @@
               ansible.builtin.stat:
                   path: "{{ item }}"
               register: root_path_perms
-              loop: "{{ root_paths | split(':') }}"
+              loop: "{{ rhel9cis_6_2_8_root_paths.stdout | split(':') }}"
 
-            - name: "6.2.8 | AUDIT | Ensure root PATH Integrity | Check for owner and permissions"
+            - ansible.builtin.debug:
+                  msg: "{{ root_path_perms.results }}"
+
+            - name: "6.2.8 | AUDIT | Ensure root PATH Integrity | Set permissions"
               ansible.builtin.file:
                   path: "{{ item.stat.path }}"
                   state: directory
                   owner: root
                   group: root
-                  mode: 0755
-                  follow: true
+                  mode: "0755"
+                  follow: false
               loop: "{{ root_path_perms.results }}"
               loop_control:
-                  label: "{{ item.stat }}"
+                  label: "{{ item }}"
               when:
-                  - item.stat.pw_name != 'root' or
-                    item.stat.gr_name != 'root' or
-                    item.stat.woth or
-                    item.stat.wgrp
+                  - item.stat.exists
+                  - item.stat.isdir
+                  - item.stat.pw_name != 'root' or item.stat.gr_name != 'root' or item.stat.woth or item.stat.wgrp
   when:
       - rhel9cis_rule_6_2_8
   tags:
@@ -418,7 +420,6 @@
 
 - name: "6.2.16 | PATCH | Ensure local interactive user dot files are not group or world writable"
   block:
-
       - name: "6.2.16 | AUDIT | Ensure local interactive user dot files are not group or world writable | Check for files"
         ansible.builtin.find:
             path: /home
