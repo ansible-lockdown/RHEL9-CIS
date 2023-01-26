@@ -39,8 +39,7 @@
             owner: root
             group: root
             mode: 0644
-
-  notify: Reload dconf
+        notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_2
       - rhel9cis_gui
@@ -108,7 +107,7 @@
             owner: root
             group: root
             mode: '0644'
-  notify: Reload dconf
+        notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_4
       - rhel9cis_gui
@@ -136,7 +135,7 @@
             owner: root
             group: root
             mode: 0644
-  notify: Reload dconf
+        notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_5
       - rhel9cis_gui
