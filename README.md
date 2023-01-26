@@ -86,6 +86,7 @@ Below is an example of the tag section from a control within this role. Using th
 
 ### Known Issues
 
-CIS 1.2.4 - repo_gpgcheck is not carried out for RedHat hosts as the  default repos do not have this function. Rocky and Alma not affected.
+CIS 1.2.4 - repo_gpgcheck is not carried out for RedHat hosts as the  default repos do not have this function. This also affect EPEL(not covered by var).
+          - Rocky and Alma not affected.
 Variable used to unset.
 rhel9cis_rhel_default_repo: true  # to be set to false if using repo that does have this ability

@@ -7,6 +7,8 @@
 Jan-2023 release
 
 - Lint file updates and improvements
+- auditd now shows diff ater initial template added
+- many control rewritten
 - Many controls moved ID references
 - Audit updates aligned
 - Command warn arg removed
@@ -15,7 +17,7 @@ Jan-2023 release
 - fqcn added to all controls
 - some controls rewritten using module rather than shell
 - typo fixes from rhel_08 inheritance
-- workfolw update for 5.6.6 to set random root password to allow for testing
+- workflow update for 5.6.6 to set random root password to allow for testing
 - incorporates issues
   - #23
   - #24
