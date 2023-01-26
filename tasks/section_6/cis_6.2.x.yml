@@ -218,9 +218,6 @@
               register: root_path_perms
               loop: "{{ root_paths | split(':') }}"
 
-            - ansible.builtin.debug:
-                  msg: "{{ root_path_perms.results }}"
-
             - name: "6.2.8 | AUDIT | Ensure root PATH Integrity | Check for owner and permissions"
               ansible.builtin.file:
                   path: "{{ item.stat.path }}"
@@ -264,58 +261,36 @@
 
 - name: "6.2.10 | PATCH | Ensure local interactive user home directories exist"
   block:
-      - name: "6.2.10 | AUDIT | Ensure local interactive user home directories exist"
-        ansible.builtin.stat:
-            path: "{{ item }}"
-        register: rhel_09_6_2_10_audit
-        loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | map(attribute='dir') | list }}"
-
-      - name: "6.2.10 | AUDIT | Ensure local interactive user home directories exist"
-        ansible.builtin.shell: find -H {{ item.0 | quote }} -not -type l -perm /027
-        changed_when: false
-        check_mode: false
-        register: rhel_09_6_2_10_patch_audit
-        with_together:
-            - "{{ rhel_09_6_2_10_audit.results | map(attribute='item') | list }}"
-            - "{{ rhel_09_6_2_10_audit.results | map(attribute='stat') | list }}"
-        loop_control:
-            label: "{{ item.0 }}"
-        when:
-            - ansible_check_mode
-            - item.1.exists
-
-      - name: "6.2.10 | PATCH | Ensure local interactive user home directories exist"
+      - name: "6.2.10 | PATCH | Ensure local interactive user home directories exist | Create dir if absent"
         ansible.builtin.file:
-            path: "{{ item.0 }}"
-            recurse: true
-            mode: a-st,g-w,o-rwx
-        register: rhel_09_6_2_10_patch
-        with_together:
-            - "{{ rhel_09_6_2_10_audit.results | map(attribute='item') | list }}"
-            - "{{ rhel_09_6_2_10_audit.results | map(attribute='stat') | list }}"
+            path: "{{ item.dir }}"
+            state: directory
+            owner: "{{ item.id }}"
+            group: "{{ item.gid }}"
+        register: rhel_09_6_2_10_home_dir
+        loop: "{{ rhel9cis_passwd  | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | list }}"
         loop_control:
-            label: "{{ item.0 }}"
-        when:
-            - not ansible_check_mode
-            - item.1.exists
+            label: "{{ item.id }}"
 
       # set default ACLs so the homedir has an effective umask of 0027
-      - name: "6.2.10 | PATCH | Ensure local interactive user home directories exist"
+      - name: "6.2.10 | PATCH | Ensure local interactive user home directories exist | Set group ACL"
         ansible.posix.acl:
-            path: "{{ item.0 }}"
+            path: "{{ item }}"
             default: true
+            etype: group
+            permissions: rx
             state: present
-            recursive: true
-            etype: "{{ item.1.etype }}"
-            permissions: "{{ item.1.mode }}"
-        with_nested:
-            - "{{ (ansible_check_mode | ternary(rhel_09_6_2_10_patch_audit, rhel_09_6_2_10_patch)).results |
-              rejectattr('skipped', 'defined') | map(attribute='item') | map('first') | list }}"
-            -
-                - etype: group
-                  mode: rx
-                - etype: other
-                  mode: '0'
+        loop: "{{ interactive_users_home.stdout_lines }}"
+        when: not system_is_container
+
+      - name: "6.2.10 | PATCH | Ensure local interactive user home directories exist | Set other ACL"
+        ansible.posix.acl:
+            path: "{{ item }}"
+            default: true
+            etype: other
+            permissions: 0
+            state: present
+        loop: "{{ interactive_users_home.stdout_lines }}"
         when: not system_is_container
   when:
       - rhel9cis_rule_6_2_10
@@ -331,9 +306,9 @@
       path: "{{ item.dir }}"
       owner: "{{ item.id }}"
       state: directory
-  loop: "{{ rhel9cis_passwd }}"
+  loop: "{{ rhel9cis_passwd  | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | list }}"
   loop_control:
-      label: "{{ rhel9cis_passwd_label }}"
+      label: "{{ item.id }}"
   when:
       - item.uid >= min_int_uid | int
       - item.id != 'nobody'
@@ -349,60 +324,43 @@
 
 - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive"
   block:
-      - name: "6.2.12 | AUDIT | Ensure local interactive user home directories are mode 750 or more restrictive"
+      - name: "6.2.12 | AUDIT | Ensure local interactive user home directories are mode 750 or more restrictive | get stat"
         ansible.builtin.stat:
             path: "{{ item }}"
-        loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int) | selectattr('uid', '<=', max_int_uid | int) | map(attribute='dir') | list }}"
-        register: rhel_09_6_2_12_audit
+        register: rhel_09_6_2_12_home_dir_perms
+        loop: "{{ interactive_users_home.stdout_lines }}"
 
-      - name: "6.2.12 | AUDIT | Ensure users' home directories permissions are 750 or more restrictive"
-        ansible.builtin.shell: find -H {{ item.0 | quote }} -not -type l -perm /027
-        check_mode: false
-        changed_when: rhel_09_6_2_12_patch_audit.stdout | length > 0
-        register: rhel_09_6_2_12_patch_audit
-        with_together:
-            - "{{ rhel_09_6_2_12_audit.results | map(attribute='item') | list }}"
-            - "{{ rhel_09_6_2_12_audit.results | map(attribute='stat') | list }}"
-        loop_control:
-            label: "{{ item.0 }}"
-        when:
-            - ansible_check_mode
-            - item.1.exists
-
-      - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive"
+      - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive | amend if needed"
         ansible.builtin.file:
-            path: "{{ item.0 }}"
-            recurse: true
-            mode: a-st,g-w,o-rwx
-        register: rhel_09_6_2_12_patch
-        with_together:
-            - "{{ rhel_09_6_2_12_audit.results | map(attribute='item') | list }}"
-            - "{{ rhel_09_6_2_12_audit.results | map(attribute='stat') | list }}"
+            path: "{{ item.stat.path }}"
+            state: directory
+            mode: "0750"
+        loop: "{{ rhel_09_6_2_12_home_dir_perms.results }}"
         loop_control:
-            label: "{{ item.0 }}"
+            label: "{{ item }}"
         when:
-            - not ansible_check_mode
-            - item.1.exists
+            - item.stat.mode > '0750'
 
       # set default ACLs so the homedir has an effective umask of 0027
-      - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive"
+      - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive | Set group ACL"
         ansible.posix.acl:
-            path: "{{ item.0 }}"
+            path: "{{ item }}"
             default: true
+            etype: group
+            permissions: rx
             state: present
-            recursive: true
-            etype: "{{ item.1.etype }}"
-            permissions: "{{ item.1.mode }}"
-        with_nested:
-            - "{{ (ansible_check_mode | ternary(rhel_09_6_2_12_patch_audit, rhel_09_6_2_12_patch)).results |
-              rejectattr('skipped', 'defined') | map(attribute='item') | map('first') | list }}"
-            -
-                - etype: group
-                  mode: rx
-                - etype: other
-                  mode: '0'
-        when:
-            - not system_is_container
+        loop: "{{ interactive_users_home.stdout_lines }}"
+        when: not system_is_container
+
+      - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive | Set other ACL"
+        ansible.posix.acl:
+            path: "{{ item }}"
+            default: true
+            etype: other
+            permissions: 0
+            state: present
+        loop: "{{ interactive_users_home.stdout_lines }}"
+        when: not system_is_container
   when:
       - rhel9cis_rule_6_2_12
   tags:
