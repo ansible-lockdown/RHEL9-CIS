@@ -22,7 +22,7 @@
             name: "{{ item }}"
             masked: true
         loop:
-        - firewalld
+            - firewalld
         when:
             - item in ansible_facts.packages
             - rhel9cis_firewall == 'nftables'
@@ -32,15 +32,15 @@
             name: "{{ item }}"
             masked: true
         loop:
-        - nftables
+            - nftables
         when:
             - item in ansible_facts.packages
             - rhel9cis_firewall == 'firewalld'
 
       - name: "3.4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | package installed"
         ansible.builtin.package:
-          name: "{{ rhel9cis_firewall }}"
-          state: installed
+            name: "{{ rhel9cis_firewall }}"
+            state: installed
 
       - name: "3.4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | {{ rhel9cis_firewall }} started and enabled"
         ansible.builtin.systemd:
