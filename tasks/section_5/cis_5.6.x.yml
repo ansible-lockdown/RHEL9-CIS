@@ -6,8 +6,7 @@
         ansible.builtin.user:
             name: "{{ item.id }}"
             shell: /usr/sbin/nologin
-        with_items:
-            - "{{ rhel9cis_passwd }}"
+        loop: "{{ rhel9cis_passwd }}"
         when:
             - item.id != "root"
             - item.id != "sync"

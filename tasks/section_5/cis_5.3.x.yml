@@ -48,8 +48,7 @@
       regexp: '^([^#|{% if system_is_ec2 %}ec2-user{% endif %}].*)NOPASSWD(.*)'
       replace: '\1PASSWD\2'
       validate: '/usr/sbin/visudo -cf %s'
-  with_items:
-      - "{{ rhel9cis_sudoers_files.stdout_lines }}"
+  loop: "{{ rhel9cis_sudoers_files.stdout_lines }}"
   when:
       - rhel9cis_rule_5_3_4
   tags:
@@ -65,8 +64,7 @@
       regexp: '^([^#].*)!authenticate(.*)'
       replace: '\1authenticate\2'
       validate: '/usr/sbin/visudo -cf %s'
-  with_items:
-      - "{{ rhel9cis_sudoers_files.stdout_lines }}"
+  loop: "{{ rhel9cis_sudoers_files.stdout_lines }}"
   when:
       - rhel9cis_rule_5_3_5
   tags:
@@ -98,8 +96,7 @@
             regexp: 'timestamp_timeout=(\d+)'
             replace: "timestamp_timeout={{ rhel9cis_sudo_timestamp_timeout }}"
             validate: '/usr/sbin/visudo -cf %s'
-        with_items:
-            - "{{ rhel9cis_5_3_6_timeout_files.stdout_lines }}"
+        loop: "{{ rhel9cis_5_3_6_timeout_files.stdout_lines }}"
         when: rhel9cis_5_3_6_timeout_files.stdout | length > 0
   when:
       - rhel9cis_rule_5_3_6

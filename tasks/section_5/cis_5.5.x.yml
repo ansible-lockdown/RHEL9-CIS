@@ -7,7 +7,7 @@
             path: /etc/security/pwquality.conf
             regexp: ^{{ item.name }}
             line: "{{ item.name }} = {{ item.value }}"
-        with_items:
+        loop:
             - { name: minlen, value: "{{ rhel9cis_pam_password.minlen }}" }
             - { name: minclass, value: "{{ rhel9cis_pam_password.minclass }}" }
 
@@ -37,7 +37,7 @@
       path: /etc/security/faillock.conf
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
-  with_items:
+  loop:
       - { regexp: '^\s*deny\s*=\s*[1-5]\b', line: 'deny = 5' }
       - { regexp: '^\s*unlock_time\s*=\s*(0|9[0-9][0-9]|[1-9][0-9][0-9][0-9]+)\b', line: 'unlock_time = 900' }
   when:
