@@ -50,7 +50,6 @@
     ansible.builtin.assert:
         that: goss_available.stat.exists
         fail_msg: "Audit binary file {{ audit_bin }} does not exist"
-        success_msg: "Audit binary file {{ audit_bin }} exists"
   when:
   - run_audit
 
