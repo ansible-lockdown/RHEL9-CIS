@@ -17,7 +17,6 @@
             "4.1.4.3 | PATCH | Ensure only authorized groups are assigned ownership of audit log files"
         ansible.builtin.file:
             path: "{{ audit_logfile.stdout }}"
-            state: file
             mode: 0640
             owner: root
             group: root
@@ -59,7 +58,6 @@
 - name: "4.1.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive"
   ansible.builtin.file:
       path: "{{ item.path }}"
-      state: file
       mode: 0640
   loop: "{{ auditd_conf_files.files }}"
   loop_control:
@@ -77,7 +75,6 @@
 - name: "4.1.4.6 | PATCH | Ensure audit configuration files are owned by root"
   ansible.builtin.file:
       path: "{{ item.path }}"
-      state: file
       owner: root
   loop: "{{ auditd_conf_files.files }}"
   loop_control:
@@ -94,7 +91,6 @@
 - name: "4.1.4.7 | PATCH | Ensure audit configuration files belong to group root"
   ansible.builtin.file:
       path: "{{ item.path }}"
-      state: file
       group: root
   loop: "{{ auditd_conf_files.files }}"
   loop_control:
@@ -125,7 +121,6 @@
       - name: "4.1.4.8 | PATCH | Ensure audit tools are 755 or more restrictive | set if required"
         ansible.builtin.file:
             path: "{{ item.item }}"
-            state: file
             mode: 0750
         register: "audit_bins"
         loop: "{{ audit_bins.results }}"
@@ -144,7 +139,6 @@
 - name: "4.1.4.9 | PATCH | Ensure audit tools are owned by root"
   ansible.builtin.file:
       path: "{{ item }}"
-      state: file
       owner: root
       group: root
   loop:
@@ -166,7 +160,6 @@
 - name: "4.1.4.10 | PATCH | Ensure audit tools belong to group root"
   ansible.builtin.file:
       path: "{{ item }}"
-      state: file
       group: root
   loop:
       - /sbin/auditctl

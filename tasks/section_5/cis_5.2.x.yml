@@ -3,7 +3,6 @@
 - name: "5.2.1 | Ensure permissions on /etc/ssh/sshd_config are configured"
   ansible.builtin.file:
       dest: /etc/ssh/sshd_config
-      state: file
       owner: root
       group: root
       mode: 0600
@@ -33,8 +32,7 @@
             owner: root
             group: root
             mode: 0600
-        with_items:
-            - "{{ rhel9cis_5_2_2_ssh_private_host_key.files }}"
+        loop: "{{ rhel9cis_5_2_2_ssh_private_host_key.files }}"
         loop_control:
             label: "{{ item.path }}"
   when:
@@ -63,8 +61,7 @@
             owner: root
             group: root
             mode: 0644
-        with_items:
-            - "{{ rhel9cis_5_2_3_ssh_public_host_key.files }}"
+        loop: "{{ rhel9cis_5_2_3_ssh_public_host_key.files }}"
         loop_control:
             label: "{{ item.path }}"
   when:
