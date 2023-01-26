@@ -49,7 +49,7 @@
 
 - name: "1.7.4 | PATCH | Ensure permissions on /etc/motd are configured"
   ansible.builtin.file:
-      dest: /etc/motd
+      path: /etc/motd
       owner: root
       group: root
       mode: 0644
@@ -64,7 +64,7 @@
 
 - name: "1.7.5 | PATCH | Ensure permissions on /etc/issue are configured"
   ansible.builtin.file:
-      dest: /etc/issue
+      path: /etc/issue
       owner: root
       group: root
       mode: 0644
@@ -79,7 +79,7 @@
 
 - name: "1.7.6 | PATCH | Ensure permissions on /etc/issue.net are configured"
   ansible.builtin.file:
-      dest: /etc/issue.net
+      path: /etc/issue.net
       owner: root
       group: root
       mode: 0644
