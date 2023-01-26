@@ -14,7 +14,7 @@
 
 - name: "1.6.1.2 | PATCH | Ensure SELinux is not disabled in bootloader configuration"
   ansible.builtin.replace:
-      dest: /etc/default/grub
+      path: /etc/default/grub
       regexp: '{{ item }}'
       replace: ''
   loop:
