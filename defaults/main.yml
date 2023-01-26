@@ -168,7 +168,7 @@ rhel9cis_rule_2_3_3: true
 rhel9cis_rule_2_3_4: true
 rhel9cis_rule_2_4: true
 
- Section 3 rules
+# Section 3 rules
 rhel9cis_rule_3_1_1: true
 rhel9cis_rule_3_1_2: true
 rhel9cis_rule_3_1_3: true
