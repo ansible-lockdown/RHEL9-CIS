@@ -46,7 +46,7 @@
 
 - name: "5.6.3 | PATCH | Ensure default user shell timeout is 900 seconds or less"
   ansible.builtin.blockinfile:
-      path: "{{ item.dest }}"
+      path: "{{ item.path }}"
       state: "{{ item.state }}"
       marker: "# {mark} CIS 5.6.3 ANSIBLE MANAGED"
       create: true
