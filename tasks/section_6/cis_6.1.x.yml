@@ -335,8 +335,6 @@
               vars:
                   warn_control_id: '6.1.15'
               when: rhel9cis_6_1_15_packages_rpm.stdout|length > 0
-
-
   when:
       - rhel9cis_rule_6_1_15
   tags:
