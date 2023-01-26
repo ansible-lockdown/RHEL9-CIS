@@ -2,7 +2,7 @@
 
 - name: "5.2.1 | Ensure permissions on /etc/ssh/sshd_config are configured"
   ansible.builtin.file:
-      dest: /etc/ssh/sshd_config
+      path: /etc/ssh/sshd_config
       owner: root
       group: root
       mode: 0600
