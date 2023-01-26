@@ -237,8 +237,6 @@
                     item.stat.gr_name != 'root' or
                     item.stat.woth or
                     item.stat.wgrp
-
-
   when:
       - rhel9cis_rule_6_2_8
   tags:
@@ -274,8 +272,8 @@
 
       - name: "6.2.10 | AUDIT | Ensure local interactive user home directories exist"
         ansible.builtin.shell: find -H {{ item.0 | quote }} -not -type l -perm /027
+        changed_when: false
         check_mode: false
-        changed_when: rhel_09_6_2_10_patch_audit.stdout | length > 0
         register: rhel_09_6_2_10_patch_audit
         with_together:
             - "{{ rhel_09_6_2_10_audit.results | map(attribute='item') | list }}"
@@ -318,8 +316,7 @@
                   mode: rx
                 - etype: other
                   mode: '0'
-        when:
-            - not system_is_container
+        when: not system_is_container
   when:
       - rhel9cis_rule_6_2_10
   tags:
