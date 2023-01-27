@@ -55,7 +55,7 @@
         ansible.builtin.replace:
             path: /etc/pam.d/system-auth
             regexp: '^password\s*(sufficient|requisite|sufficient)\s*pam_unix.so.*$'
-            replace: 'password    requisite    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
+            replace: 'password    requisite     pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
   when:
       - rhel9cis_rule_5_5_3
   tags:
@@ -88,7 +88,7 @@
         ansible.builtin.replace:
             path: /etc/pam.d/system-auth
             regexp: '^password\s*sufficient\s*pam_unix.so.*$'
-            replace: 'password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
+            replace: 'password    sufficient     pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
   when:
       - rhel9cis_rule_5_5_4
   tags:
