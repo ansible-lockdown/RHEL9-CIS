@@ -2,7 +2,7 @@
 
 
 GALAXY=ansible-galaxy
-ANSIBLE_LINT=ansible-lint
+ANSIBLE_LINT='/usr/local/bin/ansible-lint'
 ANSIBLE_FILE=site.yml
 
 all: help
@@ -20,7 +20,7 @@ galaxy-install:
 	$(GALAXY) install -r ./collections/requirements.yml
 
 ansible-lint:
-	$(ANSIBLE-LINT) $(ANSIBLE_FILE)
+	 $(ANSIBLE_LINT) $(ANSIBLE_FILE)
 
 yamllint:
 	git ls-files "*.yml"|xargs yamllint
@@ -28,5 +28,5 @@ yamllint:
 pip-requirements:
 	@echo 'Python dependencies:'
 	@cat requirements.txt
-	$(ANSIBLE_LINT) install -r requirements.txt
+	pip3 install -r requirements.txt
 
