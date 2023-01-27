@@ -119,7 +119,7 @@
         ansible.builtin.user:
             name: "{{ item }}"
             groups: "{{ rhel9cis_sugroup | default('wheel') }}"
-        loop: "{{ rhel9cis_sugroup_users | split (',') }}"
+        loop: "{{ rhel9cis_sugroup_users }}"
   when:
       - rhel9cis_rule_5_3_7
   tags:

@@ -194,6 +194,11 @@
         changed_when: false
         register: rhel9cis_6_2_8_root_paths
 
+      - name: "6.2.8 | AUDIT | Ensure root PATH Integrity | Get root paths"
+        ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2 | tr ":" "\n"
+        changed_when: false
+        register: rhel9cis_6_2_8_root_paths_split
+
       - name: "6.2.8 | AUDIT | Ensure root PATH Integrity | Set fact"
         ansible.builtin.set_fact:
             root_paths: "{{ rhel9cis_6_2_8_root_paths.stdout }}"
@@ -216,7 +221,7 @@
               ansible.builtin.stat:
                   path: "{{ item }}"
               register: root_path_perms
-              loop: "{{ rhel9cis_6_2_8_root_paths.stdout | split(':') }}"
+              loop: "{{ rhel9cis_6_2_8_root_paths_split.stdout_lines }}"
 
             - ansible.builtin.debug:
                   msg: "{{ root_path_perms.results }}"
