@@ -37,7 +37,16 @@ RHEL 9
 Almalinux 9
 Rocky 9
 
+ansible 2.10
+jmespath
+relevant collections
+
 - Access to download or add the goss binary and content to the system if using auditing (other options are available on how to get the content to the system.)
+
+## Tested with
+
+ansible-base 2.10.17 - python 3.8
+ansible-core 2.13.4  - python 3.10
 
 - makefile - this is there purely for testing and initial setup purposes.
 
@@ -65,7 +74,7 @@ Rocky 9
 
 ## Role Variables
 
-This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done via the defaults/main.yml file or with extra vars within the project, job, workflow, etc. These variables can be found [here](https://github.com/ansible-lockdown/RHEL9-CIS/wiki/Main-Variables) in the Main Variables Wiki page. All variables are listed there along with descriptions.
+This role is designed that the end user should not have to edit the tasks themselves. All customizing should be done by overriding the required varaibles as found in defaults/main.yml file. e.g. using inventory, group_vars, extra_vars
 
 ## Tags
 
