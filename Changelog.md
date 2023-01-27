@@ -6,6 +6,7 @@
 
 Jan-2023 release
 
+- updated ansible minimum to 2.10
 - Lint file updates and improvements
 - auditd now shows diff ater initial template added
 - many control rewritten
@@ -21,6 +22,7 @@ Jan-2023 release
 - incorporates issues
   - #23
   - #24
+- New option to add faillock for users without authselect - defaults/main 5.4.2
 
 ## 0.5
 
