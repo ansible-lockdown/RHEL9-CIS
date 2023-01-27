@@ -223,9 +223,6 @@
               register: root_path_perms
               loop: "{{ rhel9cis_6_2_8_root_paths_split.stdout_lines }}"
 
-            - ansible.builtin.debug:
-                  msg: "{{ root_path_perms.results }}"
-
             - name: "6.2.8 | AUDIT | Ensure root PATH Integrity | Set permissions"
               ansible.builtin.file:
                   path: "{{ item.stat.path }}"

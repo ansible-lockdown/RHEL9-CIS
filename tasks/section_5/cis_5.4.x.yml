@@ -54,9 +54,9 @@
             line: "{{ item.line }}"
             insertbefore: "{{ item.before }}"
         loop:
-            - { 'regexp': '^auth\s+required\s+pam_faillock.so preauth silent deny=.*unlock_time=.*', 'line': 'auth        required      pam_faillock.so preauth silent deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time }}','before':'^auth\s+sufficient\s+pam_unix.so try_first_pass'}
-            - { 'regexp': '^auth\s+required\s+pam_faillock.so authfail deny=.*unlock_time=.*', 'line': 'auth        required      pam_faillock.so authfail deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time }}','before':'^auth\s+required\s+pam_deny.so'}
-            - { 'regexp': '^account\s+required\s+pam_faillock.so', 'line': 'account     required      pam_faillock.so','before':'^account     required      pam_unix.so'}
+            - { 'regexp': '^auth\s+required\s+pam_faillock.so preauth silent deny=.*unlock_time=.*', 'line': 'auth        required      pam_faillock.so preauth silent deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time }}', 'before':'^auth\s+sufficient\s+pam_unix.so try_first_pass'}
+            - { 'regexp': '^auth\s+required\s+pam_faillock.so authfail deny=.*unlock_time=.*', 'line': 'auth        required      pam_faillock.so authfail deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time }}', 'before':'^auth\s+required\s+pam_deny.so'}
+            - { 'regexp': '^account\s+required\s+pam_faillock.so', 'line': 'account     required      pam_faillock.so', 'before':'^account     required      pam_unix.so'}
         when:
             - rhel9cis_add_faillock_without_authselect
             - rhel9cis_5_4_2_risks == 'ACCEPT'
@@ -69,9 +69,9 @@
             insertbefore: "{{ item.before | default(omit)}}"
             insertafter: "{{ item.after | default(omit)}}"
         loop:
-            - { 'regexp': '^auth\s+required\s+pam_faillock.so preauth silent deny=.*unlock_time=.*', 'line': 'auth        required      pam_faillock.so preauth silent deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time }}','before':'^auth\s+sufficient\s+pam_unix.so try_first_pass'}
-            - { 'regexp': '^auth\s+required\s+pam_faillock.so authfail deny=.*unlock_time=.*', 'line': 'auth        required      pam_faillock.so authfail deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time }}','before':'^auth\s+required\s+pam_deny.so'}
-            - { 'regexp': '^account\s+required\s+pam_faillock.so', 'line': 'account     required      pam_faillock.so','before':'^account     required      pam_unix.so'}
+            - { 'regexp': '^auth\s+required\s+pam_faillock.so preauth silent deny=.*unlock_time=.*', 'line':'auth        required      pam_faillock.so preauth silent deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time }}', 'before':'^auth\s+sufficient\s+pam_unix.so try_first_pass'}
+            - { 'regexp': '^auth\s+required\s+pam_faillock.so authfail deny=.*unlock_time=.*', 'line': 'auth        required      pam_faillock.so authfail deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time }}', 'before':'^auth\s+required\s+pam_deny.so'}
+            - { 'regexp': '^account\s+required\s+pam_faillock.so', 'line': 'account     required      pam_faillock.so', 'before':'^account     required      pam_unix.so'}
         when:
             - rhel9cis_add_faillock_without_authselect
             - rhel9cis_5_4_2_risks == 'ACCEPT'
