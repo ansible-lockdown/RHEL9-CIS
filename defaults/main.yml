@@ -622,6 +622,14 @@ rhel9cis_sudolog_location: "/var/log/sudo.log"
 #### 5.3.6
 rhel9cis_sudo_timestamp_timeout: 15
 
+### 5.4.2 authselect and faillock
+## This option is used at your own risk it will enable faillock for users
+## Only to be used on a new clean system if not using authselect
+## THIS CAN BREAK ACCESS EVEN FOR ROOT - UNDERSTAND RISKS ##
+rhel9cis_add_faillock_without_authselect: false
+# This needs to be set to ACCEPT
+rhel9cis_5_4_2_risks: NEVER
+
 # RHEL-09-5.4.5
 # Session timeout setting file (TMOUT setting can be set in multiple files)
 # Timeout value is in seconds. (60 seconds * 10 = 600)
