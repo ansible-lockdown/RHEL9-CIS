@@ -42,6 +42,28 @@
   tags:
       - user_passwd
 
+- name: "Ensure root password is set"
+  block:
+      - name: "Ensure root password is set"
+        ansible.builtin.shell: passwd -S root | grep "Password set, SHA512 crypt"
+        changed_when: false
+        register: root_passwd_set
+
+      - name: "Ensure root password is set"
+        ansible.builtin.assert:
+            that: root_passwd_set.rc == 0
+            fail_msg: "You have rule 5.6.6 enabled this requires that you have a root password set"
+            success_msg: "You have a root password set"
+  when:
+      - rhel9cis_rule_5_6_6
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - accounts
+      - root
+      - rule_5.6.6
+
 - name: Setup rules if container
   block:
       - name: Discover and set container variable if required
