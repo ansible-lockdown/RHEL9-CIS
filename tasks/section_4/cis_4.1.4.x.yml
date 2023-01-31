@@ -106,7 +106,7 @@
 
 - name: "4.1.4.8 | PATCH | Ensure audit tools are 755 or more restrictive"
   block:
-      - name: "PRELIM | 4.1.4.8 | Get audit binary file stat | get current mode"
+      - name: "4.1.4.8 | AUDIT | Get audit binary file stat | get current mode"
         ansible.builtin.stat:
             path: "{{ item }}"
         register: "audit_bins"
@@ -122,7 +122,7 @@
         ansible.builtin.file:
             path: "{{ item.item }}"
             mode: 0750
-        register: "audit_bins"
+
         loop: "{{ audit_bins.results }}"
         loop_control:
             label: "{{ item.item }}"
