@@ -1,7 +1,7 @@
 ---
 
 - name: "2.1.1 | PATCH | Ensure time synchronization is in use"
-  package:
+  ansible.builtin.package:
       name: chrony
       state: present
   when:
@@ -10,14 +10,13 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - rule_2.1.1
 
 - name: "2.1.2 | PATCH | Ensure chrony is configured"
   block:
       - name: "2.1.2 | PATCH | Ensure chrony is configured | Set configuration"
-        template:
+        ansible.builtin.template:
             src: etc/chrony.conf.j2
             dest: /etc/chrony.conf
             owner: root
@@ -25,7 +24,7 @@
             mode: 0644
 
       - name: "2.1.2 | PATCH | Ensure chrony is configured | modify /etc/sysconfig/chronyd | 1"
-        lineinfile:
+        ansible.builtin.lineinfile:
             path: /etc/sysconfig/chronyd
             regexp: "^(#)?OPTIONS"
             line: "OPTIONS=\"-u chrony\""

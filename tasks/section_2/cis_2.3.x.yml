@@ -1,97 +1,61 @@
 ---
 
-- name: "2.3.1 | PATCH | Ensure NIS Client is not installed"
-  package:
-      name: ypbind
-      state: absent
-  when:
-      - not rhel9cis_ypbind_required
-      - "'ypbind' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_1
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - nis
-      - rule_2.3.1
-
-- name: "2.3.2 | PATCH | Ensure rsh client is not installed"
-  package:
-      name: rsh
-      state: absent
-  when:
-      - not rhel9cis_rsh_required
-      - "'rsh' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_2
-  tags:
-      - level1-server
-      - level2-server
-      - automated
-      - patch
-      - rsh
-      - rule_2.3.2
-
-- name: "2.3.3 | PATCH | Ensure talk client is not installed"
-  package:
-      name: talk
-      state: absent
-  when:
-      - not rhel9cis_talk_required
-      - "'talk' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_3
-  tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - talk
-      - rule_2.3.3
-
-- name: "2.3.4 | PATCH | Ensure telnet client is not installed"
-  package:
+- name: "2.3.1 | PATCH | Ensure telnet client is not installed"
+  ansible.builtin.package:
       name: telnet
       state: absent
   when:
       - not rhel9cis_telnet_required
       - "'telnet' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_4
+      - rhel9cis_rule_2_3_1
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - telnet
-      - rule_2.3.4
+      - rule_2.3.1
 
-- name: "2.3.5 | PATCH | Ensure LDAP client is not installed"
-  package:
+- name: "2.3.2 | PATCH | Ensure LDAP client is not installed"
+  ansible.builtin.package:
       name: openldap-clients
       state: absent
   when:
       - not rhel9cis_openldap_clients_required
       - "'openldap-clients' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_5
+      - rhel9cis_rule_2_3_2
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - ldap
-      - rule_2.3.5
+      - rule_2.3.2
 
-- name: "2.3.6 | PATCH | Ensure TFTP client is not installed"
-  package:
+- name: "2.3.3 | PATCH | Ensure TFTP client is not installed"
+  ansible.builtin.package:
       name: tftp
       state: absent
   when:
       - not rhel9cis_tftp_client
       - "'tftp' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_6
+      - rhel9cis_rule_2_3_3
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - tftp
-      - rule_2.3.6
+      - rule_2.3.3
+
+- name: "2.3.4 | PATCH | Ensure FTP client is not installed"
+  ansible.builtin.package:
+      name: ftp
+      state: absent
+  when:
+      - not rhel9cis_tftp_client
+      - "'ftp' in ansible_facts.packages"
+      - rhel9cis_rule_2_3_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - ftp
+      - rule_2.3.4

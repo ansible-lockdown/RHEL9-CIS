@@ -1,7 +1,7 @@
 ---
 
 - name: "4.2.1.1 | PATCH | Ensure rsyslog installed"
-  package:
+  ansible.builtin.package:
       name: rsyslog
       state: present
   when:
@@ -10,13 +10,12 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - rsyslog
       - rule_4.2.1.1
 
 - name: "4.2.1.2 | PATCH | Ensure rsyslog Service is enabled"
-  service:
+  ansible.builtin.systemd:
       name: rsyslog
       enabled: true
   when:
@@ -24,39 +23,36 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - rsyslog
       - rule_4.2.1.2
 
-# This is counter to control 4.2.2.5??
 - name: "4.2.1.3 | PATCH | Ensure journald is configured to send logs to rsyslog"
-  lineinfile:
+  ansible.builtin.lineinfile:
       path: /etc/systemd/journald.conf
       regexp: "^#ForwardToSyslog=|^ForwardToSyslog="
       line: ForwardToSyslog=yes
+  notify: Restart rsyslog
   when:
       - rhel9cis_rule_4_2_1_3
-      - rhel9cis_preferred_log_capture == "rsyslog"
+      - rhel9cis_syslog == "rsyslog"
   tags:
       - level1-server
       - level1-workstation
-      - manual
       - patch
       - rule_4.2.1.3
 
 - name: "4.2.1.4 | PATCH | Ensure rsyslog default file permissions configured"
-  lineinfile:
+  ansible.builtin.lineinfile:
       path: /etc/rsyslog.conf
       regexp: '^\$FileCreateMode'
       line: '$FileCreateMode 0640'
-  notify: restart rsyslog
+  notify: Restart rsyslog
   when:
       - rhel9cis_rule_4_2_1_4
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - rsyslog
       - rule_4.2.1.4
@@ -64,22 +60,21 @@
 - name: "4.2.1.5 | PATCH | Ensure logging is configured"
   block:
       - name: "4.2.1.5 | AUDIT | Ensure logging is configured | rsyslog current config message out"
-        command: cat /etc/rsyslog.conf
+        ansible.builtin.shell: cat /etc/rsyslog.conf
         changed_when: false
         failed_when: false
         check_mode: false
-        register: rhel_08_4_2_1_5_audit
+        register: rhel_09_4_2_1_5_audit
 
       - name: "4.2.1.5 | AUDIT | Ensure logging is configured | rsyslog current config message out"
-        debug:
+        ansible.builtin.debug:
             msg:
                 - "These are the current logging configurations for rsyslog, please review:"
-                - "{{ rhel_08_4_2_1_5_audit.stdout_lines }}"
+                - "{{ rhel_09_4_2_1_5_audit.stdout_lines }}"
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | mail.* log setting"
-        blockinfile:
+        ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
-            state: present
             marker: "# {mark} MAIL LOG SETTINGS (ANSIBLE MANAGED)"
             block: |
               # mail logging additions to meet CIS standards
@@ -88,11 +83,11 @@
               mail.warning                                            -/var/log/mail.warning
               mail.err                                                /var/log/mail.err
             insertafter: '# Log all the mail messages in one place.'
-        notify: restart rsyslog
+        notify: Restart rsyslog
         when: rhel9cis_rsyslog_ansiblemanaged
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | news.crit log setting"
-        blockinfile:
+        ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
             marker: "# {mark} NEWS LOG SETTINGS (ANSIBLE MANAGED)"
@@ -101,11 +96,11 @@
               news.crit                                               -/var/log/news/news.crit
               news.notice                                             -/var/log/news/news.crit
             insertafter: '# Save news errors of level crit and higher in a special file.'
-        notify: restart rsyslog
+        notify: Restart rsyslog
         when: rhel9cis_rsyslog_ansiblemanaged
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | Misc. log setting"
-        blockinfile:
+        ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
             marker: "# {mark} MISC. LOG SETTINGS (ANSIBLE MANAGED)"
@@ -115,11 +110,11 @@
               *.crit                                                   /var/log/warn
               *.*;mail.none;news.none                                  /var/log/messages
             insertafter: '#### RULES ####'
-        notify: restart rsyslog
+        notify: Restart rsyslog
         when: rhel9cis_rsyslog_ansiblemanaged
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | Local log settings"
-        blockinfile:
+        ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
             marker: "#{mark} LOCAL LOG SETTINGS (ANSIBLE MANAGED)"
@@ -131,10 +126,10 @@
               local6,local7.*                                          -/var/log/localmessages
               *.emrg                                                    :omusrmsg:*
             insertafter: '#### RULES ####'
-        notify: restart rsyslog
+        notify: Restart rsyslog
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | Auth Settings"
-        blockinfile:
+        ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
             marker: "#{mark} Auth SETTINGS (ANSIBLE MANAGED)"
@@ -142,10 +137,10 @@
               # Private settings to meet CIS standards
               auth,authpriv.*                                           /var/log/secure
             insertafter: '#### RULES ####'
-        notify: restart rsyslog
+        notify: Restart rsyslog
 
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | Cron Settings"
-        blockinfile:
+        ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
             marker: "#{mark} Cron SETTINGS (ANSIBLE MANAGED)"
@@ -153,37 +148,35 @@
               # Cron settings to meet CIS standards
               cron.*                                                   /var/log/cron
             insertafter: '#### RULES ####'
-        notify: restart rsyslog
+        notify: Restart rsyslog
   when:
       - rhel9cis_rule_4_2_1_5
   tags:
       - level1-server
       - level1-workstation
-      - manual
       - patch
       - rsyslog
       - rule_4.2.1.5
 
 - name: "4.2.1.6 | PATCH | Ensure rsyslog is configured to send logs to a remote log host"
-  blockinfile:
+  ansible.builtin.blockinfile:
       path: /etc/rsyslog.conf
       state: present
       block: |
-        # remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
-        *.* @@{{ rhel9cis_remote_log_server }}
+        # target can be IP or FQDN
+        *.* action(type="omfwd" target="{{ rhel9cis_remote_log_host }}" port="{{ rhel9cis_remote_log_port }}" protocol="{{ rhel9cis_remote_log_protocol }}" action.resumeRetryCount="{{ rhel9cis_remote_log_retrycount }}" queue.type="LinkedList" queue.size="{{ rhel9cis_remote_log_queuesize }}")
       insertafter: EOF
   register: result
   failed_when:
       - result is failed
       - result.rc != 257
-  notify: restart rsyslog
+  notify: Restart rsyslog
   when:
       - rhel9cis_rule_4_2_1_6
-      - rhel9cis_remote_log_server is defined
+      - rhel9cis_remote_log_server
   tags:
       - level1-server
       - level1-workstation
-      - manual
       - patch
       - rsyslog
       - rule_4.2.1.6
@@ -191,12 +184,12 @@
 - name: "4.2.1.7 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote client"
   block:
       - name: "4.2.1.7 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote client. | When not log host"
-        replace:
+        ansible.builtin.replace:
             path: /etc/rsyslog.conf
-            regexp: '({{ item }})'
+            regexp: '{{ item }}'
             replace: '#\1'
-        notify: restart rsyslog
-        with_items:
+        notify: Restart rsyslog
+        loop:
             - '^(\$ModLoad imtcp)'
             - '^(\$InputTCPServerRun)'
             - '^(module\(load="imtcp"\))'
@@ -204,23 +197,20 @@
         when: not rhel9cis_system_is_log_server
 
       - name: "4.2.1.7 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote clients. | When log host"
-        replace:
+        ansible.builtin.replace:
             path: /etc/rsyslog.conf
             regexp: '^#(.*{{ item }}.*)'
             replace: '\1'
-        notify: restart rsyslog
-        with_items:
+        notify: Restart rsyslog
+        loop:
             - 'ModLoad imtcp'
             - 'InputTCPServerRun'
-            - 'module\(load="imtcp"\)'
-            - 'input\(type="imtcp"'
         when: rhel9cis_system_is_log_server
   when:
       - rhel9cis_rule_4_2_1_7
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - rsyslog
       - rule_4.2.1.7

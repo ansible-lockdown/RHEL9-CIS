@@ -1,5 +1,29 @@
 # Changes to rhel9CIS
 
+## Initial CIS v1.0.0 - released Dec 2022
+
+### Official CIS release
+
+Jan-2023 release
+
+- updated ansible minimum to 2.10
+- Lint file updates and improvements
+- auditd now shows diff ater initial template added
+- many control rewritten
+- Many controls moved ID references
+- Audit updates aligned
+- Command warn arg removed
+- Ansible 2.14 now supported
+- makefile added (hopefully help some)
+- fqcn added to all controls
+- some controls rewritten using module rather than shell
+- typo fixes from rhel_08 inheritance
+- workflow update for 5.6.6 to set random root password to allow for testing
+- incorporates issues
+  - #23
+  - #24
+- New option to add faillock for users without authselect - defaults/main 5.4.2
+
 ## 0.5
 
 - audit path updated and output file name

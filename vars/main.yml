@@ -1,12 +1,12 @@
 ---
 # vars file for RHEL9-CIS
 
-min_ansible_version: 2.9.4
+min_ansible_version: 2.10.1
 rhel9cis_allowed_crypto_policies:
     - 'DEFAULT'
     - 'FUTURE'
     - 'FIPS'
 
 # Used to control warning summary
-control_number: ""
+warn_control_list: ""
 warn_count: 0

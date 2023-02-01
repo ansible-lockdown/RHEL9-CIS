@@ -3,13 +3,13 @@
 - name: "4.1.1.1 | PATCH | Ensure auditd is installed"
   block:
       - name: "4.1.1.1 | PATCH | Ensure auditd is installed | Install auditd packages"
-        package:
+        ansible.builtin.package:
             name: audit
             state: present
         when: '"auditd" not in ansible_facts.packages'
 
       - name: "4.1.1.1 | PATCH | Ensure auditd is installed | Install auditd-lib packages"
-        package:
+        ansible.builtin.package:
             name: audit-libs
             state: present
         when: '"auditd-lib" not in ansible_facts.packages'
@@ -18,92 +18,88 @@
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - auditd
       - rule_4.1.1.1
 
-- name: "4.1.1.2 | PATCH | Ensure auditd service is enabled"
-  service:
-      name: auditd
-      state: started
-      enabled: true
+- name: "4.1.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled"
+  block:
+      - name: "4.1.1.2 | AUDIT | Ensure auditing for processes that start prior to auditd is enabled | Get GRUB_CMDLINE_LINUX"
+        ansible.builtin.shell: grep 'GRUB_CMDLINE_LINUX=' /etc/default/grub | sed 's/.$//'
+        changed_when: false
+        failed_when: false
+        check_mode: false
+        register: rhel9cis_4_1_1_2_grub_cmdline_linux
+
+      - name: "4.1.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Replace existing setting"
+        ansible.builtin.replace:
+            path: /etc/default/grub
+            regexp: 'audit=.'
+            replace: 'audit=1'
+        notify: Grub2cfg
+        when: "'audit=' in rhel9cis_4_1_1_2_grub_cmdline_linux.stdout"
+
+      - name: "4.1.1.2 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Add audit setting if missing"
+        ansible.builtin.lineinfile:
+            path: /etc/default/grub
+            regexp: '^GRUB_CMDLINE_LINUX='
+            line: '{{ rhel9cis_4_1_1_2_grub_cmdline_linux.stdout }} audit=1"'
+        notify: Grub2cfg
+        when: "'audit=' not in rhel9cis_4_1_1_2_grub_cmdline_linux.stdout"
   when:
       - rhel9cis_rule_4_1_1_2
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - auditd
+      - grub
       - rule_4.1.1.2
 
-- name: "4.1.1.3 | PATCH | Ensure auditing for processes that start prior to auditd is enabled"
+- name: "4.1.1.3 | PATCH | Ensure audit_backlog_limit is sufficient"
   block:
-      - name: "4.1.1.3 | AUDIT | Ensure auditing for processes that start prior to auditd is enabled | Get GRUB_CMDLINE_LINUX"
-        shell: grep 'GRUB_CMDLINE_LINUX=' /etc/default/grub | sed 's/.$//'
+      - name: "4.1.1.3 | AUDIT | Ensure audit_backlog_limit is sufficient | Get GRUB_CMDLINE_LINUX"
+        ansible.builtin.shell: grep 'GRUB_CMDLINE_LINUX=' /etc/default/grub | sed 's/.$//'
         changed_when: false
         failed_when: false
         check_mode: false
         register: rhel9cis_4_1_1_3_grub_cmdline_linux
 
-      - name: "4.1.1.3 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Replace existing setting"
-        replace:
-            dest: /etc/default/grub
-            regexp: 'audit=.'
-            replace: 'audit=1'
-        notify: grub2cfg
-        when: "'audit=' in rhel9cis_4_1_1_3_grub_cmdline_linux.stdout"
+      - name: "4.1.1.3 | PATCH | Ensure audit_backlog_limit is sufficient | Replace existing setting"
+        ansible.builtin.replace:
+            path: /etc/default/grub
+            regexp: 'audit_backlog_limit=\d+'
+            replace: 'audit_backlog_limit={{ rhel9cis_audit_back_log_limit }}'
+        notify: Grub2cfg
+        when: "'audit_backlog_limit=' in rhel9cis_4_1_1_3_grub_cmdline_linux.stdout"
 
-      - name: "4.1.1.3 | PATCH | Ensure auditing for processes that start prior to auditd is enabled | Add audit setting if missing"
-        lineinfile:
+      - name: "4.1.1.3 | PATCH | Ensure audit_backlog_limit is sufficient | Add audit_backlog_limit setting if missing"
+        ansible.builtin.lineinfile:
             path: /etc/default/grub
             regexp: '^GRUB_CMDLINE_LINUX='
-            line: '{{ rhel9cis_4_1_1_3_grub_cmdline_linux.stdout }} audit=1"'
-        notify: grub2cfg
-        when: "'audit=' not in rhel9cis_4_1_1_3_grub_cmdline_linux.stdout"
+            line: '{{ rhel9cis_4_1_1_3_grub_cmdline_linux.stdout }} audit_backlog_limit={{ rhel9cis_audit_back_log_limit }}"'
+        notify: Grub2cfg
+        when: "'audit_backlog_limit=' not in rhel9cis_4_1_1_3_grub_cmdline_linux.stdout"
   when:
       - rhel9cis_rule_4_1_1_3
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - auditd
       - grub
       - rule_4.1.1.3
 
-- name: "4.1.1.4 | PATCH | Ensure audit_backlog_limit is sufficient"
-  block:
-      - name: "4.1.1.4 | AUDIT | Ensure audit_backlog_limit is sufficient | Get GRUB_CMDLINE_LINUX"
-        shell: grep 'GRUB_CMDLINE_LINUX=' /etc/default/grub | sed 's/.$//'
-        changed_when: false
-        failed_when: false
-        check_mode: false
-        register: rhel9cis_4_1_1_4_grub_cmdline_linux
-
-      - name: "4.1.1.4 | PATCH | Ensure audit_backlog_limit is sufficient | Replace existing setting"
-        replace:
-            dest: /etc/default/grub
-            regexp: 'audit_backlog_limit=\d+'
-            replace: 'audit_backlog_limit={{ rhel9cis_audit_back_log_limit }}'
-        notify: grub2cfg
-        when: "'audit_backlog_limit=' in rhel9cis_4_1_1_4_grub_cmdline_linux.stdout"
-
-      - name: "4.1.1.4 | PATCH | Ensure audit_backlog_limit is sufficient | Add audit_backlog_limit setting if missing"
-        lineinfile:
-            path: /etc/default/grub
-            regexp: '^GRUB_CMDLINE_LINUX='
-            line: '{{ rhel9cis_4_1_1_4_grub_cmdline_linux.stdout }} audit_backlog_limit={{ rhel9cis_audit_back_log_limit }}"'
-        notify: grub2cfg
-        when: "'audit_backlog_limit=' not in rhel9cis_4_1_1_4_grub_cmdline_linux.stdout"
+- name: "4.1.1.4 | PATCH | Ensure auditd service is enabled"
+  ansible.builtin.systemd:
+      name: auditd
+      state: started
+      enabled: true
   when:
       - rhel9cis_rule_4_1_1_4
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - auditd
-      - grub
       - rule_4.1.1.4

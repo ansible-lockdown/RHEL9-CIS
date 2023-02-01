@@ -1,7 +1,7 @@
 ---
 
 - name: "5.3.1 | PATCH | Ensure sudo is installed"
-  package:
+  ansible.builtin.package:
       name: sudo
       state: present
   when:
@@ -9,13 +9,12 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.1
 
 - name: "5.3.2 | PATCH | Ensure sudo commands use pty"
-  lineinfile:
+  ansible.builtin.lineinfile:
       path: /etc/sudoers
       line: "Defaults    use_pty"
       validate: '/usr/sbin/visudo -cf %s'
@@ -24,13 +23,12 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.2
 
 - name: "5.3.3 | PATCH | Ensure sudo log file exists"
-  lineinfile:
+  ansible.builtin.lineinfile:
       path: /etc/sudoers
       regexp: '^Defaults    logfile='
       line: 'Defaults    logfile="{{ rhel9cis_sudolog_location }}"'
@@ -40,43 +38,38 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.3
 
 - name: "5.3.4 | PATCH | Ensure users must provide password for escalation"
-  replace:
+  ansible.builtin.replace:
       path: "{{ item }}"
       regexp: '^([^#|{% if system_is_ec2 %}ec2-user{% endif %}].*)NOPASSWD(.*)'
       replace: '\1PASSWD\2'
       validate: '/usr/sbin/visudo -cf %s'
-  with_items:
-      - "{{ rhel9cis_sudoers_files.stdout_lines }}"
+  loop: "{{ rhel9cis_sudoers_files.stdout_lines }}"
   when:
       - rhel9cis_rule_5_3_4
   tags:
       - level2-server
       - level2-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.4
 
 - name: "5.3.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
-  replace:
+  ansible.builtin.replace:
       path: "{{ item }}"
       regexp: '^([^#].*)!authenticate(.*)'
       replace: '\1authenticate\2'
       validate: '/usr/sbin/visudo -cf %s'
-  with_items:
-      - "{{ rhel9cis_sudoers_files.stdout_lines }}"
+  loop: "{{ rhel9cis_sudoers_files.stdout_lines }}"
   when:
       - rhel9cis_rule_5_3_5
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.5
@@ -84,13 +77,13 @@
 - name: "5.3.6 | PATCH | Ensure sudo authentication timeout is configured correctly"
   block:
       - name: "5.3.6 | AUDIT | Ensure sudo authentication timeout is configured correctly | Get files with timeout set"
-        shell: grep -is 'timestamp_timeout' /etc/sudoers /etc/sudoers.d/* | cut -d":" -f1 | uniq | sort
+        ansible.builtin.shell: grep -is 'timestamp_timeout' /etc/sudoers /etc/sudoers.d/* | cut -d":" -f1 | uniq | sort
         changed_when: false
         failed_when: false
         register: rhel9cis_5_3_6_timeout_files
 
       - name: "5.3.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if no results"
-        lineinfile:
+        ansible.builtin.lineinfile:
             path: /etc/sudoers
             regexp: 'Defaults timestamp_timeout='
             line: "Defaults timestamp_timeout={{ rhel9cis_sudo_timestamp_timeout }}"
@@ -98,20 +91,18 @@
         when: rhel9cis_5_3_6_timeout_files.stdout | length == 0
 
       - name: "5.3.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if has results"
-        replace:
+        ansible.builtin.replace:
             path: "{{ item }}"
             regexp: 'timestamp_timeout=(\d+)'
             replace: "timestamp_timeout={{ rhel9cis_sudo_timestamp_timeout }}"
             validate: '/usr/sbin/visudo -cf %s'
-        with_items:
-            - "{{ rhel9cis_5_3_6_timeout_files.stdout_lines }}"
+        loop: "{{ rhel9cis_5_3_6_timeout_files.stdout_lines }}"
         when: rhel9cis_5_3_6_timeout_files.stdout | length > 0
   when:
       - rhel9cis_rule_5_3_6
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.6
@@ -119,21 +110,21 @@
 - name: "5.3.7 | PATCH | Ensure access to the su command is restricted"
   block:
       - name: "5.3.7 | PATCH | Ensure access to the su command is restricted | Setting pam_wheel to use_uid"
-        lineinfile:
+        ansible.builtin.lineinfile:
             path: /etc/pam.d/su
             regexp: '^(#)?auth\s+required\s+pam_wheel\.so'
             line: 'auth           required        pam_wheel.so use_uid {% if rhel9cis_sugroup is defined %}group={{ rhel9cis_sugroup }}{% endif %}'
 
       - name: "5.3.7 | PATCH | Ensure access to the su command is restricted | wheel group contains root"
-        user:
-            name: "{{ rhel9cis_sugroup_users }}"
+        ansible.builtin.user:
+            name: "{{ item }}"
             groups: "{{ rhel9cis_sugroup | default('wheel') }}"
+        loop: "{{ rhel9cis_sugroup_users }}"
   when:
       - rhel9cis_rule_5_3_7
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - sudo
       - rule_5.3.7

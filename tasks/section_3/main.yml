@@ -1,20 +1,16 @@
 ---
 
 - name: "SECTION | 3.1.x | Disable unused network protocols and devices"
-  import_tasks: cis_3.1.x.yml
+  ansible.builtin.import_tasks: cis_3.1.x.yml
 
 - name: "SECTION | 3.2.x | Network Parameters (Host Only)"
-  import_tasks: cis_3.2.x.yml
+  ansible.builtin.import_tasks: cis_3.2.x.yml
 
 - name: "SECTION | 3.3.x | Network Parameters (host and Router)"
-  import_tasks: cis_3.3.x.yml
+  ansible.builtin.import_tasks: cis_3.3.x.yml
 
-- name: "SECTION | 3.4.1.x | Configure firewalld"
-  import_tasks: cis_3.4.1.x.yml
-  when:
-  - rhel9cis_firewall == "firewalld"
+- name: "SECTION | 3.4.1.x | Firewall configuration"
+  ansible.builtin.import_tasks: cis_3.4.1.x.yml
 
-- name: "SECTION | 3.4.2.x | Configure nftables"
-  include_tasks: cis_3.4.2.x.yml
-  when:
-  - rhel9cis_firewall == "nftables"
+- name: "SECTION | 3.4.2.x | Configure firewall"
+  ansible.builtin.import_tasks: cis_3.4.2.x.yml

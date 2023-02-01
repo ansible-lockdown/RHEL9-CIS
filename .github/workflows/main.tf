@@ -78,6 +78,7 @@ resource "local_file" "inventory" {
         run_audit: true
         system_is_ec2: true
         audit_git_version: devel
+        skip_reboot: false
     EOF
 }
 

@@ -3,11 +3,10 @@
 - name: "5.6.2 | PATCH | Ensure system accounts are secured"
   block:
       - name: "5.6.2 | Ensure system accounts are secured | Set nologin"
-        user:
+        ansible.builtin.user:
             name: "{{ item.id }}"
             shell: /usr/sbin/nologin
-        with_items:
-            - "{{ rhel9cis_passwd }}"
+        loop: "{{ rhel9cis_passwd }}"
         when:
             - item.id != "root"
             - item.id != "sync"
@@ -21,11 +20,10 @@
             label: "{{ item.id }}"
 
       - name: "5.6.2 | PATCH | Ensure system accounts are secured | Lock accounts"
-        user:
+        ansible.builtin.user:
             name: "{{ item.id }}"
             password_lock: true
-        with_items:
-            - "{{ rhel9cis_passwd }}"
+        loop: "{{ rhel9cis_passwd }}"
         when:
             - item.id != "halt"
             - item.id != "shutdown"
@@ -42,37 +40,35 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - accounts
       - rule_5.6.2
 
 - name: "5.6.3 | PATCH | Ensure default user shell timeout is 900 seconds or less"
-  blockinfile:
-      create: true
-      mode: 0644
-      dest: "{{ item.dest }}"
+  ansible.builtin.blockinfile:
+      path: "{{ item.path }}"
       state: "{{ item.state }}"
       marker: "# {mark} CIS 5.6.3 ANSIBLE MANAGED"
+      create: true
+      mode: 0644
       block: |
         TMOUT={{ rhel9cis_shell_session_timeout.timeout }}
         export TMOUT
         readonly TMOUT
-  with_items:
-      - { dest: "{{ rhel9cis_shell_session_timeout.file }}", state: present }
-      - { dest: /etc/profile, state: "{{ (rhel9cis_shell_session_timeout.file == '/etc/profile') | ternary('present', 'absent') }}" }
+  loop:
+      - { path: "{{ rhel9cis_shell_session_timeout.file }}", state: present }
+      - { path: /etc/profile, state: "{{ (rhel9cis_shell_session_timeout.file == '/etc/profile') | ternary('present', 'absent') }}" }
   when:
       - rhel9cis_rule_5_6_3
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - accounts
       - rule_5.6.3
 
 - name: "5.6.4 | PATCH | Ensure default group for the root account is GID 0"
-  user:
+  ansible.builtin.user:
       name: root
       group: 0
   when:
@@ -80,7 +76,6 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - accounts
       - rule_5.6.4
@@ -88,7 +83,7 @@
 - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive"
   block:
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/login.defs pam_umask settings"
-        replace:
+        ansible.builtin.replace:
             path: /etc/login.defs
             regexp: "{{ item.regexp }}"
             replace: "{{ item.replace }}"
@@ -97,13 +92,13 @@
             - { regexp: '(USERGROUPS_ENAB\s+)yes', replace: '\1 no' }
 
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/bashrc"
-        replace:
+        ansible.builtin.replace:
             path: /etc/bashrc
             regexp: '^(?i)(\s+UMASK|UMASK)\s0[0-2][0-6]'
             replace: '\1 027'
 
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/profile"
-        replace:
+        ansible.builtin.replace:
             path: /etc/profile
             regexp: '^(?i)(\s+UMASK|UMASK)\s0[0-2][0-6]'
             replace: '\1 027'
@@ -112,7 +107,19 @@
   tags:
       - level1-server
       - level1-workstation
-      - automated
       - patch
       - accounts
       - rule_5.6.5
+
+- name: "5.6.6 | PATCH | Ensure root password is set"
+  ansible.builtin.debug:
+      msg: "The root password has been set as per the assert in early stages"
+  when:
+      - rhel9cis_rule_5_6_6
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - accounts
+      - root
+      - rule_5.6.6
