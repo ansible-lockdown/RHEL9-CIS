@@ -653,8 +653,14 @@ rhel9cis_rpm_audit_file: /var/tmp/rpm_file_check
 # RHEL-09_6.1.10 Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable
 rhel9cis_no_world_write_adjust: true
 rhel9cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
-# 6.2.9
-rhel9cis_dotperm_ansiblemanaged: true
+
+
+# 6.2.16
+## Dont follow symlinks for changes to user home directory thanks to @dulin-gnet and comminty for rhel8-cis reedbacj
+rhel_09_6_2_16_home_follow_symlinks: false
+
+
+
 #### Goss Configuration Settings ####
 # Set correct env for the run_audit.sh script from https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
 audit_run_script_environment:
