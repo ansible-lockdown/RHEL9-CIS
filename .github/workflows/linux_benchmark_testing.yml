@@ -91,7 +91,7 @@ jobs:
       - name: add urandom passwd to root account
         shell: bash
         run: |
-         ANSIBLE_HOST_KEY_CHECKING=False && ansible all -i .github/workflows/hosts.yml -m shell -a "cat /dev/urandom | tr -dc ‘[:print:]’ | head -c50 | passwd --stdin root" --private-key ${{ secrets.SSH_PRV_KEY }} -b
+         ANSIBLE_HOST_KEY_CHECKING=False && ansible all -i .github/workflows/hosts.yml -m shell -a "cat /dev/urandom | tr -dc ‘[:print:]’ | head -c50 | passwd --stdin root" -b
 
 # Run the ansible playbook
       - name: Run_Ansible_Playbook
