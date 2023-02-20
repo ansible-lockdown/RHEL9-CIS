@@ -560,6 +560,9 @@ rhel9cis_logrotate: "daily"
 
 ## Section5 vars
 
+# This will allow use of drop in files when CIS adopts them.
+rhel9_cis_sshd_config_file: /etc/ssh/sshd_config
+
 rhel9cis_sshd:
     clientalivecountmax: 0
     clientaliveinterval: 900
