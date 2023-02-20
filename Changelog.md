@@ -1,5 +1,12 @@
 # Changes to rhel9CIS
 
+## 1.0.1
+
+Control 6_2_16 new variable added thanks to @dulin_gnet on rhel8  
+Will not follow ynlink in hoe directoris and amend permissions.
+
+- rhel_09_6_2_16_home_follow_symlink: false
+
 ## Initial CIS v1.0.0 - released Dec 2022
 
 ### Official CIS release

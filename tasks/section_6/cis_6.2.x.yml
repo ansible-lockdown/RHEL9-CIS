@@ -436,6 +436,7 @@
         ansible.builtin.file:
             path: "{{ item.path }}"
             mode: go-w
+            follow: "{{ rhel_09_6_2_16_home_follow_symlinks }}"
         loop: "{{ user_dot_files.files }}"
         loop_control:
             label: "{{ item.path }}"
