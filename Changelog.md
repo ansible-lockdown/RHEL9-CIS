@@ -1,5 +1,9 @@
 # Changes to rhel9CIS
 
+## 1.0.2
+
+#30 - thanks to smattterchew ability to change sshd config file to use dropin file instead.
+
 ## 1.0.1
 
 Control 6_2_16 new variable added thanks to @dulin_gnet on rhel8  
