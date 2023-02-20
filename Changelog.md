@@ -3,6 +3,7 @@
 ## 1.0.2
 
 #30 - thanks to smattterchew ability to change sshd config file to use dropin file instead.
+Aligned benchmark audit version with remediate release
 
 ## 1.0.1
 
