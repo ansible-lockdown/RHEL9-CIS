@@ -26,6 +26,9 @@
             owner: root
             group: root
             mode: "{{ item.mode }}"
+            state: touch
+            modification_time: preserve
+            acess_time: preserve
         loop:
             - { path: 'grub.cfg', mode: '0700' }
             - { path: 'grubenv', mode: '0600' }

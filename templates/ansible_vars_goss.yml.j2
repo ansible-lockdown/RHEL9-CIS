@@ -467,6 +467,9 @@ rhel9cis_remote_log_queuesize: {{ rhel9cis_remote_log_queuesize }}
 rhel9cis_syslog: {{ rhel9cis_syslog }}
 
 # Section 5
+# This will allow use of drop in files when CIS adopts them.
+rhel9_cis_sshd_config_file: {{ rhel9_cis_sshd_config_file }}
+
 ## 5.2.4 Note the following to understand precedence and layout
 rhel9cis_sshd_limited: false
 rhel9cis_sshd_access:

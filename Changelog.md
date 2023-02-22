@@ -1,5 +1,14 @@
 # Changes to rhel9CIS
 
+## 1.0.2
+
+thanks to @smatterchew
+#30 ability to change sshd config file to use dropin file instead.
+
+thanks to @I-am-MoS
+#34 create user.cfg if not present
+Aligned benchmark audit version with remediate release
+
 ## 1.0.1
 
 Control 6_2_16 new variable added thanks to @dulin_gnet on rhel8  

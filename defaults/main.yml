@@ -33,6 +33,9 @@ python2_bin: /bin/python2.7
 
 ## Benchmark name used by audting control role
 # The audit variable found at the base
+## metadata for Audit benchmark
+benchmark_version: 'v1.0.0'
+
 benchmark: RHEL9-CIS
 
 # Whether to skip the reboot
@@ -560,6 +563,9 @@ rhel9cis_logrotate: "daily"
 
 ## Section5 vars
 
+# This will allow use of drop in files when CIS adopts them.
+rhel9_cis_sshd_config_file: /etc/ssh/sshd_config
+
 rhel9cis_sshd:
     clientalivecountmax: 0
     clientaliveinterval: 900
@@ -689,7 +695,7 @@ copy_goss_from_path: /some/accessible/path
 ## managed by the control audit_content
 # git
 audit_file_git: "https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
-audit_git_version: devel
+audit_git_version: "benchmark_{{ benchmark_version }}"
 
 # copy:
 audit_local_copy: "some path to copy from"
