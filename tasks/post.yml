@@ -1,13 +1,13 @@
 ---
 # Post tasks
 
-- name: Gather the package facts after remediation
+- name: POST | Gather the package facts after remediation
   ansible.builtin.package_facts:
       manager: auto
   tags:
       - always
 
-- name: Update sysctl
+- name: POST | Update sysctl
   ansible.builtin.template:
       src: "etc/sysctl.d/{{ item }}.j2"
       dest: "/etc/sysctl.d/{{ item }}"
