@@ -79,6 +79,7 @@ resource "local_file" "inventory" {
         system_is_ec2: true
         audit_git_version: devel
         skip_reboot: false
+        rhel9cis_rule_5_6_6: false  # skip root passwd check and keys only
     EOF
 }
 
