@@ -1,5 +1,11 @@
 # Changes to rhel9CIS
 
+## 1.0.3
+
+Update to auditd components improve idempotency and tidy up
+workflow update to remove the urandom update
+skip 5.6.6 root password check
+
 ## 1.0.2
 
 thanks to @smatterchew
@@ -7,6 +13,7 @@ thanks to @smatterchew
 
 thanks to @I-am-MoS
 #34 create user.cfg if not present
+
 Aligned benchmark audit version with remediate release
 
 ## 1.0.1
