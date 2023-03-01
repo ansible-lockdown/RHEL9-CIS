@@ -4,8 +4,8 @@
   block:
       - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv4 | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
       - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv4"
         ansible.builtin.debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
@@ -14,7 +14,7 @@
         block:
             - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv6 | Set Fact"
               ansible.builtin.set_fact:
-                  flush_ipv6_route: true
+                  rhel9cis_flush_ipv6_route: true
 
             - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv6"
               ansible.builtin.debug:
@@ -33,8 +33,8 @@
   block:
       - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv4 | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
 
       - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv4"
         ansible.builtin.debug:
@@ -44,7 +44,7 @@
         block:
             - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv6 | Set Fact"
               ansible.builtin.set_fact:
-                  flush_ipv6_route: true
+                  rhel9cis_flush_ipv6_route: true
 
             - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv6"
               ansible.builtin.debug:
@@ -63,8 +63,8 @@
   block:
       - name: "3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
 
       - name: "3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted"
         ansible.builtin.debug:
@@ -82,8 +82,8 @@
   block:
       - name: "3.3.4 | PATCH | Ensure suspicious packets are logged | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
 
       - name: "3.3.4 | PATCH | Ensure suspicious packets are logged"
         ansible.builtin.debug:
@@ -101,8 +101,8 @@
   block:
       - name: "3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
 
       - name: 3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored"
         ansible.builtin.debug:
@@ -120,8 +120,8 @@
   block:
       - name: "3.3.6 | PATCH | Ensure bogus ICMP responses are ignored | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
 
       - name: "3.3.6 | PATCH | Ensure bogus ICMP responses are ignored"
         ansible.builtin.debug:
@@ -139,8 +139,8 @@
   block:
       - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
 
       - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
         ansible.builtin.debug:
@@ -158,8 +158,8 @@
   block:
       - name: "3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
 
       - name: "3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled"
         ansible.builtin.debug:
@@ -177,8 +177,8 @@
   block:
       - name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted | IPv6 | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv6_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv6_route: true
 
       - name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted | IPv6"
         ansible.builtin.debug:

@@ -4,8 +4,8 @@
   block:
       - name: "3.2.1 | PATCH | Ensure IP forwarding is disabled | Disable IPv4 forwarding | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
 
       - name: "3.2.1 | PATCH | Ensure IP forwarding is disabled | Disable IPv4 forwarding"
         ansible.builtin.debug:
@@ -15,7 +15,7 @@
         block:
             - name: "3.2.1 | PATCH | Ensure IP forwarding is disabled | Disable IPv6 forwarding | Set Fact"
               ansible.builtin.set_fact:
-                  flush_ipv6_route: true
+                  rhel9cis_flush_ipv6_route: true
 
             - name: "3.2.1 | PATCH | Ensure IP forwarding is disabled | Disable IPv6 forwarding"
               ansible.builtin.debug:
@@ -36,8 +36,8 @@
   block:
       - name: "3.2.2 | PATCH | Ensure packet redirect sending is disabled | Set Fact"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv4_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
       - name: "3.2.2 | PATCH | Ensure packet redirect sending is disabled"
         ansible.builtin.debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"

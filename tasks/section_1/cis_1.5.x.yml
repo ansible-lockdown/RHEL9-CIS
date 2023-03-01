@@ -33,7 +33,7 @@
   block:
       - name: "1.5.3 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
         ansible.builtin.set_fact:
-            sysctl_update: true
+            rhel9cis_sysctl_update: true
 
       - name: "1.5.3 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
         ansible.builtin.debug:

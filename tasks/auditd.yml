@@ -42,5 +42,5 @@
   diff: "{{ auditd_exception_file.stat.exists }}"
   notify: Restart auditd
   when:
-      - allow_auditd_uid_user_exclusions
+      - rhel9cis_allow_auditd_uid_user_exclusions
       - rhel9cis_auditd_uid_exclude | length > 0
