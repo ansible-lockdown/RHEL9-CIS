@@ -106,7 +106,7 @@
       path: /etc/systemd/journald.conf
       regexp: "^#Compress=|^Compress="
       line: Compress=yes
-  notify: Restart systemd_journal_upload
+  notify: Restart journald
   when:
       - rhel9cis_rule_4_2_2_3
   tags:
@@ -121,7 +121,7 @@
       path: /etc/systemd/journald.conf
       regexp: "^#Storage=|^Storage="
       line: Storage=persistent
-  notify: Restart systemd_journal_upload
+  notify: Restart journald
   when:
       - rhel9cis_rule_4_2_2_4
   tags:
@@ -137,7 +137,7 @@
       path: /etc/systemd/journald.conf
       regexp: "^ForwardToSyslog="
       line: "#ForwardToSyslog=yes"
-  notify: Restart systemd_journal_upload
+  notify: Restart journald
   when:
       - rhel9cis_rule_4_2_2_5
   tags:
@@ -153,7 +153,7 @@
       path: /etc/systemd/journald.conf
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
-  notify: Restart systemd_journal_upload
+  notify: Restart journald
   loop:
       - { regexp: '^#SystemMaxUse=|^SystemMaxUse=', line: 'SystemMaxUse={{ rhel9cis_journald_systemmaxuse }}'}
       - { regexp: '^#SystemKeepFree=|^SystemKeepFree=', line: 'SystemKeepFree={{ rhel9cis_journald_systemkeepfree }}' }
