@@ -22,7 +22,7 @@
 - name: POST | AUDITD | Add Warning count for changes to template file | Warn Count  # noqa: no-handler
   ansible.builtin.import_tasks: warning_facts.yml
   vars:
-      warn_control_id: 'Auditd_template_updated-see-diff-output'
+      warn_control_id: 'Auditd template updated, see diff output for details'
   when:
       - auditd_template_updated.changed
       - auditd_file.stat.exists
