@@ -120,11 +120,12 @@
 
 - name: "PRELIM | Update to latest gpg keys"
   ansible.builtin.package:
-      name: "{{ ansible_distribution | lower }}-gpg-keys"
+      name: "{{ gpg_key_package }}"
       state: latest
   when:
       - rhel9cis_rule_1_2_4
       - ansible_distribution != 'RedHat'
+      - ansible_distribution != 'OracleLinux'
 
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   ansible.builtin.package:
