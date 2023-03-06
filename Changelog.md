@@ -7,6 +7,7 @@ Added a warning to check diff if any changes to template file (if template file 
 workflow update to remove the urandom update
 skip 5.6.6 root password check
 variable naming
+OracleLinux support added
 
 ## 1.0.2
 
