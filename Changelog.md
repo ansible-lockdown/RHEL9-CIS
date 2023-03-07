@@ -8,6 +8,7 @@ workflow update to remove the urandom update
 skip 5.6.6 root password check
 variable naming
 OracleLinux support added
+#38 journald restart amendment thanks to @bdwyertech
 
 ## 1.0.2
 
