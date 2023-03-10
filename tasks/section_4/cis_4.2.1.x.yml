@@ -75,7 +75,7 @@
       - name: "4.2.1.5 | PATCH | Ensure logging is configured | mail.* log setting"
         ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
-            marker: "# {mark} MAIL LOG SETTINGS (ANSIBLE MANAGED)"
+            marker: "# {mark} MAIL LOG SETTINGS - CIS benchmark - Ansible-lockdown"
             block: |
               # mail logging additions to meet CIS standards
               mail.*                                                  -/var/log/mail
@@ -90,7 +90,7 @@
         ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
-            marker: "# {mark} NEWS LOG SETTINGS (ANSIBLE MANAGED)"
+            marker: "# {mark} NEWS LOG SETTINGS - CIS benchmark - Ansible-lockdown"
             block: |
               # news logging additions to meet CIS standards
               news.crit                                               -/var/log/news/news.crit
@@ -103,7 +103,7 @@
         ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
-            marker: "# {mark} MISC. LOG SETTINGS (ANSIBLE MANAGED)"
+            marker: "# {mark} MISC. LOG SETTINGS - CIS benchmark - Ansible-lockdown"
             block: |
               # misc. logging additions to meet CIS standards
               *.=warning;*.=err                                        -/var/log/warn
@@ -117,7 +117,7 @@
         ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
-            marker: "#{mark} LOCAL LOG SETTINGS (ANSIBLE MANAGED)"
+            marker: "#{mark} LOCAL LOG SETTINGS - CIS benchmark - Ansible-lockdown"
             block: |
               # local log settings to meet CIS standards
               local0,local1.*                                          -/var/log/localmessages
@@ -132,7 +132,7 @@
         ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
-            marker: "#{mark} Auth SETTINGS (ANSIBLE MANAGED)"
+            marker: "#{mark} Auth SETTINGS - CIS benchmark - Ansible-lockdown"
             block: |
               # Private settings to meet CIS standards
               auth,authpriv.*                                           /var/log/secure
@@ -143,7 +143,7 @@
         ansible.builtin.blockinfile:
             path: /etc/rsyslog.conf
             state: present
-            marker: "#{mark} Cron SETTINGS (ANSIBLE MANAGED)"
+            marker: "#{mark} Cron SETTINGS - CIS benchmark - Ansible-lockdown"
             block: |
               # Cron settings to meet CIS standards
               cron.*                                                   /var/log/cron

@@ -48,7 +48,7 @@
   ansible.builtin.blockinfile:
       path: "{{ item.path }}"
       state: "{{ item.state }}"
-      marker: "# {mark} CIS 5.6.3 ANSIBLE MANAGED"
+      marker: "# {mark} - CIS benchmark - Ansible-lockdown"
       create: true
       mode: 0644
       block: |

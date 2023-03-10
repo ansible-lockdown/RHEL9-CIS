@@ -57,7 +57,7 @@
 - name: "1.3.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools"
   ansible.builtin.blockinfile:
       path: /etc/aide.conf
-      marker: "# {mark} Audit tools (CIS - Ansible)"
+      marker: "# {mark} Audit tools - CIS benchmark - Ansible-lockdown"
       block: |
         /sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512
         /sbin/auditd p+i+n+u+g+s+b+acl+xattrs+sha512
