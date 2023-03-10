@@ -36,6 +36,7 @@ To use release version please point to main branch
 RHEL 9
 Almalinux 9
 Rocky 9
+OracleLinux 9
 
 ansible 2.10
 jmespath

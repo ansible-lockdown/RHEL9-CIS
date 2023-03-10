@@ -464,9 +464,9 @@ rhel9cis_ftp_client: false
 
 ## Section3 vars
 ## Sysctl
-sysctl_update: false
-flush_ipv4_route: false
-flush_ipv6_route: false
+rhel9cis_sysctl_update: false
+rhel9cis_flush_ipv4_route: false
+rhel9cis_flush_ipv6_route: false
 
 ### Firewall Service - either firewalld, iptables, or nftables
 #### Some control allow for services to be removed or masked
@@ -512,7 +512,7 @@ rhel9cis_max_log_file_size: 10
 update_audit_template: false
 
 ## Advanced option found in auditd post
-allow_auditd_uid_user_exclusions: false
+rhel9cis_allow_auditd_uid_user_exclusions: false
 
 
 # This can be used to configure other keys in auditd.conf

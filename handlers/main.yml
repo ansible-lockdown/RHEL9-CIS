@@ -13,7 +13,7 @@
       sysctl_set: true
   ignore_errors: true  # noqa ignore-errors
   when:
-      - flush_ipv4_route
+      - rhel9cis_flush_ipv4_route
       - not system_is_container
 
 - name: Sysctl flush ipv6 route table
@@ -22,13 +22,13 @@
       value: '1'
       sysctl_set: true
   when:
-      - flush_ipv6_route
+      - rhel9cis_flush_ipv6_route
       - not system_is_container
 
 - name: Systemd restart tmp.mount
   ansible.builtin.systemd:
       name: tmp.mount
-      daemon_Reload: true
+      daemon_reload: true
       enabled: true
       masked: false
       state: Reloaded

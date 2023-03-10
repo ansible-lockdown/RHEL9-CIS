@@ -10,3 +10,5 @@ rhel9cis_allowed_crypto_policies:
 # Used to control warning summary
 warn_control_list: ""
 warn_count: 0
+
+gpg_key_package: "{{ ansible_distribution | lower }}-gpg-keys"

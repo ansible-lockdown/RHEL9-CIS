@@ -6,8 +6,8 @@
   block:
       - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | refresh"
         ansible.builtin.set_fact:
-            sysctl_update: true
-            flush_ipv6_route: true
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv6_route: true
 
       - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | disable"
         ansible.builtin.debug:

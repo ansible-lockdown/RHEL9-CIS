@@ -1,5 +1,15 @@
 # Changes to rhel9CIS
 
+## 1.0.3
+
+Update to auditd components improve idempotency and tidy up
+Added a warning to check diff if any changes to template file (if template file exists) else its new.
+workflow update to remove the urandom update
+skip 5.6.6 root password check
+variable naming
+OracleLinux support added
+#38 journald restart amendment thanks to @bdwyertech
+
 ## 1.0.2
 
 thanks to @smatterchew
@@ -7,6 +17,7 @@ thanks to @smatterchew
 
 thanks to @I-am-MoS
 #34 create user.cfg if not present
+
 Aligned benchmark audit version with remediate release
 
 ## 1.0.1
