@@ -28,7 +28,7 @@
 - name: Systemd restart tmp.mount
   ansible.builtin.systemd:
       name: tmp.mount
-      daemon_Reload: true
+      daemon_reload: true
       enabled: true
       masked: false
       state: Reloaded
