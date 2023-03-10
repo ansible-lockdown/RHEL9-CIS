@@ -8,14 +8,14 @@
   block:
       - name: "4.1.4.1 | AUDIT | Ensure audit log files are mode 0640 or less permissive | discover file"
         ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
-        register: audit_discovered_logfile
         changed_when: false
+        register: audit_discovered_logfile
 
       - name: "4.1.4.1 | AUDIT | Ensure audit log files are mode 0640 or less permissive | stat file"
         ansible.builtin.stat:
             path: "{{ audit_discovered_logfile.stdout }}"
-        register: auditd_logfile
         changed_when: false
+        register: auditd_logfile
 
       - name: |
             "4.1.4.1 | PATCH | Ensure audit log files are mode 0640 or less permissive"
