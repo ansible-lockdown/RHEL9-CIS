@@ -645,11 +645,9 @@ rhel9cis_shell_session_timeout:
 # RHEL-09-5.4.1.5 Allow ansible to expire password for account with a last changed date in the future. False will just display users in violation, true will expire those users passwords
 rhel9cis_futurepwchgdate_autofix: true
 
-# 5.7
-# rhel9cis_sugroup: sugroup  # change accordingly wheel is default
+# 5.3.7
+rhel9cis_sugroup: nosugroup
 
-# wheel users list please supply comma seperated e.g. "vagrant,root"
-rhel9cis_sugroup_users: "root"
 
 ## Section6 vars
 
@@ -660,12 +658,9 @@ rhel9cis_rpm_audit_file: /var/tmp/rpm_file_check
 rhel9cis_no_world_write_adjust: true
 rhel9cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
 
-
 # 6.2.16
 ## Dont follow symlinks for changes to user home directory thanks to @dulin-gnet and comminty for rhel8-cis reedbacj
 rhel_09_6_2_16_home_follow_symlinks: false
-
-
 
 #### Goss Configuration Settings ####
 # Set correct env for the run_audit.sh script from https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"

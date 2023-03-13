@@ -508,7 +508,4 @@ rhel9cis_pass:
   warn_age: {{ rhel9cis_pass['warn_age'] }}
 
 ## 5.3.7 set sugroup if differs from wheel
-rhel9cis_sugroup: {% if rhel9cis_sugroup is undefined %}wheel{% else %}{{ rhel9cis_sugroup }}{% endif %}
-
-## 5.3.7 sugroup users list
-rhel9cis_sugroup_users: {{ rhel9cis_sugroup_users }}
+rhel9cis_sugroup: {{ rhel9cis_sugroup }}

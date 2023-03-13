@@ -21,6 +21,10 @@
   when:
   - audit_content == 'git'
 
+- name: Pre Audit | confirm audit branch vs benchmark version
+  ansible.builtin.debug:
+      msg: "Audit will run the branch {{ audit_git_version }} for this Benchmark {{ benchmark_version }}"
+
 - name: Pre Audit | copy to audit content files to server
   ansible.builtin.copy:
       src: "{{ audit_local_copy }}"
