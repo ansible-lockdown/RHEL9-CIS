@@ -1,5 +1,9 @@
 # Changes to rhel9CIS
 
+## 1.0.4
+
+#40 tmp systemd file variable naming update
+
 ## 1.0.3
 
 Update to auditd components improve idempotency and tidy up

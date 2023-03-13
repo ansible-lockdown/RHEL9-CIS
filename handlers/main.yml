@@ -31,7 +31,7 @@
       daemon_reload: true
       enabled: true
       masked: false
-      state: Reloaded
+      state: reloaded
 
 - name: Remount tmp
   ansible.posix.mount:
