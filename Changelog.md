@@ -3,6 +3,7 @@
 ## 1.0.4
 
 #40 tmp systemd file variable naming update
+#41 5.3.7 logic and rewrite - tidy up prelin for sugroup work
 
 ## 1.0.3
 
