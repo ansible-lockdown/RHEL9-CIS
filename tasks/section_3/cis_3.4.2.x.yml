@@ -157,7 +157,6 @@
       - nftables
       - rule_3.4.2.4
 
-
 - name: "3.4.2.4 | PATCH | Ensure host based firewall loopback traffic is configured | firewalld"
   ansible.posix.firewalld:
       rich_rule: "{{ item }}"

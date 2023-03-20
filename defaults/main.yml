@@ -343,7 +343,6 @@ rhel9cis_rule_6_2_14: true
 rhel9cis_rule_6_2_15: true
 rhel9cis_rule_6_2_16: true
 
-
 ## Section 1 vars
 
 #### 1.1.2
@@ -413,7 +412,6 @@ rhel9cis_selinux_enforce: enforcing
 
 ## 2. Services
 
-
 ### 2.1 Time Synchronization
 #### 2.1.2 Time Synchronization servers - used in template file chrony.conf.j2
 rhel9cis_time_synchronization_servers:
@@ -461,7 +459,6 @@ rhel9cis_openldap_clients_required: false
 rhel9cis_tftp_client: false
 rhel9cis_ftp_client: false
 
-
 ## Section3 vars
 ## Sysctl
 rhel9cis_sysctl_update: false
@@ -477,7 +474,6 @@ rhel9cis_firewall: firewalld
 
 ##### firewalld
 rhel9cis_default_zone: public
-
 
 # These are added to demonstrate how this can be done
 rhel9cis_firewalld_ports:
@@ -514,7 +510,6 @@ update_audit_template: false
 ## Advanced option found in auditd post
 rhel9cis_allow_auditd_uid_user_exclusions: false
 
-
 # This can be used to configure other keys in auditd.conf
 rhel9cis_auditd_extra_conf: {}
 # Example:
@@ -534,7 +529,6 @@ rhel9cis_remote_log_port: 514
 rhel9cis_remote_log_protocol: tcp
 rhel9cis_remote_log_retrycount: 100
 rhel9cis_remote_log_queuesize: 1000
-
 
 #### 4.2.1.7
 rhel9cis_system_is_log_server: false
@@ -584,7 +578,6 @@ rhel9cis_ssh_maxsessions: 4
 rhel9cis_inactivelock:
     lock_days: 30
 
-
 rhel9cis_use_authconfig: false
 # 5.3.1/5.3.2 Custom authselect profile settings. Settings in place now will fail, they are place holders from the control example
 # Due to the way many multiple options and ways to configure this control needs to be enabled and settings adjusted to minimise risk
@@ -598,7 +591,6 @@ rhel9cis_authselect_custom_profile_create: false
 
 # 5.3.2 Enable automation to select custom profile options, using the settings above
 rhel9cis_authselect_custom_profile_select: false
-
 
 rhel9cis_pass:
     max_days: 365
@@ -648,7 +640,6 @@ rhel9cis_futurepwchgdate_autofix: true
 # 5.3.7
 rhel9cis_sugroup: nosugroup
 
-
 ## Section6 vars
 
 # RHEL-09_6.1.1
@@ -668,7 +659,6 @@ audit_run_script_environment:
     AUDIT_BIN: "{{ audit_bin }}"
     AUDIT_FILE: 'goss.yml'
     AUDIT_CONTENT_LOCATION: "{{ audit_out_dir }}"
-
 
 ### Goss binary settings ###
 goss_version:
