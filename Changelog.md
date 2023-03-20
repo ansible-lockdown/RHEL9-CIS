@@ -1,5 +1,12 @@
 # Changes to rhel9CIS
 
+## 1.0.5
+
+updated yamllint
+removed empty lines after lint
+initial molecule added
+galaxy workflow updated
+
 ## 1.0.4
 
 #40 tmp systemd file variable naming update
