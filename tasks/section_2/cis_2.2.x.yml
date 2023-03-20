@@ -1,6 +1,5 @@
 ---
 
-
 - name: "2.2.1 | PATCH | Ensure xorg-x11-server-common is not installed"
   ansible.builtin.package:
       name: xorg-x11-server-common
