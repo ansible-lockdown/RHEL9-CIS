@@ -9,7 +9,6 @@ benchmark_version: '1.0.0'
 # If run via script this is discovered and set
 host_os_distribution: {{ ansible_distribution | lower }}
 
-
 #  timeout for each command to run where set - default = 10seconds/10000ms
 timeout_ms: 60000
 
@@ -127,7 +126,6 @@ rhel9cis_rule_1_9: {{ rhel9cis_rule_1_9 }}
 # Ensure system-wide crypto policy is not legacy
 rhel9cis_rule_1_10: {{ rhel9cis_rule_1_10 }}
 
-
 # section 2
 # Services
 # 2.1 Time Synchronization
@@ -190,7 +188,6 @@ rhel9cis_rule_3_4_2_4: {{ rhel9cis_rule_3_4_2_4 }}
 rhel9cis_rule_3_4_2_5: {{ rhel9cis_rule_3_4_2_5 }}
 rhel9cis_rule_3_4_2_6: {{ rhel9cis_rule_3_4_2_6 }}
 rhel9cis_rule_3_4_2_7: {{ rhel9cis_rule_3_4_2_7 }}
-
 
 #  Section 4 rules
 # 4.1 Configure System Accounting
@@ -264,7 +261,6 @@ rhel9cis_rule_4_2_3: {{ rhel9cis_rule_4_2_3 }}
 
 # 4.3 Logrotate
 rhel9cis_rule_4_3: {{ rhel9cis_rule_4_3 }}
-
 
 # Section 5
 #  Authentication and Authorization
@@ -450,7 +446,6 @@ rhel9cis_nft_tables_autonewtable: {{ rhel9cis_nft_tables_autonewtable }}
 rhel9cis_nft_tables_tablename: {{ rhel9cis_nft_tables_tablename }}
 rhel9cis_nft_tables_autochaincreate: {{ rhel9cis_nft_tables_autochaincreate }}
 
-
 # Section 4
 
 ## Set if host is a logserver
@@ -485,7 +480,6 @@ rhel9cis_authselect_custom_profile_select: {{ rhel9cis_authselect_custom_profile
 rhel9cis_authselect:
   custom_profile_name: {{ rhel9cis_authselect['custom_profile_name'] }}
   default_file_to_copy: {{ rhel9cis_authselect['default_file_to_copy'] }}
-
 
 ## 5.4.1 Enable automation to create custom profile settings, using the setings above
 rhel9cis_authselect_custom_profile_create: {{ rhel9cis_authselect_custom_profile_create }}
