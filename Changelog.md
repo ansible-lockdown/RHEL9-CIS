@@ -1,5 +1,10 @@
 # Changes to rhel9CIS
 
+## 1.0.6
+
+updated ymlalint as galaxy doenst honouyr local settings
+removed empty lines in files
+
 ## 1.0.5
 
 updated yamllint
