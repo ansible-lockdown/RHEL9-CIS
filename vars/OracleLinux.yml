@@ -1,0 +1,4 @@
+---
+# OS Specific Settings
+os_gpg_key_pubkey_name: gpg-pubkey-8d8b756f-629e59ec
+os_gpg_key_pubkey_content: "Oracle Linux (release key 1) <secalert_us@oracle.com>"

@@ -1,0 +1,125 @@
+---
+
+- name: "5.6.2 | PATCH | Ensure system accounts are secured"
+  block:
+      - name: "5.6.2 | Ensure system accounts are secured | Set nologin"
+        ansible.builtin.user:
+            name: "{{ item.id }}"
+            shell: /usr/sbin/nologin
+        loop: "{{ rhel9cis_passwd }}"
+        when:
+            - item.id != "root"
+            - item.id != "sync"
+            - item.id != "shutdown"
+            - item.id != "halt"
+            - item.id != "nfsnobody"
+            - item.gid < min_int_uid | int
+            - item.shell != "      /bin/false"
+            - item.shell != "      /usr/sbin/nologin"
+        loop_control:
+            label: "{{ item.id }}"
+
+      - name: "5.6.2 | PATCH | Ensure system accounts are secured | Lock accounts"
+        ansible.builtin.user:
+            name: "{{ item.id }}"
+            password_lock: true
+        loop: "{{ rhel9cis_passwd }}"
+        when:
+            - item.id != "halt"
+            - item.id != "shutdown"
+            - item.id != "sync"
+            - item.id != "root"
+            - item.id != "nfsnobody"
+            - item.gid < min_int_uid | int
+            - item.shell != "      /bin/false"
+            - item.shell != "      /usr/sbin/nologin"
+        loop_control:
+            label: "{{ item.id }}"
+  when:
+      - rhel9cis_rule_5_6_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - accounts
+      - rule_5.6.2
+
+- name: "5.6.3 | PATCH | Ensure default user shell timeout is 900 seconds or less"
+  ansible.builtin.blockinfile:
+      path: "{{ item.path }}"
+      state: "{{ item.state }}"
+      marker: "# {mark} - CIS benchmark - Ansible-lockdown"
+      create: true
+      mode: 0644
+      block: |
+        TMOUT={{ rhel9cis_shell_session_timeout.timeout }}
+        export TMOUT
+        readonly TMOUT
+  loop:
+      - { path: "{{ rhel9cis_shell_session_timeout.file }}", state: present }
+      - { path: /etc/profile, state: "{{ (rhel9cis_shell_session_timeout.file == '/etc/profile') | ternary('present', 'absent') }}" }
+  when:
+      - rhel9cis_rule_5_6_3
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - accounts
+      - rule_5.6.3
+
+- name: "5.6.4 | PATCH | Ensure default group for the root account is GID 0"
+  ansible.builtin.user:
+      name: root
+      group: 0
+  when:
+      - rhel9cis_rule_5_6_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - accounts
+      - rule_5.6.4
+
+- name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive"
+  block:
+      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/login.defs pam_umask settings"
+        ansible.builtin.replace:
+            path: /etc/login.defs
+            regexp: "{{ item.regexp }}"
+            replace: "{{ item.replace }}"
+        loop:
+            - { regexp: '(UMASK\s+)0[012][0-6]', replace: '\1 027' }
+            - { regexp: '(USERGROUPS_ENAB\s+)yes', replace: '\1 no' }
+
+      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/bashrc"
+        ansible.builtin.replace:
+            path: /etc/bashrc
+            regexp: '^(?i)(\s+UMASK|UMASK)\s0[0-2][0-6]'
+            replace: '\1 027'
+
+      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/profile"
+        ansible.builtin.replace:
+            path: /etc/profile
+            regexp: '^(?i)(\s+UMASK|UMASK)\s0[0-2][0-6]'
+            replace: '\1 027'
+  when:
+      - rhel9cis_rule_5_6_5
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - accounts
+      - rule_5.6.5
+
+- name: "5.6.6 | PATCH | Ensure root password is set"
+  ansible.builtin.debug:
+      msg: "The root password has been set as per the assert in early stages"
+  when:
+      - rhel9cis_rule_5_6_6
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - accounts
+      - root
+      - rule_5.6.6

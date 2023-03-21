@@ -1,0 +1,49 @@
+## This file is managed by Ansible, YOUR CHANGES WILL BE LOST!
+
+# IPv4 Network sysctl
+{% if rhel9cis_rule_3_2_1 %}
+# CIS 3.2.1
+net.ipv4.ip_forward = 0
+{% endif %}
+{% if rhel9cis_rule_3_2_2 %}
+# CIS 3.2.2
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+{% endif %}
+{% if rhel9cis_rule_3_3_1 %}
+# CIS 3.3.1
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.default.accept_source_route = 0
+{% endif %}
+{% if rhel9cis_rule_3_3_2 %}
+# CIS 3.3.2
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+{% endif %}
+{% if rhel9cis_rule_3_3_3 %}
+# CIS 3.3.3
+net.ipv4.conf.all.secure_redirects = 0
+net.ipv4.conf.default.secure_redirects = 0
+{% endif %}
+{% if rhel9cis_rule_3_3_4 %}
+# CIS 3.3.4
+net.ipv4.conf.all.log_martians = 1
+net.ipv4.conf.default.log_martians = 1
+{% endif %}
+{% if rhel9cis_rule_3_3_5 %}
+# CIS 3.3.5
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+{% endif %}
+{% if rhel9cis_rule_3_3_6 %}
+# CIS 3.3.6
+net.ipv4.icmp_ignore_bogus_error_responses = 1
+{% endif %}
+{% if rhel9cis_rule_3_3_7 %}
+# CIS 3.3.7
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.rp_filter = 1
+{% endif %}
+{% if rhel9cis_rule_3_3_8 %}
+# CIS 3.3.8
+net.ipv4.tcp_syncookies = 1
+{% endif %}

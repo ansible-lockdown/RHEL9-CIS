@@ -1,0 +1,89 @@
+---
+
+# File to skip controls if container
+# Based on standard image no changes
+# it expected all pkgs required for the container are alreday installed
+
+## controls
+
+# Firewall
+rhel9cis_firewall: None
+
+# SElinux
+rhel9cis_selinux_disable: true
+
+## Related individual rules
+# Aide
+rhel9cis_rule_1_4_1: false
+rhel9cis_rule_1_4_2: false
+
+# auditd
+rhel9cis_rule_4_1_1_1: false
+rhel9cis_rule_4_1_2_1: false
+rhel9cis_rule_4_1_2_2: false
+rhel9cis_rule_4_1_2_3: false
+
+# time sync
+rhel9cis_rule_2_2_1_1: false
+rhel9cis_rule_2_2_1_2: false
+
+# cron
+rhel9cis_rule_5_1_1: false
+rhel9cis_rule_5_1_2: false
+rhel9cis_rule_5_1_3: false
+rhel9cis_rule_5_1_4: false
+rhel9cis_rule_5_1_5: false
+rhel9cis_rule_5_1_6: false
+rhel9cis_rule_5_1_7: false
+rhel9cis_rule_5_1_8: false
+
+# crypto
+rhel9cis_rule_1_10: false
+
+# grub
+rhel9cis_rule_1_5_1: false
+rhel9cis_rule_1_5_2: false
+rhel9cis_rule_1_5_3: false
+
+## mounts
+# /tmp
+rhel9cis_rule_1_1_2: false
+rhel9cis_rule_1_1_3: false
+rhel9cis_rule_1_1_4: false
+rhel9cis_rule_1_1_5: false
+# /var
+rhel9cis_rule_1_1_6: false
+# /var/tmp
+rhel9cis_rule_1_1_7: false
+rhel9cis_rule_1_1_8: false
+rhel9cis_rule_1_1_9: false
+rhel9cis_rule_1_1_10: false
+# /var/log
+rhel9cis_rule_1_1_11: false
+# /var/log/audit
+rhel9cis_rule_1_1_12: false
+# /home
+rhel9cis_rule_1_1_13: false
+rhel9cis_rule_1_1_14: false
+# /dev/shm
+rhel9cis_rule_1_1_15: false
+rhel9cis_rule_1_1_16: false
+rhel9cis_rule_1_1_17: false
+# usb-storage
+rhel9cis_rule_1_1_23: false
+
+# logging
+rhel9cis_rule_4_2_1_1: false
+rhel9cis_rule_4_2_1_2: false
+rhel9cis_rule_4_2_1_3: false
+rhel9cis_rule_4_2_1_4: false
+rhel9cis_rule_4_2_1_5: false
+rhel9cis_rule_4_2_1_6: false
+rhel9cis_rule_4_2_2_1: false
+rhel9cis_rule_4_2_2_2: false
+rhel9cis_rule_4_2_2_3: false
+
+# systemd
+
+# Users/passwords/accounts
+rhel9cis_rule_5_5_2: false

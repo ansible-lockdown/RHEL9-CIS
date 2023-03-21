@@ -1,61 +1,194 @@
 ---
 
-- name: "3.3.1 | L2 | PATCH | Ensure DCCP is disabled"
-  lineinfile:
-      dest: /etc/modprobe.d/CIS.conf
-      regexp: "^(#)?install dccp(\\s|$)"
-      line: "install dccp /bin/true"
-      create: yes
-      mode: 0600
+- name: "3.3.1 | PATCH | Ensure source routed packets are not accepted"
+  block:
+      - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv4 | Set Fact"
+        ansible.builtin.set_fact:
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
+      - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv4"
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+
+      - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv6"
+        block:
+            - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv6 | Set Fact"
+              ansible.builtin.set_fact:
+                  rhel9cis_flush_ipv6_route: true
+
+            - name: "3.3.1 | PATCH | Ensure source routed packets are not accepted | IPv6"
+              ansible.builtin.debug:
+                  msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl.conf"
+        when: rhel9cis_ipv6_required
   when:
       - rhel9cis_rule_3_3_1
   tags:
-      - level2-server
-      - level2-workstation
+      - level1-server
+      - level1-workstation
+      - sysctl
       - patch
       - rule_3.3.1
 
-- name: "3.3.2 | L2 | PATCH | Ensure SCTP is disabled"
-  lineinfile:
-      dest: /etc/modprobe.d/CIS.conf
-      regexp: "^(#)?install sctp(\\s|$)"
-      line: "install sctp /bin/true"
-      create: yes
-      mode: 0600
+- name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted"
+  block:
+      - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv4 | Set Fact"
+        ansible.builtin.set_fact:
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
+
+      - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv4"
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+
+      - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv6"
+        block:
+            - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv6 | Set Fact"
+              ansible.builtin.set_fact:
+                  rhel9cis_flush_ipv6_route: true
+
+            - name: "3.3.2 | PATCH | Ensure ICMP redirects are not accepted | IPv6"
+              ansible.builtin.debug:
+                  msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl.conf"
+        when: rhel9cis_ipv6_required
   when:
       - rhel9cis_rule_3_3_2
   tags:
-      - level2-server
-      - level2-workstation
+      - level1-server
+      - level1-workstation
+      - sysctl
       - patch
       - rule_3.3.2
 
-- name: "3.3.3 | L2 | PATCH | Ensure RDS is disabled"
-  lineinfile:
-      dest: /etc/modprobe.d/CIS.conf
-      regexp: "^(#)?install rds(\\s|$)"
-      line: "install rds /bin/true"
-      create: yes
-      mode: 0600
+- name: "3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted"
+  block:
+      - name: "3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted | Set Fact"
+        ansible.builtin.set_fact:
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
+
+      - name: "3.3.3 | PATCH | Ensure secure ICMP redirects are not accepted"
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
   when:
       - rhel9cis_rule_3_3_3
   tags:
-      - level2-server
-      - level2-workstation
+      - level1-server
+      - level1-workstation
+      - sysctl
       - patch
       - rule_3.3.3
 
-- name: "3.3.4 | L2 | PATCH | Ensure TIPC is disabled"
-  lineinfile:
-      dest: /etc/modprobe.d/CIS.conf
-      regexp: "^(#)?install tipc(\\s|$)"
-      line: "install tipc /bin/true"
-      create: yes
-      mode: 0600
+- name: "3.3.4 | PATCH | Ensure suspicious packets are logged"
+  block:
+      - name: "3.3.4 | PATCH | Ensure suspicious packets are logged | Set Fact"
+        ansible.builtin.set_fact:
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
+
+      - name: "3.3.4 | PATCH | Ensure suspicious packets are logged"
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
   when:
       - rhel9cis_rule_3_3_4
   tags:
-      - level2-server
-      - level2-workstation
+      - level1-server
+      - level1-workstation
+      - sysctl
       - patch
       - rule_3.3.4
+
+- name: "3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored"
+  block:
+      - name: "3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored | Set Fact"
+        ansible.builtin.set_fact:
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
+
+      - name: 3.3.5 | PATCH | Ensure broadcast ICMP requests are ignored"
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+  when:
+      - rhel9cis_rule_3_3_5
+  tags:
+      - level1-server
+      - level1-workstation
+      - sysctl
+      - patch
+      - rule_3.3.5
+
+- name: "3.3.6 | PATCH | Ensure bogus ICMP responses are ignored"
+  block:
+      - name: "3.3.6 | PATCH | Ensure bogus ICMP responses are ignored | Set Fact"
+        ansible.builtin.set_fact:
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
+
+      - name: "3.3.6 | PATCH | Ensure bogus ICMP responses are ignored"
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+  when:
+      - rhel9cis_rule_3_3_6
+  tags:
+      - level1-server
+      - level1-workstation
+      - sysctl
+      - patch
+      - rule_3.3.6
+
+- name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
+  block:
+      - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled | Set Fact"
+        ansible.builtin.set_fact:
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
+
+      - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+  when:
+      - rhel9cis_rule_3_3_7
+  tags:
+      - level1-server
+      - level1-workstation
+      - sysctl
+      - patch
+      - rule_3.3.7
+
+- name: "3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled"
+  block:
+      - name: "3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled | Set Fact"
+        ansible.builtin.set_fact:
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv4_route: true
+
+      - name: "3.3.8 | PATCH | Ensure TCP SYN Cookies is enabled"
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+  when:
+      - rhel9cis_rule_3_3_8
+  tags:
+      - level1-server
+      - level1-workstation
+      - sysctl
+      - patch
+      - rule_3.3.8
+
+- name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted"
+  block:
+      - name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted | IPv6 | Set Fact"
+        ansible.builtin.set_fact:
+            rhel9cis_sysctl_update: true
+            rhel9cis_flush_ipv6_route: true
+
+      - name: "3.3.9 | PATCH | Ensure IPv6 router advertisements are not accepted | IPv6"
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl"
+  when:
+      - rhel9cis_ipv6_required
+      - rhel9cis_rule_3_3_9
+  tags:
+      - level2-server
+      - level2-workstation
+      - sysctl
+      - patch
+      - rule_3.3.9

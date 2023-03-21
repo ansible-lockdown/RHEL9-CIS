@@ -1,0 +1,49 @@
+---
+
+# Skips if mount is absent
+- name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition"
+  block:
+      - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition | Absent"
+        ansible.builtin.debug:
+            msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
+
+      - name: "1.1.8.1 | AUDIT | Ensure separate partition exists for /home | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+
+  vars:
+      warn_control_id: '1.1.8.1'
+      required_mount: '/dev/shm'
+  when:
+      - required_mount not in mount_names
+      - rhel9cis_rule_1_1_8_1
+  tags:
+      - level1-server
+      - level1-workstation
+      - audit
+      - mounts
+      - rule_1.1.8.1
+      - skip_ansible_lint
+
+- name: |
+       "1.1.8.2 | PATCH | Ensure nodev option set on /dev/shm partition | Set nodev option
+        1.1.8.3 | PATCH | Ensure noexec option set on /dev/shm partition | Set nosuid option
+        1.1.8.4 | PATCH | Ensure nosuid option set on /dev/shm partition | Set noexec option"
+  ansible.builtin.mount:
+      name: /dev/shm
+      src: tmpfs
+      fstype: tmpfs
+      state: mounted
+      opts: defaults,{% if rhel9cis_rule_1_1_8_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_8_3 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_8_4 %}nosuid{% endif %}
+  notify: Change_requires_reboot
+  when:
+      - rhel9cis_rule_1_1_8_2 or
+        rhel9cis_rule_1_1_8_3 or
+        rhel9cis_rule_1_1_8_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - mounts
+      - rule_1.1.8.2
+      - rule_1.1.8.3
+      - rule_1.1.8.4

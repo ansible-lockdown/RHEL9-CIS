@@ -1,0 +1,5 @@
+---
+# OS Specific Settings
+
+os_gpg_key_pubkey_name: gpg-pubkey-fd431d51-4ae0493b
+os_gpg_key_pubkey_content: "Red Hat, Inc. (release key 2) <security@redhat.com> fd431d51"

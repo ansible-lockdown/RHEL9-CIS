@@ -1,0 +1,59 @@
+---
+
+- name: "3.4.1.1 | PATCH | Ensure nftables is installed"
+  ansible.builtin.package:
+      name:
+          - nftables
+      state: present
+  when:
+      - rhel9cis_rule_3_4_1_1
+      - rhel9cis_firewall == 'nftables'
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - nftables
+      - rule_3.4.1.1
+
+- name: "3.4.1.2 | PATCH | Ensure a single firewall configuration utility is in use"
+  block:
+      - name: "3.4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | nftables"
+        ansible.builtin.systemd:
+            name: "{{ item }}"
+            masked: true
+        loop:
+            - firewalld
+        when:
+            - item in ansible_facts.packages
+            - rhel9cis_firewall == 'nftables'
+
+      - name: "3.4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | firewalld"
+        ansible.builtin.systemd:
+            name: "{{ item }}"
+            masked: true
+        loop:
+            - nftables
+        when:
+            - item in ansible_facts.packages
+            - rhel9cis_firewall == 'firewalld'
+
+      - name: "3.4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | package installed"
+        ansible.builtin.package:
+            name: "{{ rhel9cis_firewall }}"
+            state: installed
+
+      - name: "3.4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | {{ rhel9cis_firewall }} started and enabled"
+        ansible.builtin.systemd:
+            name: "{{ rhel9cis_firewall }}"
+            enabled: true
+            state: started
+
+  when:
+      - rhel9cis_rule_3_4_1_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - firewalld
+      - nftables
+      - rule_3.4.1.2

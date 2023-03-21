@@ -1,0 +1,53 @@
+---
+
+# Skips if mount is absent
+- name: "1.1.4.1 | AUDIT | Ensure separate partition exists for /var/tmp"
+  block:
+      - name: "1.1.4.1 | AUDIT | Ensure separate partition exists for /var/tmp | Absent"
+        ansible.builtin.debug:
+            msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
+
+      - name: "1.1.4.1 | AUDIT | Ensure separate partition exists for /var/tmp | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+  vars:
+      warn_control_id: '1.1.4.1'
+      required_mount: '/var/tmp'
+  when:
+      - required_mount not in mount_names
+      - rhel9cis_rule_1_1_4_1
+  tags:
+      - level2-server
+      - level2-workstation
+      - audit
+      - mounts
+      - rule_1.1.4.1
+
+# skips if mount is absent
+- name: |
+          "1.1.4.2 | PATCH | Ensure noexec option set on /var/tmp partition"
+          "1.1.4.3 | PATCH | Ensure nosuid option set on /var/tmp partition"
+          "1.1.4.4 | PATCH | Ensure nodev option set on /var/tmp partition"
+  ansible.builtin.mount:
+      name: /var/tmp
+      src: "{{ item.device }}"
+      fstype: "{{ item.fstype }}"
+      state: present
+      opts: defaults,{% if rhel9cis_rule_1_1_4_2 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_4_3 %}nosuid,{% endif %}{% if rhel9cis_rule_1_1_4_4 %}nodev{% endif %}
+  loop: "{{ ansible_mounts }}"
+  loop_control:
+      label: "{{ item.device }}"
+  notify: Change_requires_reboot
+  when:
+      - item.mount == "/var/tmp"
+      - rhel9cis_rule_1_1_4_2 or
+        rhel9cis_rule_1_1_4_3 or
+        rhel9cis_rule_1_1_4_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - mounts
+      - skip_ansible_lint
+      - rule_1.1.4.2
+      - rule_1.1.4.3
+      - rule_1.1.4.4

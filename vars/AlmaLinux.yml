@@ -1,0 +1,5 @@
+---
+# OS Specific Settings
+
+os_gpg_key_pubkey_name: gpg-pubkey-b86b3716-61e69f29
+os_gpg_key_pubkey_content: "AlmaLinux OS 9 <packager@almalinux.org> b86b3716"

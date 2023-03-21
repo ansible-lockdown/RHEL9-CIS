@@ -1,0 +1,53 @@
+---
+
+- name: "1.1.5.1 | AUDIT | Ensure separate partition exists for /var/log"
+  block:
+      - name: "1.1.5.1 | AUDIT | Ensure separate partition exists for /var/log | Absent"
+        ansible.builtin.debug:
+            msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
+
+      - name: "1.1.5.1 | AUDIT | Ensure separate partition exists for /var/log | Present"
+        ansible.builtin.import_tasks: warning_facts.yml
+
+  vars:
+      warn_control_id: '1.1.5.1'
+      required_mount: '/var/log'
+  when:
+      - required_mount not in mount_names
+      - rhel9cis_rule_1_1_5_1
+  tags:
+      - level2-server
+      - level2-workstation
+      - audit
+      - mounts
+      - rule_1.1.5.1
+      - skip_ansible_lint
+
+- name: |
+          "1.1.5.2 | PATCH | Ensure nodev option set on /var/log partition"
+          "1.1.5.3 | PATCH | Ensure noexec option set on /var/log partition"
+          "1.1.5.4 | PATCH | Ensure nosuid option set on /var/log partition"
+  ansible.builtin.mount:
+      name: /var/log
+      src: "{{ item.device }}"
+      fstype: "{{ item.fstype }}"
+      state: present
+      opts: defaults,{% if rhel9cis_rule_1_1_5_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_5_3 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_5_4 %}nosuid{% endif %}
+  loop: "{{ ansible_mounts }}"
+  loop_control:
+      label: "{{ item.device }}"
+  notify: Change_requires_reboot
+  when:
+      - item.mount == "/var/log"
+      - rhel9cis_rule_1_1_5_2 or
+        rhel9cis_rule_1_1_5_3 or
+        rhel9cis_rule_1_1_5_4
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - mounts
+      - skip_ansible_lint
+      - rule_1.1.5.2
+      - rule_1.1.5.3
+      - rule_1.1.5.4

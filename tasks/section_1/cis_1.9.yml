@@ -1,9 +1,10 @@
 ---
 
-- name: "1.9 | L1 | PATCH | Ensure updates, patches, and additional security software are installed"
-  package:
+- name: "1.9 | PATCH | Ensure updates, patches, and additional security software are installed"
+  ansible.builtin.package:
       name: "*"
       state: latest
+  notify: Change_requires_reboot
   when:
       - rhel9cis_rule_1_9
       - not system_is_ec2

@@ -1,13 +1,15 @@
 ---
 # defaults file for rhel9-cis
 
-rhel9cis_skip_for_travis: false
-rhel9cis_system_is_container: false
+system_is_container: false
+container_vars_file: is_container.yml
 # rhel9cis is left off the front of this var for consistency in testing pipeline
 # system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
 system_is_ec2: false
 
-rhel9cis_notauto: false
+# Run the OS validation check
+os_check: true
+
 rhel9cis_section1: true
 rhel9cis_section2: true
 rhel9cis_section3: true
@@ -15,6 +17,10 @@ rhel9cis_section4: true
 rhel9cis_section5: true
 rhel9cis_section6: true
 
+# This is used for audit purposes to run only specifc level use the tags
+# e.g.
+# - level1-server
+# - level2-workstation
 rhel9cis_level_1: true
 rhel9cis_level_2: true
 
@@ -27,10 +33,16 @@ python2_bin: /bin/python2.7
 
 ## Benchmark name used by audting control role
 # The audit variable found at the base
+## metadata for Audit benchmark
+benchmark_version: 'v1.0.0'
+
 benchmark: RHEL9-CIS
 
 # Whether to skip the reboot
-rhel9cis_skip_reboot: true
+skip_reboot: true
+
+# default value will change to true but wont reboot if not enabled but will error
+change_requires_reboot: false
 
 #### Basic external goss audit enablement settings ####
 #### Precise details - per setting can be found at the bottom of this file ####
@@ -50,7 +62,7 @@ audit_content: git
 run_audit: false
 
 # Timeout for those cmds that take longer to run where timeout set
-audit_cmd_timeout: 30000
+audit_cmd_timeout: 60000
 
 ### End Goss enablements ####
 #### Detailed settings found at the end of this document ####
@@ -62,36 +74,41 @@ audit_cmd_timeout: 30000
 # Section 1 rules
 rhel9cis_rule_1_1_1_1: true
 rhel9cis_rule_1_1_1_2: true
-rhel9cis_rule_1_1_1_3: true
-rhel9cis_rule_1_1_1_4: true
-rhel9cis_rule_1_1_1_5: true
-rhel9cis_rule_1_1_2: true
-rhel9cis_rule_1_1_3: true
-rhel9cis_rule_1_1_4: true
-rhel9cis_rule_1_1_5: true
-rhel9cis_rule_1_1_6: true
-rhel9cis_rule_1_1_7: true
-rhel9cis_rule_1_1_8: true
-rhel9cis_rule_1_1_9: true
-rhel9cis_rule_1_1_10: true
-rhel9cis_rule_1_1_11: true
-rhel9cis_rule_1_1_12: true
-rhel9cis_rule_1_1_13: true
-rhel9cis_rule_1_1_14: true
-rhel9cis_rule_1_1_15: true
-rhel9cis_rule_1_1_16: true
-rhel9cis_rule_1_1_17: true
+rhel9cis_rule_1_1_2_1: true
+rhel9cis_rule_1_1_2_2: true
+rhel9cis_rule_1_1_2_3: true
+rhel9cis_rule_1_1_2_4: true
+rhel9cis_rule_1_1_3_1: true
+rhel9cis_rule_1_1_3_2: true
+rhel9cis_rule_1_1_3_3: true
+rhel9cis_rule_1_1_4_1: true
+rhel9cis_rule_1_1_4_2: true
+rhel9cis_rule_1_1_4_3: true
+rhel9cis_rule_1_1_4_4: true
+rhel9cis_rule_1_1_5_1: true
+rhel9cis_rule_1_1_5_2: true
+rhel9cis_rule_1_1_5_3: true
+rhel9cis_rule_1_1_5_4: true
+rhel9cis_rule_1_1_6_1: true
+rhel9cis_rule_1_1_6_2: true
+rhel9cis_rule_1_1_6_3: true
+rhel9cis_rule_1_1_6_4: true
+rhel9cis_rule_1_1_7_1: true
+rhel9cis_rule_1_1_7_2: true
+rhel9cis_rule_1_1_7_3: true
+rhel9cis_rule_1_1_8_1: true
+rhel9cis_rule_1_1_8_2: true
+rhel9cis_rule_1_1_8_3: true
+rhel9cis_rule_1_1_8_4: true
 rhel9cis_rule_1_1_18: true
 rhel9cis_rule_1_1_19: true
 rhel9cis_rule_1_1_20: true
 rhel9cis_rule_1_1_21: true
-rhel9cis_rule_1_1_22: true
-rhel9cis_rule_1_1_23: true
+rhel9cis_rule_1_1_9: true
 rhel9cis_rule_1_2_1: true
 rhel9cis_rule_1_2_2: true
 rhel9cis_rule_1_2_3: true
 rhel9cis_rule_1_2_4: true
-rhel9cis_rule_1_2_5: true
 rhel9cis_rule_1_3_1: true
 rhel9cis_rule_1_3_2: true
 rhel9cis_rule_1_3_3: true
@@ -100,37 +117,37 @@ rhel9cis_rule_1_4_2: true
 rhel9cis_rule_1_5_1: true
 rhel9cis_rule_1_5_2: true
 rhel9cis_rule_1_5_3: true
-rhel9cis_rule_1_6_1: true
-rhel9cis_rule_1_6_2: true
-rhel9cis_rule_1_7_1_1: true
-rhel9cis_rule_1_7_1_2: true
-rhel9cis_rule_1_7_1_3: true
-rhel9cis_rule_1_7_1_4: true
-rhel9cis_rule_1_7_1_5: true
-rhel9cis_rule_1_7_1_6: true
-rhel9cis_rule_1_7_1_7: true
-rhel9cis_rule_1_8_1_1: true
-rhel9cis_rule_1_8_1_2: true
-rhel9cis_rule_1_8_1_3: true
-rhel9cis_rule_1_8_1_4: true
-rhel9cis_rule_1_8_1_5: true
-rhel9cis_rule_1_8_1_6: true
+rhel9cis_rule_1_6_1_1: true
+rhel9cis_rule_1_6_1_2: true
+rhel9cis_rule_1_6_1_3: true
+rhel9cis_rule_1_6_1_4: true
+rhel9cis_rule_1_6_1_5: true
+rhel9cis_rule_1_6_1_6: true
+rhel9cis_rule_1_6_1_7: true
+rhel9cis_rule_1_6_1_8: true
+rhel9cis_rule_1_7_1: true
+rhel9cis_rule_1_7_2: true
+rhel9cis_rule_1_7_3: true
+rhel9cis_rule_1_7_4: true
+rhel9cis_rule_1_7_5: true
+rhel9cis_rule_1_7_6: true
+rhel9cis_rule_1_8_1: true
 rhel9cis_rule_1_8_2: true
+rhel9cis_rule_1_8_3: true
+rhel9cis_rule_1_8_4: true
+rhel9cis_rule_1_8_5: true
+rhel9cis_rule_1_8_6: true
+rhel9cis_rule_1_8_7: true
+rhel9cis_rule_1_8_8: true
+rhel9cis_rule_1_8_9: true
+rhel9cis_rule_1_8_10: true
 rhel9cis_rule_1_9: true
 rhel9cis_rule_1_10: true
-rhel9cis_rule_1_11: true
 
 # Section 2 rules
 rhel9cis_rule_2_1_1: true
 rhel9cis_rule_2_1_2: true
-rhel9cis_rule_2_1_3: true
-rhel9cis_rule_2_1_4: true
-rhel9cis_rule_2_1_5: true
-rhel9cis_rule_2_1_6: true
-rhel9cis_rule_2_1_7: true
-rhel9cis_rule_2_2_1_1: true
-rhel9cis_rule_2_2_1_2: true
-rhel9cis_rule_2_2_1_3: true
+rhel9cis_rule_2_2_1: true
 rhel9cis_rule_2_2_2: true
 rhel9cis_rule_2_2_3: true
 rhel9cis_rule_2_2_4: true
@@ -151,50 +168,33 @@ rhel9cis_rule_2_2_18: true
 rhel9cis_rule_2_3_1: true
 rhel9cis_rule_2_3_2: true
 rhel9cis_rule_2_3_3: true
+rhel9cis_rule_2_3_4: true
+rhel9cis_rule_2_4: true
 
 # Section 3 rules
 rhel9cis_rule_3_1_1: true
 rhel9cis_rule_3_1_2: true
+rhel9cis_rule_3_1_3: true
 rhel9cis_rule_3_2_1: true
 rhel9cis_rule_3_2_2: true
-rhel9cis_rule_3_2_3: true
-rhel9cis_rule_3_2_4: true
-rhel9cis_rule_3_2_5: true
-rhel9cis_rule_3_2_6: true
-rhel9cis_rule_3_2_7: true
-rhel9cis_rule_3_2_8: true
-rhel9cis_rule_3_2_9: true
 rhel9cis_rule_3_3_1: true
 rhel9cis_rule_3_3_2: true
 rhel9cis_rule_3_3_3: true
 rhel9cis_rule_3_3_4: true
+rhel9cis_rule_3_3_5: true
+rhel9cis_rule_3_3_6: true
+rhel9cis_rule_3_3_7: true
+rhel9cis_rule_3_3_8: true
+rhel9cis_rule_3_3_9: true
 rhel9cis_rule_3_4_1_1: true
+rhel9cis_rule_3_4_1_2: true
 rhel9cis_rule_3_4_2_1: true
 rhel9cis_rule_3_4_2_2: true
 rhel9cis_rule_3_4_2_3: true
 rhel9cis_rule_3_4_2_4: true
 rhel9cis_rule_3_4_2_5: true
 rhel9cis_rule_3_4_2_6: true
-rhel9cis_rule_3_4_3_1: true
-rhel9cis_rule_3_4_3_2: true
-rhel9cis_rule_3_4_3_3: true
-rhel9cis_rule_3_4_3_4: true
-rhel9cis_rule_3_4_3_5: true
-rhel9cis_rule_3_4_3_6: true
-rhel9cis_rule_3_4_3_7: true
-rhel9cis_rule_3_4_3_8: true
-rhel9cis_rule_3_4_4_1_1: true
-rhel9cis_rule_3_4_4_1_2: true
-rhel9cis_rule_3_4_4_1_3: true
-rhel9cis_rule_3_4_4_1_4: true
-rhel9cis_rule_3_4_4_1_5: true
-rhel9cis_rule_3_4_4_2_1: true
-rhel9cis_rule_3_4_4_2_2: true
-rhel9cis_rule_3_4_4_2_3: true
-rhel9cis_rule_3_4_4_2_4: true
-rhel9cis_rule_3_4_4_2_5: true
-rhel9cis_rule_3_5: true
-rhel9cis_rule_3_6: true
+rhel9cis_rule_3_4_2_7: true
 
 # Section 4 rules
 rhel9cis_rule_4_1_1_1: true
@@ -204,30 +204,54 @@ rhel9cis_rule_4_1_1_4: true
 rhel9cis_rule_4_1_2_1: true
 rhel9cis_rule_4_1_2_2: true
 rhel9cis_rule_4_1_2_3: true
-rhel9cis_rule_4_1_3: true
-rhel9cis_rule_4_1_4: true
-rhel9cis_rule_4_1_5: true
-rhel9cis_rule_4_1_6: true
-rhel9cis_rule_4_1_7: true
-rhel9cis_rule_4_1_8: true
-rhel9cis_rule_4_1_9: true
-rhel9cis_rule_4_1_10: true
-rhel9cis_rule_4_1_11: true
-rhel9cis_rule_4_1_12: true
-rhel9cis_rule_4_1_13: true
-rhel9cis_rule_4_1_14: true
-rhel9cis_rule_4_1_15: true
-rhel9cis_rule_4_1_16: true
-rhel9cis_rule_4_1_17: true
+rhel9cis_rule_4_1_3_1: true
+rhel9cis_rule_4_1_3_2: true
+rhel9cis_rule_4_1_3_3: true
+rhel9cis_rule_4_1_3_4: true
+rhel9cis_rule_4_1_3_5: true
+rhel9cis_rule_4_1_3_6: true
+rhel9cis_rule_4_1_3_7: true
+rhel9cis_rule_4_1_3_8: true
+rhel9cis_rule_4_1_3_9: true
+rhel9cis_rule_4_1_3_10: true
+rhel9cis_rule_4_1_3_11: true
+rhel9cis_rule_4_1_3_12: true
+rhel9cis_rule_4_1_3_13: true
+rhel9cis_rule_4_1_3_14: true
+rhel9cis_rule_4_1_3_15: true
+rhel9cis_rule_4_1_3_16: true
+rhel9cis_rule_4_1_3_17: true
+rhel9cis_rule_4_1_3_18: true
+rhel9cis_rule_4_1_3_19: true
+rhel9cis_rule_4_1_3_20: true
+rhel9cis_rule_4_1_3_21: true
+rhel9cis_rule_4_1_4_1: true
+rhel9cis_rule_4_1_4_2: true
+rhel9cis_rule_4_1_4_3: true
+rhel9cis_rule_4_1_4_4: true
+rhel9cis_rule_4_1_4_5: true
+rhel9cis_rule_4_1_4_6: true
+rhel9cis_rule_4_1_4_7: true
+rhel9cis_rule_4_1_4_8: true
+rhel9cis_rule_4_1_4_9: true
+rhel9cis_rule_4_1_4_10: true
 rhel9cis_rule_4_2_1_1: true
 rhel9cis_rule_4_2_1_2: true
 rhel9cis_rule_4_2_1_3: true
 rhel9cis_rule_4_2_1_4: true
 rhel9cis_rule_4_2_1_5: true
 rhel9cis_rule_4_2_1_6: true
-rhel9cis_rule_4_2_2_1: true
+rhel9cis_rule_4_2_1_7: true
+rhel9cis_rule_4_2_2_1_1: true
+rhel9cis_rule_4_2_2_1_2: true
+rhel9cis_rule_4_2_2_1_3: true
+rhel9cis_rule_4_2_2_1_4: true
 rhel9cis_rule_4_2_2_2: true
 rhel9cis_rule_4_2_2_3: true
+rhel9cis_rule_4_2_2_4: true
+rhel9cis_rule_4_2_2_5: true
+rhel9cis_rule_4_2_2_6: true
+rhel9cis_rule_4_2_2_7: true
 rhel9cis_rule_4_2_3: true
 rhel9cis_rule_4_3: true
 
@@ -240,6 +264,7 @@ rhel9cis_rule_5_1_5: true
 rhel9cis_rule_5_1_6: true
 rhel9cis_rule_5_1_7: true
 rhel9cis_rule_5_1_8: true
+rhel9cis_rule_5_1_9: true
 rhel9cis_rule_5_2_1: true
 rhel9cis_rule_5_2_2: true
 rhel9cis_rule_5_2_3: true
@@ -263,21 +288,27 @@ rhel9cis_rule_5_2_20: true
 rhel9cis_rule_5_3_1: true
 rhel9cis_rule_5_3_2: true
 rhel9cis_rule_5_3_3: true
+rhel9cis_rule_5_3_4: true
+rhel9cis_rule_5_3_5: true
+rhel9cis_rule_5_3_6: true
+rhel9cis_rule_5_3_7: true
 rhel9cis_rule_5_4_1: true
 rhel9cis_rule_5_4_2: true
-rhel9cis_rule_5_4_3: true
-rhel9cis_rule_5_4_4: true
-rhel9cis_rule_5_5_1_1: true
-rhel9cis_rule_5_5_1_2: true
-rhel9cis_rule_5_5_1_3: true
-rhel9cis_rule_5_5_1_4: true
-rhel9cis_rule_5_5_1_5: true
+rhel9cis_rule_5_5_1: true
 rhel9cis_rule_5_5_2: true
 rhel9cis_rule_5_5_3: true
 rhel9cis_rule_5_5_4: true
 rhel9cis_rule_5_5_5: true
-rhel9cis_rule_5_6: true
-rhel9cis_rule_5_7: true
+rhel9cis_rule_5_6_1_1: true
+rhel9cis_rule_5_6_1_2: true
+rhel9cis_rule_5_6_1_3: true
+rhel9cis_rule_5_6_1_4: true
+rhel9cis_rule_5_6_1_5: true
+rhel9cis_rule_5_6_2: true
+rhel9cis_rule_5_6_3: true
+rhel9cis_rule_5_6_4: true
+rhel9cis_rule_5_6_5: true
+rhel9cis_rule_5_6_6: true
 
 # Section 6 rules
 rhel9cis_rule_6_1_1: true
@@ -294,6 +325,7 @@ rhel9cis_rule_6_1_11: true
 rhel9cis_rule_6_1_12: true
 rhel9cis_rule_6_1_13: true
 rhel9cis_rule_6_1_14: true
+rhel9cis_rule_6_1_15: true
 rhel9cis_rule_6_2_1: true
 rhel9cis_rule_6_2_2: true
 rhel9cis_rule_6_2_3: true
@@ -301,7 +333,7 @@ rhel9cis_rule_6_2_4: true
 rhel9cis_rule_6_2_5: true
 rhel9cis_rule_6_2_6: true
 rhel9cis_rule_6_2_7: true
-rhel9cis_rule_6_2_8: false
+rhel9cis_rule_6_2_8: true
 rhel9cis_rule_6_2_9: true
 rhel9cis_rule_6_2_10: true
 rhel9cis_rule_6_2_11: true
@@ -310,50 +342,18 @@ rhel9cis_rule_6_2_13: true
 rhel9cis_rule_6_2_14: true
 rhel9cis_rule_6_2_15: true
 rhel9cis_rule_6_2_16: true
-rhel9cis_rule_6_2_17: true
-rhel9cis_rule_6_2_18: true
-rhel9cis_rule_6_2_19: true
-rhel9cis_rule_6_2_20: true
-
-# Service configuration booleans set true to keep service
-rhel9cis_avahi_server: false
-rhel9cis_cups_server: false
-rhel9cis_dhcp_server: false
-rhel9cis_ldap_server: false
-rhel9cis_telnet_server: false
-rhel9cis_nfs_server: false
-rhel9cis_rpc_server: false
-rhel9cis_ntalk_server: false
-rhel9cis_rsyncd_server: false
-rhel9cis_tftp_server: false
-rhel9cis_rsh_server: false
-rhel9cis_nis_server: false
-rhel9cis_snmp_server: false
-rhel9cis_squid_server: false
-rhel9cis_smb_server: false
-rhel9cis_dovecot_server: false
-rhel9cis_httpd_server: false
-rhel9cis_vsftpd_server: false
-rhel9cis_named_server: false
-rhel9cis_nfs_rpc_server: false
-rhel9cis_is_mail_server: false
-rhel9cis_bind: false
-rhel9cis_vsftpd: false
-rhel9cis_httpd: false
-rhel9cis_dovecot: false
-rhel9cis_samba: false
-rhel9cis_squid: false
-rhel9cis_net_snmp: false
-rhel9cis_allow_autofs: false
 
 ## Section 1 vars
 
-# 1.1.2
+#### 1.1.2
 # These settings go into the /etc/fstab file for the /tmp mount settings
 # The value must contain nosuid,nodev,noexec to conform to CIS standards
 # rhel9cis_tmp_tmpfs_settings: "defaults,rw,nosuid,nodev,noexec,relatime 0 0"
 # If set true uses the tmp.mount service else using fstab configuration
 rhel9cis_tmp_svc: false
+
+#### 1.1.9
+rhel9cis_allow_autofs: false
 
 # 1.2.1
 # This is the login information for your RedHat Subscription
@@ -367,20 +367,22 @@ rhel9cis_rh_sub_password: password
 # RedHat Satellite Subscription items
 rhel9cis_rhnsd_required: false
 
-# 1.3.3 var log location variable
-rhel9cis_varlog_location: "/var/log/sudo.log"
-
-# xinetd required
-rhel9cis_xinetd_required: false
+# 1.2.4 repo_gpgcheck
+rhel9cis_rhel_default_repo: true
 
 # 1.4.2 Bootloader password
-rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'
+rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.10000.9306A36764A7BEA3BF492D1784396B27F52A71812E9955A58709F94EE70697F9BD5366F36E07DEC41B52279A056E2862A93E42069D7BBB08F5DFC2679CD43812.6C32ADA5449303AD5E67A4C150558592A05381331DE6B33463469A236871FA8E70738C6F9066091D877EF88A213C86825E093117F30E9E1BF158D0DB75E7581B'
 rhel9cis_bootloader_password: random
-rhel9cis_set_boot_pass: false
+rhel9cis_set_boot_pass: true
 
-# 1.10/1.11 Set crypto policy (LEGACY, DEFAULT, FUTURE, FIPS)
-# Control 1.10 sates not ot use LEGACY and control 1.11 says to use FUTURE or FIPS.
-rhel9cis_crypto_policy: "FUTURE"
+# 1.8 Gnome Desktop
+rhel9cis_dconf_db_name: local
+rhel9cis_screensaver_idle_delay: 900  # Set max value for idle-delay in seconds (between 1 and 900)
+rhel9cis_screensaver_lock_delay: 5  # Set max value for lock-delay in seconds (between 0 and 5)
+
+# 1.10 Set crypto policy DEFAULT
+# Control 1.10 states not to use LEGACY
+rhel9cis_crypto_policy: "DEFAULT"
 
 # System network parameters (host only OR host and router)
 rhel9cis_is_router: false
@@ -393,7 +395,7 @@ rhel9cis_config_aide: true
 # AIDE cron settings
 rhel9cis_aide_cron:
     cron_user: root
-    cron_file: /etc/crontab
+    cron_file: /etc/cron.d/aide_cron
     aide_job: '/usr/sbin/aide --check'
     aide_minute: 0
     aide_hour: 5
@@ -403,74 +405,98 @@ rhel9cis_aide_cron:
 
 # SELinux policy
 rhel9cis_selinux_pol: targeted
+# chose onf or enfocing or permissive
+rhel9cis_selinux_enforce: enforcing
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
-rhel9cis_gui: no
 
-# Set to 'true' if X Windows is needed in your environment
-rhel9cis_xwindows_required: false
+## 2. Services
 
-rhel9cis_openldap_clients_required: false
-rhel9cis_telnet_required: false
-rhel9cis_talk_required: false
-rhel9cis_rsh_required: false
-rhel9cis_ypbind_required: false
-
-# 2.2.1.1 Time Synchronization - Either chrony or ntp
-rhel9cis_time_synchronization: chrony
-
-# 2.2.1.2 Time Synchronization servers - used in template file chrony.conf.j2
+### 2.1 Time Synchronization
+#### 2.1.2 Time Synchronization servers - used in template file chrony.conf.j2
 rhel9cis_time_synchronization_servers:
     - 0.pool.ntp.org
     - 1.pool.ntp.org
     - 2.pool.ntp.org
     - 3.pool.ntp.org
-
 rhel9cis_chrony_server_options: "minpoll 8"
-rhel9cis_ntp_server_options: "iburst"
+
+### 2.2 Special Purposes
+##### Service configuration booleans set true to keep service
+rhel9cis_gui: false
+rhel9cis_avahi_server: false
+rhel9cis_cups_server: false
+rhel9cis_dhcp_server: false
+rhel9cis_dns_server: false
+rhel9cis_dnsmasq_server: false
+rhel9cis_vsftpd_server: false
+rhel9cis_tftp_server: false
+rhel9cis_httpd_server: false
+rhel9cis_nginx_server: false
+rhel9cis_dovecot_server: false
+rhel9cis_imap_server: false
+rhel9cis_samba_server: false
+rhel9cis_squid_server: false
+rhel9cis_snmp_server: false
+rhel9cis_telnet_server: false
+rhel9cis_is_mail_server: false
+# Note the options
+# Packages are used for client services and Server- only remove if you dont use the client service
+#
+
+rhel9cis_use_nfs_server: false
+rhel9cis_use_nfs_service: false
+
+rhel9cis_use_rpc_server: false
+rhel9cis_use_rpc_service: false
+
+rhel9cis_use_rsync_server: false
+rhel9cis_use_rsync_service: false
+
+#### 2.3 Service clients
+rhel9cis_telnet_required: false
+rhel9cis_openldap_clients_required: false
+rhel9cis_tftp_client: false
+rhel9cis_ftp_client: false
 
 ## Section3 vars
-# 3.4.2 | PATCH | Ensure /etc/hosts.allow is configured
-rhel9cis_host_allow:
-    - "10.0.0.0/255.0.0.0"
-    - "172.16.0.0/255.240.0.0"
-    - "192.168.0.0/255.255.0.0"
+## Sysctl
+rhel9cis_sysctl_update: false
+rhel9cis_flush_ipv4_route: false
+rhel9cis_flush_ipv6_route: false
 
-# Firewall Service - either firewalld, iptables, or nftables
+### Firewall Service - either firewalld, iptables, or nftables
+#### Some control allow for services to be removed or masked
+#### The options are under each heading
+#### absent = remove the package
+#### masked = leave package if installed and mask the service
 rhel9cis_firewall: firewalld
 
-# 3.4.2.4 Default zone setting
+##### firewalld
 rhel9cis_default_zone: public
 
-# 3.4.2.5 Zone and Interface setting
-rhel9cis_int_zone: customezone
-rhel9cis_interface: eth0
+# These are added to demonstrate how this can be done
+rhel9cis_firewalld_ports:
+    - number: 80
+      protocol: tcp
 
-rhel9cis_firewall_services:
-    - ssh
-    - dhcpv6-client
-
-# 3.4.3.2 Set nftables new table create
+#### nftables
 rhel9cis_nft_tables_autonewtable: true
 rhel9cis_nft_tables_tablename: filter
-
-# 3.4.3.3 Set nftables new chain create
 rhel9cis_nft_tables_autochaincreate: true
 
 # Warning Banner Content (issue, issue.net, motd)
-rhel9cis_warning_banner: |
-    Authorized uses only. All activity may be monitored and reported.
+rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
 # End Banner
 
 ## Section4 vars
-
+### 4.1 Configure System Accounting
+#### 4.1.2 Configure Data Retention
 rhel9cis_auditd:
     space_left_action: email
     action_mail_acct: root
     admin_space_left_action: halt
     max_log_file_action: keep_logs
-
-rhel9cis_logrotate: "daily"
 
 # The audit_back_log_limit value should never be below 8192
 rhel9cis_audit_back_log_limit: 8192
@@ -478,32 +504,71 @@ rhel9cis_audit_back_log_limit: 8192
 # The max_log_file parameter should be based on your sites policy
 rhel9cis_max_log_file_size: 10
 
-# RHEL-09-4.2.1.4/4.2.1.5 remote and destation log server name
-rhel9cis_remote_log_server: logagg.example.com
+### 4.1.3.x audit template
+update_audit_template: false
 
-# RHEL-09-4.2.1.5
+## Advanced option found in auditd post
+rhel9cis_allow_auditd_uid_user_exclusions: false
+
+# This can be used to configure other keys in auditd.conf
+rhel9cis_auditd_extra_conf: {}
+# Example:
+# rhel9cis_auditd_extra_conf:
+#     admin_space_left: '10%'
+
+## Preferred method of logging
+## Whether rsyslog or journald preferred method for local logging
+## Affects rsyslog cis 4.2.1.3 and journald cis 4.2.2.5
+rhel9cis_syslog: rsyslog
+rhel9cis_rsyslog_ansiblemanaged: true
+
+#### 4.2.1.6 remote and destation log server name
+rhel9cis_remote_log_server: false
+rhel9cis_remote_log_host: logagg.example.com
+rhel9cis_remote_log_port: 514
+rhel9cis_remote_log_protocol: tcp
+rhel9cis_remote_log_retrycount: 100
+rhel9cis_remote_log_queuesize: 1000
+
+#### 4.2.1.7
 rhel9cis_system_is_log_server: false
 
+# 4.2.2.1.2
+# rhel9cis_journal_upload_url is the ip address to upload the journal entries to
+rhel9cis_journal_upload_url: 192.168.50.42
+# The paths below have the default paths/files, but allow user to create custom paths/filenames
+rhel9cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
+rhel9cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
+rhel9cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
+
+# 4.2.2.1
+# The variables below related to journald, please set these to your site specific values
+# rhel9cis_journald_systemmaxuse is the max amount of disk space the logs will use
+rhel9cis_journald_systemmaxuse: 10M
+# rhel9cis_journald_systemkeepfree is the amount of disk space to keep free
+rhel9cis_journald_systemkeepfree: 100G
+rhel9cis_journald_runtimemaxuse: 10M
+rhel9cis_journald_runtimekeepfree: 100G
+# rhel9cis_journald_MaxFileSec is how long in time to keep log files. Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
+rhel9cis_journald_maxfilesec: 1month
+
+#### 4.3
+rhel9cis_logrotate: "daily"
+
 ## Section5 vars
+
+# This will allow use of drop in files when CIS adopts them.
+rhel9_cis_sshd_config_file: /etc/ssh/sshd_config
 
 rhel9cis_sshd:
     clientalivecountmax: 0
     clientaliveinterval: 900
-    ciphers: "aes256-ctr,aes192-ctr,aes128-ctr"
-    macs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
     logingracetime: 60
     # WARNING: make sure you understand the precedence when working with these values!!
     # allowusers:
     # allowgroups: systems dba
     # denyusers:
     # denygroups:
-rhel9cis_pam_faillock:
-    attempts: 5
-    interval: 900
-    unlock_time: 900
-    fail_for_root: no
-    remember: 5
-    pwhash: sha512
 
 # 5.2.5 SSH LogLevel setting. Options are INFO or VERBOSE
 rhel9cis_ssh_loglevel: INFO
@@ -513,9 +578,9 @@ rhel9cis_ssh_maxsessions: 4
 rhel9cis_inactivelock:
     lock_days: 30
 
+rhel9cis_use_authconfig: false
 # 5.3.1/5.3.2 Custom authselect profile settings. Settings in place now will fail, they are place holders from the control example
 # Due to the way many multiple options and ways to configure this control needs to be enabled and settings adjusted to minimise risk
-rhel9cis_use_authconfig: false
 rhel9cis_authselect:
     custom_profile_name: custom-profile
     default_file_to_copy: "sssd --symlink-meta"
@@ -531,22 +596,37 @@ rhel9cis_pass:
     max_days: 365
     min_days: 7
     warn_age: 7
-# Syslog system - either rsyslog or syslog-ng
-rhel9cis_syslog: rsyslog
-rhel9cis_rsyslog_ansiblemanaged: true
 
-rhel9cis_vartmp:
-    source: /tmp
-    fstype: none
-    opts: "defaults,nodev,nosuid,noexec,bind"
-    enabled: no
+# 5.5.1
 ## PAM
 rhel9cis_pam_password:
-    minlen: "14"
-    minclass: "4"
+    minlen: 14
+    minclass: 4
 
-# Starting GID for interactive users
-rhel9cis_int_gid: 1000
+rhel9cis_pam_faillock:
+    unlock_time: 900
+    deny: 5
+    remember: 5
+
+# UID settings for interactive users
+# These are discovered via logins.def if set true
+discover_int_uid: false
+min_int_uid: 1000
+max_int_uid: 65533
+
+# 5.3.3 var log location variable
+rhel9cis_sudolog_location: "/var/log/sudo.log"
+
+#### 5.3.6
+rhel9cis_sudo_timestamp_timeout: 15
+
+### 5.4.2 authselect and faillock
+## This option is used at your own risk it will enable faillock for users
+## Only to be used on a new clean system if not using authselect
+## THIS CAN BREAK ACCESS EVEN FOR ROOT - UNDERSTAND RISKS ##
+rhel9cis_add_faillock_without_authselect: false
+# This needs to be set to ACCEPT
+rhel9cis_5_4_2_risks: NEVER
 
 # RHEL-09-5.4.5
 # Session timeout setting file (TMOUT setting can be set in multiple files)
@@ -557,11 +637,8 @@ rhel9cis_shell_session_timeout:
 # RHEL-09-5.4.1.5 Allow ansible to expire password for account with a last changed date in the future. False will just display users in violation, true will expire those users passwords
 rhel9cis_futurepwchgdate_autofix: true
 
-# 5.7
-# rhel9cis_sugroup: sugroup  # change accordingly wheel is default
-
-# wheel users list
-rhel9cis_sugroup_users: "root"
+# 5.3.7
+rhel9cis_sugroup: nosugroup
 
 ## Section6 vars
 
@@ -571,20 +648,28 @@ rhel9cis_rpm_audit_file: /var/tmp/rpm_file_check
 # RHEL-09_6.1.10 Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable
 rhel9cis_no_world_write_adjust: true
 rhel9cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
-# 6.2.9
-rhel9cis_dotperm_ansiblemanaged: true
+
+# 6.2.16
+## Dont follow symlinks for changes to user home directory thanks to @dulin-gnet and comminty for rhel8-cis reedbacj
+rhel_09_6_2_16_home_follow_symlinks: false
+
 #### Goss Configuration Settings ####
+# Set correct env for the run_audit.sh script from https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
+audit_run_script_environment:
+    AUDIT_BIN: "{{ audit_bin }}"
+    AUDIT_FILE: 'goss.yml'
+    AUDIT_CONTENT_LOCATION: "{{ audit_out_dir }}"
 
 ### Goss binary settings ###
 goss_version:
-    release: v0.3.16
-    checksum: 'sha256:827e354b48f93bce933f5efcd1f00dc82569c42a179cf2d384b040d8a80bfbfb'
+    release: v0.3.21
+    checksum: 'sha256:9a9200779603acf0353d2c0e85ae46e083596c10838eaf4ee050c924678e4fe3'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json
 
 # if get_goss_file == download change accordingly
-goss_url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version.release }}/goss-linux-amd64"
+goss_url: "https://github.com/goss-org/goss/releases/download/{{ goss_version.release }}/goss-linux-amd64"
 
 ## if get_goss_file - copy the following needs to be updated for your environment
 ## it is expected that it will be copied from somewhere accessible to the control node
@@ -595,7 +680,7 @@ copy_goss_from_path: /some/accessible/path
 ## managed by the control audit_content
 # git
 audit_file_git: "https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
-audit_git_version: main
+audit_git_version: "benchmark_{{ benchmark_version }}"
 
 # copy:
 audit_local_copy: "some path to copy from"
@@ -603,15 +688,12 @@ audit_local_copy: "some path to copy from"
 # get_url:
 audit_files_url: "some url maybe s3?"
 
-# Where the goss audit configuration will be stored
-audit_files: "/var/tmp/{{ benchmark }}-Audit/"
-
 ## Goss configuration information
 # Where the goss configs and outputs are stored
-audit_out_dir: '/var/tmp'
+audit_out_dir: '/opt'
 audit_conf_dir: "{{ audit_out_dir }}/{{ benchmark }}-Audit/"
-pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
-post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
+pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
+post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
 
 ## The following should not need changing
 goss_file: "{{ audit_conf_dir }}goss.yml"

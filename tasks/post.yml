@@ -1,56 +1,66 @@
 ---
 # Post tasks
 
-- name: Perform DNF package cleanup
-  dnf:
-      autoremove: yes
-  changed_when: no
-
-- name: trigger update sysctl
-  command: /bin/true
-  changed_when: false
-  check_mode: false
-  notify: update sysctl
-  when:
-      - rhel9cis_rule_1_6_1 or
-        rhel9cis_rule_1_6_2 or
-        rhel9cis_rule_3_1_2 or
-        rhel9cis_rule_3_1_2 or
-        rhel9cis_rule_3_2_1 or
-        rhel9cis_rule_3_2_2 or
-        rhel9cis_rule_3_2_3 or
-        rhel9cis_rule_3_2_4 or
-        rhel9cis_rule_3_2_5 or
-        rhel9cis_rule_3_2_6 or
-        rhel9cis_rule_3_2_7 or
-        rhel9cis_rule_3_2_8 or
-        rhel9cis_rule_3_2_9
+- name: POST | Gather the package facts after remediation
+  ansible.builtin.package_facts:
+      manager: auto
   tags:
-      - sysctl
+      - always
 
-- name: trigger update auditd
-  command: /bin/true
-  notify: update auditd
-  changed_when: false
-  check_mode: false
+- name: POST | Update sysctl
+  ansible.builtin.template:
+      src: "etc/sysctl.d/{{ item }}.j2"
+      dest: "/etc/sysctl.d/{{ item }}"
+      owner: root
+      group: root
+      mode: 0600
+  register: sysctl_updated
+  notify: Reload sysctl
+  loop:
+      - 60-kernel_sysctl.conf
+      - 60-disable_ipv6.conf
+      - 60-netipv4_sysctl.conf
+      - 60-netipv6_sysctl.conf
   when:
-      - rhel9cis_rule_4_1_3 or
-        rhel9cis_rule_4_1_4 or
-        rhel9cis_rule_4_1_5 or
-        rhel9cis_rule_4_1_6 or
-        rhel9cis_rule_4_1_7 or
-        rhel9cis_rule_4_1_8 or
-        rhel9cis_rule_4_1_9 or
-        rhel9cis_rule_4_1_10 or
-        rhel9cis_rule_4_1_11 or
-        rhel9cis_rule_4_1_12
+      - rhel9cis_sysctl_update
+      - not system_is_container
+      - "'procps-ng' in ansible_facts.packages"
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: POST | reboot system if changes require it and not skipped
+  block:
+      - name: POST | Reboot system if changes require it and not skipped
+        ansible.builtin.reboot:
+        when:
+            - change_requires_reboot
+            - not skip_reboot
+
+      - name: POST | Warning a reboot required but skip option set
+        ansible.builtin.debug:
+            msg: "Warning!! changes have been made that require a reboot to be implemented but skip reboot was set - Can affect compliance check results"
+        changed_when: true
+        when:
+            - change_requires_reboot
+            - skip_reboot
+
+      - name: "POST | Warning a reboot required but skip option set | warning count"
+        ansible.builtin.import_tasks: warning_facts.yml
+        when:
+            - change_requires_reboot
+            - skip_reboot
+  vars:
+      warn_control_id: Reboot_required
   tags:
-      - auditd
-
-- name: flush handlers
-  meta: flush_handlers
-
-- name: Reboot host
-  reboot:
-  when:
-  - not rhel9cis_skip_reboot
+      - grub
+      - level1-server
+      - level1-workstation
+      - level2-server
+      - level2-workstation
+      - rhel9cis_section1
+      - rhel9cis_section2
+      - rhel9cis_section3
+      - rhel9cis_section4
+      - rhel9cis_section5
+      - rhel9cis_section6

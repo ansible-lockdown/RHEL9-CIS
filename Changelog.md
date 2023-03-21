@@ -1,93 +1,144 @@
 # Changes to rhel9CIS
 
-## 1.3.3
+## 1.0.5
 
-- update to audit script
-  - variable for audit OS agnostic
-  - removal of included library module (not required)
+updated yamllint
+removed empty lines after lint
+initial molecule added
+galaxy workflow updated
 
-- Issues included
-  - #135 - running levels - upadted tags
-  - #138 - auditd immutable
-  - #139 - 5.2.13 valus updated
-  - #140
-  - #141 - check mode update
-  - #142
-  - #143 - labels added
-  - #144
-  - #146 - undefined variable added
-  - #147 - removed warn statement
-  - #149 - shell timeout
+## 1.0.4
 
-## 1.3.2
+#40 tmp systemd file variable naming update
+#41 5.3.7 logic and rewrite - tidy up prelim for sugroup work - audit updated
 
-- issues with crypto policies on ec2 - added skip for rules if system_is_ec2 variable
-  - cis_1.10  ## Change crypto breaks installing products
-  - cis_1.11  ## Change crypto breaks installing products
+## 1.0.3
 
-## 1.3.1
+Update to auditd components improve idempotency and tidy up
+Added a warning to check diff if any changes to template file (if template file exists) else its new.
+workflow update to remove the urandom update
+skip 5.6.6 root password check
+variable naming
+OracleLinux support added
+#38 journald restart amendment thanks to @bdwyertech
 
-- CIS 1.0.1 updates
-- Added Issue and PR templates
-- Added better reboot logic
-- Added options to ensure idempotence
-- Enhanced flush handlers
-- Typo fixes
-- mount check improvements
-- Linting fixes
-- Added systemd tmp mount
-- Added systemd tmpfs block
-- #110 tmp.mount support
-  - thanks to @erpadmin
+## 1.0.2
 
-## 1.3
+thanks to @smatterchew
+#30 ability to change sshd config file to use dropin file instead.
 
-- extentions to LE audit capability
-- more lint and layout changes
-- sugroup assertion added 5.7
-- added extra logic variable to authselect/config section 5.3 related
-- AlmaLinux and Rocky tested (comments in readme - also rsyslog installed at build or will fail)
-- section 1.1 mount work has been rewritten and systemd tmp mount options added
+thanks to @I-am-MoS
+#34 create user.cfg if not present
 
-## 1.2.3
+Aligned benchmark audit version with remediate release
 
-- #117 sugroup enhancements
-  - thanks to @ihotz
-- #112 use of dnf module not shell
-  - thanks to @wolskie
+## 1.0.1
 
-## 1.2.2
+Control 6_2_16 new variable added thanks to @dulin_gnet on rhel8  
+Will not follow ynlink in hoe directoris and amend permissions.
 
-- #33 mkgrub missing variable issues - efi and bios path resolution
-  - thanks to @mrampant & @mickey1928geo
-- #102 2.2.2 xorg pkg removal extended
-  - thanks to @RosarioVinoth
-- #104 5.4.1 pwquality logic
-  - thanks to @RosarioVinoth
-- #107 Idempotence improvement for 4.1.1.3 and 4.1.1.4
-  - thanks to @andreyzher
-- lint changes and updates to sync with ansible-galaxy
+- rhel_09_6_2_16_home_follow_symlink: false
 
-## v1.2.1
+## Initial CIS v1.0.0 - released Dec 2022
 
-- bootloader and default variables
-- empty strings lint updates
-- #87
-- rule 6.1.1 - audit only - outputs file discrepancies to {{ rhel9cis_rpm_audit_file }}
-- #88
-- checkmode_improvements added to relevant tasks
-- PR #96
-- crypto policy idempotency
+### Official CIS release
 
-## v1.2.0
+Jan-2023 release
 
-- #86
-- Adding on the goss auditing tool
-- remove deprecated warnings
-- format and layout
-- general improvements
-- readme updates
-- use ansible package_facts
-- #90
-- cis fix - nfs-server not nfs
-  - Thanks to danderemer
+- updated ansible minimum to 2.10
+- Lint file updates and improvements
+- auditd now shows diff ater initial template added
+- many control rewritten
+- Many controls moved ID references
+- Audit updates aligned
+- Command warn arg removed
+- Ansible 2.14 now supported
+- makefile added (hopefully help some)
+- fqcn added to all controls
+- some controls rewritten using module rather than shell
+- typo fixes from rhel_08 inheritance
+- workflow update for 5.6.6 to set random root password to allow for testing
+- incorporates issues
+  - #23
+  - #24
+- New option to add faillock for users without authselect - defaults/main 5.4.2
+
+## 0.5
+
+- audit path updated and output file name
+
+### Taken from RHEL8-CIS issues and PRs
+
+- #209 5.6.5 rewrite umask settings
+- #220 tidy up and align variables
+- #226 Thanks to Thulium-Drake
+  -Extended the auditd config required value for auditd space left percentage (not part of CIS Benchmark but required fopr auditd to run correctly in some cases)
+
+- #227 thanks to OscarElits
+  - chrony files now RH expected locations
+- #228 Thanks to benbulll
+  - audit binary copy var missing
+
+## 0.4
+
+- Added assertion that ansible_user has password set for rule 5.3.4
+- RockyLinux now supported - release since initial branches
+- gpg check updates
+- audit out dir now /opt
+- lint updates and improvements
+- workflow updates and improvements moved to rocky image
+- selinux regexp improvements
+- warning summary now at end of play
+- advanced auditd options to exclude users in POST section
+- Issues fixed thanks to fgierlinger
+  - [#21](https://github.com/ansible-lockdown/RHEL9-CIS/issues/21)
+  - [#22](https://github.com/ansible-lockdown/RHEL9-CIS/issues/22)
+
+## 0.3
+
+- update to auditd template
+  - uses facts and template new variable
+    - update_audit_template (default false)
+- sysctl template updates and idempotency improvements
+- container discovery usage improvements
+- 3.4.1.5 discovery improvement
+- 5.6.1.4 discovery improvement
+- logrotate process logrotate.timer
+- tidy up become:
+- logic improvements
+
+## 0.2
+
+- not all controls work with rhel8 releases any longer
+  - selinux disabled 1.6.1.4
+  - logrotate - 4.3.x
+- updated to rhel8cis v2.0 benchamrk requirements
+- removed iptables firewall controls (not valid on rhel9)
+- added more to logrotate 4.3.x - sure to logrotate now a seperate package
+- grub path now standard to /boot/grub2/grub.cfg
+- 1.6.1.4 from rh8 removed as selinux.cfg doesnt disable selinux any longer
+- workflow update
+- removed doc update
+
+## 0.1
+
+- change to include statements
+- prelim and package facts discovery
+- commands module removed and moved to shell
+  - added
+
+```yml
+args:
+    warn: false
+```
+
+- update boolean values to true/false
+- 3.4.2 improved checks for p[ackage presence
+- changed to assert for OS/release and ansible version
+
+## Initial
+
+- based on RHEL8 currently as RH or CIS not GA
+- Changes to systctl, auditd, aide cron changes to utilise templates - see issue #1
+- Collection statement added to meta/main.yml using only community-general
+- aide crontab moved to template due to module change

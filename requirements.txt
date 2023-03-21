@@ -1,0 +1,5 @@
+passlib
+lxml
+xmltodict
+jmespath
+yamllint
