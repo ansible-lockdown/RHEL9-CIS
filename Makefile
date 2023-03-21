@@ -1,6 +1,5 @@
 .PHONY: all help galaxy-install ansible-list yamllint pip-requirements
 
-
 GALAXY=ansible-galaxy
 ANSIBLE_LINT='/usr/local/bin/ansible-lint'
 ANSIBLE_FILE=site.yml
@@ -15,7 +14,6 @@ help:
 	@echo "    yamllint                           to lint playbook files"
 	@echo "    pip-requirements                   add pip required file"
 
-
 galaxy-install:
 	$(GALAXY) install -r ./collections/requirements.yml
 
@@ -29,4 +27,3 @@ pip-requirements:
 	@echo 'Python dependencies:'
 	@cat requirements.txt
 	pip3 install -r requirements.txt
-

@@ -5,7 +5,6 @@ provider "aws" {
 
 // Create a security group with access to port 22 and port 80 open to serve HTTP traffic
 
-
 resource "random_id" "server" {
   keepers = {
     # Generate a new id each time we switch to a new AMI id

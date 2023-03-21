@@ -3,8 +3,8 @@ extends: default
 
 ignore: |
     tests/
-    molecule/
-    .github/
+    molecule
+    .github
     .gitlab-ci.yml
     *molecule.yml
 
