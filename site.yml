@@ -1,7 +1,7 @@
 ---
-
-- hosts: all
+- hosts: all  # noqa: name[play]
   become: true
+
   roles:
 
       - role: "{{ playbook_dir }}"
