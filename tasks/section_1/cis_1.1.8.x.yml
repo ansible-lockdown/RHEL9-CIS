@@ -28,7 +28,7 @@
        "1.1.8.2 | PATCH | Ensure nodev option set on /dev/shm partition | Set nodev option
         1.1.8.3 | PATCH | Ensure noexec option set on /dev/shm partition | Set nosuid option
         1.1.8.4 | PATCH | Ensure nosuid option set on /dev/shm partition | Set noexec option"
-  ansible.builtin.mount:
+  ansible.posix.mount:
       name: /dev/shm
       src: tmpfs
       fstype: tmpfs
