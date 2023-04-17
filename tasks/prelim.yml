@@ -88,7 +88,7 @@
 
 - name: "PRELIM | Section 1.1 | Create list of mount points"
   ansible.builtin.set_fact:
-      mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
+      mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
   tags:
       - level1-server
       - level1-workstation
@@ -124,8 +124,8 @@
       state: latest
   when:
       - rhel9cis_rule_1_2_4
-      - ansible_distribution != 'RedHat'
-      - ansible_distribution != 'OracleLinux'
+      - ansible_facts.distribution != 'RedHat'
+      - ansible_facts.distribution != 'OracleLinux'
 
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   ansible.builtin.package:

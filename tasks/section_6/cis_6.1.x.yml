@@ -155,7 +155,7 @@
         failed_when: false
         check_mode: false
         register: rhel_09_6_1_10_audit
-        loop: "{{ ansible_mounts }}"
+        loop: "{{ ansible_facts.mounts }}"
         loop_control:
             label: "{{ item.mount }}"
         when: item['device'].startswith('/dev') and not 'bind' in item['options']
@@ -196,7 +196,7 @@
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_11_audit
-        loop: "{{ ansible_mounts }}"
+        loop: "{{ ansible_facts.mounts }}"
         loop_control:
             label: "{{ item.mount }}"
         when: item['device'].startswith('/dev') and not 'bind' in item['options']
@@ -250,7 +250,7 @@
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_13_suid_perms
-        loop: "{{ ansible_mounts }}"
+        loop: "{{ ansible_facts.mounts }}"
         loop_control:
             label: "{{ item.mount }}"
 
@@ -289,7 +289,7 @@
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_14_sgid_perms
-        loop: "{{ ansible_mounts }}"
+        loop: "{{ ansible_facts.mounts }}"
         loop_control:
             label: "{{ item.mount }}"
 
