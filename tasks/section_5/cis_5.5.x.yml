@@ -38,8 +38,8 @@
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
   loop:
-      - { regexp: '^\s*deny\s*=\s*[1-5]\b', line: 'deny = 5' }
-      - { regexp: '^\s*unlock_time\s*=\s*(0|9[0-9][0-9]|[1-9][0-9][0-9][0-9]+)\b', line: 'unlock_time = 900' }
+      - { regexp: '^\s*deny\s*=\s*[1-5]\b', line: 'deny = {{ rhel9cis_pam_faillock.deny }}' }
+      - { regexp: '^\s*unlock_time\s*=\s*(0|9[0-9][0-9]|[1-9][0-9][0-9][0-9]+)\b', line: 'unlock_time = {{ rhel9cis_pam_faillock.unlock_time }}' }
   when:
       - rhel9cis_rule_5_5_2
 
