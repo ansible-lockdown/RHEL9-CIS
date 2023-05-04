@@ -33,13 +33,42 @@
       - rule_5.5.1
 
 - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured"
-  ansible.builtin.lineinfile:
-      path: /etc/security/faillock.conf
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
-  loop:
-      - { regexp: '^\s*deny\s*=\s*[1-5]\b', line: 'deny = {{ rhel9cis_pam_faillock.deny }}' }
-      - { regexp: '^\s*unlock_time\s*=\s*(0|9[0-9][0-9]|[1-9][0-9][0-9][0-9]+)\b', line: 'unlock_time = {{ rhel9cis_pam_faillock.unlock_time }}' }
+  block:
+      - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | Set faillock.conf configs"
+        ansible.builtin.lineinfile:
+            path: /etc/security/faillock.conf
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+        loop:
+            - { regexp: '^\s*deny\s*=\s*[1-5]\b', line: 'deny = {{ rhel9cis_pam_faillock.deny }}' }
+            - { regexp: '^\s*unlock_time\s*=\s*(0|9[0-9][0-9]|[1-9][0-9][0-9][0-9]+)\b', line: 'unlock_time = {{ rhel9cis_pam_faillock.unlock_time }}' }
+      - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | Set preauth"
+        ansible.builtin.lineinfile:
+            path: "{{ item }}"
+            regexp: '^auth\s*(sufficient|required)\s*pam_faillock.so\s*preauth(.*)'
+            line: "auth    required     pam_faillock.so preauth silent audit deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time}}"
+            insertafter: 'auth\s*(sufficient|required)\s*pam_env.so$'
+        loop:
+            - "/etc/pam.d/system-auth"
+            - "/etc/pam.d/password-auth"
+      - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | Set authfail"
+        ansible.builtin.lineinfile:
+            path: "{{ item }}"
+            regexp: '^auth\s*(sufficient|required)\s*pam_faillock.so\s*authfail(.*)'
+            line: "auth    required     pam_faillock.so authfail audit deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time}}"
+            insertbefore: 'auth\s*(sufficient|required)\s*pam_deny.so$'
+        loop:
+            - "/etc/pam.d/system-auth"
+            - "/etc/pam.d/password-auth"
+      - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | Load account faillock.so"
+        ansible.builtin.lineinfile:
+            path: "{{ item }}"
+            regexp: '^account\s*(sufficient|required)\s*pam_faillock.so$'
+            line: "account    required     pam_faillock.so"
+            insertbefore: '^account\s*(sufficient|required)\s*pam_unix.so$'
+        loop:
+            - "/etc/pam.d/system-auth"
+            - "/etc/pam.d/password-auth"
   when:
       - rhel9cis_rule_5_5_2
 
