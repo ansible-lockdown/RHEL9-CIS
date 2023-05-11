@@ -185,7 +185,7 @@
       - name: "4.2.2.7 | PATCH | Ensure journald default file permissions configured | Set permission"
         ansible.builtin.lineinfile:
             path: "{{ systemd_conf_file | default('/usr/lib/tmpfiles.d/systemd.conf') }}"
-            regexp: "^z \/var\/log\/journal\/%m\/system.journal (!?06(0|4)0) root"
+            regexp: '^z \/var\/log\/journal\/%m\/system.journal (!?06(0|4)0) root'
             line: 'z /var/log/journal/%m/system.journal 0640 root systemd-journal - -'
 
   when:
