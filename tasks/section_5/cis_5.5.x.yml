@@ -71,6 +71,11 @@
             - "/etc/pam.d/password-auth"
   when:
       - rhel9cis_rule_5_5_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - rule_5.5.2
 
 - name: "5.5.3 | PATCH | Ensure password reuse is limited"
   block:
