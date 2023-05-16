@@ -4,5 +4,8 @@
   connection: local
   become: true
 
+  vars_files:
+    - "{{ ansible_distribution }}.yml"
+
   roles:
   - role: "{{ playbook_dir }}"
