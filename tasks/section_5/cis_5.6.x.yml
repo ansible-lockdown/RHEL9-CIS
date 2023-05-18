@@ -13,7 +13,7 @@
             - item.id != "shutdown"
             - item.id != "halt"
             - item.id != "nfsnobody"
-            - item.gid < min_int_uid | int
+            - item.uid < min_int_uid | int
             - item.shell != "      /bin/false"
             - item.shell != "      /usr/sbin/nologin"
         loop_control:
@@ -30,7 +30,7 @@
             - item.id != "sync"
             - item.id != "root"
             - item.id != "nfsnobody"
-            - item.gid < min_int_uid | int
+            - item.uid < min_int_uid | int
             - item.shell != "      /bin/false"
             - item.shell != "      /usr/sbin/nologin"
         loop_control:
