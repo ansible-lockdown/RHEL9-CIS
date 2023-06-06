@@ -62,10 +62,19 @@
             state: present
 
       - name: "PRELIM | Gather system-wide crypto-policy"
-        ansible.builtin.shell: update-crypto-policies --show
+        ansible.builtin.shell: 'update-crypto-policies --show'
         changed_when: false
         check_mode: false
         register: system_wide_crypto_policy
+
+      - name: "PRELIM | Gather system-wide crypto-policy"
+        ansible.builtin.set_fact:
+            current_crypto_policy: "{{ system_wide_crypto_policy.stdout.split(':')[0] }}"
+
+      - name: "PRELIM | Gather system-wide crypto-policy module"
+        ansible.builtin.set_fact:
+            current_crypto_module: "{{ system_wide_crypto_policy.stdout.split(':')[1] }}"
+        when: "':' in system_wide_crypto_policy.stdout"
   when:
       - rhel9cis_rule_1_10
   tags:

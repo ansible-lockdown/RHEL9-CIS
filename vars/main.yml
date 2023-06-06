@@ -7,6 +7,11 @@ rhel9cis_allowed_crypto_policies:
     - 'FUTURE'
     - 'FIPS'
 
+rhel9cis_allowed_crypto_policies_modules:
+    - 'OSPP'
+    - 'AD-Support'
+    - 'AD-Support-LEGACY'
+
 # Used to control warning summary
 warn_control_list: ""
 warn_count: 0

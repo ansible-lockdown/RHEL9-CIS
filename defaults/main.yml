@@ -380,9 +380,11 @@ rhel9cis_dconf_db_name: local
 rhel9cis_screensaver_idle_delay: 900  # Set max value for idle-delay in seconds (between 1 and 900)
 rhel9cis_screensaver_lock_delay: 5  # Set max value for lock-delay in seconds (between 0 and 5)
 
-# 1.10 Set crypto policy DEFAULT
-# Control 1.10 states not to use LEGACY
-rhel9cis_crypto_policy: "DEFAULT"
+# 1.10/1.11 Set crypto policy (LEGACY, DEFAULT, FUTURE, FIPS)
+# Control 1.10 states do not use LEGACY and control 1.11 says to use FUTURE or FIPS.
+rhel9cis_crypto_policy: 'DEFAULT'
+# Added module to be allowed as default setting (Allowed options in vars/main.yml)
+rhel9cis_crypto_policy_module: ''
 
 # System network parameters (host only OR host and router)
 rhel9cis_is_router: false
