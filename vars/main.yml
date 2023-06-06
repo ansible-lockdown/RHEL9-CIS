@@ -9,8 +9,8 @@ rhel9cis_allowed_crypto_policies:
 
 rhel9cis_allowed_crypto_policies_modules:
     - 'OSPP'
-    - 'AD-Support'
-    - 'AD-Support-LEGACY'
+    - 'AD-SUPPORT'
+    - 'AD-SUPPORT-LEGACY'
 
 # Used to control warning summary
 warn_control_list: ""
