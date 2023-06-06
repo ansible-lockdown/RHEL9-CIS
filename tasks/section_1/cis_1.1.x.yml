@@ -13,9 +13,10 @@
             mode: 0600
 
       - name: "1.1.9 | PATCH | Disable USB Storage | Edit modprobe config"
-        ansible.builtin.modprobe:
+        community.general.modprobe:
             name: usb-storage
             state: absent
+        when: not system_is_container      
 
       - name: "1.1.9 | PATCH | Disable USB Storage | blacklist"
         ansible.builtin.lineinfile:

@@ -1,5 +1,11 @@
 # Changes to rhel9CIS
 
+## 1.0.7
+
+lint and yaml updates
+improvements to 6.1.10, 6.1.11, 6.1.13, 6.1.14
+4.1.3.6 updated on process discovery
+
 ## 1.0.6
 
 updated ymlalint as galaxy doenst honouyr local settings
