@@ -20,18 +20,18 @@
   tags:
       - always
 
-- name: "Check password set for {{ ansible_user }}"
+- name: "Check password set for {{ ansible_env.SUDO_USER }}"
   block:
-      - name: Capture current password state of connecting user"
+      - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"
         ansible.builtin.shell: "grep {{ ansible_env.SUDO_USER }} /etc/shadow | awk -F: '{print $2}'"
         changed_when: false
         failed_when: false
         check_mode: false
-        register: ansible_user_password_set
+        register: rhel9cis_ansible_user_password_set
 
-      - name: "Assert that password set for {{ ansible_env.SUDO_USER }} and account not locked"
+      - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert password set and not locked"
         ansible.builtin.assert:
-            that: ansible_user_password_set.stdout | length != 0 and ansible_user_password_set.stdout != "!!"
+            that: ansible_user_password_set.stdout | length != 0 and rhel9cis_ansible_user_password_set.stdout != "!!"
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
             success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
         vars:
@@ -41,6 +41,7 @@
       - not system_is_ec2
   tags:
       - user_passwd
+      - rule_5.3.4
 
 - name: "Ensure root password is set"
   block:
