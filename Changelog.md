@@ -1,5 +1,9 @@
 # Changes to rhel9CIS
 
+## 1.0.8
+
+rule_1.10 improvements allowing for module checking (useful for AD)
+
 ## 1.0.7
 
 lint and yaml updates
@@ -8,7 +12,7 @@ improvements to 6.1.10, 6.1.11, 6.1.13, 6.1.14
 
 ## 1.0.6
 
-updated ymlalint as galaxy doenst honouyr local settings
+updated yamllint as galaxy doesn't honour local settings
 removed empty lines in files
 
 ## 1.0.5
