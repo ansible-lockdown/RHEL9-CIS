@@ -100,7 +100,7 @@
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/profile"
         ansible.builtin.replace:
             path: /etc/profile
-            regexp: '^(?i)(\s+UMASK|UMASK)\s0[0-2][0-6]'
+            regexp: '(?i)(umask)\s0[0-2][0-6]'
             replace: '\1 027'
   when:
       - rhel9cis_rule_5_6_5
