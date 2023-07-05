@@ -202,7 +202,7 @@
 
 - name: "3.4.2.6 | PATCH | Ensure nftables established connections are configured"
   block:
-      - name: "3.4.2.6 | AUDIT | EEnsure nftables established connections are configured | Gather incoming connection rules"
+      - name: "3.4.2.6 | AUDIT | Ensure nftables established connections are configured | Gather incoming connection rules"
         ansible.builtin.shell: nft list ruleset | awk '/hook input/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state'
         changed_when: false
         failed_when: false

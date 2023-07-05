@@ -1,5 +1,11 @@
 # Changes to rhel9CIS
 
+## 1.0.9
+fixed assert for user password set
+
+thanks to @byjunks
+[#66](https://github.com/ansible-lockdown/RHEL9-CIS/issues/66)
+
 ## 1.0.8
 
 rule_1.10 improvements allowing for module checking (useful for AD)

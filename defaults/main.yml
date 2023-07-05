@@ -477,7 +477,7 @@ rhel9cis_firewall: firewalld
 ##### firewalld
 rhel9cis_default_zone: public
 
-# These are added to demonstrate how this can be done
+# These settings are added to demonstrate how this update can be done (eventually will require a new control)
 rhel9cis_firewalld_ports:
     - number: 80
       protocol: tcp
