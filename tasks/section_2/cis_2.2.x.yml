@@ -228,9 +228,8 @@
   ansible.builtin.package:
       name: dnsmasq
       state: absent
-  notify: Restart postfix
   when:
-      - not rhel9cis_is_mail_server
+      - not rhel9cis_dnsmasq_server
       - "'dnsmasq' in ansible_facts.packages"
       - rhel9cis_rule_2_2_14
   tags:
