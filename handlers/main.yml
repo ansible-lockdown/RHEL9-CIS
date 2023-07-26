@@ -3,8 +3,6 @@
 
 - name: Reload sysctl
   ansible.builtin.shell: sysctl --system
-  when:
-      - sysctl_updated.changed
 
 - name: Sysctl flush ipv4 route table
   ansible.posix.sysctl:
