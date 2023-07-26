@@ -1,6 +1,13 @@
 # Changes to rhel9CIS
 
+## 1.0.10
+
+- [#72](https://github.com/ansible-lockdown/RHEL9-CIS/issues/72)
+  - Only run check when paybook user not a superuser
+- fix for 5.5.3 thanks to @nrg-fv
+
 ## 1.0.9
+
 fixed assert for user password set
 
 thanks to @byjunks
