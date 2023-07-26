@@ -173,7 +173,7 @@
 
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Displaying any unowned files or directories"
         ansible.builtin.debug:
-            msg: "Warning!! Missing owner on items in {{ rhel_09_6_1_10_audit | json_query('results[*].stdout_lines[*]') | flatten }}"
+            msg: "Warning!! Missing owner on items in {{ rhel_09_6_1_10_audit | json_query('results[*].stdout_lines[*]') | flatten }}"  # noqa jinja[invalid]
         when: rhel_09_6_1_10_unowned_files_found
 
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | warning"
@@ -219,7 +219,7 @@
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Displaying all ungrouped files or directories"
         ansible.builtin.debug:
-            msg: "Warning!! Missing group on items in {{ rhel_09_6_1_11_audit | json_query('results[*].stdout_lines[*]') | flatten }}"
+            msg: "Warning!! Missing group on items in {{ rhel_09_6_1_11_audit | json_query('results[*].stdout_lines[*]') | flatten }}"  # noqa jinja[invalid]
         when: rhel_09_6_1_11_ungrouped_files_found
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | warning"
@@ -275,7 +275,7 @@
 
       - name: "6.1.13 | AUDIT | Audit SUID executables | Alert SUID executables exist"
         ansible.builtin.debug:
-            msg: "Warning!! SUID set on items in {{ rhel_09_6_1_13_suid_perms | json_query('results[*].stdout_lines[*]') | flatten }}"
+            msg: "Warning!! SUID set on items in {{ rhel_09_6_1_13_suid_perms | json_query('results[*].stdout_lines[*]') | flatten }}"  # noqa jinja[invalid]
         when: rhel9_6_1_13_suid_found
 
       - name: "6.1.13 | AUDIT | Audit SUID executables | Alert SUID executables exist | warning"
@@ -317,7 +317,7 @@
 
       - name: "6.1.14 | AUDIT | Audit SGID executables | Alert SGID executables exist"
         ansible.builtin.debug:
-            msg: "Warning!! SGID set on items in {{ rhel_09_6_1_14_sgid_perms | json_query('results[*].stdout_lines[*]') | flatten }}"
+            msg: "Warning!! SGID set on items in {{ rhel_09_6_1_14_sgid_perms | json_query('results[*].stdout_lines[*]') | flatten }}"  # noqa jinja[invalid]
         when: rhel9_6_1_14_sgid_found
 
       - name: "6.1.14 | AUDIT | Audit SGID executables| warning"
