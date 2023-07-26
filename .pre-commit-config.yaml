@@ -54,16 +54,3 @@ repos:
   rev: v1.32.0  # or higher tag
   hooks:
   - id: yamllint
-
-## To be moved to main link when PR approved - https://github.com/ansible/ansible-sign.git
-- repo: https://github.com/ansible-lockdown/ansible-sign.git
-  rev: v0.1.1b
-  hooks:
-  - id: ansible-sign
-    name: Verify Ansible-sign signature
-    description: This hook runs ansible-sign.
-    entry: ansible-sign project gpg-verify .
-    language: python
-    # do not pass files as we need to scan the directory with the MANIFEST.in
-    pass_filenames: false
-    always_run: true

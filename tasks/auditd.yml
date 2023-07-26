@@ -19,7 +19,7 @@
       - Audit immutable fact
       - Restart auditd
 
-- name: POST | AUDITD | Add Warning count for changes to template file | Warn Count  # noqa: no-handler
+- name: POST | AUDITD | Add Warning count for changes to template file | Warn Count  # noqa no-handler
   ansible.builtin.import_tasks: warning_facts.yml
   vars:
       warn_control_id: 'Auditd template updated, see diff output for details'
