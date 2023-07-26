@@ -18,7 +18,7 @@
 ![Devel Build Status](https://img.shields.io/github/actions/workflow/status/ansible-lockdown/RHEL9-CIS/linux_benchmark_testing.yml?label=Devel%20Build%20Status)
 ![Devel Commits](https://img.shields.io/github/commit-activity/m/ansible-lockdown/RHEL9-CIS/devel?color=dark%20green&label=Devel%20Branch%20commits)
 
-![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen) 
+![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen)
 ![Main Build Status](https://img.shields.io/github/actions/workflow/status/ansible-lockdown/RHEL9-CIS/linux_benchmark_testing.yml?label=Build%20Status)
 ![Main Release Date](https://img.shields.io/github/release-date/ansible-lockdown/RHEL9-CIS?label=Release%20Date)
 ![Release Tag](https://img.shields.io/github/v/tag/ansible-lockdown/RHEL9-CIS?label=Release%20Tag&&color=success)
@@ -100,10 +100,6 @@ Almalinux 9
 Rocky 9
 OracleLinux 9
 
-ansible 2.10
-jmespath
-relevant collections
-
 - Access to download or add the goss binary and content to the system if using auditing (other options are available on how to get the content to the system.)
 
 **General:**
@@ -120,12 +116,14 @@ relevant collections
 **Technical Dependencies:**
 
 - Python3
-- Ansible 2.9+
+- Ansible 2.10+
 - python-def (should be included in RHEL 9)
 - libselinux-python
 - pip packages
   - jmespath ( complete list found in requirements.txt)
 - collections found in collections/requirememnts.yml
+
+pre-commit is available if installed
 
 ## Role Variables
 
