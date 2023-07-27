@@ -39,7 +39,7 @@ jobs:
       # The type of runner that the job will run on
         runs-on: ubuntu-latest
         env:
-            ENABLE_DEBUG: true
+            ENABLE_DEBUG: false
             # Imported as a variable by terraform
             TF_VAR_repository: ${{ github.event.repository.name }}
         defaults:
@@ -73,7 +73,7 @@ jobs:
                 chmod 700 .ssh
                 echo $PRIVATE_KEY > .ssh/github_actions.pem
                 chmod 600 .ssh/github_actions.pem
-            
+
             - name: DEBUG - Show IaC files
               if: env.ENABLE_DEBUG == 'true'
               run: |
