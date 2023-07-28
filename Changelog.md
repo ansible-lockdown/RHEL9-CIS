@@ -11,6 +11,8 @@
 - updated to logic in 5.6.5
 - lint updates to 6.1.x
 - readme updates
+- audit control updates and variable name changes
+  - ability to run audit on arm64(e.g. pi or M1/2) too thanks to @lucab85 #77
 
 ## 1.0.10
 
