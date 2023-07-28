@@ -88,7 +88,7 @@
             regexp: '(?i)(umask\s*)'
             line: '{{ item.line }} 027'
         with_items:
-            - { path: '/etc/bash.bashrc', line: 'umask' }
+            - { path: '/etc/bashrc', line: 'umask' }
             - { path: '/etc/profile', line: 'umask' }
             - { path: '/etc/login.defs', line: 'UMASK' }
 
