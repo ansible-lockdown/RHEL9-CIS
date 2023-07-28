@@ -1,30 +1,34 @@
 ---
 
-- name: Download audit binary
+- name: Pre Audit Setup | Set audit package name
+  block:
+      - name: Pre Audit Setup | Set audit package name | 64bit
+        ansible.builtin.set_fact:
+            audit_pkg_arch_name: AMD64
+        when: ansible_machine == "x86_64"
+
+      - name: Pre Audit Setup | Set audit package name | ARM64
+        ansible.builtin.set_fact:
+            audit_pkg_arch_name: ARM64
+        when: ansible_machine == "arm64"
+
+- name: Pre Audit Setup | Download audit binary
   ansible.builtin.get_url:
-      url: "{{ goss_url }}"
+      url: "{{ audit_bin_url }}{{ audit_pkg_arch_name }}"
       dest: "{{ audit_bin }}"
       owner: root
       group: root
-      checksum: "{{ goss_version.checksum }}"
+      checksum: "{{ audit_bin_version[audit_pkg_arch_name + '_checksum'] }}"
       mode: 0555
   when:
-      - get_goss_file == 'download'
+      - get_audit_binary_method == 'download'
 
-- name: Copy audit binary
+- name: Pre Audit Setup | copy audit binary
   ansible.builtin.copy:
-      src:
+      src: "{{ audit_bin_copy_location }}"
       dest: "{{ audit_bin }}"
       mode: 0555
       owner: root
       group: root
   when:
-      - get_goss_file == 'copy'
-
-- name: Install git if not present
-  ansible.builtin.package:
-      name: git
-      state: present
-  register: git_installed
-  when:
-      - '"git" not in ansible_facts.packages'
+      - get_audit_binary_method == 'copy'

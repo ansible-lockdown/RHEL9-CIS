@@ -52,7 +52,7 @@ setup_audit: false
 # How to retrive goss
 # Options are copy or download - detailed settings at the bottom of this file
 # you will need to access to either github or the file already dowmloaded
-get_goss_file: download
+get_audit_binary_method: download
 
 # how to get audit files onto host options
 # options are git/copy/get_url - use local if already available to to the host (adjust paths accordingly)
@@ -663,15 +663,16 @@ audit_run_script_environment:
     AUDIT_CONTENT_LOCATION: "{{ audit_out_dir }}"
 
 ### Goss binary settings ###
-goss_version:
-    release: v0.3.21
-    checksum: 'sha256:9a9200779603acf0353d2c0e85ae46e083596c10838eaf4ee050c924678e4fe3'
+audit_bin_release: v0.3.23
+audit_bin_version:
+    AMD64_checksum: 'sha256:9e9f24e25f86d6adf2e669a9ffbe8c3d7b9b439f5f877500dea02ba837e10e4d'
+    ARM64_checksum: 'sha256:7b0794fa590857e7d64ef436e1a100ca26f6039f269a6138009aa837d27d7f9e'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json
 
 # if get_goss_file == download change accordingly
-goss_url: "https://github.com/goss-org/goss/releases/download/{{ goss_version.release }}/goss-linux-amd64"
+audit_bin_url: "https://github.com/goss-org/goss/releases/download/{{ audit_bin_release }}/goss-linux-"
 
 ## if get_goss_file - copy the following needs to be updated for your environment
 ## it is expected that it will be copied from somewhere accessible to the control node
