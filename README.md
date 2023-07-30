@@ -51,13 +51,13 @@ Check Mode is not supported! The role will complete in check mode without errors
 
 This role was developed against a clean install of the Operating System. If you are implementing to an existing system please review this role for any site specific changes that are needed.
 
-To use release version please point to main branch and relevant release for the cis benchmark you wish to work with.
+To use the release version, please point to the `main` branch and relevant release for the cis benchmark you wish to work with.
 
 ---
 
 ## Matching a security Level for CIS
 
-It is possible to to only run level 1 or level 2 controls for CIS.
+It is possible to only run level 1 or level 2 controls for CIS.
 This is managed using tags:
 
 - level1_server
@@ -65,23 +65,23 @@ This is managed using tags:
 - level2_server
 - level2_workstation
 
-The control found in defaults main also need to reflect this as this control the testing thet takes place if you are using the audit component.
+The control found in the `defaults` main also needs to reflect this, as this control is the testing that takes place if you are using the audit component.
 
 ## Coming from a previous release
 
-CIS release always contains changes, it is highly recommended to review the new references and available variables. This have changed significantly since ansible-lockdown initial release.
-This is now compatible with python3 if it is found to be the default interpreter. This does come with pre-requisites which it configures the system accordingly.
+CIS release always contains changes, it is highly recommended to review the new references and available variables. This has changed significantly since the ansible-lockdown initial release.
+This is now compatible with python3 if it is found to be the default interpreter. This does come with prerequisites which configure the system accordingly.
 
 Further details can be seen in the [Changelog](./ChangeLog.md)
 
 ## Auditing (new)
 
-This can be turned on or off within the defaults/main.yml file with the variable rhel8cis_run_audit. The value is false by default, please refer to the wiki for more details. The defaults file also populates the goss checks to check only the controls that have been enabled in the ansible role.
+This can be turned on or off within the `defaults/main.yml` file with the variables `setup_audit` and `run_audit`. The value is `false` by default. Please refer to the wiki for more details. The defaults file also populates the goss checks to check only the controls that have been enabled in the ansible role.
 
 This is a much quicker, very lightweight, checking (where possible) config compliance and live/running settings.
 
-A new form of auditing has been developed, by using a small (12MB) go binary called [goss](https://github.com/goss-org/goss) along with the relevant configurations to check. Without the need for infrastructure or other tooling.
-This audit will not only check the config has the correct setting but aims to capture if it is running with that configuration also trying to remove [false positives](https://www.mindpointgroup.com/blog/is-compliance-scanning-still-relevant/) in the process.
+A new form of auditing has been developed by using a small (12MB) go binary called [goss](https://github.com/goss-org/goss) along with the relevant configurations to check without the need for infrastructure or other tooling.
+This audit will not only check the config has the correct setting but aims to capture if it is running with that configuration also try to remove [false positives](https://www.mindpointgroup.com/blog/is-compliance-scanning-still-relevant/) in the process.
 
 Refer to [RHEL9-CIS-Audit](https://github.com/ansible-lockdown/RHEL9-CIS-Audit).
 
