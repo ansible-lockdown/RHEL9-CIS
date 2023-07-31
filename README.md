@@ -173,7 +173,8 @@ uses:
 
 - ansible-core 2.12
 - ansible collections - pulls in the latest version based on requirements file
-- runs the audit using the devel branch
+- Runs the audit using the devel branch
+- Runs the pre-commit setup on the PR to ensure everything is in place as expected.
 - This is an automated test that occurs on pull requests into devel
 
 ## Local Testing
@@ -183,3 +184,8 @@ uses:
 - ansible-core 2.15.1  - python 3.11
 
 makefile - this is there purely for testing and initial setup purposes.
+pre-commit can be tested with
+
+```sh
+pre-commit run -c .precommit/.precommit-commit-config.yaml
+```
