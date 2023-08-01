@@ -15,11 +15,11 @@
 ![Ansible Galaxy Quality](https://img.shields.io/ansible/quality/61781?label=Quality&&logo=ansible)
 ![Discord Badge](https://img.shields.io/discord/925818806838919229?logo=discord)
 
-![Devel Build Status](https://img.shields.io/github/actions/workflow/status/ansible-lockdown/RHEL9-CIS/linux_benchmark_testing.yml?label=Devel%20Build%20Status)
+[![devel build status](https://github.com/ansible-lockdown/RHEL9-CIS-TEST/actions/workflows/devel_pipeline_validation.yml/badge.svg?branch=devel)](https://github.com/ansible-lockdown/RHEL9-CIS-TEST/actions/workflows/devel_pipeline_validation.yml)
 ![Devel Commits](https://img.shields.io/github/commit-activity/m/ansible-lockdown/RHEL9-CIS/devel?color=dark%20green&label=Devel%20Branch%20commits)
 
 ![Release Branch](https://img.shields.io/badge/Release%20Branch-Main-brightgreen)
-![Main Build Status](https://img.shields.io/github/actions/workflow/status/ansible-lockdown/RHEL9-CIS/linux_benchmark_testing.yml?label=Build%20Status)
+[![main build status](https://github.com/ansible-lockdown/RHEL9-CIS-TEST/actions/workflows/main_pipeline_validation.yml/badge.svg?branch=main)](https://github.com/ansible-lockdown/RHEL9-CIS-TEST/actions/workflows/main_pipeline_validation.yml)
 ![Main Release Date](https://img.shields.io/github/release-date/ansible-lockdown/RHEL9-CIS?label=Release%20Date)
 ![Release Tag](https://img.shields.io/github/v/tag/ansible-lockdown/RHEL9-CIS?label=Release%20Tag&&color=success)
 
@@ -106,6 +106,12 @@ Rocky 9
 OracleLinux 9
 
 - Access to download or add the goss binary and content to the system if using auditing (other options are available on how to get the content to the system.)
+
+CentOS stream - while this will generally work it is not supported and requires the following variable setting
+
+```sh
+check_os: false
+```
 
 **General:**
 
