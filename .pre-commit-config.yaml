@@ -1,4 +1,9 @@
 ---
+##### CI for use by github no need for action to be added
+##### Inherited
+ci:
+    autofix_prs: false
+    skip: [detect-aws-credentials, ansible-lint ]
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -28,7 +33,7 @@ repos:
   rev: v1.4.0
   hooks:
   - id: detect-secrets
-    args: ['--baseline', '.precommit/.secrets.baseline']
+    args: ['--baseline', '.secrets.baseline']
     exclude: package.lock.json
 
 - repo: https://github.com/ansible-community/ansible-lint
