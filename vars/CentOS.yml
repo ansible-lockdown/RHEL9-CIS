@@ -1,0 +1,4 @@
+---
+
+os_gpg_key_pubkey_name: centos-gpg-keys
+os_gpg_key_pubkey_content: "builder@centos.org 9.0"
