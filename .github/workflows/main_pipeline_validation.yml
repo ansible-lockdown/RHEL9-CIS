@@ -1,62 +1,58 @@
 ---
 
-# This is a basic workflow to help you get started with Actions
+    name: main_pipeline_validation
 
-name: linux_benchmark_pipeline
+    on: # yamllint disable-line rule:truthy
+      pull_request_target:
+          types: [opened, reopened, synchronize]
+          branches:
+              - main
+          paths:
+              - '**.yml'
+              - '**.sh'
+              - '**.j2'
+              - '**.ps1'
+              - '**.cfg'
 
-# Controls when the action will run.
-# Triggers the workflow on push or pull request
-# events but only for the devel branch
-on: # yamllint disable-line rule:truthy
-  pull_request_target:
-      types: [opened, reopened, synchronize]
-      branches:
-          - devel
-          - main
-      paths:
-          - '**.yml'
-          - '**.sh'
-          - '**.j2'
-          - '**.ps1'
-          - '**.cfg'
+    # A workflow run is made up of one or more jobs
+    # that can run sequentially or in parallel
+    jobs:
 
-# A workflow run is made up of one or more jobs
-# that can run sequentially or in parallel
-jobs:
-  # This will create messages for first time contributers and direct them to the Discord server
-    welcome:
-      runs-on: ubuntu-latest
-
-      steps:
-          - uses: actions/first-interaction@main
-            with:
-              repo-token: ${{ secrets.GITHUB_TOKEN }}
-              pr-message: |-
-                  Congrats on opening your first pull request and thank you for taking the time to help improve Ansible-Lockdown!
-                  Please join in the conversation happening on the [Discord Server](https://discord.io/ansible-lockdown) as well.
-      # This workflow contains a single job called "build"
-    build:
-      # The type of runner that the job will run on
-        runs-on: ubuntu-latest
-        env:
-            ENABLE_DEBUG: false
-            # Imported as a variable by terraform
-            TF_VAR_repository: ${{ github.event.repository.name }}
-        defaults:
-          run:
-            shell: bash
-            working-directory: .github/workflows/github_linux_IaC
-
-        # Steps represent a sequence of tasks that will be executed as part of the job
-        steps:
-          # Checks-out your repository under $GITHUB_WORKSPACE,
-          # so your job can access it
+      # Carries out lint tests on the content
+        linting:
+          runs-on: ubuntu-latest
+          steps:
             - name: Clone ${{ github.event.repository.name }}
               uses: actions/checkout@v3
               with:
-                  ref: ${{ github.event.pull_request.head.sha }}
+                fetch-depth: 0
+                ref: ${{ github.event.pull_request.head.sha }}
 
-          # Pull in terraform code for linux servers
+            - name: Run ansible-lint
+              uses: ansible/ansible-lint-action@v6
+              with:
+                path: ./site.yml
+
+        # This workflow contains a single job which tests the playbook
+        playbook-test:
+          # The type of runner that the job will run on
+          runs-on: ubuntu-latest
+          env:
+            ENABLE_DEBUG: ${{ vars.ENABLE_DEBUG }}
+            # Imported as a variable by terraform
+            TF_VAR_repository: ${{ github.event.repository.name }}
+          defaults:
+            run:
+              shell: bash
+              working-directory: .github/workflows/github_linux_IaC
+
+          steps:
+            - name: Clone ${{ github.event.repository.name }}
+              uses: actions/checkout@v3
+              with:
+                ref: ${{ github.event.pull_request.head.sha }}
+
+            # Pull in terraform code for linux servers
             - name: Clone github IaC plan
               uses: actions/checkout@v3
               with:
@@ -81,13 +77,10 @@ jobs:
                 echo "benchmark_type = $benchmark_type"
                 pwd
                 ls
-
               env:
-                  # Imported from github variables this is used to load the relvent OS.tfvars file
-                  OSVAR: ${{ vars.OSVAR }}
-                  benchmark_type: ${{ vars.BENCHMARK_TYPE }}
-
-### Build out the server
+                # Imported from github variables this is used to load the relvent OS.tfvars file
+                OSVAR: ${{ vars.OSVAR }}
+                benchmark_type: ${{ vars.BENCHMARK_TYPE }}
 
             - name: Terraform_Init
               id: init
@@ -114,7 +107,7 @@ jobs:
                 TF_VAR_benchmark_type: ${{ vars.BENCHMARK_TYPE }}
               run: terraform apply -var-file "github_vars.tfvars" -var-file "${OSVAR}.tfvars" --auto-approve -input=false
 
-      ## Debug Section
+  ## Debug Section
             - name: DEBUG - Show Ansible hostfile
               if: env.ENABLE_DEBUG == 'true'
               run: cat hosts.yml
@@ -124,7 +117,7 @@ jobs:
             - name: Sleep for 60 seconds
               run: sleep 60s
 
-      # Run the ansible playbook
+          # Run the ansible playbook
             - name: Run_Ansible_Playbook
               uses: arillso/action.playbook@master
               with:
@@ -137,10 +130,10 @@ jobs:
                 ANSIBLE_HOST_KEY_CHECKING: "false"
                 ANSIBLE_DEPRECATION_WARNINGS: "false"
 
-      # Remove test system - User secrets to keep if necessary
+          # Remove test system - User secrets to keep if necessary
 
             - name: Terraform_Destroy
-              if: always()
+              if: always() && env.ENABLE_DEBUG == 'false'
               env:
                 AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                 AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
