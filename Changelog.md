@@ -3,9 +3,10 @@
 ## 1.1.0
 
 - new workflow configuration
-- Added pre-commit config - Does not have to be used but can imrpove things
+  - Allowing devel and main configs
+  - IaC code found in alternate repo for easier mgmt
+- Added pre-commit config - Does not have to be used but can improve things
   - .pre-commit-config.yaml
-  - MANIFEST.in
   - .secrets.baseline
 
 - updated to logic in 5.6.5
@@ -13,6 +14,8 @@
 - readme updates
 - audit control updates and variable name changes
   - ability to run audit on arm64(e.g. pi or M1/2) too thanks to @lucab85 #77
+- tidy up README adopted PR #78 thanks to @lucab85
+
 
 ## 1.0.10
 
