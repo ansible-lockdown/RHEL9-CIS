@@ -15,7 +15,8 @@
 - audit control updates and variable name changes
   - ability to run audit on arm64(e.g. pi or M1/2) too thanks to @lucab85 #77
 - tidy up README adopted PR #78 thanks to @lucab85
-
+- moved Makefile requirements to .config/
+- removed .ansible.cfg and local.yml
 
 ## 1.0.10
 
