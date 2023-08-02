@@ -1,6 +1,6 @@
 ---
 
-    name: devel_pipeline_validation
+    name: Devel pipeline
 
     on: # yamllint disable-line rule:truthy
       pull_request_target:
@@ -30,7 +30,7 @@
                       Please join in the conversation happening on the [Discord Server](https://discord.io/ansible-lockdown) as well.
 
       # Carries out lint tests on the content
-        linting:
+        lint:
           runs-on: ubuntu-latest
           steps:
             - name: Clone ${{ github.event.repository.name }}
