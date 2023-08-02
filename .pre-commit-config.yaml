@@ -33,7 +33,7 @@ repos:
   rev: v1.4.0
   hooks:
   - id: detect-secrets
-    args: ['--baseline', '.secrets.baseline']
+    args: ['--baseline', '.config/.secrets.baseline']
     exclude: package.lock.json
 
 - repo: https://github.com/ansible-community/ansible-lint
