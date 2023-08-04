@@ -19,9 +19,9 @@
 ![Release Tag](https://img.shields.io/github/v/release/ansible-lockdown/RHEL9-CIS)
 ![Release Date](https://img.shields.io/github/release-date/ansible-lockdown/RHEL9-CIS)
 
-[![Main pipeline status](https://github.com/ansible-lockdown/RHEL9-CIS/actions/workflows/main_pipeline_validation.yml/badge.svg?)](https://github.com/ansible-lockdown/RHEL9-CIS/actions/workflows/main_pipeline_validation.yml)
+[![Main Pipeline Status](https://github.com/ansible-lockdown/RHEL9-CIS/actions/workflows/main_pipeline_validation.yml/badge.svg?)](https://github.com/ansible-lockdown/RHEL9-CIS/actions/workflows/main_pipeline_validation.yml)
 
-[![Devel pipeline status](https://github.com/ansible-lockdown/RHEL9-CIS/actions/workflows/devel_pipeline_validation.yml/badge.svg?)](https://github.com/ansible-lockdown/RHEL9-CIS/actions/workflows/devel_pipeline_validation.yml)
+[![Devel Pipeline Status](https://github.com/ansible-lockdown/RHEL9-CIS/actions/workflows/devel_pipeline_validation.yml/badge.svg?)](https://github.com/ansible-lockdown/RHEL9-CIS/actions/workflows/devel_pipeline_validation.yml)
 ![Devel Commits](https://img.shields.io/github/commit-activity/m/ansible-lockdown/RHEL9-CIS/devel?color=dark%20green&label=Devel%20Branch%20commits)
 
 ![Issues Open](https://img.shields.io/github/issues-raw/ansible-lockdown/RHEL9-CIS?label=Open%20Issues)
@@ -29,7 +29,6 @@
 ![Pull Requests](https://img.shields.io/github/issues-pr/ansible-lockdown/RHEL9-CIS?label=Pull%20Requests)
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/RHEL9-CIS?label=License)
-
 
 ---
 
@@ -192,8 +191,9 @@ uses:
 - ansible-core 2.15.1  - python 3.11
 
 makefile - this is there purely for testing and initial setup purposes.
-pre-commit can be tested with
+pre-commit can be tested
+Is run from with the directory
 
 ```sh
-pre-commit run -c .precommit/.precommit-commit-config.yaml
+pre-commit run
 ```
