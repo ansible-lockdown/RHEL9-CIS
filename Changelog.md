@@ -8,6 +8,7 @@
 - Added pre-commit config - Does not have to be used but can improve things
   - .pre-commit-config.yaml
   - .secrets.baseline
+  - gitleaks and secrets detection
 
 - updated to logic in 5.6.5
 - lint updates to 6.1.x
