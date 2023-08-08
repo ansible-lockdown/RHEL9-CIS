@@ -2,6 +2,6 @@
 
 # IPv6 disable
 {% if rhel9cis_rule_3_1_1 and rhel9cis_ipv6_required %}
-net.ipv6.conf.all.disable_ipv6 = 1 
+net.ipv6.conf.all.disable_ipv6 = 1
 net.ipv6.conf.default.disable_ipv6 = 1
 {% endif %}

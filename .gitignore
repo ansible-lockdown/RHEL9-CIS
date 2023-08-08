@@ -12,7 +12,7 @@ delete*
 ignore*
 test_inv
 # temp remove doc while this is built up
-doc/  
+doc/
 # VSCode
 .vscode
 
