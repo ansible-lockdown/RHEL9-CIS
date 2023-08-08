@@ -36,7 +36,6 @@ repos:
     args: ['--baseline', '.config/.secrets.baseline']
     exclude: package.lock.json
 
-
 - repo: https://github.com/gitleaks/gitleaks
   rev: v8.17.0
   hooks:
