@@ -1,5 +1,24 @@
 # Changes to rhel9CIS
 
+## 1.1.0
+
+- new workflow configuration
+  - Allowing devel and main configs
+  - IaC code found in alternate repo for easier mgmt
+- Added pre-commit config - Does not have to be used but can improve things
+  - .pre-commit-config.yaml
+  - .secrets.baseline
+  - gitleaks and secrets detection
+
+- updated to logic in 5.6.5
+- lint updates to 6.1.x
+- readme updates
+- audit control updates and variable name changes
+  - ability to run audit on arm64(e.g. pi or M1/2) too thanks to @lucab85 #77
+- tidy up README adopted PR #78 thanks to @lucab85
+- moved Makefile requirements to .config/
+- removed .ansible.cfg and local.yml
+
 ## 1.0.10
 
 - [#72](https://github.com/ansible-lockdown/RHEL9-CIS/issues/72)

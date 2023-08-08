@@ -2,9 +2,11 @@
 
 - name: "Post Audit | Run post_remediation {{ benchmark }} audit"
   ansible.builtin.shell: "{{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -o {{ post_audit_outfile }} -g {{ group_names }}"
-  environment: "{{ audit_run_script_environment | default({}) }}"
-  changed_when: audit_run_post_remediation.rc == 0
-  register: audit_run_post_remediation
+  changed_when: true
+  environment:
+      AUDIT_BIN: "{{ audit_bin }}"
+      AUDIT_CONTENT_LOCATION: "{{ audit_out_dir }}"
+      AUDIT_FILE: "goss.yml"
 
 - name: Post Audit | ensure audit files readable by users
   ansible.builtin.file:
@@ -17,7 +19,7 @@
 
 - name: Post Audit | Capture audit data if json format
   block:
-      - name: "Capture data {{ post_audit_outfile }}"
+      - name: "capture data {{ post_audit_outfile }}"
         ansible.builtin.shell: "cat {{ post_audit_outfile }}"
         register: post_audit
         changed_when: false
