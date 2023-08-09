@@ -17,7 +17,7 @@
 
       - name: "1.2.1 | AUDIT | Ensure GPG keys are configured | expected keys fail"
         ansible.builtin.fail:
-            msg: Installed GPG Keys do not meet expected values or keys installed that are not expected
+            msg: Installed GPG Keys do not meet expected values or expected keys are not installed
         when:
             - os_installed_pub_keys.rc == 1 or
               os_gpg_key_check.rc == 1
