@@ -20,27 +20,29 @@
   tags:
       - always
 
-- name: "Check password set for {{ ansible_user }}"
+- name: "Check password set for {{ ansible_env.SUDO_USER }}"
   block:
-      - name: Capture current password state of "{{ ansible_user }}"
-        ansible.builtin.shell: "grep {{ ansible_user }} /etc/shadow | awk -F: '{print $2}'"
+      - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"
+        ansible.builtin.shell: "grep {{ ansible_env.SUDO_USER }} /etc/shadow | awk -F: '{print $2}'"
         changed_when: false
         failed_when: false
         check_mode: false
-        register: ansible_user_password_set
+        register: rhel9cis_ansible_user_password_set
 
-      - name: "Assert that password set for {{ ansible_user }} and account not locked"
+      - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert password set and not locked"
         ansible.builtin.assert:
-            that: ansible_user_password_set.stdout | length != 0 and ansible_user_password_set.stdout != "!!"
-            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_user }} has no password set - It can break access"
-            success_msg: "You a password set for the {{ ansible_user }}"
+            that: rhel9cis_ansible_user_password_set.stdout | length != 0 and rhel9cis_ansible_user_password_set.stdout != "!!"
+            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
+            success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
         vars:
             sudo_password_rule: rhel9cis_rule_5_3_4
   when:
       - rhel9cis_rule_5_3_4
+      - ansible_env.SUDO_USER is defined
       - not system_is_ec2
   tags:
       - user_passwd
+      - rule_5.3.4
 
 - name: "Ensure root password is set"
   block:
@@ -91,6 +93,17 @@
       that: rhel9cis_crypto_policy in rhel9cis_allowed_crypto_policies
       fail_msg: "Crypto policy is not a permitted version"
       success_msg: "Crypto policy is a permitted version"
+
+- name: Check crypto-policy module input
+  ansible.builtin.assert:
+      that: rhel9cis_crypto_policy_module in rhel9cis_allowed_crypto_policies_modules
+      fail_msg: "Crypto policy module is not a permitted version"
+      success_msg: "Crypto policy module is a permitted version"
+  when:
+      - rhel9cis_rule_1_10
+      - rhel9cis_crypto_policy_module | length > 0
+  tags:
+      - rule_1.10
 
 - name: Check rhel9cis_bootloader_password_hash variable has been changed
   ansible.builtin.assert:

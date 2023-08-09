@@ -1,5 +1,41 @@
 # Changes to rhel9CIS
 
+## 1.1.0
+
+- new workflow configuration
+  - Allowing devel and main configs
+  - IaC code found in alternate repo for easier mgmt
+- Added pre-commit config - Does not have to be used but can improve things
+  - .pre-commit-config.yaml
+  - .secrets.baseline
+  - gitleaks and secrets detection
+
+- updated to logic in 5.6.5
+- lint updates to 6.1.x
+- readme updates
+- audit control updates and variable name changes
+  - ability to run audit on arm64(e.g. pi or M1/2) too thanks to @lucab85 #77
+- tidy up README adopted PR #78 thanks to @lucab85
+- moved Makefile requirements to .config/
+- removed .ansible.cfg and local.yml
+
+## 1.0.10
+
+- [#72](https://github.com/ansible-lockdown/RHEL9-CIS/issues/72)
+  - Only run check when paybook user not a superuser
+- fix for 5.5.3 thanks to @nrg-fv
+
+## 1.0.9
+
+fixed assert for user password set
+
+thanks to @byjunks
+[#66](https://github.com/ansible-lockdown/RHEL9-CIS/issues/66)
+
+## 1.0.8
+
+rule_1.10 improvements allowing for module checking (useful for AD)
+
 ## 1.0.7
 
 lint and yaml updates
@@ -8,7 +44,7 @@ improvements to 6.1.10, 6.1.11, 6.1.13, 6.1.14
 
 ## 1.0.6
 
-updated ymlalint as galaxy doenst honouyr local settings
+updated yamllint as galaxy doesn't honour local settings
 removed empty lines in files
 
 ## 1.0.5

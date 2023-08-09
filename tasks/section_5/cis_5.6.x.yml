@@ -83,25 +83,21 @@
 - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive"
   block:
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/login.defs pam_umask settings"
-        ansible.builtin.replace:
-            path: /etc/login.defs
-            regexp: "{{ item.regexp }}"
-            replace: "{{ item.replace }}"
-        loop:
-            - { regexp: '(UMASK\s+)0[012][0-6]', replace: '\1 027' }
-            - { regexp: '(USERGROUPS_ENAB\s+)yes', replace: '\1 no' }
+        ansible.builtin.lineinfile:
+            path: "{{ item.path }}"
+            regexp: '(?i)(umask\s*)'
+            line: '{{ item.line }} 027'
+        with_items:
+            - { path: '/etc/bashrc', line: 'umask' }
+            - { path: '/etc/profile', line: 'umask' }
+            - { path: '/etc/login.defs', line: 'UMASK' }
 
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/bashrc"
-        ansible.builtin.replace:
-            path: /etc/bashrc
-            regexp: '^(?i)(\s+UMASK|UMASK)\s0[0-2][0-6]'
-            replace: '\1 027'
+        ansible.builtin.lineinfile:
+            path: /etc/login.defs
+            regexp: '^USERGROUPS_ENAB'
+            line: USERGROUPS_ENAB no
 
-      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/profile"
-        ansible.builtin.replace:
-            path: /etc/profile
-            regexp: '^(?i)(\s+UMASK|UMASK)\s0[0-2][0-6]'
-            replace: '\1 027'
   when:
       - rhel9cis_rule_5_6_5
   tags:

@@ -25,5 +25,5 @@ yamllint:
 
 pip-requirements:
 	@echo 'Python dependencies:'
-	@cat requirements.txt
+	@cat .config/requirements.txt
 	pip3 install -r requirements.txt
