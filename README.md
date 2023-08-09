@@ -186,13 +186,16 @@ uses:
 
 ## Local Testing
 
-- ansible-base 2.10.17 - python 3.8
-- ansible-core 2.13.4  - python 3.10
-- ansible-core 2.15.1  - python 3.11
+- Ansible
 
-makefile - this is there purely for testing and initial setup purposes.
-pre-commit can be tested
-Is run from with the directory
+  - ansible-base 2.10.17 - python 3.8
+  - ansible-core 2.13.4  - python 3.10
+  - ansible-core 2.15.1  - python 3.11
+
+## Added Extras
+
+- makefile - this is there purely for testing and initial setup purposes.
+- [pre-commit](https://pre-commit.com) can be tested and can be run from within the directory
 
 ```sh
 pre-commit run
