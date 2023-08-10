@@ -111,7 +111,7 @@ OracleLinux 9
 CentOS stream - while this will generally work it is not supported and requires the following variable setting
 
 ```sh
-check_os: false
+os_check: false
 ```
 
 **General:**
