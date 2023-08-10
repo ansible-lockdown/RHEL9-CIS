@@ -44,14 +44,14 @@
       - user_passwd
       - rule_5.3.4
 
-- name: "Ensure root password is set"
+- name: Ensure root password is set
   block:
-      - name: "Ensure root password is set"
+      - name: Ensure root password is set
         ansible.builtin.shell: passwd -S root | grep "Password set, SHA512 crypt"
         changed_when: false
         register: root_passwd_set
 
-      - name: "Ensure root password is set"
+      - name: Ensure root password is set
         ansible.builtin.assert:
             that: root_passwd_set.rc == 0
             fail_msg: "You have rule 5.6.6 enabled this requires that you have a root password set"
