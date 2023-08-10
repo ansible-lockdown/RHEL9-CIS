@@ -8,6 +8,7 @@ container_vars_file: is_container.yml
 system_is_ec2: false
 
 # Run the OS validation check
+# Supported OSs will not need for this to be changed - see README e.g. CentOS
 os_check: true
 
 rhel9cis_section1: true
