@@ -23,9 +23,9 @@
               os_gpg_key_check.rc == 1
   when:
       - rhel9cis_rule_1_2_1
-      - ansible_distribution == "RedHat" or
-        ansible_distribution == "Rocky" or
-        ansible_distribution == "AlmaLinux"
+      - ansible_facts.distribution == "RedHat" or
+        ansible_facts.distribution == "Rocky" or
+        ansible_facts.distribution == "AlmaLinux"
   tags:
       - level1-server
       - level1-workstation
@@ -111,8 +111,8 @@
 
   when:
       - rhel9cis_rule_1_2_4
-      - not rhel9cis_rhel_default_repo or ansible_distribution != 'RedHat'
-      - ansible_distribution != 'OracleLinux'
+      - not rhel9cis_rhel_default_repo or ansible_facts.distribution != 'RedHat'
+      - ansible_facts.distribution != 'OracleLinux'
   tags:
       - level1-server
       - level1-workstation
