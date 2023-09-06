@@ -90,7 +90,7 @@ Aligned benchmark audit version with remediate release
 ## 1.0.1
 
 Control 6_2_16 new variable added thanks to @dulin_gnet on rhel8
-Will not follow ynlink in hoe directoris and amend permissions.
+Will not follow symlink in home directoris and amend permissions.
 
 - rhel_09_6_2_16_home_follow_symlink: false
 
