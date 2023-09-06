@@ -32,7 +32,7 @@
       fstype: "{{ item.fstype }}"
       state: present
       opts: defaults,{% if rhel9cis_rule_1_1_7_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_7_3 %}nosuid,{% endif %}
-  loop: "{{ ansible_mounts }}"
+  loop: "{{ ansible_facts.mounts }}"
   loop_control:
       label: "{{ item.device }}"
   notify: Change_requires_reboot

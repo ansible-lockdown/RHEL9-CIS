@@ -33,7 +33,7 @@
       state: present
       opts: defaults,{% if rhel9cis_rule_1_1_2_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_2_3 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_2_4 %}nosuid{% endif %}
   notify: Remount tmp
-  loop: "{{ ansible_mounts }}"
+  loop: "{{ ansible_facts.mounts }}"
   loop_control:
       label: "{{ item.device }}"
   when:
