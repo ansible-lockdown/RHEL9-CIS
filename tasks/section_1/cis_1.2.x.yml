@@ -111,8 +111,8 @@
 
   when:
       - rhel9cis_rule_1_2_4
-      - not rhel9cis_rhel_default_repo or ansible_facts.distribution != 'RedHat'
-      - ansible_facts.distribution != 'OracleLinux'
+      - rhel9cis_rule_enable_repogpg
+      - not rhel9cis_rhel_default_repo
   tags:
       - level1-server
       - level1-workstation
