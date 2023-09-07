@@ -32,7 +32,7 @@
 
 - name: "6.1.3 | PATCH | Ensure permissions on /etc/group are configured"
   ansible.builtin.file:
-      path: /etc/group-
+      path: /etc/group
       owner: root
       group: root
       mode: 0644
