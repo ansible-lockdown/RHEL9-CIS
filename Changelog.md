@@ -1,5 +1,9 @@
 # Changes to rhel9CIS
 
+## 1.1.2 - Based on CIS v1.0.0
+
+- updated audit binary versions - aligned with rhel9-cis-audit
+
 ## 1.1.1 - Based on CIS v1.0.0
 
 - thanks to @agbrowne

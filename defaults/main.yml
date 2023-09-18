@@ -665,10 +665,10 @@ audit_run_script_environment:
     AUDIT_CONTENT_LOCATION: "{{ audit_out_dir }}"
 
 ### Goss binary settings ###
-audit_bin_release: v0.3.23
+audit_bin_release: v0.4.2
 audit_bin_version:
-    AMD64_checksum: 'sha256:9e9f24e25f86d6adf2e669a9ffbe8c3d7b9b439f5f877500dea02ba837e10e4d'
-    ARM64_checksum: 'sha256:7b0794fa590857e7d64ef436e1a100ca26f6039f269a6138009aa837d27d7f9e'
+    AMD64_checksum: 'sha256:e50e43d75c47c731f5fdff176f5abeb8aca35f17aea60f85ebc28f6110cb6945'
+    ARM64_checksum: 'sha256:6da14a98f12d1929ea719d4cfe96087c8e3a37b29d91b72fbe6edc7f8a580784 '
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json
