@@ -367,7 +367,7 @@
 
             - name: "6.1.15 | AUDIT | Audit system file permissions | warning count"
               ansible.builtin.import_tasks:
-            file: warning_facts.yaml
+                  file: warning_facts.yaml
               vars:
                   warn_control_id: '6.1.15'
               when: rhel9cis_6_1_15_packages_rpm.stdout|length > 0
