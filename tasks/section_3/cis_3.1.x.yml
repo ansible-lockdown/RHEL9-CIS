@@ -26,7 +26,7 @@
 
 - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled"
   block:
-      - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | Check if nmcli command is available"
+      - name: "3.1.2 | AUDIT | Ensure wireless interfaces are disabled | Check if nmcli command is available | if wlan exists"
         ansible.builtin.shell: rpm -q NetworkManager
         changed_when: false
         failed_when: false
@@ -47,6 +47,7 @@
         when: rhel_09_wifi_enabled is changed  # noqa no-handler
   when:
       - rhel9cis_rule_3_1_2
+      - "'wlan' in ansible_facts.interfaces"
   tags:
       - level1-server
       - patch
@@ -72,7 +73,7 @@
             regexp: "^(#)?blacklist tipc(\\s|$)"
             line: "blacklist tipc"
             create: true
-            mode: 0600
+            mode: '0600'
   when:
       - rhel9cis_rule_3_1_3
   tags:

@@ -35,7 +35,7 @@
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
             success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
         vars:
-            sudo_password_rule: rhel9cis_rule_5_3_4
+            sudo_password_rule: rhel9cis_rule_5_3_4  # pragma: allowlist secret
   when:
       - rhel9cis_rule_5_3_4
       - ansible_env.SUDO_USER is defined
@@ -107,7 +107,7 @@
 
 - name: Check rhel9cis_bootloader_password_hash variable has been changed
   ansible.builtin.assert:
-      that: rhel9cis_bootloader_password_hash.find('grub.pbkdf2.sha512') != -1 and rhel9cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'
+      that: rhel9cis_bootloader_password_hash.find('grub.pbkdf2.sha512') != -1 and rhel9cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
       msg: "This role will not be able to run single user password commands as rhel9cis_bootloader_password_hash variable has not been set correctly"
   when:
       - rhel9cis_set_boot_pass
@@ -127,66 +127,77 @@
       - always
 
 - name: Include preliminary steps
-  ansible.builtin.import_tasks: prelim.yml
+  ansible.builtin.import_tasks:
+      file: prelim.yml
   tags:
       - prelim_tasks
       - always
 
 - name: run pre_remediation audit
-  ansible.builtin.include_tasks: pre_remediation_audit.yml
+  ansible.builtin.include_tasks:
+      file: pre_remediation_audit.yml
   when:
       - run_audit
 
 - name: run Section 1 tasks
-  ansible.builtin.import_tasks: section_1/main.yml
+  ansible.builtin.import_tasks:
+      file: section_1/main.yml
   when: rhel9cis_section1
   tags:
       - rhel9cis_section1
 
 - name: run Section 2 tasks
-  ansible.builtin.import_tasks: section_2/main.yml
+  ansible.builtin.import_tasks:
+      file: section_2/main.yml
   when: rhel9cis_section2
   tags:
       - rhel9cis_section2
 
 - name: run Section 3 tasks
-  ansible.builtin.import_tasks: section_3/main.yml
+  ansible.builtin.import_tasks:
+      file: section_3/main.yml
   when: rhel9cis_section3
   tags:
       - rhel9cis_section3
 
 - name: run Section 4 tasks
-  ansible.builtin.import_tasks: section_4/main.yml
+  ansible.builtin.import_tasks:
+      file: section_4/main.yml
   when: rhel9cis_section4
   tags:
       - rhel9cis_section4
 
 - name: run Section 5 tasks
-  ansible.builtin.import_tasks: section_5/main.yml
+  ansible.builtin.import_tasks:
+      file: section_5/main.yml
   when: rhel9cis_section5
   tags:
       - rhel9cis_section5
 
 - name: run Section 6 tasks
-  ansible.builtin.import_tasks: section_6/main.yml
+  ansible.builtin.import_tasks:
+      file: section_6/main.yml
   when: rhel9cis_section6
   tags:
       - rhel9cis_section6
 
 - name: run auditd logic
-  ansible.builtin.import_tasks: auditd.yml
+  ansible.builtin.import_tasks:
+      file: auditd.yml
   when: update_audit_template
   tags:
       - always
 
 - name: run post remediation tasks
-  ansible.builtin.import_tasks: post.yml
+  ansible.builtin.import_tasks:
+      file: post.yml
   tags:
       - post_tasks
       - always
 
 - name: run post_remediation audit
-  ansible.builtin.import_tasks: post_remediation_audit.yml
+  ansible.builtin.import_tasks:
+      file: post_remediation_audit.yml
   when:
       - run_audit
 
