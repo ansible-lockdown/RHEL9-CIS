@@ -73,7 +73,8 @@
                 - "{{ dnf_configured.stdout_lines }}"
 
       - name: "1.2.3 | AUDIT | Ensure package manager repositories are configured | Warn Count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yaml
   vars:
       warn_control_id: '1.2.3'
   when:
