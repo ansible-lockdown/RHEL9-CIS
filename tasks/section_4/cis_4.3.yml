@@ -40,7 +40,7 @@
 
             - name: "4.3 | AUDIT | Ensure logrotate is configured | Warning count"
               ansible.builtin.import_tasks:
-                  file: warning_facts.yaml
+                  file: warning_facts.yml
         vars:
             warn_control_id: '4.3'
         when: log_rotates.matched > 0

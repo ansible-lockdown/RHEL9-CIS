@@ -16,7 +16,7 @@
 
             - name: "1.1.8.1 | AUDIT | Ensure separate partition exists for /home | Present"
               ansible.builtin.import_tasks:
-                  file: warning_facts.yaml
+                  file: warning_facts.yml
         when: rhel9cis_1_8_1_1_mount_check.rc == 1
 
   vars:
