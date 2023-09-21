@@ -10,7 +10,7 @@
             create: true
             owner: root
             group: root
-            mode: 0600
+            mode: '0600'
 
       - name: "1.1.9 | PATCH | Disable USB Storage | Edit modprobe config"
         community.general.modprobe:
@@ -24,7 +24,7 @@
             regexp: "^(#)?blacklist usb-storage(\\s|$)"
             line: "blacklist usb-storage"
             create: true
-            mode: 0600
+            mode: '0600'
   when:
       - rhel9cis_rule_1_1_9
   tags:

@@ -73,7 +73,7 @@
             regexp: "^(#)?blacklist tipc(\\s|$)"
             line: "blacklist tipc"
             create: true
-            mode: 0600
+            mode: '0600'
   when:
       - rhel9cis_rule_3_1_3
   tags:

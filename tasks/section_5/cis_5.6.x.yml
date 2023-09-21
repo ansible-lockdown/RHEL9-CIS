@@ -50,7 +50,7 @@
       state: "{{ item.state }}"
       marker: "# {mark} - CIS benchmark - Ansible-lockdown"
       create: true
-      mode: 0644
+      mode: '0644'
       block: |
         TMOUT={{ rhel9cis_shell_session_timeout.timeout }}
         export TMOUT

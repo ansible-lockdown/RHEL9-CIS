@@ -6,7 +6,7 @@
       dest: /etc/motd
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - rhel9cis_rule_1_7_1
   tags:
@@ -22,7 +22,7 @@
       dest: /etc/issue
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - rhel9cis_rule_1_7_2
   tags:
@@ -37,7 +37,7 @@
       dest: /etc/issue.net
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - rhel9cis_rule_1_7_3
   tags:
@@ -52,7 +52,7 @@
       path: /etc/motd
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - rhel9cis_rule_1_7_4
   tags:
@@ -67,7 +67,7 @@
       path: /etc/issue
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - rhel9cis_rule_1_7_5
   tags:
@@ -82,7 +82,7 @@
       path: /etc/issue.net
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   when:
       - rhel9cis_rule_1_7_6
   tags:

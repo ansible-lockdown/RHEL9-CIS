@@ -8,7 +8,7 @@
             regexp: "^(#)?install squashfs(\\s|$)"
             line: "install squashfs /bin/true"
             create: true
-            mode: 0600
+            mode: '0600'
 
       - name: "1.1.1.1 | PATCH | Ensure mounting of squashfs filesystems is disabled | blacklist"
         ansible.builtin.lineinfile:
@@ -16,7 +16,7 @@
             regexp: "^(#)?blacklist squashfs(\\s|$)"
             line: "blacklist squashfs"
             create: true
-            mode: 0600
+            mode: '0600'
 
       - name: "1.1.1.1 | PATCH | Ensure mounting of squashfs filesystems is disabled | Disable squashfs"
         community.general.modprobe:
@@ -41,7 +41,7 @@
             regexp: "^(#)?install udf(\\s|$)"
             line: "install udf /bin/true"
             create: true
-            mode: 0600
+            mode: '0600'
 
       - name: "1.1.1.2 | PATCH | Ensure mounting of udf filesystems is disabled | blacklist"
         ansible.builtin.lineinfile:
@@ -49,7 +49,7 @@
             regexp: "^(#)?blacklist udf(\\s|$)"
             line: "blacklist udf"
             create: true
-            mode: 0600
+            mode: '0600'
 
       - name: "1.1.1.2 | PATCH | Ensure mounting of udf filesystems is disable | Disable udf"
         community.general.modprobe:

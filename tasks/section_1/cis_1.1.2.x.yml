@@ -63,7 +63,7 @@
       dest: /etc/systemd/system/tmp.mount
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   notify: Systemd restart tmp.mount
   when:
       - rhel9cis_tmp_svc
