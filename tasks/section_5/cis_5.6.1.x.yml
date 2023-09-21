@@ -97,7 +97,8 @@
             - not rhel9cis_futurepwchgdate_autofix
 
       - name: "5.6.1.5 | AUDIT | Ensure all users last password change date is in the past | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yaml
         when:
             - rhel9cis_5_6_1_5_user_list.stdout | length > 0
             - not rhel9cis_futurepwchgdate_autofix

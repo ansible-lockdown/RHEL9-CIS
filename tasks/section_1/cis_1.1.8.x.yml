@@ -15,7 +15,8 @@
                   msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
             - name: "1.1.8.1 | AUDIT | Ensure separate partition exists for /home | Present"
-              ansible.builtin.import_tasks: warning_facts.yml
+              ansible.builtin.import_tasks:
+                  file: warning_facts.yaml
         when: rhel9cis_1_8_1_1_mount_check.rc == 1
 
   vars:
