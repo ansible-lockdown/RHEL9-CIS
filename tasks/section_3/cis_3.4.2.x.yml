@@ -47,7 +47,7 @@
 
       - name: "3.4.2.2 | AUDIT | Ensure an nftables table exists | Alert on no tables | warning count"
         ansible.builtin.import_tasks:
-            file: warning_facts.yamlfacts.yml
+            file: warning_facts.yml
         when:
             - rhel9cis_3_4_2_2_nft_tables.stdout | length == 0
             - not rhel9cis_nft_tables_autonewtable

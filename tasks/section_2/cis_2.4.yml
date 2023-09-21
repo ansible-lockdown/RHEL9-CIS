@@ -26,7 +26,7 @@
 
       - name: "2.4 | AUDIT | Ensure nonessential services listening on the system are removed or masked | Warn Count"
         ansible.builtin.import_tasks:
-            file: warning_facts.yamlfacts.yml
+            file: warning_facts.yml
   vars:
       warn_control_id: '2.4'
   when:
