@@ -8,7 +8,8 @@
         changed_when: false
         register: rhel9cis_1_8_1_1_mount_check
 
-      - block:
+      - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition"
+        block:
             - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition | Absent"
               ansible.builtin.debug:
                   msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
