@@ -13,7 +13,7 @@
       dest: "/etc/sysctl.d/{{ item }}"
       owner: root
       group: root
-      mode: 0600
+      mode: '0600'
   register: sysctl_updated
   notify: Reload sysctl
   loop:

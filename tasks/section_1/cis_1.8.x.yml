@@ -25,7 +25,7 @@
             create: true
             owner: root
             group: root
-            mode: 0644
+            mode: '0644'
         notify: Reload dconf
         loop:
             - { regexp: 'user-db', line: 'user-db:user' }
@@ -38,7 +38,7 @@
             dest: /etc/dconf/db/gdm.d/01-banner-message
             owner: root
             group: root
-            mode: 0644
+            mode: '0644'
         notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_2
@@ -59,7 +59,7 @@
       create: true
       owner: root
       group: root
-      mode: 0644
+      mode: '0644'
   notify: Reload dconf
   loop:
       - { file: '/etc/dconf/profile/gdm', regexp: 'user-db', line: 'user-db:user' }
@@ -87,7 +87,7 @@
             create: true
             owner: root
             group: root
-            mode: 0644
+            mode: '0644'
         loop:
             - { regexp: '^user-db', line: 'user-db: user' }
             - { regexp: '^system-db', line: 'system-db: local' }
@@ -97,7 +97,7 @@
             path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d"
             owner: root
             group: root
-            mode: 0755
+            mode: '0755'
             state: directory
 
       - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle | Make conf file"
@@ -125,7 +125,7 @@
             path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
             owner: root
             group: root
-            mode: 0755
+            mode: '0755'
             state: directory
 
       - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | Make lock file"
@@ -134,7 +134,7 @@
             dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-screensaver"
             owner: root
             group: root
-            mode: 0644
+            mode: '0644'
         notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_5
@@ -171,7 +171,7 @@
             path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
             owner: root
             group: root
-            mode: 0755
+            mode: '0755'
             state: directory
 
       - name: "1.8.7 | PATCH | Ensure GDM disabling automatic mounting of removable media is not overridden | Make lock file"
@@ -180,7 +180,7 @@
             dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-automount_lock"
             owner: root
             group: root
-            mode: 0644
+            mode: '0644'
         notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_7
@@ -199,7 +199,7 @@
             path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d"
             owner: root
             group: root
-            mode: 0755
+            mode: '0755'
             state: directory
 
       - name: "1.8.8 | PATCH | Ensure GDM autorun-never is enabled | Make conf file"
@@ -227,7 +227,7 @@
             path: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks"
             owner: root
             group: root
-            mode: 0755
+            mode: '0755'
             state: directory
 
       - name: "1.8.9 | PATCH | Ensure GDM autorun-never is not overridden | Make lockfile"
@@ -236,7 +236,7 @@
             dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-autorun_lock"
             owner: root
             group: root
-            mode: 0644
+            mode: '0644'
         notify: Reload dconf
   when:
       - rhel9cis_rule_1_8_9
