@@ -6,6 +6,7 @@
 - lint updates
 - .secrets updated
 - file mode quoted
+- updated 5.6.5 thansk to feedback from S!ghs on discord community
 
 ## 1.1.1 - Based on CIS v1.0.0
 

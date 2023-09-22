@@ -83,10 +83,10 @@
 - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive"
   block:
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/login.defs pam_umask settings"
-        ansible.builtin.lineinfile:
+        ansible.builtin.replace:
             path: "{{ item.path }}"
-            regexp: '(?i)(umask\s*)'
-            line: '{{ item.line }} 027'
+            regexp: (?i)(umask\s+\d\d\d)
+            replace: '{{ item.line }} 027'
         with_items:
             - { path: '/etc/bashrc', line: 'umask' }
             - { path: '/etc/profile', line: 'umask' }
