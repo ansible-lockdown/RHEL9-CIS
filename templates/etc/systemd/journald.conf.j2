@@ -1,0 +1,7 @@
+# journald configure.
+
+{% if rhel9cis_rule_4_2_2_3 %}
+# CIS 4.2.2.3/4
+Compress=yes
+Storage=persistent 
+{% endif %}
