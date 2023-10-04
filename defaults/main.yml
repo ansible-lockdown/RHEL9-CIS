@@ -523,7 +523,8 @@ rhel9cis_auditd_extra_conf: {}
 ## Preferred method of logging
 ## Whether rsyslog or journald preferred method for local logging
 ## Affects rsyslog cis 4.2.1.3 and journald cis 4.2.2.5
-rhel9cis_syslog: rsyslog
+#rhel9cis_syslog: rsyslog
+rhel9cis_syslog: journald
 rhel9cis_rsyslog_ansiblemanaged: true
 
 #### 4.2.1.6 remote and destation log server name
@@ -536,6 +537,7 @@ rhel9cis_remote_log_queuesize: 1000
 
 #### 4.2.1.7
 rhel9cis_system_is_log_server: false
+#rhel9cis_system_is_log_server: true
 
 # 4.2.2.1.2
 # rhel9cis_journal_upload_url is the ip address to upload the journal entries to
