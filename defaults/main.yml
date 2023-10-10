@@ -567,7 +567,7 @@ rhel9cis_logrotate: "daily"
 rhel9_cis_sshd_config_file: /etc/ssh/sshd_config
 
 rhel9cis_sshd:
-    clientalivecountmax: 0
+    clientalivecountmax: 3
     clientaliveinterval: 900
     logingracetime: 60
     # WARNING: make sure you understand the precedence when working with these values!!
