@@ -145,6 +145,11 @@
       - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
         ansible.builtin.debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+
+      - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled in "
+        ansible.builtin.debug:
+            msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
+      
   when:
       - rhel9cis_rule_3_3_7
   tags:
