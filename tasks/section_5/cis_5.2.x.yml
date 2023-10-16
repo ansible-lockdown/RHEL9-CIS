@@ -91,7 +91,7 @@
             line: "AllowGroups {{ rhel9cis_sshd['allowgroups'] }}"
             validate: sshd -t -f %s
         notify: Restart sshd
-        when: "rhel9cis_sshd['allowgroups']|default('') | length > 0"
+        when: "rhel9cis_sshd['allowgroups']| default('')| length > 0"
 
       - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for denyusers"
         ansible.builtin.lineinfile:
