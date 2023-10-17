@@ -9,6 +9,6 @@ rhel9cis_sshd:
     clientaliveinterval: 900
     logingracetime: 60
     # allowusers: 
-    allowgroups: root sshd wheel
+    allowgroups: sshd wheel
     # denyusers:
     # denygroups:
