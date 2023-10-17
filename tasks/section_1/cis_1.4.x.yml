@@ -6,7 +6,7 @@
       content: "GRUB2_PASSWORD={{ rhel9cis_bootloader_password_hash }}"  # noqa template-instead-of-copy
       owner: root
       group: root
-      mode: 0600
+      mode: '0600'
   notify: Grub2cfg
   when:
       - rhel9cis_set_boot_pass

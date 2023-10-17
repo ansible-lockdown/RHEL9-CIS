@@ -133,8 +133,8 @@
       state: latest
   when:
       - rhel9cis_rule_1_2_4
-      - ansible_distribution != 'RedHat'
-      - ansible_distribution != 'OracleLinux'
+      - ansible_facts.distribution != 'RedHat'
+      - ansible_facts.distribution != 'OracleLinux'
 
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   ansible.builtin.package:
@@ -191,7 +191,7 @@
       path: "{{ rhel9_cis_sshd_config_file }}"
       owner: root
       group: root
-      mode: 0600
+      mode: '0600'
       state: touch
   when:
       - rhel9_cis_sshd_config_file != '/etc/ssh/sshd_config'

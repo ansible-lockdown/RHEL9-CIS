@@ -11,7 +11,7 @@
       dest: /etc/audit/rules.d/99_auditd.rules
       owner: root
       group: root
-      mode: 0640
+      mode: '0640'
   diff: "{{ rhel9cis_auditd_file.stat.exists }}"  # Only run diff if not a new file
   register: rhel9cis_auditd_template_updated
   notify:
@@ -20,7 +20,8 @@
       - Restart auditd
 
 - name: POST | AUDITD | Add Warning count for changes to template file | Warn Count  # noqa no-handler
-  ansible.builtin.import_tasks: warning_facts.yml
+  ansible.builtin.import_tasks:
+      file: warning_facts.yml
   vars:
       warn_control_id: 'Auditd template updated, see diff output for details'
   when:
@@ -38,7 +39,7 @@
       dest: /etc/audit/rules.d/98_auditd_exceptions.rules
       owner: root
       group: root
-      mode: 0640
+      mode: '0640'
   diff: "{{ rhel9cis_auditd_exception_file.stat.exists }}"
   notify: Restart auditd
   when:

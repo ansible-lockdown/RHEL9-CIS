@@ -15,7 +15,8 @@
         when: shadow_passwd.stdout | length > 0
 
       - name: "6.2.1 | AUDIT | Ensure accounts in /etc/passwd use shadowed passwords | warning fact"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         vars:
             warn_control_id: '6.2.1'
         when: shadow_passwd.stdout | length >= 1
@@ -59,7 +60,8 @@
         when: rhel9cis_6_2_3_passwd_gid_check.stdout | length >= 1
 
       - name: "6.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         vars:
             warn_control_id: '6.2.3'
         when: rhel9cis_6_2_3_passwd_gid_check.stdout | length >= 1
@@ -87,7 +89,8 @@
         when: rhel9cis_6_2_4_user_uid_check.stdout | length >= 1
 
       - name: "6.2.4 | AUDIT| Ensure no duplicate UIDs exist | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: rhel9cis_6_2_4_user_uid_check.stdout | length >= 1
   vars:
       warn_control_id: '6.2.4'
@@ -115,7 +118,8 @@
         when: rhel9cis_6_2_5_user_user_check.stdout | length >= 1
 
       - name: "6.2.5 | AUDIT | Ensure no duplicate GIDs exist | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         vars:
             warn_control_id: '6.2.5'
         when: rhel9cis_6_2_5_user_user_check.stdout_lines | length >= 1
@@ -144,7 +148,8 @@
         when: rhel9cis_6_2_6_user_username_check.stdout | length >= 1
 
       - name: "6.2.6 | AUDIT | Ensure no duplicate user names exist | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         vars:
             warn_control_id: '6.2.6'
         when: rhel9cis_6_2_6_user_username_check.stdout | length >= 1
@@ -173,7 +178,8 @@
         when: rhel9cis_6_2_7_group_group_check.stdout is not defined
 
       - name: "6.2.7 | AUDIT | Ensure no duplicate group names exist | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         vars:
             warn_control_id: '6.2.7'
         when: rhel9cis_6_2_7_group_group_check.stdout is not defined

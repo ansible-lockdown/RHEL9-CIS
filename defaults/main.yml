@@ -361,7 +361,7 @@ rhel9cis_allow_autofs: false
 # DO NOT USE PLAIN TEXT PASSWORDS!!!!!
 # The intent here is to use a password utility like Ansible Vault here
 rhel9cis_rh_sub_user: user
-rhel9cis_rh_sub_password: password
+rhel9cis_rh_sub_password: password  # pragma: allowlist secret
 
 # 1.2.2
 # Do you require rhnsd
@@ -370,10 +370,11 @@ rhel9cis_rhnsd_required: false
 
 # 1.2.4 repo_gpgcheck
 rhel9cis_rhel_default_repo: true
+rhel9cis_rule_enable_repogpg: true
 
 # 1.4.1 Bootloader password
-rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.10000.9306A36764A7BEA3BF492D1784396B27F52A71812E9955A58709F94EE70697F9BD5366F36E07DEC41B52279A056E2862A93E42069D7BBB08F5DFC2679CD43812.6C32ADA5449303AD5E67A4C150558592A05381331DE6B33463469A236871FA8E70738C6F9066091D877EF88A213C86825E093117F30E9E1BF158D0DB75E7581B'
-rhel9cis_bootloader_password: random
+rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.10000.9306A36764A7BEA3BF492D1784396B27F52A71812E9955A58709F94EE70697F9BD5366F36E07DEC41B52279A056E2862A93E42069D7BBB08F5DFC2679CD43812.6C32ADA5449303AD5E67A4C150558592A05381331DE6B33463469A236871FA8E70738C6F9066091D877EF88A213C86825E093117F30E9E1BF158D0DB75E7581B'  # pragma: allowlist secret
+rhel9cis_bootloader_password: random  # pragma: allowlist secret
 rhel9cis_set_boot_pass: true
 
 # 1.8 Gnome Desktop
@@ -664,10 +665,10 @@ audit_run_script_environment:
     AUDIT_CONTENT_LOCATION: "{{ audit_out_dir }}"
 
 ### Goss binary settings ###
-audit_bin_release: v0.3.23
+audit_bin_release: v0.4.2
 audit_bin_version:
-    AMD64_checksum: 'sha256:9e9f24e25f86d6adf2e669a9ffbe8c3d7b9b439f5f877500dea02ba837e10e4d'
-    ARM64_checksum: 'sha256:7b0794fa590857e7d64ef436e1a100ca26f6039f269a6138009aa837d27d7f9e'
+    AMD64_checksum: 'sha256:e50e43d75c47c731f5fdff176f5abeb8aca35f17aea60f85ebc28f6110cb6945'
+    ARM64_checksum: 'sha256:6da14a98f12d1929ea719d4cfe96087c8e3a37b29d91b72fbe6edc7f8a580784 '
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json
@@ -696,12 +697,12 @@ audit_files_url: "some url maybe s3?"
 # Where the goss configs and outputs are stored
 audit_out_dir: '/opt'
 audit_conf_dir: "{{ audit_out_dir }}/{{ benchmark }}-Audit/"
-pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
-post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_hostname }}-{{ benchmark }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
+pre_audit_outfile: "{{ audit_out_dir }}/{{ ansible_facts.hostname }}-{{ benchmark }}_pre_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
+post_audit_outfile: "{{ audit_out_dir }}/{{ ansible_facts.hostname }}-{{ benchmark }}_post_scan_{{ ansible_date_time.epoch }}.{{ audit_format }}"
 
 ## The following should not need changing
 goss_file: "{{ audit_conf_dir }}goss.yml"
-audit_vars_path: "{{ audit_conf_dir }}/vars/{{ ansible_hostname }}.yml"
+audit_vars_path: "{{ audit_conf_dir }}/vars/{{ ansible_facts.hostname }}.yml"
 audit_results: |
       The pre remediation results are: {{ pre_audit_summary }}.
       The post remediation results are: {{ post_audit_summary }}.

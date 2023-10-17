@@ -1,5 +1,21 @@
 # Changes to rhel9CIS
 
+## 1.1.2 - Based on CIS v1.0.0
+
+- updated audit binary versions - aligned with rhel9-cis-audit
+- lint updates
+- .secrets updated
+- file mode quoted
+- updated 5.6.5 thansk to feedback from S!ghs on discord community
+
+## 1.1.1 - Based on CIS v1.0.0
+
+- thanks to @agbrowne
+  - [#90](https://github.com/ansible-lockdown/RHEL9-CIS/issues/90)
+
+- thanks to @mnasiadka
+  - [#54](https://github.com/ansible-lockdown/RHEL9-CIS/pull/54)
+
 ## 1.1.0
 
 - new workflow configuration
@@ -81,8 +97,8 @@ Aligned benchmark audit version with remediate release
 
 ## 1.0.1
 
-Control 6_2_16 new variable added thanks to @dulin_gnet on rhel8  
-Will not follow ynlink in hoe directoris and amend permissions.
+Control 6_2_16 new variable added thanks to @dulin_gnet on rhel8
+Will not follow symlink in home directories and amend permissions.
 
 - rhel_09_6_2_16_home_follow_symlink: false
 

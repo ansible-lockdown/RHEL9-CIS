@@ -13,7 +13,7 @@
       dest: "/etc/sysctl.d/{{ item }}"
       owner: root
       group: root
-      mode: 0600
+      mode: '0600'
   register: sysctl_updated
   notify: Reload sysctl
   loop:
@@ -21,6 +21,19 @@
       - 60-disable_ipv6.conf
       - 60-netipv4_sysctl.conf
       - 60-netipv6_sysctl.conf
+  when:
+      - rhel9cis_sysctl_update
+      - not system_is_container
+      - "'procps-ng' in ansible_facts.packages"
+
+- name: POST | Update usr sysctl
+  ansible.builtin.lineinfile:
+      dest: /usr/lib/sysctl.d/50-default.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+  loop:
+      - { regexp: '^net.ipv4.conf.default.rp_filter', line: 'net.ipv4.conf.default.rp_filter = 1' }
+      - { regexp: '^net.ipv4.conf.*.rp_filter', line: 'net.ipv4.conf.*.rp_filter = 1' }
   when:
       - rhel9cis_sysctl_update
       - not system_is_container
@@ -46,7 +59,8 @@
             - skip_reboot
 
       - name: "POST | Warning a reboot required but skip option set | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when:
             - change_requires_reboot
             - skip_reboot

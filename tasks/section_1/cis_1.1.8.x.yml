@@ -3,18 +3,25 @@
 # Skips if mount is absent
 - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition"
   block:
-      - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition | Absent"
-        ansible.builtin.debug:
-            msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
+      - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition | check exists"
+        ansible.builtin.shell: mount -l | grep -w /dev/shm
+        changed_when: false
+        register: rhel9cis_1_8_1_1_mount_check
 
-      - name: "1.1.8.1 | AUDIT | Ensure separate partition exists for /home | Present"
-        ansible.builtin.import_tasks: warning_facts.yml
+      - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition"
+        block:
+            - name: "1.1.8.1 | AUDIT | Ensure /dev/shm is a separate partition | Absent"
+              ansible.builtin.debug:
+                  msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
+
+            - name: "1.1.8.1 | AUDIT | Ensure separate partition exists for /home | Present"
+              ansible.builtin.import_tasks:
+                  file: warning_facts.yml
+        when: rhel9cis_1_8_1_1_mount_check.rc == 1
 
   vars:
       warn_control_id: '1.1.8.1'
-      required_mount: '/dev/shm'
   when:
-      - required_mount not in mount_names
       - rhel9cis_rule_1_1_8_1
   tags:
       - level1-server
