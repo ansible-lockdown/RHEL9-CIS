@@ -278,7 +278,7 @@
 - name: "5.2.15 | PATCH | Ensure SSH warning banner is configured"
   ansible.builtin.lineinfile:
       path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: '^#Banner|^Banner'
+      regexp: "^#Banner|^Banner"
       line: 'Banner /etc/issue.net'
   when:
       - rhel9cis_rule_5_2_15
