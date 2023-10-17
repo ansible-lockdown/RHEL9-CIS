@@ -278,7 +278,7 @@
 - name: "5.2.15 | PATCH | Ensure SSH warning banner is configured"
   ansible.builtin.lineinfile:
       path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: '^Banner'
+      regexp: "^#Banner|^Banner"
       line: 'Banner /etc/issue.net'
   when:
       - rhel9cis_rule_5_2_15
@@ -354,7 +354,7 @@
       - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Add line in sshd_config for ClientAliveInterval"
         ansible.builtin.lineinfile:
             path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: '^ClientAliveInterval'
+            regexp: '^ClientAliveInterval|^#ClientAliveInterval'
             line: "ClientAliveInterval {{ rhel9cis_sshd['clientaliveinterval'] }}"
             validate: sshd -t -f %s
 

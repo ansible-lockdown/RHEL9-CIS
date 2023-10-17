@@ -6,3 +6,13 @@ os_gpg_key_pubkey_content: "Red Hat, Inc. (release key 2) <security@redhat.com> 
 
 # disable repo_gpgcheck due to OS default repos
 rhel9cis_rule_enable_repogpg: false
+
+# Vars setup for overiding main.yml
+rhel9cis_sshd:
+    clientalivecountmax: 3
+    clientaliveinterval: 900
+    logingracetime: 60
+    # allowusers: 
+    allowgroups: sshd wheel
+    # denyusers:
+    # denygroups:
