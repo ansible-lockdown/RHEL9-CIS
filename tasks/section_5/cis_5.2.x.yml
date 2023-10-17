@@ -354,14 +354,14 @@
       - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Add line in sshd_config for ClientAliveInterval"
         ansible.builtin.lineinfile:
             path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: '^ClientAliveInterval'
+            regexp: '^ClientAliveInterval|^#ClientAliveInterval'
             line: "ClientAliveInterval {{ rhel9cis_sshd['clientaliveinterval'] }}"
             validate: sshd -t -f %s
 
       - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Ensure SSH ClientAliveCountMax set to <= 3"
         ansible.builtin.lineinfile:
             path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: '^ClientAliveCountMax'
+            regexp: '^ClientAliveCountMax|^#ClientAliveCountMax'
             line: "ClientAliveCountMax {{ rhel9cis_sshd['clientalivecountmax'] }}"
             validate: sshd -t -f %s
   when:
