@@ -28,6 +28,18 @@
       - password
       - rule_5.6.1.2
 
+- name: "5.6.1.2 | PATCH | Set existing users"
+  ansible.builtin.shell: getent passwd | awk -F: '$3 >= {{ usr_min_uid}} { print "echo "$1";chage -m {{ min_days }} -M {{ min_days }}"$1}'
+        
+  when:
+      - rhel9cis_rule_5_6_1_2
+  tags:
+      - level1-server
+      - level1-workstation
+      - patch
+      - password
+      - rule_5.6.1.2
+
 - name: "5.6.1.3 | PATCH | Ensure password expiration warning days is 7 or more"
   ansible.builtin.lineinfile:
       path: /etc/login.defs

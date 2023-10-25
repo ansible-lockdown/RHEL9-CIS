@@ -16,3 +16,4 @@ rhel9cis_sshd:
     allowgroups: sshd wheel
     # denyusers:
     # denygroups:
+    usr_min_uid: 1000
