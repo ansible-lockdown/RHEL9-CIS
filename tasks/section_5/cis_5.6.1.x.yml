@@ -28,11 +28,22 @@
       - password
       - rule_5.6.1.2
 
-- name: "5.6.1.2 | PATCH | Set existing users"
-  ansible.builtin.shell: getent passwd | awk -F: '$3 >= {{ usr_min_uid}} { print "echo "$1";chage -m {{ min_days }} -M {{ min_days }}"$1}'
-        
+- name: "5.6.1.1/2 | PATCH | Set existing users with password rules"
+  block:
+      - name: "5.6.1.1/2 | AUDIT | Get existing users"
+        ansible.builtin.getent:
+            database: passwd
+
+      - name: "5.6.1.1/2 | PATCH | Update users higher than usr_min_uid"
+        ansible.builtin.user:
+          name: "{{ item }}"
+          password_expire_min: "{{ rhel9cis_pass['min_days'] }}"
+          password_expire_max: "{{ rhel9cis_pass['max_days'] }}"
+        loop: "{{ getent_passwd | dict2items | map(attribute='key') | list  }}"
+        when: getent_passwd[item].1 | int >= usr_min_uid
   when:
       - rhel9cis_rule_5_6_1_2
+      - rhel9cis_rule_5_6_1_2_set_user
   tags:
       - level1-server
       - level1-workstation

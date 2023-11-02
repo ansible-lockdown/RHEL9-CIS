@@ -7,13 +7,21 @@ os_gpg_key_pubkey_content: "Red Hat, Inc. (release key 2) <security@redhat.com> 
 # disable repo_gpgcheck due to OS default repos
 rhel9cis_rule_enable_repogpg: false
 
-# Vars setup for overiding main.yml
+# enable interactive users to be set min/max password change
+rhel9cis_rule_5_6_1_2_set_user: true
+
+# 5.6.1.1/2 Variable to be adjust so the rule sets password min/max
+# This refers to the minimum UID that rule will start from
+usr_min_uid: 1000
+
+# Vars setup for overiding main.yml for rule 5.3.2 
 rhel9cis_sshd:
     clientalivecountmax: 3
     clientaliveinterval: 900
     logingracetime: 60
+    # Group and user choose as being the default for this release
+    # Can also use;
     # allowusers: 
-    allowgroups: sshd wheel
-    # denyusers:
     # denygroups:
-    usr_min_uid: 1000
+    allowgroups: wheel
+    denyusers: nobody

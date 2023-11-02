@@ -601,6 +601,10 @@ rhel9cis_pass:
     min_days: 7
     warn_age: 7
 
+# 5.6.1.1/2 Variable to be adjust so the rule sets password min/max
+# This refers to the minimum UID that rule will start from
+usr_min_uid: 1000
+
 # 5.5.1
 ## PAM
 rhel9cis_pam_password:
