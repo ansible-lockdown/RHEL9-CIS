@@ -1,10 +1,25 @@
 ---
 
 - name: "5.6.1.1 | PATCH | Ensure password expiration is 365 days or less"
-  ansible.builtin.lineinfile:
-      path: /etc/login.defs
-      regexp: '^PASS_MAX_DAYS'
-      line: "PASS_MAX_DAYS {{ rhel9cis_pass['max_days'] }}"
+ block:
+    - name: "5.6.1.1 | PATCH | Set default."
+      ansible.builtin.lineinfile:
+        path: /etc/login.defs
+        regexp: '^PASS_MAX_DAYS'
+        line: "PASS_MAX_DAYS {{ rhel9cis_pass['max_days'] }}"
+
+    - name: "5.6.1.1 | AUDIT | Get existing users"
+      ansible.builtin.getent:
+        database: shadow
+
+    - name: "5.6.1.1 | PATCH | Set existing users"
+      ansible.builtin.user:
+        name: "{{ item }}"
+        password_expire_max: "{{ rhel9cis_pass['max_days'] }}"
+      loop: "{{ getent_shadow | dict2items | map(attribute='key') | list  }}"
+      when: ( getent_shadow[item].0 != "!!" ) and
+            ( getent_shadow[item].0 != "!*" ) and
+            ( getent_shadow[item].0 != "*" )
   when:
       - rhel9cis_rule_5_6_1_1
   tags:
