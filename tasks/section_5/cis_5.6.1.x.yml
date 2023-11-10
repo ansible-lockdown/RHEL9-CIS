@@ -15,10 +15,25 @@
       - rule_5.5.1.1
 
 - name: "5.6.1.2 | PATCH | Ensure minimum days between password changes is 7 or more"
-  ansible.builtin.lineinfile:
-      path: /etc/login.defs
-      regexp: '^PASS_MIN_DAYS'
-      line: "PASS_MIN_DAYS {{ rhel9cis_pass['min_days'] }}"
+  block:
+    - name: "5.6.1.2 | PATCH | Set default."
+      ansible.builtin.lineinfile:
+        path: /etc/login.defs
+        regexp: '^PASS_MIN_DAYS'
+        line: "PASS_MIN_DAYS {{ rhel9cis_pass['min_days'] }}"
+      
+    - name: "5.6.1.2 | AUDIT | Get existing users"
+      ansible.builtin.getent:
+        database: shadow
+
+    - name: "5.6.1.2 | PATCH | Set existing users"
+      ansible.builtin.user:
+        name: "{{ item }}"
+        password_expire_min: "{{ rhel9cis_pass['min_days'] }}"
+      loop: "{{ getent_shadow | dict2items | map(attribute='key') | list  }}"
+      when: ( getent_shadow[item].0 != "!!" ) and
+            ( getent_shadow[item].0 != "!*" ) and
+            ( getent_shadow[item].0 != "*" )
   when:
       - rhel9cis_rule_5_6_1_2
   tags:
