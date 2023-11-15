@@ -8,7 +8,7 @@ testruns:
   testrun_benchmark_filename: CIS_Red_Hat_Enterprise_Linux_9_Benchmark_v1.0.0-xccdf.xml
   testrun_checklist_id: "xccdf_org.cisecurity.benchmarks_benchmark_1.0.0_CIS_Red_Hat_Enterprise_Linux_9_Benchmark"
   testrun_ansible_vars:
-    ubtu22cis_sshd:
+    rhel9cis_sshd:
       allow_users: "ec2-user"
       allow_groups: "sshadmins"
   testrun_ansible_tags:
