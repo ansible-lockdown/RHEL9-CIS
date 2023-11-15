@@ -1,7 +1,7 @@
 ---
 
 - name: "5.6.1.1 | PATCH | Ensure password expiration is 365 days or less"
- block:
+  block:
     - name: "5.6.1.1 | PATCH | Set default."
       ansible.builtin.lineinfile:
         path: /etc/login.defs
