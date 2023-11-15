@@ -1,0 +1,11 @@
+include:
+  - project: 'cybersecurity/automated_hardening_tech/sfera_automation_pipeline'
+    # Do not forget to also set the correct pipeline branch below in the first variable!!!
+    ref: &pipeline_branch master
+    file: 'pipeline_for_include_ansible.yml'
+
+variables:
+    # Basic data
+    # Require branch of pipeline so as to include correct version of resources
+    PIPELINE_BRANCH: *pipeline_branch
+    BASELINE_FOLDER_NAME: ANSIBLE_CIS_RHEL_9
