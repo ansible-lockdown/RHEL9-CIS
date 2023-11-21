@@ -3,7 +3,6 @@ os_image: rhel
 os_image_version: v9
 ciscat_version: v4.33.0
 testruns:
-<<<<<<< HEAD
 - name: L2_Server_CIS_RHEL9_Ansible
   testrun_ciscat_profile: xccdf_org.cisecurity.benchmarks_profile_Level_2_-_Server
   testrun_benchmark_filename: CIS_Red_Hat_Enterprise_Linux_9_Benchmark_v1.0.0-xccdf.xml
@@ -112,8 +111,6 @@ testruns:
       check_ids: [R1_1_2_1, R1_1_3_1, R1_1_4_1, R1_1_5_1, R1_1_6_1, R1_1_7_1, R1_6_1_6, R3_3_7, R4_1_1_2, R4_1_1_3, R4_2_2_3, R4_2_2_4, R4_2_3, R5_2_4, R5_2_12, R5_2_20, R5_3_4, R5_6_5, R5_6_6, R6_2_2]
       result: fail
 
-=======
->>>>>>> dfffb19 (Adding testfile with L1.)
 - name: L1_Server_CIS_RHEL9_Ansible
   testrun_ciscat_profile: xccdf_org.cisecurity.benchmarks_profile_Level_1_-_Server
   testrun_benchmark_filename: CIS_Red_Hat_Enterprise_Linux_9_Benchmark_v1.0.0-xccdf.xml
