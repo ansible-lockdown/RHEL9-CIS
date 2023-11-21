@@ -23,7 +23,7 @@
   when:
       - get_audit_binary_method == 'download'
 
-- name: Pre Audit Setup | copy audit binary
+- name: Pre Audit Setup | Copy audit binary
   ansible.builtin.copy:
       src: "{{ audit_bin_copy_location }}"
       dest: "{{ audit_bin }}"

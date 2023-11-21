@@ -1,5 +1,12 @@
 # Changes to rhel9CIS
 
+## 1.1.3 - Based on CIS v1.0.0
+
+- updated goss binary to 0.4.4
+- moved majority of audit variables to vars/audit.yml
+- new function to enable audit_only using remediation
+- removed some dupes in audit config
+
 ## 1.1.2 - Based on CIS v1.0.0
 
 - updated audit binary versions - aligned with rhel9-cis-audit
