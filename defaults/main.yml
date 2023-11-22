@@ -449,6 +449,9 @@ rhel9cis_time_synchronization_servers:
     - 2.pool.ntp.org
     - 3.pool.ntp.org
 rhel9cis_chrony_server_options: "minpoll 8"
+rhel9cis_chrony_server_rtcsync: false
+rhel9cis_chrony_server_makestep: "1.0 3"
+rhel9cis_chrony_server_minsources: 2
 
 ### 2.2 Special Purposes
 ##### Service configuration booleans set true to keep service
