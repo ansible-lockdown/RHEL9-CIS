@@ -1243,6 +1243,7 @@ rhel9cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | de
 # This boolean variable governs if current role should follow filesystem links for changes to
 # user home directory.
 rhel_09_6_2_16_home_follow_symlinks: false
+# thanks to @dulin-gnet and community for rhel8-cis feedback.
 
 #### Goss Configuration Settings ####
 # Set correct env for the run_audit.sh script from https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
