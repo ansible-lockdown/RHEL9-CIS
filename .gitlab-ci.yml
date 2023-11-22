@@ -1,7 +1,6 @@
 include:
   - project: 'cybersecurity/automated_hardening_tech/sfera_automation_pipeline'
     # Do not forget to also set the correct pipeline branch below in the first variable!!!
-#    ref: &pipeline_branch master
     ref: &pipeline_branch master
     file: 'pipeline_for_include_ansible.yml'
 
