@@ -581,8 +581,20 @@ rhel9cis_time_synchronization_servers:
 # This variable should contain the default options to be used for every NTP server hostname defined
 # within the 'rhel9cis_time_synchronization_servers' var.
 rhel9cis_chrony_server_options: "minpoll 8"
+# This variable, if set to 'true'(default), will inform the kernel the system clock is kept synchronized
+# and the kernel will update the real-time clock every 11 minutes. Otherwise, if 'rtcsync' option is
+# disabled, chronyd will not be in sync(kernel discipline is disabled, 11 minutes mode will be off).
 rhel9cis_chrony_server_rtcsync: false
+# This variable configures the values to be used by chronyd to gradually correct any time offset,
+# by slowing down/speeding up the clock. An example of this directive usage would be:
+# 'makestep 1000 10'.
+# Step the system clock:
+#   - IF the adjustment is larger than 1000 seconds
+#   - but ONLY IN the first ten clock updates
 rhel9cis_chrony_server_makestep: "1.0 3"
+# This variable configures the minimum number of sources that need to be considered as selectable in the source
+# selection algorithm before the local clock is updated. Setting minsources to a larger number can be used to
+# improve the reliability, because multiple sources will need to correspond with each other.
 rhel9cis_chrony_server_minsources: 2
 
 
