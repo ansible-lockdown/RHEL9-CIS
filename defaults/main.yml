@@ -141,7 +141,9 @@ audit_cmd_timeout: 120000
 # the CIS benchmark documents.
 # PLEASE NOTE: These work in coordination with the section # group variables and tags.
 # You must enable an entire section in order for the variables below to take effect.
-# Section 1 rules
+
+# Section 1 is Initial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
+# Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
 rhel9cis_rule_1_1_1_1: true
 rhel9cis_rule_1_1_1_2: true
 rhel9cis_rule_1_1_2_1: true
@@ -579,8 +581,20 @@ rhel9cis_time_synchronization_servers:
 # This variable should contain the default options to be used for every NTP server hostname defined
 # within the 'rhel9cis_time_synchronization_servers' var.
 rhel9cis_chrony_server_options: "minpoll 8"
+# This variable, if set to 'true'(default), will inform the kernel the system clock is kept synchronized
+# and the kernel will update the real-time clock every 11 minutes. Otherwise, if 'rtcsync' option is
+# disabled, chronyd will not be in sync(kernel discipline is disabled, 11 minutes mode will be off).
 rhel9cis_chrony_server_rtcsync: false
+# This variable configures the values to be used by chronyd to gradually correct any time offset,
+# by slowing down/speeding up the clock. An example of this directive usage would be:
+# 'makestep 1000 10'.
+# Step the system clock:
+#   - IF the adjustment is larger than 1000 seconds
+#   - but ONLY IN the first ten clock updates
 rhel9cis_chrony_server_makestep: "1.0 3"
+# This variable configures the minimum number of sources that need to be considered as selectable in the source
+# selection algorithm before the local clock is updated. Setting minsources to a larger number can be used to
+# improve the reliability, because multiple sources will need to correspond with each other.
 rhel9cis_chrony_server_minsources: 2
 
 
@@ -645,7 +659,6 @@ rhel9cis_telnet_server: false
 # This variable, when system is NOT a mailserver, will configure Postfix to listen only on the loopback interface(the virtual
 # network interface that the server uses to communicate internally.
 rhel9cis_is_mail_server: false
-
 # Note the options
 # Client package configuration variables.
 # Packages are used for client services and Server- only remove if you dont use the client service
@@ -743,7 +756,7 @@ rhel9cis_tftp_client: false
 # Set this variable to `true` to keep package `ftp`; otherwise, the package is uninstalled.
 rhel9cis_ftp_client: false
 
-## Section3 vars
+## Section 3 vars for
 ## Sysctl
 
 
