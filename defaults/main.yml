@@ -137,6 +137,7 @@ audit_run_heavy_tests: true
 audit_cmd_timeout: 120000
 
 ### End Goss enablements ####
+#### Detailed settings found at the end of this document ####
 
 # These variables correspond with the CIS rule IDs or paragraph numbers defined in
 # the CIS benchmark documents.
@@ -660,7 +661,6 @@ rhel9cis_telnet_server: false
 # This variable, when system is NOT a mailserver, will configure Postfix to listen only on the loopback interface(the virtual
 # network interface that the server uses to communicate internally.
 rhel9cis_is_mail_server: false
-
 # Note the options
 # Client package configuration variables.
 # Packages are used for client services and Server- only remove if you dont use the client service
@@ -885,7 +885,7 @@ rhel9cis_auditd_uid_exclude:
 # '/etc/audit/auditd.conf' file) can be stored within current variable.
 rhel9cis_auditd_extra_conf: {}
 # Example:
-#rhel9cis_auditd_extra_conf:
+# rhel9cis_auditd_extra_conf:
 #     admin_space_left: '10%'
 
 ## Whether rsyslog or journald preferred method for local logging
