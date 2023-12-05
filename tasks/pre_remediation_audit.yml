@@ -32,8 +32,8 @@
   when:
       - audit_content == 'copy'
   ansible.builtin.copy:
-      src: "{{ audit_local_copy }}"
-      dest: "{{ audit_conf_dest }}"
+      src: "{{ audit_conf_copy }}"
+      dest: "{{ audit_conf_dir }}"
       mode: preserve
 
 - name: Pre Audit Setup | Unarchive audit content files on server
