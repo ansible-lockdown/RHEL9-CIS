@@ -42,7 +42,7 @@ rhel9cis_level_1: true
 rhel9cis_level_2: true
 
 ## 1.6 SubSection - Mandatory Access Control
-# This variable governs if SELinux is disabled or not. If SELinux is NOT DISABLED by setting
+# This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
 # 'rhel9cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
 rhel9cis_selinux_disable: false
 # This variable is used in a preliminary task, handling grub2 paths either in case of
@@ -440,13 +440,21 @@ rhel9cis_rh_sub_password: password  # pragma: allowlist secret
 # RedHat Satellite Subscription items
 rhel9cis_rhnsd_required: false
 
-# 1.2.4 repo_gpgcheck
+# Control 1.2.4 - When installing RHEL from authorized Red Hat source, RHEL will come with default YUM repository. NOT having a default YUM
+# repo('rhel9cis_rhel_default_repo' set as 'false'), in conjunction with 'rhel9cis_rule_enable_repogpg' set as 'True', will enable the tasks
+# which check the GPG signatures for all the individual YUM repositories.
 rhel9cis_rhel_default_repo: true
+# Control 1.2.4 - When 'rhel9cis_rule_enable_repogpg' is set to 'true'(in conjunction with 'rhel9cis_rhel_default_repo':'false'), conditions are met for
+# enabling the GPG signatures-check for all the individual YUM repositories. If GPG signatures-check is enabled on repositories which do not
+# support it(like RedHat), installation of packages will fail.
 rhel9cis_rule_enable_repogpg: true
 
-# 1.4.1 Bootloader password
+# Control 1.4.1 - This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value
+# must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
+# this format: 'grub.pbkdf2.sha512.<Rounds>.<Salt>.<Checksum>'
 rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.10000.9306A36764A7BEA3BF492D1784396B27F52A71812E9955A58709F94EE70697F9BD5366F36E07DEC41B52279A056E2862A93E42069D7BBB08F5DFC2679CD43812.6C32ADA5449303AD5E67A4C150558592A05381331DE6B33463469A236871FA8E70738C6F9066091D877EF88A213C86825E093117F30E9E1BF158D0DB75E7581B'  # pragma: allowlist secret
 rhel9cis_bootloader_password: random  # pragma: allowlist secret
+# Control 1.4.1 - This variable governs whether a bootloader password should be set in /boot/grub2/user.cfg file.
 rhel9cis_set_boot_pass: true
 
 ## Controls 1.8.x - Settings for GDM
@@ -454,17 +462,21 @@ rhel9cis_set_boot_pass: true
 # (See https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en)
 # The default database is `local`
 rhel9cis_dconf_db_name: local
-
 # This variable governs the number of seconds of inactivity before the screen goes blank.
 rhel9cis_screensaver_idle_delay: 900  # Set max value for idle-delay in seconds (between 1 and 900)
-
 # This variable governs the number of seconds the screen remains blank before it is locked.
 rhel9cis_screensaver_lock_delay: 5  # Set max value for lock-delay in seconds (between 0 and 5)
 
-# 1.10/1.11 Set crypto policy (LEGACY, DEFAULT, FUTURE, FIPS)
-# Control 1.10 states do not use LEGACY and control 1.11 says to use FUTURE or FIPS.
+# Control 1.10 - This variable contains the value to be set as the system-wide crypto policy. Rule 1.10 enforces
+# NOT using 'LEGACY' value(as it is less secure, it just ensures compatibility with legacy systems), therefore
+# possible values for this variable are, as explained by RedHat docs:
+#  -'DEFAULT': reasonable default policy for today's standards(balances usability and security)
+#  -'FUTURE': conservative security level that is believed to withstand any near-term future attacks
+#  -'FIPS': A level that conforms to the FIPS140-2 requirements
 rhel9cis_crypto_policy: 'DEFAULT'
-# Added module to be allowed as default setting (Allowed options in vars/main.yml)
+# Control 1.10 - This variable contains the value of the crypto policy module(combinations of policies and
+# sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
+# using 'rhel9cis_allowed_crypto_policies_modules' variable.
 rhel9cis_crypto_policy_module: ''
 
 # System network parameters (host only OR host and router)
@@ -521,13 +533,21 @@ rhel9cis_aide_cron:
     # can be concatenated with commas.
     aide_weekday: '*'
 
-# SELinux policy
-# This selects type of policy; targeted or mls ( multilevel )
+## Control 1.6.1.3|4|5 - SELinux policy settings
+# This selects type of policy; targeted or mls( multilevel )
 # mls should not be used, since it will disable unconfined policy module
-# and may prevent some services from running.
+# and may prevent some services from running. Requires SELinux not being disabled(by
+# having 'rhel9cis_selinux_disable' var set as 'true'), otherwise setting will be ignored.
 rhel9cis_selinux_pol: targeted
-# chose onf or enfocing or permissive
-# CIS expects enforcing since permissive allows operations thet might compromise the system.
+## Control 1.6.1.3|4 - SELinux configured and not disabled
+# This variable contains a specific SELinux mode, respectively:
+#  - 'enforcing':  SELinux policy IS enforced, therefore denies operations based on SELinux policy
+#                  rules. If system was installed with SELinux, this is enabled by default.
+#  - 'permissive': SELinux policy IS NOT enforced, therefore does NOT deny any operation, only
+#                  logs AVC(Access Vector Cache) messages. RedHat docs suggest it "can be used
+#                  briefly to check if SELinux is the culprit in preventing your application
+#                  from working".
+# CIS expects enforcing since permissive allows operations that might compromise the system.
 # Even though logging still occurs.
 rhel9cis_selinux_enforce: enforcing
 
@@ -537,7 +557,7 @@ rhel9cis_selinux_enforce: enforcing
 
 ### 2.1 Time Synchronization
 #### 2.1.2 Time Synchronization servers - used in template file chrony.conf.j2
-# The following variable represents a list of of time servers used
+# The following variable represents a list of time servers used
 # for configuring chrony, timesyncd, and ntp.
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
 # The default setting for the `options` is `minpoll` but `iburst` can be used, please refer to the documentation
@@ -547,6 +567,9 @@ rhel9cis_time_synchronization_servers:
     - 1.pool.ntp.org
     - 2.pool.ntp.org
     - 3.pool.ntp.org
+#### 2.1.2 - Time Synchronization servers
+# This variable should contain the default options to be used for every NTP server hostname defined
+# within the 'rhel9cis_time_synchronization_servers' var.
 rhel9cis_chrony_server_options: "minpoll 8"
 rhel9cis_chrony_server_rtcsync: false
 rhel9cis_chrony_server_makestep: "1.0 3"
