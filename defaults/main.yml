@@ -579,22 +579,60 @@ rhel9cis_chrony_server_minsources: 2
 # Service configuration variables (boolean).
 # Set the respective variable to true to keep the service.
 # otherwise the service is stopped and disabled
+
+# This variable governs whether rules dealing with GUI specific packages(and/or their settings) should
+# be executed either to:
+# - secure GDM(Control 1.8.2-1.8.10), if GUI is needed('rhel9cis_gui: true')
+# - or remove GDM(Control 1.8.1) and X-Windows-system(2.2.1), if no GUI is needed('rhel9cis_gui: false')
 rhel9cis_gui: false
+# Control 2.2.2 - Ensure Avahi Server is not installed
+# This variable, when set to false, will specify that Avahi Server packages should be uninstalled.
 rhel9cis_avahi_server: false
+# Control 2.2.3 -  Ensure CUPS is not installed
+# This variable, when set to false, will specify that CUPS(Common UNIX Printing System) package should be uninstalled.
 rhel9cis_cups_server: false
+# Control 2.2.4 - Ensure DHCP Server is not installed
+# This variable, when set to false, will specify that DHCP server package should be uninstalled.
 rhel9cis_dhcp_server: false
+# Control 2.2.5 - Ensure DNS Server is not installed
+# This variable, when set to false, will specify that DNS server package should be uninstalled.
 rhel9cis_dns_server: false
+# Control 2.2.14 - Ensure dnsmasq is not installed
+# This variable, when set to false, will specify that dnsmasq package should be uninstalled.
 rhel9cis_dnsmasq_server: false
+# Control 2.2.6 - Ensure VSFTP Server is not installed
+# This variable, when set to false, will specify that VSFTP server package should be uninstalled.
 rhel9cis_vsftpd_server: false
+# Control 2.2.7 - Ensure TFTP Server is not installed
+# This variable, when set to false, will specify that TFTP server package should be uninstalled.
 rhel9cis_tftp_server: false
+# Control 2.2.8 - Ensure a web server is not installed - HTTPD
+# This variable, when set to false, will specify that webserver packages(HTTPD) should be uninstalled.
 rhel9cis_httpd_server: false
+# Control 2.2.8 - Ensure a web server is not installed - NGINX
+# This variable, when set to false, will specify that webserver packages(NGINX) should be uninstalled.
 rhel9cis_nginx_server: false
+# Control 2.2.9 - Ensure IMAP and POP3 server is not installed - dovecot
+# This variable, when set to false, will specify that IMAP and POP3 servers(dovecot) should be uninstalled.
 rhel9cis_dovecot_server: false
+# Control 2.2.9 - Ensure IMAP and POP3 server is not installed - cyrus-imapd
+# This variable, when set to false, will specify that IMAP and POP3 servers(cyrus-imapd) should be uninstalled.
 rhel9cis_imap_server: false
+# Control 2.2.10 - Ensure Samba is not enabled
+# This variable, when set to false, will specify that 'samba' package should be uninstalled.
 rhel9cis_samba_server: false
+# Control 2.2.11 - Ensure HTTP Proxy Server is not installed
+# This variable, when set to false, will specify that 'squid' package should be uninstalled.
 rhel9cis_squid_server: false
+# Control 2.2.12 - Ensure net-snmp is not installed
+# This variable, when set to false, will specify that 'net-snmp' package should be uninstalled.
 rhel9cis_snmp_server: false
+# Control 2.2.13 - Ensure telnet-server is not installed
+# This variable, when set to false, will specify that 'telnet-server' package should be uninstalled.
 rhel9cis_telnet_server: false
+# Control 2.2.15 - Ensure mail transfer agent is configured for local-only mode
+# This variable, when system is NOT a mailserver, will configure Postfix to listen only on the loopback interface(the virtual
+# network interface that the server uses to communicate internally.
 rhel9cis_is_mail_server: false
 
 # Note the options
@@ -602,35 +640,121 @@ rhel9cis_is_mail_server: false
 # Packages are used for client services and Server- only remove if you dont use the client service
 # Set the respective variable to `true` to keep the
 # client package, otherwise it is uninstalled (false).
+
+# Control 2.2.16 - Ensure nfs-utils is not installed or the nfs-server service is masked"
+# This variable specifies if the usage of NFS SERVER is needed. The behavior of 2.2.16 will depend on
+# the var used in conjunction('rhel9cis_use_nfs_service') with current one, respectively:
+# - if Server IS NOT needed('false') and:
+#    - Service IS NOT needed('rhel9cis_use_nfs_service: false'): 'nfs-utils' package will be removed
+#    - Service IS needed('rhel9cis_use_nfs_service: true'): impossible to need the service without the server
+# - if Server IS needed('true') and:
+#    - Service IS NOT needed('rhel9cis_use_nfs_service: false'): 'nfs-server' service will be masked
+#    - Service IS needed('rhel9cis_use_nfs_service: true'): Rule 2.2.16 will be SKIPPED.
+#  | Server  | Service | Result                                                    |
+#  |---------|---------|-----------------------------------------------------------|
+#  | false   | false   | Remove package                                            |
+#  | false   | true    | Needing 'service' without needing 'server' makes no sense |
+#  | true    | false   | Mask 'service'                                            |
+#  | true    | true    | SKIP RULE, BOTH 'service' and 'server' are required       |
 rhel9cis_use_nfs_server: false
+# Control 2.2.16 - Ensure nfs-utils is not installed or the nfs-server service is masked.
+# This variable specifies if the usage of NFS SERVICE is needed. If it's:
+#   - needed('true'): rule 2.2.16 will not be executed at all
+#   - not needed('false'): rule 2.2.16 will be executed, its behavior being controlled by the var
+#     used in conjunction with current one:
+#          - removing 'nfs-utils' package('rhel9cis_use_nfs_server' set to 'false')
+#          - masking the 'nfs-server' service('rhel9cis_use_nfs_server' set to 'true')
 rhel9cis_use_nfs_service: false
 
+# Control 2.2.17 - Ensure rpcbind is not installed or the rpcbind services are masked
+# This variable specifies if the usage of RPC SERVER is needed. The behavior of 2.2.17 will depend on
+# the var used in conjunction('rhel9cis_use_rpc_service') with current one, respectively:
+# - if Server IS NOT needed('false') and:
+#    - Service IS NOT needed('rhel9cis_use_rpc_service: false'): 'rpcbind' package will be removed
+#    - Service IS needed('rhel9cis_use_rpc_service: true'): impossible to need the service without the server
+# - if Server IS needed('true') and:
+#    - Service IS NOT needed('rhel9cis_use_rpc_service: false'): 'rpcbind.socket' service will be masked
+#    - Service IS needed('rhel9cis_use_rpc_service: true'): Rule 2.2.17 will be SKIPPED.
+#  | Server  | Service | Result                                                    |
+#  |---------|---------|-----------------------------------------------------------|
+#  | false   | false   | Remove package                                            |
+#  | false   | true    | Needing 'service' without needing 'server' makes no sense |
+#  | true    | false   | Mask 'service'                                            |
+#  | true    | true    | SKIP RULE, BOTH 'service' and 'server' are required       |
 rhel9cis_use_rpc_server: false
+# Control 2.2.17 - Ensure rpcbind is not installed or the rpcbind services are masked
+# This variable specifies if the usage of RPC SERVICE is needed. If it's:
+#   - needed('true'): rule 2.2.17 will not be executed at all
+#   - not needed('false'): rule 2.2.17 will be executed, its behavior being controlled by the var
+#     used in conjunction with current one:
+#          - removing 'rpcbind' package('rhel9cis_use_rpc_server' set to 'false')
+#          - masking the 'rpcbind.socket' service('rhel9cis_use_rpc_server' set to 'true')
 rhel9cis_use_rpc_service: false
 
+
+# Control 2.2.18 - Ensure rsync service is not enabled
+# This variable specifies if the usage of RSYNC SERVER is needed. The behavior of 2.2.18 will depend on
+# the var used in conjunction('rhel9cis_use_rsync_service') with current one, respectively:
+# - if Server IS NOT needed('false') and:
+#    - Service IS NOT needed('rhel9cis_use_rsync_service: false'): 'rsync-daemon' package will be removed
+#    - Service IS needed('rhel9cis_use_rsync_service: true'): impossible to need the service without the server
+# - if Server IS needed('true') and:
+#    - Service IS NOT needed('rhel9cis_use_rsync_service: false'): 'rsyncd' service will be masked
+#    - Service IS needed('rhel9cis_use_rsync_service: true'): Rule 2.2.18 will be SKIPPED.
+#  | Server  | Service | Result                                                    |
+#  |---------|---------|-----------------------------------------------------------|
+#  | false   | false   | Remove package                                            |
+#  | false   | true    | Needing 'service' without needing 'server' makes no sense |
+#  | true    | false   | Mask 'service'                                            |
+#  | true    | true    | SKIP RULE, BOTH 'service' and 'server' are required       |
 rhel9cis_use_rsync_server: false
+# Control 2.2.18 - Ensure rsync service is not enabled
+# This variable specifies if the usage of RSYNC SERVICE is needed. If it's:
+#   - needed('true'): rule 2.2.18 will not be executed at all
+#   - not needed('false'): rule 2.2.18 will be executed, its behavior being controlled by the var
+#     used in conjunction with current one:
+#          - removing 'rsync-daemon' package('rhel9cis_use_rsync_server' set to 'false')
+#          - masking the 'rsyncd' service('rhel9cis_use_rsync_server' set to 'true')
 rhel9cis_use_rsync_service: false
 
 #### 2.3 Service clients
+# Control - 2.3.1 - Ensure telnet client is not installed
+# Set this variable to `true` to keep package `telnet`; otherwise, the package is uninstalled.
 rhel9cis_telnet_required: false
+# Control - 2.3.2 - Ensure LDAP client is not installed
+# Set this variable to `true` to keep package `openldap-clients`; otherwise, the package is uninstalled.
 rhel9cis_openldap_clients_required: false
+# Control - 2.3.3 - Ensure FTP client is not installed
+# Set this variable to `true` to keep package `tftp`; otherwise, the package is uninstalled.
 rhel9cis_tftp_client: false
+# Control - 2.3.4 - Ensure FTP client is not installed
+# Set this variable to `true` to keep package `ftp`; otherwise, the package is uninstalled.
 rhel9cis_ftp_client: false
 
 ## Section3 vars
 ## Sysctl
+# This variable governs if the task which updates sysctl(including sysctl reload) is executed, but current
+# default value can be overriden by other tasks(1.5.3, 3.1.1, 3.2.1, 3.2.2, 3.3.1-3.3.9).
 rhel9cis_sysctl_update: false
+# This variable governs if the task which flushes the IPv4 routing table is executed(forcing subsequent connections to
+# use the new configuration). Current default value can be overriden by other tasks(3.2.1, 3.2.2, 3.3.1-3.3.8).
 rhel9cis_flush_ipv4_route: false
+# This variable governs if the task which flushes the IPv6 routing table is executed(forcing subsequent connections to
+# use the new configuration). Current default value can be overriden by other tasks(3.1.1, 3.2.1, 3.3.1, 3.3.2, 3.3.9).
 rhel9cis_flush_ipv6_route: false
 
-### Firewall Service - either firewalld, iptables, or nftables
+### Firewall Service to install and configure - Option is:
+# 1) either 'firewalld'(Controls 3.4.1.2, 3.4.2.1, 3.4.2.4)
+# 2) or 'nftables'(Controls )
 #### Some control allow for services to be removed or masked
 #### The options are under each heading
 #### absent = remove the package
 #### masked = leave package if installed and mask the service
 rhel9cis_firewall: firewalld
 
-##### firewalld
+# Control 3.4.2.1 - Ensure firewalld default zone is set
+# This variable will set the firewalld default zone(that is used for everything that is not explicitly bound/assigned
+# to another zone): if there is no zone assigned to a connection, interface or source, only the default zone is used.
 rhel9cis_default_zone: public
 
 # These settings are added to demonstrate how this update can be done (eventually will require a new control)
@@ -643,10 +767,26 @@ rhel9cis_firewalld_ports:
 # "rhel9cis_nft_tables_tablename" is the name of the table in nftables you want to create.
 # nftables configs are applied to.
 # options are: inet filter
+
+# Control 3.4.2.2 - Ensure at least one nftables table exists
+# This variable governs if a table will be automatically created in nftables. Without a table (no default one), nftables
+# will not filter network traffic, so if this variable is set to 'false' and no tables exist, an alarm will be triggered!
 rhel9cis_nft_tables_autonewtable: true
+# Controls 3.4.2.{2|3|4|6|7} nftables
+# This variable stores the name of the table to be used when configuring nftables(creating chains, configuring loopback
+# traffic, established connections, default deny). If 'rhel9cis_nft_tables_autonewtable' is set as true, a new table will
+# be created using as name the value stored by this variable.
 rhel9cis_nft_tables_tablename: filter
+# Control 3.4.2.3 - Ensure nftables base chains exist
+# This variable governs if a nftables base chain(entry point for packets from the networking stack) will be automatically
+# created, if needed. Without a chain, a hook for input, forward, and delete, packets that would flow through those
+#chains will not be touched by nftables
 rhel9cis_nft_tables_autochaincreate: true
 
+## Controls:
+# - 1.7.1 - Ensure message of the day is configured properly
+# - 1.7.2 - Ensure local login warning banner is configured properly
+# - 1.7.3 - Ensure remote login warning banner is configured properly
 # Warning Banner Content (issue, issue.net, motd)
 rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
 # End Banner
@@ -658,7 +798,11 @@ rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and
 # This variable controls how the audit system behaves when
 # log files are getting too full and space is getting too low.
 rhel9cis_auditd:
+    # This variable tells the system what action to take when the system has detected
+    #that it is starting to get low on disk space. Options are the same as for `admin_space_left_action`
     space_left_action: email
+    # This variable should contain a valid email address or alias(default value is root),
+    # which will be used to send a warning when configured action is 'email'.
     action_mail_acct: root
     # This variable determines the action the audit system should take when disk
     # space runs low.
@@ -716,9 +860,9 @@ rhel9cis_max_log_file_size: 10
 update_audit_template: false
 
 ## Advanced option found in auditd post
-# users whose actions are not logged by auditd
+# This variable governs if defining user exceptions for auditd logging is acceptable.
 rhel9cis_allow_auditd_uid_user_exclusions: false
-# add a list of uids to be excluded.
+# This variable contains a list of uids to be excluded(users whose actions are not logged by auditd)
 rhel9cis_auditd_uid_exclude:
     - 1999
 
