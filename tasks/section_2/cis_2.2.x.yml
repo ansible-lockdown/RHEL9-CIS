@@ -274,8 +274,8 @@
             masked: true
             state: stopped
         when:
-            - not rhel9cis_use_nfs_server
-            - rhel9cis_use_nfs_service
+            - rhel9cis_use_nfs_server
+            - not rhel9cis_use_nfs_service
   when:
       - "'nfs-utils' in ansible_facts.packages"
       - rhel9cis_rule_2_2_16
