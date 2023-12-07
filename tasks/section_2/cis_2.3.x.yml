@@ -50,7 +50,7 @@
       name: ftp
       state: absent
   when:
-      - not rhel9cis_tftp_client
+      - not rhel9cis_ftp_client
       - "'ftp' in ansible_facts.packages"
       - rhel9cis_rule_2_3_4
   tags:
