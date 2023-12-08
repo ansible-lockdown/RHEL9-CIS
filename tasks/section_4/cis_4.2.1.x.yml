@@ -35,7 +35,6 @@
   notify: Restart rsyslog
   when:
       - rhel9cis_rule_4_2_1_3
-      - rhel9cis_syslog == "rsyslog"
   tags:
       - level1-server
       - level1-workstation
