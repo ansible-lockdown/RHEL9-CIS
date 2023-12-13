@@ -10,7 +10,7 @@ benchmark_version: '1.0.0'
 host_os_distribution: {{ ansible_facts.distribution | lower }}
 
 #  timeout for each command to run where set - default = 10seconds/10000ms
-timeout_ms: 60000
+timeout_ms: {{ audit_cmd_timeout }}
 
 # Taken from LE rhel9-cis
 rhel9cis_section1: {{ rhel9cis_section1 }}
