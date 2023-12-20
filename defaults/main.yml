@@ -529,6 +529,17 @@ rhel9cis_auditd:
     max_log_file: 10
     max_log_file_action: keep_logs
 
+# This value governs if the below extra-vars for auditd should be used by the role
+rhel9cis_auditd_extra_conf_usage: false
+
+# This can be used to configure other keys in auditd.conf
+# Example:
+# rhel9cis_auditd_extra_conf:
+#     admin_space_left: '10%'
+rhel9cis_auditd_extra_conf:
+    admin_space_left: 50
+    space_left: 75
+
 # The audit_back_log_limit value should never be below 8192
 rhel9cis_audit_back_log_limit: 8192
 

@@ -58,6 +58,7 @@
   notify: Restart auditd
   when:
       - rhel9cis_auditd_extra_conf.keys() | length > 0
+      - rhel9cis_auditd_extra_conf_usage
   tags:
       - level2-server
       - level2-workstation
