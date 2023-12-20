@@ -4,7 +4,7 @@
   ansible.builtin.lineinfile:
       path: /etc/audit/auditd.conf
       regexp: "^max_log_file( |=)"
-      line: "max_log_file = {{ rhel9cis_max_log_file_size }}"
+      line: "max_log_file = {{ rhel9cis_auditd['max_log_file'] }}"
   notify: Restart auditd
   when:
       - rhel9cis_rule_4_1_2_1
