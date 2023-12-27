@@ -898,7 +898,7 @@ rhel9cis_auditd_uid_exclude:
 # This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
 # or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
 # practices are written wholly independent of each other.
-rhel9cis_syslog: rsyslog
+rhel9cis_syslog: journald
 ## Control 4.2.1.5 | PATCH | Ensure logging is configured
 # This variable governs if current Ansible role should manage syslog settings
 # in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
