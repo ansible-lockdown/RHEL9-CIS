@@ -73,7 +73,7 @@
       - audit
       - accounts
       - groups
-      - rule_6.2.2
+      - rule_6.2.3
 
 - name: "6.2.4 | AUDIT Ensure no duplicate UIDs exist"
   block:
