@@ -67,7 +67,7 @@
         /sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
       validate: aide -D --config %s
   when:
-      - rhel9cis_rule_1_3_2
+      - rhel9cis_rule_1_3_3
       - not system_is_ec2
   tags:
       - level1-server
