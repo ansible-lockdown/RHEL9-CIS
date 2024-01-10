@@ -31,7 +31,7 @@
   ansible.builtin.lineinfile:
       path: /etc/sudoers
       regexp: '^Defaults    logfile='
-      line: 'Defaults    logfile="{{ rhel9cis_sudolog_location }}"'
+      line: 'Defaults    logfile={{ rhel9cis_sudolog_location }}'
       validate: '/usr/sbin/visudo -cf %s'
   when:
       - rhel9cis_rule_5_3_3
