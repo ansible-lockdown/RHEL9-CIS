@@ -42,7 +42,7 @@ rhel9cis_section6: true
 rhel9cis_level_1: true
 rhel9cis_level_2: true
 
-## 1.6 SubSection - Mandatory Access Control
+## Section 1.6 - Mandatory Access Control
 # This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
 # 'rhel9cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
 rhel9cis_selinux_disable: false
@@ -73,6 +73,7 @@ change_requires_reboot: false
 ## Refer to vars/auditd.yml for any other settings ##
 #### Basic external goss audit enablement settings ####
 #### Precise details - per setting can be found at the bottom of this file ####
+
 
 ## Audit setup
 # Audits are carried out using Goss. This variable
@@ -419,63 +420,70 @@ rhel9cis_rule_6_2_16: true
 
 ## Section 1 vars
 
-#### 1.1.2
-# These settings go into the /etc/fstab file for the /tmp mount settings
-# The value must contain nosuid,nodev,noexec to conform to CIS standards
-# rhel9cis_tmp_tmpfs_settings: "defaults,rw,nosuid,nodev,noexec,relatime 0 0"
-# If set true uses the tmp.mount service else using fstab configuration
+## Control 1.1.2
+# If set to `true`, rule will be implemented using the `tmp.mount` systemd-service,
+# otherwise fstab configuration will be used.
+# These /tmp settings will include nosuid,nodev,noexec to conform to CIS standards.
 rhel9cis_tmp_svc: false
 
-#### 1.1.9
+## Control 1.1.9
 rhel9cis_allow_autofs: false
 
-# 1.2.1
+## Control 1.2.1
 # This is the login information for your RedHat Subscription
 # DO NOT USE PLAIN TEXT PASSWORDS!!!!!
 # The intent here is to use a password utility like Ansible Vault here
 rhel9cis_rh_sub_user: user
 rhel9cis_rh_sub_password: password  # pragma: allowlist secret
 
-# 1.2.2
+## Control 1.2.2
 # Do you require rhnsd
 # RedHat Satellite Subscription items
 rhel9cis_rhnsd_required: false
 
-# Control 1.2.4 - When installing RHEL from authorized Red Hat source, RHEL will come with default YUM repository. NOT having a default YUM
-# repo('rhel9cis_rhel_default_repo' set as 'false'), in conjunction with 'rhel9cis_rule_enable_repogpg' set as 'True', will enable the tasks
+## Control 1.2.4
+# When installing RHEL from authorized Red Hat source, RHEL will come with default YUM repository. NOT having a default YUM
+# repo ('rhel9cis_rhel_default_repo' set as 'false'), in conjunction with 'rhel9cis_rule_enable_repogpg' set as 'True', will enable the tasks
 # which check the GPG signatures for all the individual YUM repositories.
 rhel9cis_rhel_default_repo: true
-# Control 1.2.4 - When 'rhel9cis_rule_enable_repogpg' is set to 'true'(in conjunction with 'rhel9cis_rhel_default_repo':'false'), conditions are met for
+## Control 1.2.4
+# When 'rhel9cis_rule_enable_repogpg' is set to 'true'(in conjunction with 'rhel9cis_rhel_default_repo':'false'), conditions are met for
 # enabling the GPG signatures-check for all the individual YUM repositories. If GPG signatures-check is enabled on repositories which do not
 # support it(like RedHat), installation of packages will fail.
 rhel9cis_rule_enable_repogpg: true
 
-# Control 1.4.1 - This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value
+## Control 1.4.1
+# This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value
 # must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
 # this format: 'grub.pbkdf2.sha512.<Rounds>.<Salt>.<Checksum>'
 rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.10000.9306A36764A7BEA3BF492D1784396B27F52A71812E9955A58709F94EE70697F9BD5366F36E07DEC41B52279A056E2862A93E42069D7BBB08F5DFC2679CD43812.6C32ADA5449303AD5E67A4C150558592A05381331DE6B33463469A236871FA8E70738C6F9066091D877EF88A213C86825E093117F30E9E1BF158D0DB75E7581B'  # pragma: allowlist secret
 rhel9cis_bootloader_password: random  # pragma: allowlist secret
-# Control 1.4.1 - This variable governs whether a bootloader password should be set in /boot/grub2/user.cfg file.
+## Control 1.4.1
+# This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
 rhel9cis_set_boot_pass: true
 
-## Controls 1.8.x - Settings for GDM
+## Control 1.8.x - Settings for GDM
 # This variable specifies the GNOME configuration database file to which configurations are written.
-# (See https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en)
-# The default database is `local`
+# (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
+# The default database is 'local'.
 rhel9cis_dconf_db_name: local
 # This variable governs the number of seconds of inactivity before the screen goes blank.
-rhel9cis_screensaver_idle_delay: 900  # Set max value for idle-delay in seconds (between 1 and 900)
+# Set max value for idle-delay in seconds (between 1 and 900)
+rhel9cis_screensaver_idle_delay: 900
 # This variable governs the number of seconds the screen remains blank before it is locked.
-rhel9cis_screensaver_lock_delay: 5  # Set max value for lock-delay in seconds (between 0 and 5)
+# Set max value for lock-delay in seconds (between 0 and 5)
+rhel9cis_screensaver_lock_delay: 5
 
-# Control 1.10 - This variable contains the value to be set as the system-wide crypto policy. Rule 1.10 enforces
-# NOT using 'LEGACY' value(as it is less secure, it just ensures compatibility with legacy systems), therefore
+## Control 1.10
+# This variable contains the value to be set as the system-wide crypto policy. Current rule enforces NOT USING
+# 'LEGACY' value(as it is less secure, it just ensures compatibility with legacy systems), therefore
 # possible values for this variable are, as explained by RedHat docs:
-#  -'DEFAULT': reasonable default policy for today's standards(balances usability and security)
+#  -'DEFAULT': reasonable default policy for today's standards (balances usability and security)
 #  -'FUTURE': conservative security level that is believed to withstand any near-term future attacks
 #  -'FIPS': A level that conforms to the FIPS140-2 requirements
 rhel9cis_crypto_policy: 'DEFAULT'
-# Control 1.10 - This variable contains the value of the crypto policy module(combinations of policies and
+## Control 1.10
+# This variable contains the value of the crypto policy module(combinations of policies and
 # sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
 # using 'rhel9cis_allowed_crypto_policies_modules' variable.
 rhel9cis_crypto_policy_module: ''
@@ -537,27 +545,29 @@ rhel9cis_aide_cron:
 ## Control 1.6.1.3|4|5 - SELinux policy settings
 # This selects type of policy; targeted or mls( multilevel )
 # mls should not be used, since it will disable unconfined policy module
-# and may prevent some services from running. Requires SELinux not being disabled(by
+# and may prevent some services from running. Requires SELinux not being disabled (by
 # having 'rhel9cis_selinux_disable' var set as 'true'), otherwise setting will be ignored.
 rhel9cis_selinux_pol: targeted
 ## Control 1.6.1.3|4 - SELinux configured and not disabled
 # This variable contains a specific SELinux mode, respectively:
 #  - 'enforcing':  SELinux policy IS enforced, therefore denies operations based on SELinux policy
-#                  rules. If system was installed with SELinux, this is enabled by default.
+# rules. If system was installed with SELinux, this is enabled by default.
 #  - 'permissive': SELinux policy IS NOT enforced, therefore does NOT deny any operation, only
-#                  logs AVC(Access Vector Cache) messages. RedHat docs suggest it "can be used
-#                  briefly to check if SELinux is the culprit in preventing your application
-#                  from working".
+# logs AVC(Access Vector Cache) messages. RedHat docs suggest it "can be used
+# briefly to check if SELinux is the culprit in preventing your application
+# from working".
 # CIS expects enforcing since permissive allows operations that might compromise the system.
 # Even though logging still occurs.
 rhel9cis_selinux_enforce: enforcing
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
 
-## 2. Services
+## Section 2. Services
 
 ### 2.1 Time Synchronization
-#### 2.1.2 Time Synchronization servers - used in template file chrony.conf.j2
+
+
+## Control 2.1.2 Time Synchronization servers - used in template file chrony.conf.j2
 # The following variable represents a list of time servers used
 # for configuring chrony, timesyncd, and ntp.
 # Each list item contains two settings, `name` (the domain name of the server) and synchronization `options`.
@@ -568,67 +578,70 @@ rhel9cis_time_synchronization_servers:
     - 1.pool.ntp.org
     - 2.pool.ntp.org
     - 3.pool.ntp.org
-#### 2.1.2 - Time Synchronization servers
+## Control 2.1.2 - Time Synchronization servers
 # This variable should contain the default options to be used for every NTP server hostname defined
 # within the 'rhel9cis_time_synchronization_servers' var.
 rhel9cis_chrony_server_options: "minpoll 8"
 
+
 ### 2.2 Special Purposes
+
 # Service configuration variables (boolean).
 # Set the respective variable to true to keep the service.
 # otherwise the service is stopped and disabled
 
+
 # This variable governs whether rules dealing with GUI specific packages(and/or their settings) should
 # be executed either to:
-# - secure GDM(Control 1.8.2-1.8.10), if GUI is needed('rhel9cis_gui: true')
-# - or remove GDM(Control 1.8.1) and X-Windows-system(2.2.1), if no GUI is needed('rhel9cis_gui: false')
+# - secure GDM, if GUI is needed('rhel9cis_gui: true')
+# - or remove GDM and X-Windows-system, if no GUI is needed('rhel9cis_gui: false')
 rhel9cis_gui: false
-# Control 2.2.2 - Ensure Avahi Server is not installed
+## Control 2.2.2 - Ensure Avahi Server is not installed
 # This variable, when set to false, will specify that Avahi Server packages should be uninstalled.
 rhel9cis_avahi_server: false
-# Control 2.2.3 -  Ensure CUPS is not installed
+## Control 2.2.3 -  Ensure CUPS is not installed
 # This variable, when set to false, will specify that CUPS(Common UNIX Printing System) package should be uninstalled.
 rhel9cis_cups_server: false
-# Control 2.2.4 - Ensure DHCP Server is not installed
+## Control 2.2.4 - Ensure DHCP Server is not installed
 # This variable, when set to false, will specify that DHCP server package should be uninstalled.
 rhel9cis_dhcp_server: false
-# Control 2.2.5 - Ensure DNS Server is not installed
+## Control 2.2.5 - Ensure DNS Server is not installed
 # This variable, when set to false, will specify that DNS server package should be uninstalled.
 rhel9cis_dns_server: false
-# Control 2.2.14 - Ensure dnsmasq is not installed
+## Control 2.2.14 - Ensure dnsmasq is not installed
 # This variable, when set to false, will specify that dnsmasq package should be uninstalled.
 rhel9cis_dnsmasq_server: false
-# Control 2.2.6 - Ensure VSFTP Server is not installed
+## Control 2.2.6 - Ensure VSFTP Server is not installed
 # This variable, when set to false, will specify that VSFTP server package should be uninstalled.
 rhel9cis_vsftpd_server: false
-# Control 2.2.7 - Ensure TFTP Server is not installed
+## Control 2.2.7 - Ensure TFTP Server is not installed
 # This variable, when set to false, will specify that TFTP server package should be uninstalled.
 rhel9cis_tftp_server: false
-# Control 2.2.8 - Ensure a web server is not installed - HTTPD
+## Control 2.2.8 - Ensure a web server is not installed - HTTPD
 # This variable, when set to false, will specify that webserver packages(HTTPD) should be uninstalled.
 rhel9cis_httpd_server: false
-# Control 2.2.8 - Ensure a web server is not installed - NGINX
+## Control 2.2.8 - Ensure a web server is not installed - NGINX
 # This variable, when set to false, will specify that webserver packages(NGINX) should be uninstalled.
 rhel9cis_nginx_server: false
-# Control 2.2.9 - Ensure IMAP and POP3 server is not installed - dovecot
+## Control 2.2.9 - Ensure IMAP and POP3 server is not installed - dovecot
 # This variable, when set to false, will specify that IMAP and POP3 servers(dovecot) should be uninstalled.
 rhel9cis_dovecot_server: false
-# Control 2.2.9 - Ensure IMAP and POP3 server is not installed - cyrus-imapd
+## Control 2.2.9 - Ensure IMAP and POP3 server is not installed - cyrus-imapd
 # This variable, when set to false, will specify that IMAP and POP3 servers(cyrus-imapd) should be uninstalled.
 rhel9cis_imap_server: false
-# Control 2.2.10 - Ensure Samba is not enabled
+## Control 2.2.10 - Ensure Samba is not enabled
 # This variable, when set to false, will specify that 'samba' package should be uninstalled.
 rhel9cis_samba_server: false
-# Control 2.2.11 - Ensure HTTP Proxy Server is not installed
+## Control 2.2.11 - Ensure HTTP Proxy Server is not installed
 # This variable, when set to false, will specify that 'squid' package should be uninstalled.
 rhel9cis_squid_server: false
-# Control 2.2.12 - Ensure net-snmp is not installed
+## Control 2.2.12 - Ensure net-snmp is not installed
 # This variable, when set to false, will specify that 'net-snmp' package should be uninstalled.
 rhel9cis_snmp_server: false
-# Control 2.2.13 - Ensure telnet-server is not installed
+## Control 2.2.13 - Ensure telnet-server is not installed
 # This variable, when set to false, will specify that 'telnet-server' package should be uninstalled.
 rhel9cis_telnet_server: false
-# Control 2.2.15 - Ensure mail transfer agent is configured for local-only mode
+## Control 2.2.15 - Ensure mail transfer agent is configured for local-only mode
 # This variable, when system is NOT a mailserver, will configure Postfix to listen only on the loopback interface(the virtual
 # network interface that the server uses to communicate internally.
 rhel9cis_is_mail_server: false
@@ -639,15 +652,15 @@ rhel9cis_is_mail_server: false
 # Set the respective variable to `true` to keep the
 # client package, otherwise it is uninstalled (false).
 
-# Control 2.2.16 - Ensure nfs-utils is not installed or the nfs-server service is masked"
-# This variable specifies if the usage of NFS SERVER is needed. The behavior of 2.2.16 will depend on
-# the var used in conjunction('rhel9cis_use_nfs_service') with current one, respectively:
+## Control 2.2.16 - Ensure nfs-utils is not installed or the nfs-server service is masked"
+# This variable specifies if the usage of NFS SERVER is needed. Execution of the rule which secures (by uninstalling or masking service)
+# NFS(if it's NOT needed) will depend on the var used in conjunction('rhel9cis_use_nfs_service') with current one, respectively:
 # - if Server IS NOT needed('false') and:
 #    - Service IS NOT needed('rhel9cis_use_nfs_service: false'): 'nfs-utils' package will be removed
 #    - Service IS needed('rhel9cis_use_nfs_service: true'): impossible to need the service without the server
 # - if Server IS needed('true') and:
 #    - Service IS NOT needed('rhel9cis_use_nfs_service: false'): 'nfs-server' service will be masked
-#    - Service IS needed('rhel9cis_use_nfs_service: true'): Rule 2.2.16 will be SKIPPED.
+#    - Service IS needed('rhel9cis_use_nfs_service: true'): Rule will be SKIPPED.
 #  | Server  | Service | Result                                                    |
 #  |---------|---------|-----------------------------------------------------------|
 #  | false   | false   | Remove package                                            |
@@ -655,24 +668,24 @@ rhel9cis_is_mail_server: false
 #  | true    | false   | Mask 'service'                                            |
 #  | true    | true    | SKIP RULE, BOTH 'service' and 'server' are required       |
 rhel9cis_use_nfs_server: false
-# Control 2.2.16 - Ensure nfs-utils is not installed or the nfs-server service is masked.
+## Control 2.2.16 - Ensure nfs-utils is not installed or the nfs-server service is masked.
 # This variable specifies if the usage of NFS SERVICE is needed. If it's:
-#   - needed('true'): rule 2.2.16 will not be executed at all
-#   - not needed('false'): rule 2.2.16 will be executed, its behavior being controlled by the var
-#     used in conjunction with current one:
+#   - needed('true'): rule which uninstalls/masks-service WILL NOT be executed at all
+#   - not needed('false'): rule which uninstalls/masks-service WILL be executed, its behavior being
+#    controlled by the var used in conjunction with current one:
 #          - removing 'nfs-utils' package('rhel9cis_use_nfs_server' set to 'false')
 #          - masking the 'nfs-server' service('rhel9cis_use_nfs_server' set to 'true')
 rhel9cis_use_nfs_service: false
 
-# Control 2.2.17 - Ensure rpcbind is not installed or the rpcbind services are masked
-# This variable specifies if the usage of RPC SERVER is needed. The behavior of 2.2.17 will depend on
-# the var used in conjunction('rhel9cis_use_rpc_service') with current one, respectively:
+## Control 2.2.17 - Ensure rpcbind is not installed or the rpcbind services are masked
+# This variable specifies if the usage of RPC SERVER is needed. Execution of the rule which secures (by uninstalling or masking service)
+# RPC(if it's NOT needed) will depend on the var used in conjunction('rhel9cis_use_rpc_service') with current one, respectively:
 # - if Server IS NOT needed('false') and:
 #    - Service IS NOT needed('rhel9cis_use_rpc_service: false'): 'rpcbind' package will be removed
 #    - Service IS needed('rhel9cis_use_rpc_service: true'): impossible to need the service without the server
 # - if Server IS needed('true') and:
 #    - Service IS NOT needed('rhel9cis_use_rpc_service: false'): 'rpcbind.socket' service will be masked
-#    - Service IS needed('rhel9cis_use_rpc_service: true'): Rule 2.2.17 will be SKIPPED.
+#    - Service IS needed('rhel9cis_use_rpc_service: true'): Rule will be SKIPPED.
 #  | Server  | Service | Result                                                    |
 #  |---------|---------|-----------------------------------------------------------|
 #  | false   | false   | Remove package                                            |
@@ -680,25 +693,24 @@ rhel9cis_use_nfs_service: false
 #  | true    | false   | Mask 'service'                                            |
 #  | true    | true    | SKIP RULE, BOTH 'service' and 'server' are required       |
 rhel9cis_use_rpc_server: false
-# Control 2.2.17 - Ensure rpcbind is not installed or the rpcbind services are masked
+## Control 2.2.17 - Ensure rpcbind is not installed or the rpcbind services are masked
 # This variable specifies if the usage of RPC SERVICE is needed. If it's:
-#   - needed('true'): rule 2.2.17 will not be executed at all
-#   - not needed('false'): rule 2.2.17 will be executed, its behavior being controlled by the var
+#   - needed('true'): rule which uninstalls/masks-service WILL NOT be executed at all
+#   - not needed('false'): rule which uninstalls/masks-service WILL be executed, its behavior being controlled by the var
 #     used in conjunction with current one:
 #          - removing 'rpcbind' package('rhel9cis_use_rpc_server' set to 'false')
 #          - masking the 'rpcbind.socket' service('rhel9cis_use_rpc_server' set to 'true')
 rhel9cis_use_rpc_service: false
 
-
-# Control 2.2.18 - Ensure rsync service is not enabled
-# This variable specifies if the usage of RSYNC SERVER is needed. The behavior of 2.2.18 will depend on
-# the var used in conjunction('rhel9cis_use_rsync_service') with current one, respectively:
+## Control 2.2.18 - Ensure rsync service is not enabled
+# This variable specifies if the usage of RSYNC SERVER is needed. Execution of the rule which secures (by uninstalling or masking service)
+# RSYNC(if it's NOT needed) will depend on the var used in conjunction('rhel9cis_use_rsync_service') with current one, respectively:
 # - if Server IS NOT needed('false') and:
 #    - Service IS NOT needed('rhel9cis_use_rsync_service: false'): 'rsync-daemon' package will be removed
 #    - Service IS needed('rhel9cis_use_rsync_service: true'): impossible to need the service without the server
 # - if Server IS needed('true') and:
 #    - Service IS NOT needed('rhel9cis_use_rsync_service: false'): 'rsyncd' service will be masked
-#    - Service IS needed('rhel9cis_use_rsync_service: true'): Rule 2.2.18 will be SKIPPED.
+#    - Service IS needed('rhel9cis_use_rsync_service: true'): Rule will be SKIPPED.
 #  | Server  | Service | Result                                                    |
 #  |---------|---------|-----------------------------------------------------------|
 #  | false   | false   | Remove package                                            |
@@ -706,51 +718,57 @@ rhel9cis_use_rpc_service: false
 #  | true    | false   | Mask 'service'                                            |
 #  | true    | true    | SKIP RULE, BOTH 'service' and 'server' are required       |
 rhel9cis_use_rsync_server: false
-# Control 2.2.18 - Ensure rsync service is not enabled
+## Control 2.2.18 - Ensure rsync service is not enabled
 # This variable specifies if the usage of RSYNC SERVICE is needed. If it's:
-#   - needed('true'): rule 2.2.18 will not be executed at all
-#   - not needed('false'): rule 2.2.18 will be executed, its behavior being controlled by the var
+#   - needed('true'): rule which uninstalls/masks-service WILL NOT be executed at all
+#   - not needed('false'): rule which uninstalls/masks-service WILL be executed, its behavior being controlled by the var
 #     used in conjunction with current one:
 #          - removing 'rsync-daemon' package('rhel9cis_use_rsync_server' set to 'false')
 #          - masking the 'rsyncd' service('rhel9cis_use_rsync_server' set to 'true')
 rhel9cis_use_rsync_service: false
 
 #### 2.3 Service clients
-# Control - 2.3.1 - Ensure telnet client is not installed
+
+
+## Control - 2.3.1 - Ensure telnet client is not installed
 # Set this variable to `true` to keep package `telnet`; otherwise, the package is uninstalled.
 rhel9cis_telnet_required: false
-# Control - 2.3.2 - Ensure LDAP client is not installed
+## Control - 2.3.2 - Ensure LDAP client is not installed
 # Set this variable to `true` to keep package `openldap-clients`; otherwise, the package is uninstalled.
 rhel9cis_openldap_clients_required: false
-# Control - 2.3.3 - Ensure FTP client is not installed
+## Control - 2.3.3 - Ensure FTP client is not installed
 # Set this variable to `true` to keep package `tftp`; otherwise, the package is uninstalled.
 rhel9cis_tftp_client: false
-# Control - 2.3.4 - Ensure FTP client is not installed
+## Control - 2.3.4 - Ensure FTP client is not installed
 # Set this variable to `true` to keep package `ftp`; otherwise, the package is uninstalled.
 rhel9cis_ftp_client: false
 
 ## Section 3 vars for
 ## Sysctl
-# This variable governs if the task which updates sysctl(including sysctl reload) is executed, but current
-# default value can be overriden by other tasks(1.5.3, 3.1.1, 3.2.1, 3.2.2, 3.3.1-3.3.9).
+
+
+# This variable governs if the task which updates sysctl(including sysctl reload) is executed.
+# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
 rhel9cis_sysctl_update: false
 # This variable governs if the task which flushes the IPv4 routing table is executed(forcing subsequent connections to
-# use the new configuration). Current default value can be overriden by other tasks(3.2.1, 3.2.2, 3.3.1-3.3.8).
+# use the new configuration).
+# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
 rhel9cis_flush_ipv4_route: false
 # This variable governs if the task which flushes the IPv6 routing table is executed(forcing subsequent connections to
-# use the new configuration). Current default value can be overriden by other tasks(3.1.1, 3.2.1, 3.3.1, 3.3.2, 3.3.9).
+# use the new configuration).
+# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
 rhel9cis_flush_ipv6_route: false
 
-### Firewall Service to install and configure - Option is:
-# 1) either 'firewalld'(Controls 3.4.1.2, 3.4.2.1, 3.4.2.4)
-# 2) or 'nftables'(Controls )
+### Firewall Service to install and configure - Options are:
+# 1) either 'firewalld'
+# 2) or 'nftables'
 #### Some control allow for services to be removed or masked
 #### The options are under each heading
 #### absent = remove the package
 #### masked = leave package if installed and mask the service
 rhel9cis_firewall: firewalld
 
-# Control 3.4.2.1 - Ensure firewalld default zone is set
+## Control 3.4.2.1 - Ensure firewalld default zone is set
 # This variable will set the firewalld default zone(that is used for everything that is not explicitly bound/assigned
 # to another zone): if there is no zone assigned to a connection, interface or source, only the default zone is used.
 rhel9cis_default_zone: public
@@ -761,31 +779,28 @@ rhel9cis_firewalld_ports:
       protocol: tcp
 
 ## Controls 3.5.2.x - nftables
-# The default nftables table name is "filter". This variable name will be the one all
-# "rhel9cis_nft_tables_tablename" is the name of the table in nftables you want to create.
-# nftables configs are applied to.
-# options are: inet filter
 
-# Control 3.4.2.2 - Ensure at least one nftables table exists
+
+## Control 3.4.2.2 - Ensure at least one nftables table exists
 # This variable governs if a table will be automatically created in nftables. Without a table (no default one), nftables
 # will not filter network traffic, so if this variable is set to 'false' and no tables exist, an alarm will be triggered!
 rhel9cis_nft_tables_autonewtable: true
-# Controls 3.4.2.{2|3|4|6|7} nftables
+## Controls 3.4.2.{2|3|4|6|7} nftables
 # This variable stores the name of the table to be used when configuring nftables(creating chains, configuring loopback
 # traffic, established connections, default deny). If 'rhel9cis_nft_tables_autonewtable' is set as true, a new table will
 # be created using as name the value stored by this variable.
 rhel9cis_nft_tables_tablename: filter
-# Control 3.4.2.3 - Ensure nftables base chains exist
+## Control 3.4.2.3 - Ensure nftables base chains exist
 # This variable governs if a nftables base chain(entry point for packets from the networking stack) will be automatically
 # created, if needed. Without a chain, a hook for input, forward, and delete, packets that would flow through those
-#chains will not be touched by nftables
+# chains will not be touched by nftables.
 rhel9cis_nft_tables_autochaincreate: true
 
 ## Controls:
 # - 1.7.1 - Ensure message of the day is configured properly
 # - 1.7.2 - Ensure local login warning banner is configured properly
 # - 1.7.3 - Ensure remote login warning banner is configured properly
-# Warning Banner Content (issue, issue.net, motd)
+# This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
 rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
 # End Banner
 
@@ -797,7 +812,7 @@ rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and
 # log files are getting too full and space is getting too low.
 rhel9cis_auditd:
     # This variable tells the system what action to take when the system has detected
-    #that it is starting to get low on disk space. Options are the same as for `admin_space_left_action`
+    # that it is starting to get low on disk space. Options are the same as for `admin_space_left_action`.
     space_left_action: email
     # This variable should contain a valid email address or alias(default value is root),
     # which will be used to send a warning when configured action is 'email'.
@@ -837,11 +852,9 @@ rhel9cis_audit_back_log_limit: 8192
 # This should be set based on your sites policy. CIS does not provide a specific value.
 rhel9cis_max_log_file_size: 10
 
-## 4.1.3.x - Audit template
-# This variable is set to true by tasks 4.1.3.1 to 4.1.3.20. As a result, the
-# audit settings are overwritten with the role's template. In order to exclude
-# specific rules, you must set the variable of form `rhel9cis_rule_4_1_3_x` above
-# to `false`.
+## Control 4.1.3.x - Audit template
+# This variable governs if the auditd logic should be executed(if value is true).
+# NOTE: The current default value is likely to be overriden(via 'set_fact') by other further tasks(in sub-section 'Auditd rules').
 update_audit_template: false
 
 ## Advanced option found in auditd post
@@ -857,12 +870,12 @@ rhel9cis_auditd_uid_exclude:
 # '/etc/audit/auditd.conf' file) can be stored within current variable.
 rhel9cis_auditd_extra_conf: {}
 # Example:
-# rhel9cis_auditd_extra_conf:
+#rhel9cis_auditd_extra_conf:
 #     admin_space_left: '10%'
 
 ## Whether rsyslog or journald preferred method for local logging
-## 4.2.1 | Configure rsyslog
-## 4.2.2 | Configure journald
+## Control 4.2.1 | Configure rsyslog
+## Control 4.2.2 | Configure journald
 # This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
 # or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
 # practices are written wholly independent of each other.
@@ -872,93 +885,92 @@ rhel9cis_syslog: rsyslog
 # in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
 rhel9cis_rsyslog_ansiblemanaged: true
 
-#### Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
+## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
 # remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
 # over UDP or TCP, will not be performed.
 rhel9cis_remote_log_server: false
-#### Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
+## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable configures the value of the 'target' parameter to be configured when enabling
 # forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
 # destination server. For this value to be reflected in the configuration, the variable which enables the
 # automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
 rhel9cis_remote_log_host: logagg.example.com
-#### Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
+## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable configures the value of the 'port' parameter to be configured when enabling
 # forwarding syslog messages to a remote log server. The default value for this destination port is 514.
 # For this value to be reflected in the configuration, the variable which enables the
 # automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
 rhel9cis_remote_log_port: 514
-#### Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
+## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable configures the value("TCP"/"UDP") of the 'protocol' parameter to be configured when enabling
 # forwarding syslog messages to a remote log server. The default value for the 'omfwd' plug-in is UDP.
 # For this value to be reflected in the configuration, the variable which enables the
 # automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
 rhel9cis_remote_log_protocol: tcp
-#### Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
+## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable governs how often an action is retried(value is passed to 'action.resumeRetryCount' parameter) before
 # it is considered to have failed(that roughly translates to discarded messages). The default value is 0, but
 # when set to "-1"(eternal), this setting would prevent rsyslog from dropping messages when retrying to connect
 # if server is not responding. For this value to be reflected in the configuration, the variable which enables the
 # automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
 rhel9cis_remote_log_retrycount: 100
-#### Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
+## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
 # This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
 # For this value to be reflected in the configuration, the variable which enables the automatic configuration
 # of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
 rhel9cis_remote_log_queuesize: 1000
 
-#### Control 4.2.1.7 - Ensure rsyslog is not configured to receive logs from a remote client
+## Control 4.2.1.7 - Ensure rsyslog is not configured to receive logs from a remote client
 # This variable expresses whether the system is used as a log server or not. If set to:
 #  - 'false', current system will act as a log CLIENT, thus it should NOT receive data from other hosts.
 #  - 'true', current system will act as a log SERVER, enabling centralised log management(by protecting log integrity
-#             from local attacks on remote clients)
+# from local attacks on remote clients)
 rhel9cis_system_is_log_server: false
 
-#### Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
 # 'rhel9cis_journal_upload_url' is the ip address to upload the journal entries to
 #  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
 #  number may be specified after a colon (":"), otherwise 19532 will be used by default.
 rhel9cis_journal_upload_url: 192.168.50.42
 ## The paths below have the default paths/files, but allow user to create custom paths/filenames
-#### Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to the private key file used by the remote journal
 # server to authenticate itself to the client. This key is used alongside the server's
 # public certificate to establish secure communication.
 rhel9cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
-#### Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to the public certificate file of the remote journal
 # server. This certificate is used to verify the authenticity of the remote server.
 rhel9cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
-#### Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
+## Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to a file containing one or more public certificates
 # of certificate authorities (CAs) that the client trusts. These trusted certificates are used
 # to validate the authenticity of the remote server's certificate.
 rhel9cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
 
-# Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
 # The variables below related to journald, please set these to your site specific values
 # These variable specifies how much disk space the journal may use up at most
 # Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
 # See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
 # ATTENTION: Uncomment the keyword below when values are set!
 
-# Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# rhel9cis_journald_systemmaxuse is the max amount of disk space the logs will use
+## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
+# 'rhel9cis_journald_systemmaxuse' is the max amount of disk space the logs will use
 rhel9cis_journald_systemmaxuse: 10M
-# Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# rhel9cis_journald_systemkeepfree is the amount of disk space to keep free
+## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
+# 'rhel9cis_journald_systemkeepfree' is the amount of disk space to keep free
 rhel9cis_journald_systemkeepfree: 100G
-# Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# rhel9cis_journald_runtimemaxuse control how much disk space the journal may use up at most.
-# same as rhel9cis_journald_systemmaxuse.
+## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
+# 'rhel9cis_journald_runtimemaxuse' control how much disk space the journal may use up at most.
+# same as 'rhel9cis_journald_systemmaxuse'.
 rhel9cis_journald_runtimemaxuse: 10M
-# Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# rhel9cis_journald_runtimekeepfree is the amount of disk space to keep free
-# same as rhel9cis_journald_systemkeepfree, but related to runtime space.
+## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
+# 'rhel9cis_journald_runtimekeepfree' is the amount of disk space to keep free
+# same as 'rhel9cis_journald_systemkeepfree', but related to runtime space.
 rhel9cis_journald_runtimekeepfree: 100G
-# Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# rhel9cis_journald_MaxFileSec is how long in time to keep log files.
+## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
+# 'rhel9cis_journald_MaxFileSec' is how long in time to keep log files.
 # This variable specifies, the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
 # The given values is interpreted as seconds, unless suffixed with the units
@@ -967,23 +979,24 @@ rhel9cis_journald_runtimekeepfree: 100G
 # ATTENTION: Uncomment the keyword below when values are set!
 rhel9cis_journald_maxfilesec: 1month
 
-#### Control 4.3 - Ensure logrotate is configured
+## Control 4.3 - Ensure logrotate is configured
 # This variable defines the log file rotation period.
 # Options are: daily, weekly, monthly, yearly.
 rhel9cis_logrotate: "daily"
 
 ## Section5 vars
 
-# Section 5.2 - SSH
+## Section 5.2 - SSH
+
 # This value, containing the absolute filepath of the produced 'sshd' config file, allows usage of
 # drop-in files('/etc/ssh/ssh_config.d/{ssh_drop_in_name}.conf', supported by RHEL9) when CIS adopts them.
 # Otherwise, the default value is '/etc/ssh/ssh_config'.
 rhel9_cis_sshd_config_file: /etc/ssh/sshd_config
 
-#### Controls:
-## 5.2.4  - Ensure SSH access is limited
-## 5.2.19 - Ensure SSH LoginGraceTime is set to one minute or less
-## 5.2.20 - Ensure SSH Idle Timeout Interval is configured
+## Controls:
+## - 5.2.4  - Ensure SSH access is limited
+## - 5.2.19 - Ensure SSH LoginGraceTime is set to one minute or less
+## - 5.2.20 - Ensure SSH Idle Timeout Interval is configured
 rhel9cis_sshd:
     # This variable sets the maximum number of unresponsive "keep-alive" messages
     # that can be sent from the server to the client before the connection is considered
@@ -1023,7 +1036,7 @@ rhel9cis_sshd:
     # For more info, see https://linux.die.net/man/5/sshd_config
     deny_groups: ""
 
-# Control 5.2.5 - Ensure SSH LogLevel is appropriate
+## Control 5.2.5 - Ensure SSH LogLevel is appropriate
 # This variable is used to control the verbosity of the logging produced by the SSH server.
 # The options for setting it are as follows:
 # - `QUIET`: Minimal logging;
@@ -1035,39 +1048,41 @@ rhel9cis_sshd:
 # - `DEBUG(x)`: Whereas x = debug level 1 to 3, DEBUG=DEBUG1.
 rhel9cis_ssh_loglevel: INFO
 
-# Control 5.2.18 - Ensure SSH MaxSessions is set to 10 or less
+## Control 5.2.18 - Ensure SSH MaxSessions is set to 10 or less
 # This variable value specifies the maximum number of open sessions that are permitted from
 # a given location
 rhel9cis_ssh_maxsessions: 4
 
 ## Control 5.6.1.4 - Ensure inactive password lock is 30 days or less
+rhel9cis_inactivelock:
 # This variable specifies the number of days of inactivity before an account will be locked.
 # CIS requires a value of 30 days or less.
-rhel9cis_inactivelock:
     lock_days: 30
 # This variable governs if authconfig package should be installed. This package provides a simple method of
 # configuring /etc/sysconfig/network to handle NIS, as well as /etc/passwd and /etc/shadow, the files used
 # for shadow password support. Basic LDAP, Kerberos 5, and Winbind client configuration is also provided.
 rhel9cis_use_authconfig: false
 
-#### Controls
-# SECTION 5.4 - Configure authselect: Custom authselect profile settings(name, profile to customize, options)
-#          5.4.1 - Ensure custom authselect profile is used('custom_profile_name', 'default_file_to_copy' subsettings)
-#          5.4.2 - Ensure authselect includes with-faillock | with auth select profile('custom_profile_name')
-# Settings in place now will fail, they are place holders from the control example. Due to the way many multiple
+## Section 5.4 - Configure authselect: Custom authselect profile settings(name, profile to customize, options)
+## Controls:
+#  - 5.4.1 - Ensure custom authselect profile is used('custom_profile_name', 'default_file_to_copy' subsettings)
+#  - 5.4.2 - Ensure authselect includes with-faillock | with auth select profile('custom_profile_name')
+# Settings in place now will fail, they are placeholders from the control example. Due to the way many multiple
 # options and ways to configure this control needs to be enabled and settings adjusted to minimise risk.
 rhel9cis_authselect:
+    # This variable configures the name of the custom profile to be created and selected.
     custom_profile_name: custom-profile
+    # This variable configures the ID of the existing profile that should be used as a base for the new profile.
     default_file_to_copy: "sssd --symlink-meta"
     options: with-sudo with-faillock without-nullok
 
-# Control 5.4.1 - Ensure custom authselect profile is used
+## Control 5.4.1 - Ensure custom authselect profile is used
 # This variable governs if an authselect custom profile should be automatically created, by copying and
 # customizing one of the default profiles. The default profiles include: sssd, winbind, or the nis. This profile can then be
 # customized to follow site specific requirements.
 rhel9cis_authselect_custom_profile_create: false
 
-# Control 5.4.2 - Ensure authselect includes with-faillock | Create custom profiles
+## Control 5.4.2 - Ensure authselect includes with-faillock | Create custom profiles
 # This variable governs if the existing custom profile should be selected(Note: please keep in mind that all future updates
 # to the PAM templates and meta files in the original profile will be reflected in your custom profile, too.)
 rhel9cis_authselect_custom_profile_select: false
@@ -1098,11 +1113,11 @@ rhel9cis_pam_password:
     # set to 4, passwords will have to include all four types of characters.
     minclass: 4
 
-##   Controls
-# 5.5.2 - Ensure lockout for failed password attempts is configured
-# 5.5.3 - Ensure password reuse is limited
-# 5.5.4 - Ensure password hashing algorithm is SHA-512
-# 5.4.2 -  Ensure authselect includes with-faillock
+## Controls
+# - 5.5.2 - Ensure lockout for failed password attempts is configured
+# - 5.5.3 - Ensure password reuse is limited
+# - 5.5.4 - Ensure password hashing algorithm is SHA-512
+# - 5.4.2 -  Ensure authselect includes with-faillock
 rhel9cis_pam_faillock:
     # This variable sets the amount of time a user will be unlocked after the max amount of
     #   password failures.
@@ -1110,7 +1125,7 @@ rhel9cis_pam_faillock:
     # This variable sets the amount of tries a password can be entered, before a user is locked.
     deny: 5
     # This variable represents the number of password change cycles, after which
-    # a user can re-use a password.
+    # an user can re-use a password.
     # CIS requires a value of 5 or more.
     remember: 5
 
@@ -1118,44 +1133,44 @@ rhel9cis_pam_faillock:
 # These are discovered via logins.def if set true
 discover_int_uid: false
 ### Controls:
-# 5.6.2 -  Ensure system accounts are secured
-# 6.2.10 - Ensure local interactive user home directories exist
-# 6.2.11 - Ensure local interactive users own their home directories
+# - 5.6.2 -  Ensure system accounts are secured
+# - 6.2.10 - Ensure local interactive user home directories exist
+# - 6.2.11 - Ensure local interactive users own their home directories
 # This variable sets the minimum number from which to search for UID
 # Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
 # been set to `true`.
 min_int_uid: 1000
 ### Controls:
-# 6.2.10 - Ensure local interactive user home directories exist
-# 6.2.11 - Ensure local interactive users own their home directories
+# - 6.2.10 - Ensure local interactive user home directories exist
+# - 6.2.11 - Ensure local interactive users own their home directories
 # This variable sets the maximum number at which the search stops for UID
 # Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
 # been set to `true`.
 max_int_uid: 65533
 
-### Control 5.3.3 - Ensure sudo log file exists
+## Control 5.3.3 - Ensure sudo log file exists
 # By default, sudo logs through syslog(3). However, to specify a custom log file, the
 # 'logfile' parameter will be used, setting it with current variable's value.
 # This variable defines the path and file name of the sudo log file.
 rhel9cis_sudolog_location: "/var/log/sudo.log"
 
-#### Control 5.3.6 -Ensure sudo authentication timeout is configured correctly
+## Control 5.3.6 -Ensure sudo authentication timeout is configured correctly
 # This variable sets the duration (in minutes) during which a user's authentication credentials
 # are cached after successfully authenticating using "sudo". This allows the user to execute
 # multiple commands with elevated privileges without needing to re-enter their password for each
 # command within the specified time period. CIS requires a value of at most 15 minutes.
 rhel9cis_sudo_timestamp_timeout: 15
 
-### 5.4.2 authselect and faillock
+## Control 5.4.2 - authselect and faillock
 ## This option is used at your own risk it will enable faillock for users
 ## Only to be used on a new clean system if not using authselect
-## THIS CAN BREAK ACCESS EVEN FOR ROOT - UNDERSTAND RISKS ##
+## THIS CAN BREAK ACCESS EVEN FOR ROOT - PLEASE UNDERSTAND RISKS !
 rhel9cis_add_faillock_without_authselect: false
-# This needs to be set to 'ACCEPT'(string), besides setting 'rhel9cis_add_faillock_without_authselect'
-# to 'true', in order to execute the 5.4.2 sub-tasks dealing with not authselect profile
+# This needs to be set to 'ACCEPT'(as string), besides setting 'rhel9cis_add_faillock_without_authselect'
+# to 'true', in order to include the 'with-failock' option to the current authselect profile.
 rhel9cis_5_4_2_risks: NEVER
 
-### Control 5.6.3 - Ensure default user shell timeout is 900 seconds or less
+## Control 5.6.3 - Ensure default user shell timeout is 900 seconds or less
 # Session timeout setting file (TMOUT setting can be set in multiple files)
 # Timeout value is in seconds. (60 seconds * 10 = 600)
 rhel9cis_shell_session_timeout:
@@ -1171,36 +1186,36 @@ rhel9cis_shell_session_timeout:
     # CIS requires a value of at most 900 seconds.
     timeout: 600
 
-### Control 5.6.1.5 - Ensure all users last password change date is in the past
+## Control 5.6.1.5 - Ensure all users last password change date is in the past
 # Allow ansible to expire password for account with a last changed date in the future. Setting it
 # to 'false' will just display users in violation, while 'true' will expire those users passwords.
 rhel9cis_futurepwchgdate_autofix: true
 
-### Control 5.3.7 - Ensure access to the 'su' command is restricted
+## Control 5.3.7 - Ensure access to the 'su' command is restricted
 # This variable determines the name of the group of users that are allowed to use the su command.
 # CIS requires that such a group be CREATED(named according to site policy) and be kept EMPTY.
 rhel9cis_sugroup: nosugroup
 
 ## Section6 vars
 
-### Control 6.1.15 - Audit system file permissions | Create list and warning
+## Control 6.1.15 - Audit system file permissions | Create list and warning
 # The RPM package-manager has many useful options. For example, using option:
 #  - '-V': RPM can automatically check if system packages are correctly installed
 #  - '-qf': RPM can be used to determine which package a particular file belongs to
-# Rule 6.1.15 takes advantage of the combination of those two options and, therefore, is able to
+# Auditing system file-permissions takes advantage of the combination of those two options and, therefore, is able to
 # detect any discrepancy regarding installed packages, redirecting the output of this combined
 # command into a specific file. If no output is returned, the package is installed correctly.
-# Current variable stores the preferred absolute filepath such a file, therefore if this file
+# Current variable stores the preferred absolute filepath for such a file, therefore if this file
 # contains any lines, an alert message will be generated to warn about each discrepancy.
 rhel9cis_rpm_audit_file: /var/tmp/rpm_file_check
 
-### Control 6.1.9 - Ensure no world writable files exist
+## Control 6.1.9 - Ensure no world writable files exist
 # Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable.
 rhel9cis_no_world_write_adjust: true
 
 rhel9cis_passwd_label: "{{ (this_item | default(item)).id }}: {{ (this_item | default(item)).dir }}"
 
-### Control 6.2.16 - Ensure local interactive user dot files are not group or world writable
+## Control 6.2.16 - Ensure local interactive user dot files are not group or world writable
 # This boolean variable governs if current role should follow filesystem links for changes to
 # user home directory.
 rhel_09_6_2_16_home_follow_symlinks: false
