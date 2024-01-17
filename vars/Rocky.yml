@@ -3,3 +3,9 @@
 
 os_gpg_key_pubkey_name: gpg-pubkey-350d275d-6279464b
 os_gpg_key_pubkey_content: "Rocky Enterprise Software Foundation - Release key 2022 <releng@rockylinux.org> 350d275d"
+
+rhel9cis_sshd:
+    # This variable sets the maximum number of unresponsive "keep-alive" messages
+    # that can be sent from the server to the client before the connection is considered
+    # inactive and thus, closed.
+    clientalivecountmax: 3
