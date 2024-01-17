@@ -613,7 +613,6 @@ rhel9cis_use_authconfig: false
 rhel9cis_authselect:
     custom_profile_name: custom-profile
     default_file_to_copy: "sssd --symlink-meta"
-    options: with-sudo with-faillock without-nullok
 
 # 5.3.1 Enable automation to create custom profile settings, using the settings above
 rhel9cis_authselect_custom_profile_create: false
