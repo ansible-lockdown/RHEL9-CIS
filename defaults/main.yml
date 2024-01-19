@@ -38,7 +38,6 @@ rhel9cis_section6: true
 # e.g.
 # - level1-server
 # - level2-workstation
-# Used for audit
 rhel9cis_level_1: true
 rhel9cis_level_2: true
 
@@ -142,9 +141,7 @@ audit_cmd_timeout: 120000
 # the CIS benchmark documents.
 # PLEASE NOTE: These work in coordination with the section # group variables and tags.
 # You must enable an entire section in order for the variables below to take effect.
-
-# Section 1 is Initial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
-# Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
+# Section 1 rules
 rhel9cis_rule_1_1_1_1: true
 rhel9cis_rule_1_1_1_2: true
 rhel9cis_rule_1_1_2_1: true
