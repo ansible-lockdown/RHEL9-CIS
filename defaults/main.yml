@@ -955,30 +955,30 @@ rhel9cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
 # of certificate authorities (CAs) that the client trusts. These trusted certificates are used
 # to validate the authenticity of the remote server's certificate.
 rhel9cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
+# ATTENTION: Uncomment the keyword below when values are set!
 
+## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
+# Current variable configures the max amount of disk space the logs will use(thus, journal files
+# will not grow without bounds)
 # The variables below related to journald, please set these to your site specific values
 # These variable specifies how much disk space the journal may use up at most
 # Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
 # See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
-# ATTENTION: Uncomment the keyword below when values are set!
-
-## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# 'rhel9cis_journald_systemmaxuse' is the max amount of disk space the logs will use
 rhel9cis_journald_systemmaxuse: 10M
 ## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# 'rhel9cis_journald_systemkeepfree' is the amount of disk space to keep free
+# Current variable configures the amount of disk space to keep free for other uses.
 rhel9cis_journald_systemkeepfree: 100G
 ## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# 'rhel9cis_journald_runtimemaxuse' control how much disk space the journal may use up at most.
-# same as 'rhel9cis_journald_systemmaxuse'.
+# This variable configures how much disk space the journal may use up at most.
+# Similar with 'rhel9cis_journald_systemmaxuse', but related to runtime space.
 rhel9cis_journald_runtimemaxuse: 10M
 ## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# 'rhel9cis_journald_runtimekeepfree' is the amount of disk space to keep free
-# same as 'rhel9cis_journald_systemkeepfree', but related to runtime space.
+# This variable configures the actual amount of disk space to keep free
+# Similar with 'rhel9cis_journald_systemkeepfree', but related to runtime space.
 rhel9cis_journald_runtimekeepfree: 100G
 ## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# 'rhel9cis_journald_MaxFileSec' is how long in time to keep log files.
-# This variable specifies, the maximum time to store entries in a single journal
+# Current variable governs the settings for log retention(how long the log files will be kept).
+# Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
 # The given values is interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
