@@ -3,214 +3,228 @@ os_image: rhel
 os_image_version: v9
 ciscat_version: v4.33.0
 testruns:
-- name: L2_Server_CIS_RHEL9_Ansible
-  testrun_ciscat_profile: xccdf_org.cisecurity.benchmarks_profile_Level_2_-_Server
-  testrun_benchmark_filename: CIS_Red_Hat_Enterprise_Linux_9_Benchmark_v1.0.0-xccdf.xml
-  testrun_checklist_id: "xccdf_org.cisecurity.benchmarks_benchmark_1.0.0_CIS_Red_Hat_Enterprise_Linux_9_Benchmark"
-  testrun_ansible_vars:
-    ubtu22cis_sshd:
-      allow_users: "ec2-user"
-      allow_groups: "sshadmins"
-  testrun_ansible_tags:
-  - level2-server
-  - level1-server
-  testrun_skip_ansible_tags:
-  - rule_5.3.4 # Enforcing password-based escalation will be disruptive for our AWS automation
-  activities:
-  # - id: 20_Ansible_Role_InitialCheck_L2_Workstation
-  #   type: ansible
-  #   role_name: rhel9-cis # code.siemens.com
-  #   ansible:
-  #     check_mode: yes
-  - id: 21_initial_ciscat_check
-    type: ciscat
-    validations:
-    - sub_type: count
-      expected:
-        pass: 134
-        fail: 97
-        error: 0
-        unknown: 0
-        not selected: 24
-    - sub_type: by_id
-      result: pass
-      check_ids: [R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_4, R1_2_2, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_5, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_4, R1_7_5, R1_7_6, R1_8_1, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_2_1, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_4_2_1, R3_4_2_7, R4_1_1_1, R4_1_1_4, R4_1_2_1, R4_1_4_1, R4_1_4_2, R4_1_4_3, R4_1_4_4, R4_1_4_5, R4_1_4_7, R4_1_4_8, R4_1_4_9, R4_1_4_10, R4_2_1_1, R4_2_1_2, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R5_1_1, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_14, R5_2_18, R5_2_20, R5_3_1, R5_3_5, R5_3_6, R5_5_4, R5_6_1_3, R5_6_1_5, R5_6_2, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
-    - sub_type: by_id
-      result: fail
-      check_ids: [R1_1_1_1, R1_1_1_2, R1_1_2_1, R1_1_3_1, R1_1_4_1, R1_1_5_1, R1_1_6_1, R1_1_7_1, R1_1_8_3, R1_1_9, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_6, R1_7_2, R1_7_3, R2_1_2, R3_1_3, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_7, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_2, R3_4_2_3, R3_4_2_4, R4_1_1_2, R4_1_1_3, R4_1_2_2, R4_1_2_3, R4_1_3_1, R4_1_3_2, R4_1_3_3, R4_1_3_4, R4_1_3_5, R4_1_3_6, R4_1_3_7, R4_1_3_8, R4_1_3_9, R4_1_3_10, R4_1_3_11, R4_1_3_12, R4_1_3_13, R4_1_3_14, R4_1_3_15, R4_1_3_16, R4_1_3_17, R4_1_3_18, R4_1_3_19, R4_1_3_20, R4_2_1_4, R4_2_2_3, R4_2_2_4, R4_2_3, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_2_4, R5_2_7, R5_2_12, R5_2_13, R5_2_15, R5_2_16, R5_2_17, R5_2_19, R5_3_2, R5_3_3, R5_3_4, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_6_1_1, R5_6_1_2, R5_6_1_4, R5_6_3, R5_6_5, R5_6_6, R6_2_2]
-  - id: 22_Ansible_Role_Implement_L2_Workstation
-    type: ansible
-    role_name: "rhel9-cis"
-    before_script: |
-      /sbin/groupadd sshadmins
-      /sbin/usermod -a -G sshadmins ec2-user
-  - id: 23_ciscat_check_after_implement
-    type: ciscat
-    validations:
-    - sub_type: count
-      expected:
-        pass: 212
-        fail: 19
-        error: 0
-        unknown: 0
-        not selected: 24
-    - sub_type: compare
-      compare_with: 21_initial_ciscat_check
-      overall_expected_change: improvement
-      expected:
-        rules_passed_only_here: &rulesPassedOnlyAfterImplementL2 [R1_1_1_1, R1_1_1_2, R1_1_8_3, R1_1_9, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_7_2, R1_7_3, R2_1_2, R3_1_3, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_2, R3_4_2_3, R3_4_2_4, R4_1_2_2, R4_1_2_3, R4_1_3_1, R4_1_3_10, R4_1_3_11, R4_1_3_12, R4_1_3_13, R4_1_3_14, R4_1_3_15, R4_1_3_16, R4_1_3_17, R4_1_3_18, R4_1_3_19, R4_1_3_2, R4_1_3_20, R4_1_3_3, R4_1_3_4, R4_1_3_5, R4_1_3_6, R4_1_3_7, R4_1_3_8, R4_1_3_9, R4_2_1_4, R4_2_3, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_2_13, R5_2_15, R5_2_16, R5_2_17, R5_2_19, R5_2_7, R5_3_2, R5_3_3, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_6_1_1, R5_6_1_2, R5_6_1_4, R5_6_3]
-        rules_failed_only_there: *rulesPassedOnlyAfterImplementL2
-        rules_passed_only_there: &rulesFAILEDAfterImplementL2 [R5_2_20]
-        rules_failed_only_here: *rulesFAILEDAfterImplementL2
-        rules_unknown_only_here: []
-        rules_unknown_only_there: []
-    - sub_type: by_id
-      result: pass
-      check_ids: [R1_1_1_1, R1_1_1_2, R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_3, R1_1_8_4, R1_1_9, R1_2_2, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_5, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_2, R1_7_3, R1_7_4, R1_7_5, R1_7_6, R1_8_1, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_1_2, R2_2_1, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_1_3, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_1, R3_4_2_2, R3_4_2_3, R3_4_2_4, R3_4_2_7, R4_1_1_1, R4_1_1_4, R4_1_2_1, R4_1_2_2, R4_1_2_3, R4_1_3_1, R4_1_3_2, R4_1_3_3, R4_1_3_4, R4_1_3_5, R4_1_3_6, R4_1_3_7, R4_1_3_8, R4_1_3_9, R4_1_3_10, R4_1_3_11, R4_1_3_12, R4_1_3_13, R4_1_3_14, R4_1_3_15, R4_1_3_16, R4_1_3_17, R4_1_3_18, R4_1_3_19, R4_1_3_20, R4_1_4_1, R4_1_4_2, R4_1_4_3, R4_1_4_4, R4_1_4_5, R4_1_4_7, R4_1_4_8, R4_1_4_9, R4_1_4_10, R4_2_1_1, R4_2_1_2, R4_2_1_4, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R4_2_3, R5_1_1, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_7, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_13, R5_2_14, R5_2_15, R5_2_16, R5_2_17, R5_2_18, R5_2_19, R5_3_1, R5_3_2, R5_3_3, R5_3_5, R5_3_6, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_5_4, R5_6_1_1, R5_6_1_2, R5_6_1_3, R5_6_1_4, R5_6_1_5, R5_6_2, R5_6_3, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
-    - sub_type: by_id
-      result: fail
-      check_ids: [R1_1_2_1, R1_1_3_1, R1_1_4_1, R1_1_5_1, R1_1_6_1, R1_1_7_1, R1_6_1_6, R3_3_7, R4_1_1_2, R4_1_1_3, R4_2_2_3, R4_2_2_4, R5_2_4, R5_2_12, R5_2_20, R5_3_4, R5_6_5, R5_6_6, R6_2_2]
-  - id: 25_reboot_system_for_testing_consistency
-    type: reboot
-    args:
-    - msg: "Reboot performed as requested on testfiles used for running ANSIBLE_CIS_DEBIAN_10 pipeline(L2)"
-    - test_command: "uptime -s"
-    - reboot_timeout: 100
-  # - id: 24_Ansible_Role_CheckAfterImplement_L1_Workstation
-  #   type: ansible
-  #   role_name: "rhel9-cis"
-  #   before_script: |
-  #     cat /etc/os-release
-  #   ansible:
-  #     check_mode: yes
-  #     diff: yes
-  - id: 26_ciscat_check_after_impl_AND_reboot
-    type: ciscat
-    validations:
-    - sub_type: count
-      expected:
-        pass: 211
-        fail: 20
-        error: 0
-        unknown: 0
-        not selected: 24
-    - sub_type: compare
-      compare_with: 23_ciscat_check_after_implement
-      overall_expected_change: stagnation
-      expected:
-        rules_passed_only_here: []
-        rules_failed_only_there: []
-        rules_passed_only_there: [R4_2_3]
-        rules_failed_only_here: [R4_2_3]
-        rules_unknown_only_here: []
-        rules_unknown_only_there: []
-    - sub_type: by_id
-      result: pass
-      check_ids: [R1_1_1_1, R1_1_1_2, R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_3, R1_1_8_4, R1_1_9, R1_2_2, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_5, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_2, R1_7_3, R1_7_4, R1_7_5, R1_7_6, R1_8_1, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_1_2, R2_2_1, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_1_3, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_1, R3_4_2_2, R3_4_2_3, R3_4_2_4, R3_4_2_7, R4_1_1_1, R4_1_1_4, R4_1_2_1, R4_1_2_2, R4_1_2_3, R4_1_3_1, R4_1_3_2, R4_1_3_3, R4_1_3_4, R4_1_3_5, R4_1_3_6, R4_1_3_7, R4_1_3_8, R4_1_3_9, R4_1_3_10, R4_1_3_11, R4_1_3_12, R4_1_3_13, R4_1_3_14, R4_1_3_15, R4_1_3_16, R4_1_3_17, R4_1_3_18, R4_1_3_19, R4_1_3_20, R4_1_4_1, R4_1_4_2, R4_1_4_3, R4_1_4_4, R4_1_4_5, R4_1_4_7, R4_1_4_8, R4_1_4_9, R4_1_4_10, R4_2_1_1, R4_2_1_2, R4_2_1_4, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R5_1_1, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_7, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_13, R5_2_14, R5_2_15, R5_2_16, R5_2_17, R5_2_18, R5_2_19, R5_3_1, R5_3_2, R5_3_3, R5_3_5, R5_3_6, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_5_4, R5_6_1_1, R5_6_1_2, R5_6_1_3, R5_6_1_4, R5_6_1_5, R5_6_2, R5_6_3, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
-    - sub_type: by_id
-      check_ids: [R1_1_2_1, R1_1_3_1, R1_1_4_1, R1_1_5_1, R1_1_6_1, R1_1_7_1, R1_6_1_6, R3_3_7, R4_1_1_2, R4_1_1_3, R4_2_2_3, R4_2_2_4, R4_2_3, R5_2_4, R5_2_12, R5_2_20, R5_3_4, R5_6_5, R5_6_6, R6_2_2]
-      result: fail
+    - name: L2_Server_CIS_RHEL9_Ansible
+      testrun_ciscat_profile: xccdf_org.cisecurity.benchmarks_profile_Level_2_-_Server
+      testrun_benchmark_filename: CIS_Red_Hat_Enterprise_Linux_9_Benchmark_v1.0.0-xccdf.xml
+      testrun_checklist_id: "xccdf_org.cisecurity.benchmarks_benchmark_1.0.0_CIS_Red_Hat_Enterprise_Linux_9_Benchmark"
+      testrun_ansible_vars:
+          ubtu22cis_sshd:
+              allow_users: "ec2-user"
+              allow_groups: "sshadmins"
+      testrun_ansible_tags:
+          - level2-server
+          - level1-server
+      testrun_skip_ansible_tags:
+          - rule_5.3.4 # Enforcing password-based escalation will be disruptive for our AWS automation
+      activities:
+          # - id: 20_Ansible_Role_InitialCheck_L2_Workstation
+          #   type: ansible
+          #   role_name: rhel9-cis # code.siemens.com
+          #   ansible:
+          #     check_mode: yes
+          - id: 21_initial_ciscat_check
+            type: ciscat
+            validations:
+            - sub_type: count
+              expected:
+                  pass: 134
+                  fail: 97
+                  not selected: 24
+            - sub_type: by_id
+              result: pass
+              check_ids: [R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_4, R1_2_2, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_5, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_4, R1_7_5, R1_7_6, R1_8_1, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_2_1, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_4_2_1, R3_4_2_7, R4_1_1_1, R4_1_1_4, R4_1_2_1, R4_1_4_1, R4_1_4_2, R4_1_4_3, R4_1_4_4, R4_1_4_5, R4_1_4_7, R4_1_4_8, R4_1_4_9, R4_1_4_10, R4_2_1_1, R4_2_1_2, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R5_1_1, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_14, R5_2_18, R5_2_20, R5_3_1, R5_3_5, R5_3_6, R5_5_4, R5_6_1_3, R5_6_1_5, R5_6_2, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
+            - sub_type: by_id
+              result: fail
+              check_ids: [R1_1_1_1, R1_1_1_2, R1_1_2_1, R1_1_3_1, R1_1_4_1, R1_1_5_1, R1_1_6_1, R1_1_7_1, R1_1_8_3, R1_1_9, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_6, R1_7_2, R1_7_3, R2_1_2, R3_1_3, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_7, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_2, R3_4_2_3, R3_4_2_4, R4_1_1_2, R4_1_1_3, R4_1_2_2, R4_1_2_3, R4_1_3_1, R4_1_3_2, R4_1_3_3, R4_1_3_4, R4_1_3_5, R4_1_3_6, R4_1_3_7, R4_1_3_8, R4_1_3_9, R4_1_3_10, R4_1_3_11, R4_1_3_12, R4_1_3_13, R4_1_3_14, R4_1_3_15, R4_1_3_16, R4_1_3_17, R4_1_3_18, R4_1_3_19, R4_1_3_20, R4_2_1_4, R4_2_2_3, R4_2_2_4, R4_2_3, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_2_4, R5_2_7, R5_2_12, R5_2_13, R5_2_15, R5_2_16, R5_2_17, R5_2_19, R5_3_2, R5_3_3, R5_3_4, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_6_1_1, R5_6_1_2, R5_6_1_4, R5_6_3, R5_6_5, R5_6_6, R6_2_2]
+          - id: 22_Ansible_Role_Implement_L2_Workstation
+            type: ansible
+            role_name: "rhel9-cis"
+            before_script: |
+                /sbin/groupadd sshadmins
+                /sbin/usermod -a -G sshadmins ec2-user
+          - id: 23_ciscat_check_after_implement
+            type: ciscat
+            validations:
+            - sub_type: count
+              expected:
+                  pass: 213
+                  fail: 18
+                  not selected: 24
+            - sub_type: compare
+              compare_with: 21_initial_ciscat_check
+              overall_expected_change: improvement
+              expected:
+                rules_passed_only_here: [R1_1_1_1, R1_1_1_2, R1_1_8_3, R1_1_9, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_7_2, R1_7_3, R2_1_2, R3_1_3, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_7, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_2, R3_4_2_3, R3_4_2_4, R4_1_2_2, R4_1_2_3, R4_1_3_1, R4_1_3_10, R4_1_3_11, R4_1_3_12, R4_1_3_13, R4_1_3_14, R4_1_3_15, R4_1_3_16, R4_1_3_17, R4_1_3_18, R4_1_3_19, R4_1_3_2, R4_1_3_20, R4_1_3_3, R4_1_3_4, R4_1_3_5, R4_1_3_6, R4_1_3_7, R4_1_3_8, R4_1_3_9, R4_2_1_4, R4_2_3, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_2_13, R5_2_15, R5_2_16, R5_2_17, R5_2_19, R5_2_7, R5_3_2, R5_3_3, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_6_1_1, R5_6_1_2, R5_6_1_4, R5_6_3]
+                rules_failed_only_here: &rulesFAILEDAfterImplementL2
+                    - R5_2_20 # [TBD] Ensure SSH Idle Timeout Interval is configured
+                rules_unknown_only_there: []
+            - sub_type: by_id
+              result: pass
+              check_ids: &passed_rules_after_impl_l2 [R1_1_1_1, R1_1_1_2, R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_3, R1_1_8_4, R1_1_9, R1_2_2, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_5, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_2, R1_7_3, R1_7_4, R1_7_5, R1_7_6, R1_8_1, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_1_2, R2_2_1, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_1_3, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_7, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_1, R3_4_2_2, R3_4_2_3, R3_4_2_4, R3_4_2_7, R4_1_1_1, R4_1_1_4, R4_1_2_1, R4_1_2_2, R4_1_2_3, R4_1_3_1, R4_1_3_2, R4_1_3_3, R4_1_3_4, R4_1_3_5, R4_1_3_6, R4_1_3_7, R4_1_3_8, R4_1_3_9, R4_1_3_10, R4_1_3_11, R4_1_3_12, R4_1_3_13, R4_1_3_14, R4_1_3_15, R4_1_3_16, R4_1_3_17, R4_1_3_18, R4_1_3_19, R4_1_3_20, R4_1_4_1, R4_1_4_2, R4_1_4_3, R4_1_4_4, R4_1_4_5, R4_1_4_7, R4_1_4_8, R4_1_4_9, R4_1_4_10, R4_2_1_1, R4_2_1_2, R4_2_1_4, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R4_2_3, R5_1_1, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_7, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_13, R5_2_14, R5_2_15, R5_2_16, R5_2_17, R5_2_18, R5_2_19, R5_3_1, R5_3_2, R5_3_3, R5_3_5, R5_3_6, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_5_4, R5_6_1_1, R5_6_1_2, R5_6_1_3, R5_6_1_4, R5_6_1_5, R5_6_2, R5_6_3, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
+            - sub_type: by_id
+              result: fail
+              check_ids: &failed_rules_after_impl_l2
+                  - R1_1_2_1 # [N/A]                                            Ensure /tmp is a separate partition
+                  - R1_1_3_1 # [N/A]                                            Ensure separate partition exists for /var
+                  - R1_1_4_1 # [N/A]                                            Ensure separate partition exists for /var/tmp
+                  - R1_1_5_1 # [N/A]                                            Ensure separate partition exists for /var/log
+                  - R1_1_6_1 # [N/A]                                            Ensure separate partition exists for /var/log/audit
+                  - R1_1_7_1 # [N/A]                                            Ensure separate partition exists for /home
+                  - R1_6_1_6 # [ SSM ]                                          Ensure no unconfined services exist
+                  - R4_1_1_2 # [Grub audit=1]                                   Ensure auditing for processes that start prior to auditd is enabled
+                  - R4_1_1_3 # [Grub audit_backlog_limit]                       Ensure audit_backlog_limit is sufficient
+                  - R4_2_2_3 # [Compress in /etc/systemd/journald.conf]         Ensure journald is configured to compress large log files
+                  - R4_2_2_4 # [Storage=persistent /etc/systemd/journald.conf]  Ensure journald is configured to write logfiles to persistent disk
+                  - R5_2_4   # [TBD]                                            Ensure SSH access is limited
+                  - R5_2_12  #                                                  Ensure SSH X11 forwarding is disabled
+                  - R5_2_20  #                                                  Ensure SSH Idle Timeout Interval is configured
+                  - R5_3_4   # [DELIBERATELY IMPL-SKIPPED]                      Ensure users must provide password for escalation
+                  - R5_6_5   # Ensure default user umask is 027 or more restrictive
+                  - R5_6_6   # Ensure root password is set
+                  - R6_2_2   # Ensure /etc/shadow password fields are not empty
+          - id: 25_reboot_system_for_testing_consistency
+            type: reboot
+            args:
+                - msg: "Reboot performed as requested on testfiles used for running ANSIBLE_CIS_DEBIAN_10 pipeline(L2)"
+                - test_command: "chmod g-wx,o-rwx /var/log/chrony/tracking.log" # Without adjusting log-perm during reboot, R4_2_3 will be reported as Fail
+                - reboot_timeout: 100
+          # - id: 24_Ansible_Role_CheckAfterImplement_L1_Workstation
+          #   type: ansible
+          #   role_name: "rhel9-cis"
+          #   before_script: |
+          #     cat /etc/os-release
+          #   ansible:
+          #     check_mode: yes
+          #     diff: yes
+          - id: 26_ciscat_check_after_impl_AND_reboot
+            type: ciscat
+            validations:
+                - sub_type: count
+                  expected:
+                      pass: 213
+                      fail: 18
+                      error: 0
+                      unknown: 0
+                      not selected: 24
+                - sub_type: compare
+                  compare_with: 23_ciscat_check_after_implement
+                  overall_expected_change: stagnation
+                  expected:
+                      rules_passed_only_here:  []
+                      rules_failed_only_here:  [] # - R4_2_3 # Ensure all logfiles have appropriate permissions and ownership
+                      rules_unknown_only_here: []
+                - sub_type: by_id
+                  result: pass
+                  check_ids: *passed_rules_after_impl_l2
+                - sub_type: by_id
+                  check_ids: *failed_rules_after_impl_l2
+                  result: fail
 
-- name: L1_Server_CIS_RHEL9_Ansible
-  testrun_ciscat_profile: xccdf_org.cisecurity.benchmarks_profile_Level_1_-_Server
-  testrun_benchmark_filename: CIS_Red_Hat_Enterprise_Linux_9_Benchmark_v1.0.0-xccdf.xml
-  testrun_checklist_id: "xccdf_org.cisecurity.benchmarks_benchmark_1.0.0_CIS_Red_Hat_Enterprise_Linux_9_Benchmark"
-  testrun_ansible_vars:
-    rhel9cis_sshd:
-      allow_users: "ec2-user"
-      allow_groups: "sshadmins"
-  testrun_ansible_tags:
-  - level1-server
-  activities:
-  - id: 10_Ansible_Role_InitialCheck_L1_Workstation
-    type: ansible
-    role_name: rhel9-cis # code.siemens.com
-    ansible:
-      check_mode: yes
-  - id: 11_initial_ciscat_check
-    type: ciscat
-    validations:
-    - sub_type: count
-      expected:
-        pass: 119
-        fail: 62
-        error: 0
-        unknown: 0
-        not selected: 74
-    - sub_type: by_id
-      result: pass
-      check_ids: [R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_4, R1_2_2, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_4, R1_7_5, R1_7_6, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_4_2_1, R3_4_2_7, R4_2_1_1, R4_2_1_2, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R5_1_1, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_14, R5_2_18, R5_2_20, R5_3_1, R5_3_5, R5_3_6, R5_5_4, R5_6_1_3, R5_6_1_5, R5_6_2, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
-    - sub_type: by_id
-      result: fail
-      check_ids: [R1_1_2_1, R1_1_8_3, R1_1_9, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_6, R1_7_2, R1_7_3, R2_1_2, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_7, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_2, R3_4_2_3, R3_4_2_4, R4_2_1_4, R4_2_2_3, R4_2_2_4, R4_2_3, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_2_4, R5_2_7, R5_2_15, R5_2_16, R5_2_17, R5_2_19, R5_3_2, R5_3_3, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_6_1_1, R5_6_1_2, R5_6_1_4, R5_6_3, R5_6_5, R5_6_6, R6_2_2]
-  - id: 12_Ansible_Role_Implement_L1_Workstation
-    type: ansible
-    role_name: rhel9-cis # code.siemens.com
-    before_script: |
-      /sbin/groupadd sshadmins
-      /sbin/usermod -a -G sshadmins ec2-user
-  - id: 13_ciscat_check_after_implement
-    type: ciscat
-    validations:
-    - sub_type: count
-      expected:
-        pass: 171
-        fail: 10
-        error: 0
-        unknown: 0
-        not selected: 74
-    - sub_type: compare
-      compare_with: 11_initial_ciscat_check
-      overall_expected_change: improvement
-      expected:
-        rules_passed_only_here: &rulesPassedOnlyAfterImplementL1 [R1_1_8_3, R1_1_9, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_7_2, R1_7_3, R2_1_2, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_2, R3_4_2_3, R3_4_2_4, R4_2_1_4, R4_2_3, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_2_15, R5_2_16, R5_2_17, R5_2_19, R5_2_7, R5_3_2, R5_3_3, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_6_1_1, R5_6_1_2, R5_6_1_4, R5_6_3]
-        rules_failed_only_there: *rulesPassedOnlyAfterImplementL1
-        rules_passed_only_there: [R5_2_20]
-        rules_failed_only_here: [R5_2_20]
-        rules_unknown_only_here: []
-        rules_unknown_only_there: []
-    - sub_type: by_id
-      result: pass
-      check_ids: [R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_3, R1_1_8_4, R1_1_9, R1_2_2, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_2, R1_7_3, R1_7_4, R1_7_5, R1_7_6, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_1_2, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_1, R3_4_2_2, R3_4_2_3, R3_4_2_4, R3_4_2_7, R4_2_1_1, R4_2_1_2, R4_2_1_4, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R4_2_3, R5_1_1, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_7, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_14, R5_2_15, R5_2_16, R5_2_17, R5_2_18, R5_2_19, R5_3_1, R5_3_2, R5_3_3, R5_3_5, R5_3_6, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_5_4, R5_6_1_1, R5_6_1_2, R5_6_1_3, R5_6_1_4, R5_6_1_5, R5_6_2, R5_6_3, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
-    - sub_type: by_id
-      result: fail
-      check_ids: [R1_1_2_1, R1_6_1_6, R3_3_7, R4_2_2_3, R4_2_2_4, R5_2_4, R5_2_20, R5_6_5, R5_6_6, R6_2_2]
-  - id: 15_reboot_system_for_testing_consistency
-    type: reboot
-    args:
-    - msg: Reboot performed as requested on testfiles used for running ANSIBLE_CIS_DEBIAN_10 pipeline(L1)
-    - reboot_timeout: 100
-    # - id: 14_Ansible_Role_CheckAfterImplement_L1_Workstation
-  #   type: ansible
-  #   role_name: rhel9-cis # code.siemens.com
-  #   before_script: |
-  #     cat /etc/os-release
-  #   ansible:
-  #     check_mode: yes
-  #     diff: yes
-  - id: 16_ciscat_check_after_impl_AND_reboot
-    type: ciscat
-    validations:
-    - sub_type: count
-      expected:
-        pass: 170
-        fail: 11
-        error: 0
-        unknown: 0
-        not selected: 74
-    - sub_type: compare
-      compare_with: 13_ciscat_check_after_implement
-      overall_expected_change: stagnation
-      expected:
-        rules_passed_only_here: []
-        rules_failed_only_there: []
-        rules_passed_only_there: [R4_2_3]
-        rules_failed_only_here: [R4_2_3]
-        rules_unknown_only_here: []
-        rules_unknown_only_there: []
-    - sub_type: by_id
-      result: pass
-      check_ids: [R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_3, R1_1_8_4, R1_1_9, R1_2_2, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_2, R1_7_3, R1_7_4, R1_7_5, R1_7_6, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_1_2, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_1, R3_4_2_2, R3_4_2_3, R3_4_2_4, R3_4_2_7, R4_2_1_1, R4_2_1_2, R4_2_1_4, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R5_1_1, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_7, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_14, R5_2_15, R5_2_16, R5_2_17, R5_2_18, R5_2_19, R5_3_1, R5_3_2, R5_3_3, R5_3_5, R5_3_6, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_5_4, R5_6_1_1, R5_6_1_2, R5_6_1_3, R5_6_1_4, R5_6_1_5, R5_6_2, R5_6_3, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
-    - sub_type: by_id
-      result: fail
-      check_ids: [R1_1_2_1, R1_6_1_6, R3_3_7, R4_2_2_3, R4_2_2_4, R4_2_3, R5_2_4, R5_2_20, R5_6_5, R5_6_6, R6_2_2]
+    - name: L1_Server_CIS_RHEL9_Ansible
+      testrun_ciscat_profile: xccdf_org.cisecurity.benchmarks_profile_Level_1_-_Server
+      testrun_benchmark_filename: CIS_Red_Hat_Enterprise_Linux_9_Benchmark_v1.0.0-xccdf.xml
+      testrun_checklist_id: "xccdf_org.cisecurity.benchmarks_benchmark_1.0.0_CIS_Red_Hat_Enterprise_Linux_9_Benchmark"
+      testrun_ansible_vars:
+        rhel9cis_sshd:
+          allow_users: "ec2-user"
+          allow_groups: "sshadmins"
+      testrun_ansible_tags:
+      - level1-server
+      activities:
+#      - id: 10_Ansible_Role_InitialCheck_L1_Workstation
+#        type: ansible
+#        role_name: rhel9-cis     # code.siemens.com
+#        ansible:
+#          check_mode: yes
+      - id: 11_initial_ciscat_check
+        type: ciscat
+        validations:
+        - sub_type: count
+          expected:
+              pass: 119
+              fail: 62
+              error: 0
+              unknown: 0
+              not selected: 74
+        - sub_type: by_id
+          result: pass
+          check_ids: [R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_4, R1_2_2, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_4, R1_7_5, R1_7_6, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_4_2_1, R3_4_2_7, R4_2_1_1, R4_2_1_2, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R5_1_1, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_14, R5_2_18, R5_2_20, R5_3_1, R5_3_5, R5_3_6, R5_5_4, R5_6_1_3, R5_6_1_5, R5_6_2, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
+        - sub_type: by_id
+          result: fail
+          check_ids: [R1_1_2_1, R1_1_8_3, R1_1_9, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_6, R1_7_2, R1_7_3, R2_1_2, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_7, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_2, R3_4_2_3, R3_4_2_4, R4_2_1_4, R4_2_2_3, R4_2_2_4, R4_2_3, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_2_4, R5_2_7, R5_2_15, R5_2_16, R5_2_17, R5_2_19, R5_3_2, R5_3_3, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_6_1_1, R5_6_1_2, R5_6_1_4, R5_6_3, R5_6_5, R5_6_6, R6_2_2]
+      - id: 12_Ansible_Role_Implement_L1_Workstation
+        type: ansible
+        role_name: rhel9-cis     # code.siemens.com
+        before_script: |
+            /sbin/groupadd sshadmins
+            /sbin/usermod -a -G sshadmins ec2-user
+      - id: 13_ciscat_check_after_implement
+        type: ciscat
+        validations:
+        - sub_type: count
+          expected:
+              pass: 172
+              fail: 9
+              error: 0
+              unknown: 0
+              not selected: 74
+        - sub_type: compare
+          compare_with: 11_initial_ciscat_check
+          overall_expected_change: improvement
+          expected:
+              rules_passed_only_here: [R1_1_8_3, R1_1_9, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_7_2, R1_7_3, R2_1_2, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_7, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_2, R3_4_2_3, R3_4_2_4, R4_2_1_4, R4_2_3, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_2_15, R5_2_16, R5_2_17, R5_2_19, R5_2_7, R5_3_2, R5_3_3, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_6_1_1, R5_6_1_2, R5_6_1_4, R5_6_3]
+              rules_passed_only_there:
+              - R5_2_20
+              rules_unknown_only_here: []
+        - sub_type: by_id
+          result: pass
+          check_ids: &passed_rules_after_impl_l1 [R1_1_2_2, R1_1_2_3, R1_1_2_4, R1_1_3_2, R1_1_3_3, R1_1_4_2, R1_1_4_3, R1_1_4_4, R1_1_5_2, R1_1_5_3, R1_1_5_4, R1_1_6_2, R1_1_6_3, R1_1_6_4, R1_1_7_2, R1_1_7_3, R1_1_8_1, R1_1_8_2, R1_1_8_3, R1_1_8_4, R1_1_9, R1_2_2, R1_3_1, R1_3_2, R1_3_3, R1_4_1, R1_4_2, R1_5_1, R1_5_2, R1_5_3, R1_6_1_1, R1_6_1_2, R1_6_1_3, R1_6_1_4, R1_6_1_7, R1_6_1_8, R1_7_1, R1_7_2, R1_7_3, R1_7_4, R1_7_5, R1_7_6, R1_8_2, R1_8_3, R1_8_4, R1_8_5, R1_8_6, R1_8_7, R1_8_8, R1_8_9, R1_8_10, R1_10, R2_1_1, R2_1_2, R2_2_2, R2_2_3, R2_2_4, R2_2_5, R2_2_6, R2_2_7, R2_2_8, R2_2_9, R2_2_10, R2_2_11, R2_2_12, R2_2_13, R2_2_14, R2_2_15, R2_2_16, R2_2_17, R2_2_18, R2_3_1, R2_3_2, R2_3_3, R2_3_4, R3_1_2, R3_2_1, R3_2_2, R3_3_1, R3_3_2, R3_3_3, R3_3_4, R3_3_5, R3_3_6, R3_3_7, R3_3_8, R3_3_9, R3_4_1_1, R3_4_1_2, R3_4_2_1, R3_4_2_2, R3_4_2_3, R3_4_2_4, R3_4_2_7, R4_2_1_1, R4_2_1_2, R4_2_1_4, R4_2_1_7, R4_2_2_1_4, R4_2_2_2, R4_2_3, R5_1_1, R5_1_2, R5_1_3, R5_1_4, R5_1_5, R5_1_6, R5_1_7, R5_1_8, R5_1_9, R5_2_1, R5_2_2, R5_2_3, R5_2_5, R5_2_6, R5_2_7, R5_2_8, R5_2_9, R5_2_10, R5_2_11, R5_2_14, R5_2_15, R5_2_16, R5_2_17, R5_2_18, R5_2_19, R5_3_1, R5_3_2, R5_3_3, R5_3_5, R5_3_6, R5_3_7, R5_4_2, R5_5_1, R5_5_2, R5_5_3, R5_5_4, R5_6_1_1, R5_6_1_2, R5_6_1_3, R5_6_1_4, R5_6_1_5, R5_6_2, R5_6_3, R5_6_4, R6_1_1, R6_1_2, R6_1_3, R6_1_4, R6_1_5, R6_1_6, R6_1_7, R6_1_8, R6_1_9, R6_1_10, R6_1_11, R6_1_12, R6_2_1, R6_2_3, R6_2_4, R6_2_5, R6_2_6, R6_2_7, R6_2_8, R6_2_9, R6_2_10, R6_2_11, R6_2_12, R6_2_13, R6_2_14, R6_2_15, R6_2_16]
+        - sub_type: by_id
+          result: fail
+          check_ids: &failed_rules_after_impl_l1
+              - R1_1_2_1         # [N/A]                                            Ensure /tmp is a separate partition
+              - R1_6_1_6         # [ SSM ]                                          Ensure no unconfined services exist
+              - R4_2_2_3         # [Compress in /etc/systemd/journald.conf]         Ensure journald is configured to compress large log files
+              - R4_2_2_4         # [Storage=persistent /etc/systemd/journald.conf]  Ensure journald is configured to write logfiles to persistent disk
+              - R5_2_4           # [TBD]                                            Ensure SSH access is limited
+              - R5_2_20          # #                                                Ensure SSH Idle Timeout Interval is configured
+              - R5_6_5           # Ensure default user umask is 027 or more restrictive
+              - R5_6_6           # Ensure root password is set
+              - R6_2_2           # Ensure /etc/shadow password fields are not empty
+      - id: 15_reboot_system_for_testing_consistency
+        type: reboot
+        args:
+        - msg: Reboot performed as requested on testfiles used for running ANSIBLE_CIS_DEBIAN_10 pipeline(L1)
+        - reboot_timeout: 100
+        - test_command: "chmod g-wx,o-rwx /var/log/chrony/tracking.log" # Fixing rule: "R4_2_3-Ensure all logfiles have appropriate permissions and ownership"
+          # - id: 14_Ansible_Role_CheckAfterImplement_L1_Workstation
+          #   type: ansible
+          #   role_name: rhel9-cis # code.siemens.com
+          #   before_script: |
+          #     cat /etc/os-release
+          #   ansible:
+          #     check_mode: yes
+          #     diff: yes
+      - id: 16_ciscat_check_after_impl_AND_reboot
+        type: ciscat
+        validations:
+        - sub_type: count
+          expected:
+              pass: 172
+              fail: 9
+              error: 0
+              unknown: 0
+              not selected: 74
+        - sub_type: compare
+          compare_with: 13_ciscat_check_after_implement
+          overall_expected_change: stagnation
+          expected:
+              rules_passed_only_here: []
+              rules_failed_only_here: []
+              rules_unknown_only_here: []
+        - sub_type: by_id
+          result: pass
+          check_ids: *passed_rules_after_impl_l1
+        - sub_type: by_id
+          result: fail
+          check_ids: *failed_rules_after_impl_l1
