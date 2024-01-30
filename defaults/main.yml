@@ -853,6 +853,12 @@ rhel9cis_auditd:
     # CIS prescribes the value `keep_logs`.
     max_log_file_action: keep_logs
 
+##  Control 4.1.1.4 - Ensure rhel9cis_audit_back_log_limit is sufficient
+# This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
+# system can buffer in memory, if the audit subsystem is unable to process them in real-time.
+# Buffering in memory is useful in situations, where the audit system is overwhelmed
+# with incoming audit events, and needs to temporarily store them until they can be processed.
+# This variable should be set to a sufficient value. The CIS baseline recommends at least `8192` as value.
 # This value governs if the below extra-vars for auditd should be used by the role
 rhel9cis_auditd_extra_conf_usage: false
 
