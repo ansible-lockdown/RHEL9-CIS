@@ -38,7 +38,6 @@ rhel9cis_section6: true
 # e.g.
 # - level1-server
 # - level2-workstation
-# Used for audit
 rhel9cis_level_1: true
 rhel9cis_level_2: true
 
@@ -137,7 +136,6 @@ audit_run_heavy_tests: true
 audit_cmd_timeout: 120000
 
 ### End Goss enablements ####
-#### Detailed settings found at the end of this document ####
 
 # These variables correspond with the CIS rule IDs or paragraph numbers defined in
 # the CIS benchmark documents.
@@ -831,6 +829,8 @@ rhel9cis_auditd:
     # - `single`: the audit daemon will put the computer system in single user mode
     # CIS prescribes either `halt` or `single`.
     admin_space_left_action: halt
+    # The max_log_file parameter should be based on your sites policy.
+    max_log_file: 10
     # This variable determines what action the audit system should take when the maximum
     # size of a log file is reached.
     # The options for setting this variable are as follows:
@@ -841,8 +841,6 @@ rhel9cis_auditd:
     # - `keep_logs`: the system attempts to keep as many logs as possible without violating disk space constraints.
     # CIS prescribes the value `keep_logs`.
     max_log_file_action: keep_logs
-    # The max_log_file parameter should be based on your sites policy.
-    max_log_file: 10
 
 # This value governs if the below extra-vars for auditd should be used by the role
 rhel9cis_auditd_extra_conf_usage: false
