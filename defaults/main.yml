@@ -853,7 +853,13 @@ rhel9cis_auditd_extra_conf_usage: false
 # rhel9cis_auditd_extra_conf:
 #     admin_space_left: '10%'
 rhel9cis_auditd_extra_conf:
+    # This variable governs the threshold(MegaBytes) under which the audit daemon should perform a
+    # specific action to alert that the system is running low on disk space. Must be lower than
+    # the 'space_left' variable.
     admin_space_left: 50
+    # This variable governs the threshold(MegaBytes) under which the audit daemon should perform a
+    # specific action to alert that the system is running low on disk space(last chance to do something
+    # before running out of disk space). Must be lower than the 'space_left' variable.
     space_left: 75
 
 ##  Control 4.1.1.4 - Ensure rhel9cis_audit_back_log_limit is sufficient
