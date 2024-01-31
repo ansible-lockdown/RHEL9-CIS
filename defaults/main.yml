@@ -73,7 +73,6 @@ change_requires_reboot: false
 #### Basic external goss audit enablement settings ####
 #### Precise details - per setting can be found at the bottom of this file ####
 
-
 ## Audit setup
 # Audits are carried out using Goss. This variable
 # determines whether execution of the role prepares for auditing
@@ -563,8 +562,7 @@ rhel9cis_selinux_enforce: enforcing
 
 ## Section 2. Services
 
-### 2.1 Time Synchronization
-
+## Section 2.1 Time Synchronization
 
 ## Control 2.1.2 Time Synchronization servers - used in template file chrony.conf.j2
 # The following variable represents a list of time servers used
@@ -597,14 +595,12 @@ rhel9cis_chrony_server_makestep: "1.0 3"
 # improve the reliability, because multiple sources will need to correspond with each other.
 rhel9cis_chrony_server_minsources: 2
 
-
-### 2.2 Special Purposes
-
+## Section 2.2 Special Purposes
 # Service configuration variables (boolean).
-# Set the respective variable to true to keep the service.
+# Set the respective variable to true to keep the service,
 # otherwise the service is stopped and disabled
 
-
+## Control 1.8.10-10, 2.2.1
 # This variable governs whether rules dealing with GUI specific packages(and/or their settings) should
 # be executed either to:
 # - secure GDM, if GUI is needed('rhel9cis_gui: true')
@@ -741,8 +737,7 @@ rhel9cis_use_rsync_server: false
 #          - masking the 'rsyncd' service('rhel9cis_use_rsync_server' set to 'true')
 rhel9cis_use_rsync_service: false
 
-#### 2.3 Service clients
-
+## Section 2.3 Service clients
 
 ## Control - 2.3.1 - Ensure telnet client is not installed
 # Set this variable to `true` to keep package `telnet`; otherwise, the package is uninstalled.
@@ -757,9 +752,8 @@ rhel9cis_tftp_client: false
 # Set this variable to `true` to keep package `ftp`; otherwise, the package is uninstalled.
 rhel9cis_ftp_client: false
 
-## Section3 vars
+## Section 3 vars
 ## Sysctl
-
 
 # This variable governs if the task which updates sysctl(including sysctl reload) is executed.
 # NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
@@ -791,9 +785,6 @@ rhel9cis_default_zone: public
 rhel9cis_firewalld_ports:
     - number: 80
       protocol: tcp
-
-## Controls 3.5.2.x - nftables
-
 
 ## Control 3.4.2.2 - Ensure at least one nftables table exists
 # This variable governs if a table will be automatically created in nftables. Without a table (no default one), nftables
@@ -953,6 +944,7 @@ rhel9cis_system_is_log_server: false
 #  number may be specified after a colon (":"), otherwise 19532 will be used by default.
 rhel9cis_journal_upload_url: 192.168.50.42
 ## The paths below have the default paths/files, but allow user to create custom paths/filenames
+
 ## Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
 # This variable specifies the path to the private key file used by the remote journal
 # server to authenticate itself to the client. This key is used alongside the server's
@@ -1074,8 +1066,8 @@ rhel9cis_ssh_maxsessions: 4
 
 ## Control 5.6.1.4 - Ensure inactive password lock is 30 days or less
 rhel9cis_inactivelock:
-# This variable specifies the number of days of inactivity before an account will be locked.
-# CIS requires a value of 30 days or less.
+    # This variable specifies the number of days of inactivity before an account will be locked.
+    # CIS requires a value of 30 days or less.
     lock_days: 30
 # This variable governs if authconfig package should be installed. This package provides a simple method of
 # configuring /etc/sysconfig/network to handle NIS, as well as /etc/passwd and /etc/shadow, the files used
