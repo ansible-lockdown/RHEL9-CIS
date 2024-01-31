@@ -1028,11 +1028,6 @@ rhel9cis_sshd:
     # This variable specifies the amount of seconds allowed for successful authentication to
     # the SSH server.
     logingracetime: 60
-    # WARNING: make sure you understand the precedence when working with these values!!
-    # allowusers:
-    # allowgroups: systems dba
-    # denyusers:
-    # denygroups:
     # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
     # access for users whose user name matches one of the patterns. This is done
     # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
