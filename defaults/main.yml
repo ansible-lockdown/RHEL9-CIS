@@ -1024,7 +1024,7 @@ rhel9cis_sshd:
     # This variable sets the maximum number of unresponsive "keep-alive" messages
     # that can be sent from the server to the client before the connection is considered
     # inactive and thus, closed.
-    clientalivecountmax: 0
+    clientalivecountmax: 3
     # This variable sets the time interval in seconds between sending "keep-alive"
     # messages from the server to the client. These types of messages are intended to
     # keep the connection alive and prevent it being terminated due to inactivity.
