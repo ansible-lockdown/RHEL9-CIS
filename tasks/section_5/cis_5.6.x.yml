@@ -98,11 +98,37 @@
             regexp: '^USERGROUPS_ENAB'
             line: USERGROUPS_ENAB no
 
-      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Force umask sessions /etc/pam.d/system-auth"
+      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Check umask.so in system-auth"
+        shell: |
+            grep -E -q "^session\s*(optional|requisite|required)\s*pam_umask.so$" /etc/pam.d/system-auth
+        ignore_errors: true
+        no_log: true
+        check_mode: true
+        register: pam_umask_line_present_system
+
+      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | If needed, load session umask.so in system-auth"
         ansible.builtin.lineinfile:
-            path: /etc/pam.d/system-auth
-            line: 'session     required            pam_umask.so'
-            insertafter: EOF
+            path: "/etc/pam.d/system-auth"
+            regexp: '^session\s*(optional|requisite|required)\s*pam_umask.so$'
+            line: 'session    optional    pam_umask.so'
+        when:
+            - pam_umask_line_present_system.rc | int != 0
+
+      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Check umask.so in password-auth"
+        shell: |
+            grep -E -q "^session\s*(optional|requisite|required)\s*pam_umask.so$" /etc/pam.d/password-auth
+        ignore_errors: true
+        no_log: true
+        check_mode: true
+        register: pam_umask_line_present_password
+
+      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | If needed, load session umask.so in password-auth"
+        ansible.builtin.lineinfile:
+            path: "/etc/pam.d/password-auth"
+            regexp: '^session\s*(optional|requisite|required)\s*pam_umask.so$'
+            line: 'session    optional    pam_umask.so'
+        when:
+            - pam_umask_line_present_password.rc | int != 0
   when:
       - rhel9cis_rule_5_6_5
   tags:
