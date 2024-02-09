@@ -150,11 +150,18 @@
       - rule_5.2.6
 
 - name: "5.2.7 | PATCH | Ensure SSH root login is disabled"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#PermitRootLogin|^PermitRootLogin"
-      line: 'PermitRootLogin no'
-      validate: sshd -t -f %s
+  block:
+      - name: "5.2.7 | PATCH | Ensure SSH root login is disabled | config file"
+        ansible.builtin.lineinfile:
+            path: "{{ rhel9_cis_sshd_config_file }}"
+            regexp: "^#PermitRootLogin|^PermitRootLogin"
+            line: 'PermitRootLogin no'
+            validate: sshd -t -f %s
+
+      - name: "5.2.7 | PATCH | Ensure SSH root login is disabled | override file"
+        ansible.builtin.file:
+            path: /etc/ssh/sshd_config.d/01-permitrootlogin.conf
+            state: absent
   when:
       - rhel9cis_rule_5_2_7
   tags:
