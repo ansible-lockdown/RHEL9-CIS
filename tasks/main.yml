@@ -33,24 +33,24 @@
         ansible.builtin.debug:
             msg: "No local account found for {{ ansible_env.SUDO_USER }} user. Skipping local account checks."
         when:
-          - rhel9cis_ansible_user_password_set.stdout == "not found"
+            - rhel9cis_ansible_user_password_set.stdout == "not found"
       - name: "Check local account"
         block:
-          - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"
-            ansible.builtin.assert:
-                that:
-                  - rhel9cis_ansible_user_password_set.stdout | length != 0
-                  - rhel9cis_ansible_user_password_set.stdout != "!!"
-                fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
-                success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
-          - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"
-            ansible.builtin.assert:
-                that:
-                  - not rhel9cis_ansible_user_password_set.stdout.startswith("!")
-                fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
-                success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
+            - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"
+              ansible.builtin.assert:
+                  that:
+                      - rhel9cis_ansible_user_password_set.stdout | length != 0
+                      - rhel9cis_ansible_user_password_set.stdout != "!!"
+                  fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
+                  success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
+            - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"
+              ansible.builtin.assert:
+                  that:
+                      - not rhel9cis_ansible_user_password_set.stdout.startswith("!")
+                  fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
+                  success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
         when:
-          - rhel9cis_ansible_user_password_set.stdout != "not found"
+            - rhel9cis_ansible_user_password_set.stdout != "not found"
   when:
       - rhel9cis_rule_5_3_4
       - ansible_env.SUDO_USER is defined
