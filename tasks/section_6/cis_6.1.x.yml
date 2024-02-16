@@ -230,7 +230,7 @@
             warn_control_id: '6.1.11'
         when: rhel_09_6_1_11_ungrouped_files_found
   vars:
-      - rhel_09_6_1_11_ungrouped_files_found: false
+      rhel_09_6_1_11_ungrouped_files_found: false
   when:
       - rhel9cis_rule_6_1_11
   tags:
