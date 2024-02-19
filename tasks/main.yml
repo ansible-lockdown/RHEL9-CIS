@@ -34,6 +34,7 @@
             msg: "No local account found for {{ ansible_env.SUDO_USER }} user. Skipping local account checks."
         when:
             - rhel9cis_ansible_user_password_set.stdout == "not found"
+
       - name: "Check local account"
         block:
             - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"
@@ -43,6 +44,7 @@
                       - rhel9cis_ansible_user_password_set.stdout != "!!"
                   fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
                   success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
+
             - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"
               ansible.builtin.assert:
                   that:
