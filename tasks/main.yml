@@ -23,19 +23,36 @@
 - name: "Check password set for {{ ansible_env.SUDO_USER }}"
   block:
       - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"
-        ansible.builtin.shell: "grep {{ ansible_env.SUDO_USER }} /etc/shadow | awk -F: '{print $2}'"
+        ansible.builtin.shell: "(grep {{ ansible_env.SUDO_USER }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'"
         changed_when: false
         failed_when: false
         check_mode: false
         register: rhel9cis_ansible_user_password_set
 
-      - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert password set and not locked"
-        ansible.builtin.assert:
-            that: rhel9cis_ansible_user_password_set.stdout | length != 0 and rhel9cis_ansible_user_password_set.stdout != "!!"
-            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
-            success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
-        vars:
-            sudo_password_rule: rhel9cis_rule_5_3_4  # pragma: allowlist secret
+      - name: "Check for local account {{ ansible_env.SUDO_USER }} | Check for local account"
+        ansible.builtin.debug:
+            msg: "No local account found for {{ ansible_env.SUDO_USER }} user. Skipping local account checks."
+        when:
+            - rhel9cis_ansible_user_password_set.stdout == "not found"
+
+      - name: "Check local account"
+        block:
+            - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"
+              ansible.builtin.assert:
+                  that:
+                      - rhel9cis_ansible_user_password_set.stdout | length != 0
+                      - rhel9cis_ansible_user_password_set.stdout != "!!"
+                  fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
+                  success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
+
+            - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"
+              ansible.builtin.assert:
+                  that:
+                      - not rhel9cis_ansible_user_password_set.stdout.startswith("!")
+                  fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
+                  success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
+        when:
+            - rhel9cis_ansible_user_password_set.stdout != "not found"
   when:
       - rhel9cis_rule_5_3_4
       - ansible_env.SUDO_USER is defined
@@ -43,6 +60,8 @@
   tags:
       - user_passwd
       - rule_5.3.4
+  vars:
+      sudo_password_rule: rhel9cis_rule_5_3_4  # pragma: allowlist secret
 
 - name: Ensure root password is set
   block:
