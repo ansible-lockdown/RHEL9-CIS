@@ -65,7 +65,7 @@
   ansible.builtin.file:
       path: "{{ item.path }}"
       mode: "{{ '0600' if item.mode == '0600' else '0640' }}"
-  loop: "{{ auditd_conf_files.files | default([]) }}"
+  loop: "{{ auditd_conf_files.files }}"
   loop_control:
       label: "{{ item.path }}"
   when:
