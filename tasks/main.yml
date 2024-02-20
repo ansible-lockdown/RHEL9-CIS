@@ -3,7 +3,7 @@
 
 - name: Check OS version and family
   ansible.builtin.assert:
-      that: (ansible_facts.distribution != 'CentOS' and ansible_os_family == 'RedHat' or ansible_os_family == "Rocky") and ansible_facts.distribution_major_version is version_compare('9', '==')
+      that: (ansible_facts.distribution != 'CentOS' and ansible_facts.os_family == 'RedHat' or ansible_facts.os_family == "Rocky") and ansible_facts.distribution_major_version is version_compare('9', '==')
       fail_msg: "This role can only be run against Supported OSs. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
       success_msg: "This role is running against a supported OS {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }}"
   when:
@@ -66,7 +66,7 @@
 - name: Ensure root password is set
   block:
       - name: Ensure root password is set
-        ansible.builtin.shell: passwd -S root | grep "Password set, SHA512 crypt"
+        ansible.builtin.shell: passwd -S root | egrep -e "(Password set, SHA512 crypt|Password locked)"
         changed_when: false
         register: root_passwd_set
 
@@ -102,7 +102,7 @@
             - system_is_container
   when:
       - ansible_connection == 'docker' or
-        ansible_virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+        ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
       - container_discovery
       - always

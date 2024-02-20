@@ -64,12 +64,11 @@
 - name: "4.1.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive"
   ansible.builtin.file:
       path: "{{ item.path }}"
-      mode: '0640'
-  loop: "{{ auditd_conf_files.files }}"
+      mode: "{{ '0600' if item.mode == '0600' else '0640' }}"
+  loop: "{{ auditd_conf_files.files | default([]) }}"
   loop_control:
       label: "{{ item.path }}"
   when:
-      - item.mode != '06(0|4)0'
       - rhel9cis_rule_4_1_4_5
   tags:
       - level2-server
@@ -82,7 +81,7 @@
   ansible.builtin.file:
       path: "{{ item.path }}"
       owner: root
-  loop: "{{ auditd_conf_files.files }}"
+  loop: "{{ auditd_conf_files.files | default([]) }}"
   loop_control:
       label: "{{ item.path }}"
   when:
@@ -98,7 +97,7 @@
   ansible.builtin.file:
       path: "{{ item.path }}"
       group: root
-  loop: "{{ auditd_conf_files.files }}"
+  loop: "{{ auditd_conf_files.files | default([]) }}"
   loop_control:
       label: "{{ item.path }}"
   when:

@@ -26,19 +26,6 @@
       - not system_is_container
       - "'procps-ng' in ansible_facts.packages"
 
-- name: POST | Update usr sysctl
-  ansible.builtin.lineinfile:
-      dest: /usr/lib/sysctl.d/50-default.conf
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
-  loop:
-      - { regexp: '^net.ipv4.conf.default.rp_filter', line: 'net.ipv4.conf.default.rp_filter = 1' }
-      - { regexp: '^net.ipv4.conf.*.rp_filter', line: 'net.ipv4.conf.*.rp_filter = 1' }
-  when:
-      - rhel9cis_sysctl_update
-      - not system_is_container
-      - "'procps-ng' in ansible_facts.packages"
-
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
