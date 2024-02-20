@@ -83,7 +83,7 @@
             - system_is_container
   when:
       - ansible_connection == 'docker' or
-        ansible_facts.ansible_virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+        ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
       - container_discovery
       - always
