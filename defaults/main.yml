@@ -1012,26 +1012,26 @@ rhel9cis_sshd:
     # If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
     # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
     # For more info, see https://linux.die.net/man/5/sshd_config
-    allow_users: ""
+    allowusers: ""
     # (String) This variable, if spcieifed, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
     # for users whose primary group or supplementary group list matches one of the patterns. This is done
     # by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
     # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
     # For more info, https://linux.die.net/man/5/sshd_config
-    allow_groups: "wheel"
+    allowgroups: "wheel"
     # This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
     # for users whose user name matches one of the patterns. This is done
     # by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
     # If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
     # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
     # For more info, see https://linux.die.net/man/5/sshd_config
-    deny_users: "nobody"
+    denyusers: "nobody"
     # This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to prevent SSH access
     # for users whose primary group or supplementary group list matches one of the patterns. This is done
     # by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
     # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
     # For more info, see https://linux.die.net/man/5/sshd_config
-    deny_groups: ""
+    denygroups: ""
 
 ## Control 5.2.5 - Ensure SSH LogLevel is appropriate
 # This variable is used to control the verbosity of the logging produced by the SSH server.
