@@ -201,7 +201,6 @@
       - level1_server
       - level1_workstation
 
-
 - name: "PRELIM | 5.3.4 | Find all sudoers files."
   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
   changed_when: false
