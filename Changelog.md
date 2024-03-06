@@ -3,6 +3,13 @@
 ## 1.1.4 - Based on CIS v1.0.0
 
 - 1.2.1 new option for a new system to import gpg key for 1.2.1 to pass redhat only
+- thanks to @ipruteanu-sie
+  - #156
+  - #165
+  - #180
+  - #181
+  - #183
+  - #184
 
 ## 1.1.3 - Based on CIS v1.0.0
 
