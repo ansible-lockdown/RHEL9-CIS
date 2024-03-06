@@ -1060,10 +1060,6 @@ rhel9cis_inactivelock:
     # This variable specifies the number of days of inactivity before an account will be locked.
     # CIS requires a value of 30 days or less.
     lock_days: 30
-# This variable governs if authconfig package should be installed. This package provides a simple method of
-# configuring /etc/sysconfig/network to handle NIS, as well as /etc/passwd and /etc/shadow, the files used
-# for shadow password support. Basic LDAP, Kerberos 5, and Winbind client configuration is also provided.
-rhel9cis_use_authconfig: false
 
 ## Section 5.4 - Configure authselect: Custom authselect profile settings(name, profile to customize, options)
 ## Controls:
