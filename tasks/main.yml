@@ -8,7 +8,6 @@
       success_msg: "This role is running against a supported OS {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }}"
   when:
       - os_check
-      - not system_is_ec2
   tags:
       - always
 
@@ -169,63 +168,63 @@
       - run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
-- name: run Section 1 tasks
+- name: Run Section 1 tasks
   ansible.builtin.import_tasks:
       file: section_1/main.yml
   when: rhel9cis_section1
   tags:
       - rhel9cis_section1
 
-- name: run Section 2 tasks
+- name: Run Section 2 tasks
   ansible.builtin.import_tasks:
       file: section_2/main.yml
   when: rhel9cis_section2
   tags:
       - rhel9cis_section2
 
-- name: run Section 3 tasks
+- name: Run Section 3 tasks
   ansible.builtin.import_tasks:
       file: section_3/main.yml
   when: rhel9cis_section3
   tags:
       - rhel9cis_section3
 
-- name: run Section 4 tasks
+- name: Run Section 4 tasks
   ansible.builtin.import_tasks:
       file: section_4/main.yml
   when: rhel9cis_section4
   tags:
       - rhel9cis_section4
 
-- name: run Section 5 tasks
+- name: Run Section 5 tasks
   ansible.builtin.import_tasks:
       file: section_5/main.yml
   when: rhel9cis_section5
   tags:
       - rhel9cis_section5
 
-- name: run Section 6 tasks
+- name: Run Section 6 tasks
   ansible.builtin.import_tasks:
       file: section_6/main.yml
   when: rhel9cis_section6
   tags:
       - rhel9cis_section6
 
-- name: run auditd logic
+- name: Run auditd logic
   ansible.builtin.import_tasks:
       file: auditd.yml
   when: update_audit_template
   tags:
       - always
 
-- name: run post remediation tasks
+- name: Run post remediation tasks
   ansible.builtin.import_tasks:
       file: post.yml
   tags:
       - post_tasks
       - always
 
-- name: run post_remediation audit
+- name: Run post_remediation audit
   ansible.builtin.import_tasks:
       file: post_remediation_audit.yml
   when:
