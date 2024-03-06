@@ -424,6 +424,11 @@ rhel9cis_rule_6_2_16: true
 # These /tmp settings will include nosuid,nodev,noexec to conform to CIS standards.
 rhel9cis_tmp_svc: false
 
+## Control 1.2.1
+# For new systems that have not yet run update the gpg key is not yet imported
+# Setting to `true` will allow a test on the package and the foce the import of the key
+rhel9cis_force_gpg_key_import: true
+
 ## Control 1.2.4
 # When installing RHEL from authorized Red Hat source, RHEL will come with default YUM repository. NOT having a default YUM
 # repo ('rhel9cis_rhel_default_repo' set as 'false'), in conjunction with 'rhel9cis_rule_enable_repogpg' set as 'True', will enable the tasks
