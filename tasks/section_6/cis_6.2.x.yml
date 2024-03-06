@@ -75,7 +75,7 @@
       - groups
       - rule_6.2.3
 
-- name: "6.2.4 | AUDIT Ensure no duplicate UIDs exist"
+- name: "6.2.4 | AUDIT | Ensure no duplicate UIDs exist"
   block:
       - name: "6.2.4 | AUDIT | Ensure no duplicate UIDs exist | Check for duplicate UIDs"
         ansible.builtin.shell: "pwck -r | awk -F: '{if ($3 in uid) print $1 ; else uid[$3]}' /etc/passwd"
@@ -88,7 +88,7 @@
             msg: "Warning!! The following users have UIDs that are duplicates: {{ rhel9cis_6_2_4_user_uid_check.stdout_lines }}"
         when: rhel9cis_6_2_4_user_uid_check.stdout | length >= 1
 
-      - name: "6.2.4 | AUDIT| Ensure no duplicate UIDs exist | warning count"
+      - name: "6.2.4 | AUDIT | Ensure no duplicate UIDs exist | warning count"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
         when: rhel9cis_6_2_4_user_uid_check.stdout | length >= 1

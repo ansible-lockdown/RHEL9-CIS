@@ -99,7 +99,7 @@
       - level2-workstation
       - patch
       - auditd
-      - rule_4.1.3_7
+      - rule_4.1.3.7
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "4.1.3.8 | PATCH | Ensure events that modify user/group information are collected"
@@ -268,7 +268,7 @@
       - level2-workstation
       - patch
       - auditd
-      - rule_4.1.20
+      - rule_4.1.3.20
 
 - name: "4.1.3.21 | AUDIT | Ensure the running and on disk configuration is the same"
   ansible.builtin.debug:
