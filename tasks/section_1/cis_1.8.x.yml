@@ -118,7 +118,7 @@
       - gui
       - rule_1.8.4
 
-- name: "1.8.5 PATCH | Ensure GDM screen locks cannot be overridden"
+- name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden"
   block:
       - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | Make lock directory"
         ansible.builtin.file:
