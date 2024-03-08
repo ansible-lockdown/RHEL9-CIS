@@ -424,6 +424,11 @@ rhel9cis_rule_6_2_16: true
 # These /tmp settings will include nosuid,nodev,noexec to conform to CIS standards.
 rhel9cis_tmp_svc: false
 
+## Control 1.2.1
+# For new systems that have not yet run update the gpg key is not yet imported
+# Setting to `true` will allow a test on the package and the foce the import of the key
+rhel9cis_force_gpg_key_import: true
+
 ## Control 1.2.4
 # When installing RHEL from authorized Red Hat source, RHEL will come with default YUM repository. NOT having a default YUM
 # repo ('rhel9cis_rhel_default_repo' set as 'false'), in conjunction with 'rhel9cis_rule_enable_repogpg' set as 'True', will enable the tasks
@@ -998,11 +1003,11 @@ rhel9cis_sshd:
     # This variable sets the maximum number of unresponsive "keep-alive" messages
     # that can be sent from the server to the client before the connection is considered
     # inactive and thus, closed.
-    clientalivecountmax: 0
+    clientalivecountmax: 3
     # This variable sets the time interval in seconds between sending "keep-alive"
     # messages from the server to the client. These types of messages are intended to
     # keep the connection alive and prevent it being terminated due to inactivity.
-    clientaliveinterval: 900
+    clientaliveinterval: 15
     # This variable specifies the amount of seconds allowed for successful authentication to
     # the SSH server.
     logingracetime: 60
@@ -1012,26 +1017,29 @@ rhel9cis_sshd:
     # If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
     # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
     # For more info, see https://linux.die.net/man/5/sshd_config
-    allow_users: ""
-    # (String) This variable, if spcieifed, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
+    # allowusers: ""
+
+    # (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
     # for users whose primary group or supplementary group list matches one of the patterns. This is done
     # by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
     # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
     # For more info, https://linux.die.net/man/5/sshd_config
-    allow_groups: "wheel"
+    # allowgroups: "wheel"
+
     # This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
     # for users whose user name matches one of the patterns. This is done
     # by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
     # If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
     # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
     # For more info, see https://linux.die.net/man/5/sshd_config
-    deny_users: "nobody"
+    denyusers: "nobody"
+
     # This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to prevent SSH access
     # for users whose primary group or supplementary group list matches one of the patterns. This is done
     # by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
     # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
     # For more info, see https://linux.die.net/man/5/sshd_config
-    deny_groups: ""
+    denygroups: ""
 
 ## Control 5.2.5 - Ensure SSH LogLevel is appropriate
 # This variable is used to control the verbosity of the logging produced by the SSH server.
@@ -1055,10 +1063,6 @@ rhel9cis_inactivelock:
     # This variable specifies the number of days of inactivity before an account will be locked.
     # CIS requires a value of 30 days or less.
     lock_days: 30
-# This variable governs if authconfig package should be installed. This package provides a simple method of
-# configuring /etc/sysconfig/network to handle NIS, as well as /etc/passwd and /etc/shadow, the files used
-# for shadow password support. Basic LDAP, Kerberos 5, and Winbind client configuration is also provided.
-rhel9cis_use_authconfig: false
 
 ## Section 5.4 - Configure authselect: Custom authselect profile settings(name, profile to customize, options)
 ## Controls:

@@ -1,6 +1,6 @@
 ---
 
-- name: "5.2.1 | Ensure permissions on /etc/ssh/sshd_config are configured"
+- name: "5.2.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
   ansible.builtin.file:
       path: "/etc/ssh/sshd_config"
       owner: root

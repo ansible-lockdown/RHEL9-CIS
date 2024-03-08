@@ -136,6 +136,31 @@
       - ansible_facts.distribution != 'RedHat'
       - ansible_facts.distribution != 'OracleLinux'
 
+- name: "PRELIM | Check gpg keys are imported will cause 1.2.1 to fail if not | RedHat Only"
+  block:
+      - name: "PRELIM | Check gpg keys are imported will cause 1.2.1 to fail if not"
+        ansible.builtin.shell: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'
+        changed_when: false
+        failed_when: false
+        register: check_gpg_imported
+
+      - name: "PRELIM | Check key package matches RedHat"
+        ansible.builtin.shell: rpm -qi redhat-release | grep Signature
+        changed_when: false
+        failed_when: false
+        register: os_gpg_package_valid
+        when: "'not installed' in check_gpg_imported.stdout"
+
+      - name: "PRELIM | Force keys to be imported"
+        ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+        when:
+            - "'not installed' in check_gpg_imported.stdout"
+            - "'Key ID 199e2f91fd431d51' in os_gpg_package_valid.stdout"
+  when:
+      - rhel9cis_rule_1_2_1
+      - rhel9cis_force_gpg_key_import
+      - ansible_facts.distribution == 'RedHat'
+
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   ansible.builtin.package:
       name: audit
@@ -200,27 +225,6 @@
       - ssh
       - level1_server
       - level1_workstation
-
-- name: "PRELIM | Install authconfig"
-  ansible.builtin.package:
-      name: authconfig
-      state: present
-  become: true
-  when:
-      - rhel9cis_use_authconfig
-      - rhel9cis_rule_5_3_1 or
-        rhel9cis_rule_5_3_2 or
-        rhel9cis_rule_5_3_3 or
-       '"authconfig" not in ansible_facts.packages or
-       "auditd-lib" not in ansible_facts.packages'
-  tags:
-      - level1-server
-      - level1-workstation
-      - rule_5.3.1 or
-        rule_5.3.2 or
-        rule_5.3.3
-      - authconfig
-      - auditd
 
 - name: "PRELIM | 5.3.4 | Find all sudoers files."
   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
