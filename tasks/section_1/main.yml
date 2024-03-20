@@ -1,8 +1,4 @@
 ---
-
-- name: "SECTION | 1.1.1.x | Disable unused filesystems"
-  ansible.builtin.import_tasks: cis_1.1.1.x.yml
-
 - name: "SECTION | 1.1.2.x | Configure /tmp"
   ansible.builtin.import_tasks: cis_1.1.2.x.yml
 
@@ -23,9 +19,6 @@
 
 - name: "SECTION | 1.1.8.x | Configure /dev/shm"
   ansible.builtin.import_tasks: cis_1.1.8.x.yml
-
-- name: "SECTION | 1.1.x | Disable various mounting"
-  ansible.builtin.import_tasks: cis_1.1.x.yml
 
 - name: "SECTION | 1.2 | Configure Software Updates"
   ansible.builtin.import_tasks: cis_1.2.x.yml
