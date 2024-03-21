@@ -30,8 +30,8 @@
 - name: "5.3.3 | PATCH | Ensure sudo log file exists"
   ansible.builtin.lineinfile:
       path: /etc/sudoers
-      regexp: '^Defaults    logfile='
-      line: 'Defaults    logfile="{{ rhel9cis_sudolog_location }}"'
+      regexp: '^Defaults logfile='
+      line: 'Defaults logfile={{ rhel9cis_sudolog_location }}'
       validate: '/usr/sbin/visudo -cf %s'
   when:
       - rhel9cis_rule_5_3_3
