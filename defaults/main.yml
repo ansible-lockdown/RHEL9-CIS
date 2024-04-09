@@ -1088,21 +1088,6 @@ rhel9cis_authselect_custom_profile_create: false
 # to the PAM templates and meta files in the original profile will be reflected in your custom profile, too.)
 rhel9cis_authselect_custom_profile_select: false
 
-## Section 5.6.1.x: Shadow Password Suite Parameters
-rhel9cis_pass:
-    ## Control 5.6.1.1 - Ensure password expiration is 365 days or less
-    # This variable governs after how many days a password expires.
-    # CIS requires a value of 365 or less.
-    max_days: 365
-    ## Control 5.6.1.2 - Ensure minimum days between password changes is 7 or more
-    # This variable specifies the minimum number of days allowed between changing
-    # passwords. CIS requires a value of at least 1.
-    min_days: 7
-    ## Control 5.6.1.3 - Ensure password expiration warning days is 7 or more
-    # This variable governs, how many days before a password expires, the user will be warned.
-    # CIS requires a value of at least 7.
-    warn_age: 7
-
 ## Control 5.5.1 - Ensure password creation requirements are configured  - PAM
 rhel9cis_pam_password:
     # This variable sets the minimum chars a password needs to be set.
@@ -1170,6 +1155,31 @@ rhel9cis_add_faillock_without_authselect: false
 # This needs to be set to 'ACCEPT'(as string), besides setting 'rhel9cis_add_faillock_without_authselect'
 # to 'true', in order to include the 'with-failock' option to the current authselect profile.
 rhel9cis_5_4_2_risks: NEVER
+
+## Section 5.6.1.x: Shadow Password Suite Parameters
+rhel9cis_pass:
+    ## Control 5.6.1.1 - Ensure password expiration is 365 days or less
+    # This variable governs after how many days a password expires.
+    # CIS requires a value of 365 or less.
+    max_days: 365
+    ## Control 5.6.1.2 - Ensure minimum days between password changes is 7 or more
+    # This variable specifies the minimum number of days allowed between changing
+    # passwords. CIS requires a value of at least 1.
+    min_days: 7
+    ## Control 5.6.1.3 - Ensure password expiration warning days is 7 or more
+    # This variable governs, how many days before a password expires, the user will be warned.
+    # CIS requires a value of at least 7.
+    warn_age: 7
+
+## Allow the forcing of setting user_max_days for logins.
+# This can break current connecting user access
+rhel9cis_force_user_maxdays: false
+
+## Allow the force setting of minimum days between changing the password
+rhel9cis_force_user_mindays: force
+
+## Allow the forcing of of number of days before warning users of password expiry
+rhel9cis_force_user_warnage: force
 
 ## Control 5.6.3 - Ensure default user shell timeout is 900 seconds or less
 # Session timeout setting file (TMOUT setting can be set in multiple files)
