@@ -235,7 +235,7 @@
                   state: directory
                   owner: root
                   group: root
-                  mode: "0755"
+                  mode: '0755'
                   follow: false
               loop: "{{ root_path_perms.results }}"
               loop_control:
@@ -344,7 +344,7 @@
         ansible.builtin.file:
             path: "{{ item.stat.path }}"
             state: directory
-            mode: "0750"
+            mode: '0750'
         loop: "{{ rhel_09_6_2_12_home_dir_perms.results }}"
         loop_control:
             label: "{{ item }}"
