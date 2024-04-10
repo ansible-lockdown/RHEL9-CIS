@@ -1,5 +1,19 @@
 # Changes to rhel9CIS
 
+## 1.1.5 - Based on CIS v1.0.0
+
+- added new interactive user discoveries
+  - updated controls 6.2.10-6.2.14
+- audit steps moved to prelim
+- removed vars not used
+- updated quotes used in mode tasks
+- pre-commit update
+- issues addressed
+  - #190 thanks to @ipruteanu-sie
+    - aligned logic for user shadow suite params (aligned with other repos)
+    - new variables to force changes to existing users added 5.6.1.1 - 5.6.1.2
+  - #198 thanks to @brakkio86
+
 ## 1.1.4 - Based on CIS v1.0.0
 
 - 1.2.1 new option for a new system to import gpg key for 1.2.1 to pass redhat only
