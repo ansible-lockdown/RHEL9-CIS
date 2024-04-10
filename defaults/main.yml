@@ -171,10 +171,6 @@ rhel9cis_rule_1_1_8_1: true
 rhel9cis_rule_1_1_8_2: true
 rhel9cis_rule_1_1_8_3: true
 rhel9cis_rule_1_1_8_4: true
-rhel9cis_rule_1_1_18: true
-rhel9cis_rule_1_1_19: true
-rhel9cis_rule_1_1_20: true
-rhel9cis_rule_1_1_21: true
 rhel9cis_rule_1_1_9: true
 rhel9cis_rule_1_2_1: true
 rhel9cis_rule_1_2_2: true
@@ -371,7 +367,6 @@ rhel9cis_rule_5_5_1: true
 rhel9cis_rule_5_5_2: true
 rhel9cis_rule_5_5_3: true
 rhel9cis_rule_5_5_4: true
-rhel9cis_rule_5_5_5: true
 rhel9cis_rule_5_6_1_1: true
 rhel9cis_rule_5_6_1_2: true
 rhel9cis_rule_5_6_1_3: true
@@ -821,7 +816,7 @@ rhel9cis_auditd:
     max_log_file: 10
     # This variable determines what action the audit system should take when the maximum
     # size of a log file is reached.
-    # The options for setting this variable are as follows:
+    #  The options for setting this variable are as follows:
     # - `ignore`: the system does nothing when the size of a log file is full;
     # - `syslog`: a message is sent to the system log indicating the problem;
     # - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;
@@ -837,14 +832,12 @@ rhel9cis_auditd_extra_conf_usage: false
 # Example:
 # rhel9cis_auditd_extra_conf:
 #     admin_space_left: '10%'
+
+# These variables governs the threshold(MegaBytes) under which the audit daemon should perform a
+# specific action to alert that the system is running low on disk space.
 rhel9cis_auditd_extra_conf:
-    # This variable governs the threshold(MegaBytes) under which the audit daemon should perform a
-    # specific action to alert that the system is running low on disk space. Must be lower than
-    # the 'space_left' variable.
+    # Must be lower than the 'space_left' variable.
     admin_space_left: 50
-    # This variable governs the threshold(MegaBytes) under which the audit daemon should perform a
-    # specific action to alert that the system is running low on disk space(last chance to do something
-    # before running out of disk space). Must be lower than the 'space_left' variable.
     space_left: 75
 
 ##  Control 4.1.1.4 - Ensure rhel9cis_audit_back_log_limit is sufficient
@@ -854,12 +847,6 @@ rhel9cis_auditd_extra_conf:
 # with incoming audit events, and needs to temporarily store them until they can be processed.
 # This variable should be set to a sufficient value. The CIS baseline recommends at least `8192` as value.
 rhel9cis_audit_back_log_limit: 8192
-
-## Control 4.1.2.1 - Ensure audit log storage size is configured
-# This variable specifies the maximum size in MB that an audit log file can reach
-# before it is archived or deleted to make space for the new audit data.
-# This should be set based on your sites policy. CIS does not provide a specific value.
-rhel9cis_max_log_file_size: 10
 
 ## Control 4.1.3.x - Audit template
 # This variable governs if the auditd logic should be executed(if value is true).
@@ -1015,30 +1002,22 @@ rhel9cis_sshd:
     # access for users whose user name matches one of the patterns. This is done
     # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
     # If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
-    # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-    # For more info, see https://linux.die.net/man/5/sshd_config
     # allowusers: ""
 
     # (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
     # for users whose primary group or supplementary group list matches one of the patterns. This is done
     # by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
-    # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-    # For more info, https://linux.die.net/man/5/sshd_config
     # allowgroups: "wheel"
 
     # This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
     # for users whose user name matches one of the patterns. This is done
     # by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
     # If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
-    # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-    # For more info, see https://linux.die.net/man/5/sshd_config
     denyusers: "nobody"
 
-    # This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to prevent SSH access
-    # for users whose primary group or supplementary group list matches one of the patterns. This is done
+    # This variable, if specified, configures a list of GROUP name patterns, separated by spaces,
+    # to prevent SSH access for users whose primary group or supplementary group list matches one of the patterns. This is done
     # by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
-    # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-    # For more info, see https://linux.die.net/man/5/sshd_config
     denygroups: ""
 
 ## Control 5.2.5 - Ensure SSH LogLevel is appropriate
@@ -1176,10 +1155,12 @@ rhel9cis_pass:
 rhel9cis_force_user_maxdays: false
 
 ## Allow the force setting of minimum days between changing the password
-rhel9cis_force_user_mindays: force
+# This can break current connecting user access
+rhel9cis_force_user_mindays: false
 
 ## Allow the forcing of of number of days before warning users of password expiry
-rhel9cis_force_user_warnage: force
+# This can break current connecting user access
+rhel9cis_force_user_warnage: false
 
 ## Control 5.6.3 - Ensure default user shell timeout is 900 seconds or less
 # Session timeout setting file (TMOUT setting can be set in multiple files)
