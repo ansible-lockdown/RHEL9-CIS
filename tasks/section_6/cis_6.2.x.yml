@@ -278,7 +278,7 @@
             owner: "{{ item.id }}"
             group: "{{ item.gid }}"
         register: rhel_09_6_2_10_home_dir
-        loop: "{{ discovered_interactive_uids.stdout_lines }}"
+        loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | list }}"
         loop_control:
             label: "{{ item.id }}"
 
