@@ -4,7 +4,9 @@
 
 - added new interactive user discoveries
   - updated controls 6.2.10-6.2.14
-- audit steps moved to prelim
+- audit
+  - steps moved to prelim
+  - update to coipy and archive logic and variables
 - removed vars not used
 - updated quotes used in mode tasks
 - pre-commit update
