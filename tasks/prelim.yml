@@ -3,7 +3,7 @@
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
 
-- name: Include audit specific variables
+- name: PRELIM | Include audit specific variables
   when:
       - run_audit or audit_only
       - setup_audit
@@ -12,7 +12,7 @@
       - run_audit
   ansible.builtin.include_vars: audit.yml
 
-- name: Include pre-remediation audit tasks
+- name: PRELIM | Include pre-remediation audit tasks
   when:
       - run_audit or audit_only
       - setup_audit
