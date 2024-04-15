@@ -151,23 +151,6 @@
       - prelim_tasks
       - always
 
-- name: Include audit specific variables
-  when:
-      - run_audit or audit_only
-      - setup_audit
-  tags:
-      - setup_audit
-      - run_audit
-  ansible.builtin.include_vars: audit.yml
-
-- name: Include pre-remediation audit tasks
-  when:
-      - run_audit or audit_only
-      - setup_audit
-  tags:
-      - run_audit
-  ansible.builtin.import_tasks: pre_remediation_audit.yml
-
 - name: Run Section 1 tasks
   ansible.builtin.import_tasks:
       file: section_1/main.yml

@@ -67,74 +67,56 @@ skip_reboot: true
 # default value will change to true but wont reboot if not enabled but will error
 change_requires_reboot: false
 
-##########################################
+###########################################
 ### Goss is required on the remote host ###
-## Refer to vars/auditd.yml for any other settings ##
-#### Basic external goss audit enablement settings ####
-#### Precise details - per setting can be found at the bottom of this file ####
+### vars/auditd.yml for other settings  ###
 
-## Audit setup
-# Audits are carried out using Goss. This variable
-# determines whether execution of the role prepares for auditing
-# by installing the required binary.
+# Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
 setup_audit: false
 
-## Enable audits to run - this runs the audit and get the latest content
-# This variable governs whether the audit using the
-# separately maintained audit role using Goss
-# is carried out.
+# enable audits to run - this runs the audit and get the latest content
 run_audit: false
+# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
+audit_run_heavy_tests: true
 
-# Only run Audit do not remediate
+## Only run Audit do not remediate
 audit_only: false
-# This will enable files to be copied back to control node(part of audit_only)
+### As part of audit_only ###
+# This will enable files to be copied back to control node in audit_only mode
 fetch_audit_files: false
-# Path to copy the files to will create dir structure(part of audit_only)
+# Path to copy the files to will create dir structure in audit_only mode
 audit_capture_files_dir: /some/location to copy to on control node
+#############################
 
-## How to retrieve audit binary(Goss)
-# Options are 'copy' or 'download' - detailed settings at the bottom of this file
-# - if 'copy':
-#    - the filepath mentioned via the below 'audit_bin_copy_location' var will be used to access already downloaded Goss
-# - if 'download':
-#    - the GitHub Goss-releases URL will be used for a fresh-download, via 'audit_bin_url' and 'audit_pkg_arch_name' vars
+# How to retrieve audit binary
+# Options are copy or download - detailed settings at the bottom of this file
+# you will need to access to either github or the file already dowmloaded
 get_audit_binary_method: download
 
-## if get_audit_binary_method is 'copy', the following var needs to be updated for your environment
+## if get_audit_binary_method - copy the following needs to be updated for your environment
 ## it is expected that it will be copied from somewhere accessible to the control node
 ## e.g copy from ansible control node to remote host
 audit_bin_copy_location: /some/accessible/path
 
-## How to retrieve the audit role
-# The role for auditing is maintained separately.
-# This variable specifies the method of how to get the audit role
-# options are git/copy/get_url other e.g. if you wish to run from already downloaded conf
-# onto the system. The options are as follows:
-# - 'git': clone audit content from GitHub REPOSITORY, set up via `audit_file_git` var, and
-#          VERSION(e.g. branch, tag name), set up via `audit_git_version` var.
-# - 'copy': copy from path as specified in variable `audit_conf_copy`.
-# - 'archive': same as 'copy', only that the specified filepath needs to be unpacked.
-# - 'get_url': Download from url as specified in variable `audit_files_url`
+# how to get audit files onto host options
+# options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
 audit_content: git
 
-# This variable(only used when 'audit_content' is 'copy' or 'archive') should
-# contain the filepath with audit-content to be copied/unarchived on server:
-audit_conf_copy: "some path to copy from"
+# If using either archive, copy, get_url:
+## Note will work with .tar files - zip will require extra configuration
+### If using get_url this is expecting github url in tar.gz format e.g.
+### https://github.com/ansible-lockdown/UBUNTU22-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
+audit_conf_source: "some path or url to copy from"
 
-# This variable(only used when 'audit_content' is 'get_url') should
-# contain the URL from where the audit-content must be downloaded on server:
-audit_files_url: "some url maybe s3?"
+# Destination for the audit content to be placed on managed node
+# note may not need full path e.g. /opt with the directory being the {{ benchmark }}-Audit directory
+audit_conf_dest: "/opt"
 
-# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
-audit_run_heavy_tests: true
+# Where the audit logs are stored
+audit_log_dir: '/opt'
 
-# Timeout for those cmds that take longer to run where timeout set
-# This variable specifies the timeout (in ms) for audit commands that
-# take a very long time: if a command takes too long to complete,
-# it will be forcefully terminated after the specified duration.
-audit_cmd_timeout: 120000
-
-### End Goss enablements ####
+### Goss Settings ##
+####### END ########
 
 # These variables correspond with the CIS rule IDs or paragraph numbers defined in
 # the CIS benchmark documents.
@@ -171,10 +153,6 @@ rhel9cis_rule_1_1_8_1: true
 rhel9cis_rule_1_1_8_2: true
 rhel9cis_rule_1_1_8_3: true
 rhel9cis_rule_1_1_8_4: true
-rhel9cis_rule_1_1_18: true
-rhel9cis_rule_1_1_19: true
-rhel9cis_rule_1_1_20: true
-rhel9cis_rule_1_1_21: true
 rhel9cis_rule_1_1_9: true
 rhel9cis_rule_1_2_1: true
 rhel9cis_rule_1_2_2: true
@@ -371,7 +349,6 @@ rhel9cis_rule_5_5_1: true
 rhel9cis_rule_5_5_2: true
 rhel9cis_rule_5_5_3: true
 rhel9cis_rule_5_5_4: true
-rhel9cis_rule_5_5_5: true
 rhel9cis_rule_5_6_1_1: true
 rhel9cis_rule_5_6_1_2: true
 rhel9cis_rule_5_6_1_3: true
@@ -821,7 +798,7 @@ rhel9cis_auditd:
     max_log_file: 10
     # This variable determines what action the audit system should take when the maximum
     # size of a log file is reached.
-    # The options for setting this variable are as follows:
+    #  The options for setting this variable are as follows:
     # - `ignore`: the system does nothing when the size of a log file is full;
     # - `syslog`: a message is sent to the system log indicating the problem;
     # - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;
@@ -837,14 +814,12 @@ rhel9cis_auditd_extra_conf_usage: false
 # Example:
 # rhel9cis_auditd_extra_conf:
 #     admin_space_left: '10%'
+
+# These variables governs the threshold(MegaBytes) under which the audit daemon should perform a
+# specific action to alert that the system is running low on disk space.
 rhel9cis_auditd_extra_conf:
-    # This variable governs the threshold(MegaBytes) under which the audit daemon should perform a
-    # specific action to alert that the system is running low on disk space. Must be lower than
-    # the 'space_left' variable.
+    # Must be lower than the 'space_left' variable.
     admin_space_left: 50
-    # This variable governs the threshold(MegaBytes) under which the audit daemon should perform a
-    # specific action to alert that the system is running low on disk space(last chance to do something
-    # before running out of disk space). Must be lower than the 'space_left' variable.
     space_left: 75
 
 ##  Control 4.1.1.4 - Ensure rhel9cis_audit_back_log_limit is sufficient
@@ -854,12 +829,6 @@ rhel9cis_auditd_extra_conf:
 # with incoming audit events, and needs to temporarily store them until they can be processed.
 # This variable should be set to a sufficient value. The CIS baseline recommends at least `8192` as value.
 rhel9cis_audit_back_log_limit: 8192
-
-## Control 4.1.2.1 - Ensure audit log storage size is configured
-# This variable specifies the maximum size in MB that an audit log file can reach
-# before it is archived or deleted to make space for the new audit data.
-# This should be set based on your sites policy. CIS does not provide a specific value.
-rhel9cis_max_log_file_size: 10
 
 ## Control 4.1.3.x - Audit template
 # This variable governs if the auditd logic should be executed(if value is true).
@@ -1015,30 +984,22 @@ rhel9cis_sshd:
     # access for users whose user name matches one of the patterns. This is done
     # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
     # If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
-    # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-    # For more info, see https://linux.die.net/man/5/sshd_config
     # allowusers: ""
 
     # (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
     # for users whose primary group or supplementary group list matches one of the patterns. This is done
     # by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
-    # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-    # For more info, https://linux.die.net/man/5/sshd_config
     # allowgroups: "wheel"
 
     # This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
     # for users whose user name matches one of the patterns. This is done
     # by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
     # If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
-    # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-    # For more info, see https://linux.die.net/man/5/sshd_config
     denyusers: "nobody"
 
-    # This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to prevent SSH access
-    # for users whose primary group or supplementary group list matches one of the patterns. This is done
+    # This variable, if specified, configures a list of GROUP name patterns, separated by spaces,
+    # to prevent SSH access for users whose primary group or supplementary group list matches one of the patterns. This is done
     # by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
-    # The allow/deny directives process order: DenyUsers, AllowUsers, DenyGroups, AllowGroups.
-    # For more info, see https://linux.die.net/man/5/sshd_config
     denygroups: ""
 
 ## Control 5.2.5 - Ensure SSH LogLevel is appropriate
@@ -1087,21 +1048,6 @@ rhel9cis_authselect_custom_profile_create: false
 # This variable governs if the existing custom profile should be selected(Note: please keep in mind that all future updates
 # to the PAM templates and meta files in the original profile will be reflected in your custom profile, too.)
 rhel9cis_authselect_custom_profile_select: false
-
-## Section 5.6.1.x: Shadow Password Suite Parameters
-rhel9cis_pass:
-    ## Control 5.6.1.1 - Ensure password expiration is 365 days or less
-    # This variable governs after how many days a password expires.
-    # CIS requires a value of 365 or less.
-    max_days: 365
-    ## Control 5.6.1.2 - Ensure minimum days between password changes is 7 or more
-    # This variable specifies the minimum number of days allowed between changing
-    # passwords. CIS requires a value of at least 1.
-    min_days: 7
-    ## Control 5.6.1.3 - Ensure password expiration warning days is 7 or more
-    # This variable governs, how many days before a password expires, the user will be warned.
-    # CIS requires a value of at least 7.
-    warn_age: 7
 
 ## Control 5.5.1 - Ensure password creation requirements are configured  - PAM
 rhel9cis_pam_password:
@@ -1170,6 +1116,33 @@ rhel9cis_add_faillock_without_authselect: false
 # This needs to be set to 'ACCEPT'(as string), besides setting 'rhel9cis_add_faillock_without_authselect'
 # to 'true', in order to include the 'with-failock' option to the current authselect profile.
 rhel9cis_5_4_2_risks: NEVER
+
+## Section 5.6.1.x: Shadow Password Suite Parameters
+rhel9cis_pass:
+    ## Control 5.6.1.1 - Ensure password expiration is 365 days or less
+    # This variable governs after how many days a password expires.
+    # CIS requires a value of 365 or less.
+    max_days: 365
+    ## Control 5.6.1.2 - Ensure minimum days between password changes is 7 or more
+    # This variable specifies the minimum number of days allowed between changing
+    # passwords. CIS requires a value of at least 1.
+    min_days: 7
+    ## Control 5.6.1.3 - Ensure password expiration warning days is 7 or more
+    # This variable governs, how many days before a password expires, the user will be warned.
+    # CIS requires a value of at least 7.
+    warn_age: 7
+
+## Allow the forcing of setting user_max_days for logins.
+# This can break current connecting user access
+rhel9cis_force_user_maxdays: false
+
+## Allow the force setting of minimum days between changing the password
+# This can break current connecting user access
+rhel9cis_force_user_mindays: false
+
+## Allow the forcing of of number of days before warning users of password expiry
+# This can break current connecting user access
+rhel9cis_force_user_warnage: false
 
 ## Control 5.6.3 - Ensure default user shell timeout is 900 seconds or less
 # Session timeout setting file (TMOUT setting can be set in multiple files)

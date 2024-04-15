@@ -235,7 +235,7 @@
                   state: directory
                   owner: root
                   group: root
-                  mode: "0755"
+                  mode: '0755'
                   follow: false
               loop: "{{ root_path_perms.results }}"
               loop_control:
@@ -278,7 +278,7 @@
             owner: "{{ item.id }}"
             group: "{{ item.gid }}"
         register: rhel_09_6_2_10_home_dir
-        loop: "{{ rhel9cis_passwd  | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | list }}"
+        loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | list }}"
         loop_control:
             label: "{{ item.id }}"
 
@@ -290,7 +290,7 @@
             etype: group
             permissions: rx
             state: present
-        loop: "{{ interactive_users_home.stdout_lines }}"
+        loop: "{{ discovered_interactive_users_home.stdout_lines }}"
         when: not system_is_container
 
       - name: "6.2.10 | PATCH | Ensure local interactive user home directories exist | Set other ACL"
@@ -300,7 +300,7 @@
             etype: other
             permissions: 0
             state: present
-        loop: "{{ interactive_users_home.stdout_lines }}"
+        loop: "{{ discovered_interactive_users_home.stdout_lines }}"
         when: not system_is_container
   when:
       - rhel9cis_rule_6_2_10
@@ -320,10 +320,7 @@
   loop_control:
       label: "{{ item.id }}"
   when:
-      - item.uid >= min_int_uid | int
-      - item.id != 'nobody'
-      - (item.id != 'tss' and item.dir != '/dev/null')
-      - item.shell != '/sbin/nologin'
+      - item.id in discovered_interactive_usernames.stdout
       - rhel9cis_rule_6_2_11
   tags:
       - level1-server
@@ -338,13 +335,13 @@
         ansible.builtin.stat:
             path: "{{ item }}"
         register: rhel_09_6_2_12_home_dir_perms
-        loop: "{{ interactive_users_home.stdout_lines }}"
+        loop: "{{ discovered_interactive_users_home.stdout_lines }}"
 
       - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive | amend if needed"
         ansible.builtin.file:
             path: "{{ item.stat.path }}"
             state: directory
-            mode: "0750"
+            mode: '0750'
         loop: "{{ rhel_09_6_2_12_home_dir_perms.results }}"
         loop_control:
             label: "{{ item }}"
@@ -359,7 +356,7 @@
             etype: group
             permissions: rx
             state: present
-        loop: "{{ interactive_users_home.stdout_lines }}"
+        loop: "{{ discovered_interactive_users_home.stdout_lines }}"
         when: not system_is_container
 
       - name: "6.2.12 | PATCH | Ensure local interactive user home directories are mode 750 or more restrictive | Set other ACL"
@@ -369,7 +366,7 @@
             etype: other
             permissions: 0
             state: present
-        loop: "{{ interactive_users_home.stdout_lines }}"
+        loop: "{{ discovered_interactive_users_home.stdout_lines }}"
         when: not system_is_container
   when:
       - rhel9cis_rule_6_2_12
@@ -385,7 +382,7 @@
   ansible.builtin.file:
       path: "{{ item }}/.netrc"
       state: absent
-  loop: "{{ interactive_users_home.stdout_lines }}"
+  loop: "{{ discovered_interactive_users_home.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_13
   tags:
@@ -400,7 +397,7 @@
   ansible.builtin.file:
       path: "{{ item }}/.forward"
       state: absent
-  loop: "{{ interactive_users_home.stdout_lines }}"
+  loop: "{{ discovered_interactive_users_home.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_14
   tags:
@@ -415,7 +412,7 @@
   ansible.builtin.file:
       path: "~{{ item }}/.rhosts"
       state: absent
-  loop: "{{ interactive_users_home.stdout_lines }}"
+  loop: "{{ discovered_interactive_users_home.stdout_lines }}"
   when:
       - rhel9cis_rule_6_2_15
   tags:
