@@ -403,7 +403,7 @@ rhel9cis_tmp_svc: false
 
 ## Control 1.2.1
 # For new systems that have not yet run update the gpg key is not yet imported
-# Setting to `true` will allow a test on the package and the foce the import of the key
+# Setting to `true` will allow a test on the package and force the import of the key
 rhel9cis_force_gpg_key_import: true
 
 ## Control 1.2.4
