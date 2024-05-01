@@ -2,6 +2,54 @@
 
 # Preliminary tasks that should always be run
 # List users in order to look files inside each home directory
+
+- name: PRELIM | Include audit specific variables
+  when:
+      - run_audit or audit_only
+      - setup_audit
+  tags:
+      - setup_audit
+      - run_audit
+  ansible.builtin.include_vars: audit.yml
+
+- name: PRELIM | Include pre-remediation audit tasks
+  when:
+      - run_audit or audit_only
+      - setup_audit
+  tags:
+      - run_audit
+  ansible.builtin.import_tasks: pre_remediation_audit.yml
+
+- name: "PRELIM | AUDIT | Interactive Users"
+  tags:
+      - always
+  ansible.builtin.shell: >
+      grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $1 }'
+  changed_when: false
+  register: discovered_interactive_usernames
+
+- name: "PRELIM | AUDIT | Interactive User accounts home directories"
+  tags:
+      - always
+  ansible.builtin.shell: >
+      grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
+  changed_when: false
+  register: discovered_interactive_users_home
+
+- name: "PRELIM | AUDIT | Interactive UIDs"
+  tags:
+      - always
+  ansible.builtin.shell: >
+      grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
+  changed_when: false
+  register: discovered_interactive_uids
+
+- name: "PRELIM | capture /etc/password variables"
+  ansible.builtin.include_tasks:
+      file: parse_etc_password.yml
+  tags:
+      - always
+
 - name: "PRELIM | List users accounts"
   ansible.builtin.shell: "awk -F: '{print $1}' /etc/passwd"
   changed_when: false
@@ -11,25 +59,6 @@
       - level1-server
       - level1-workstation
       - users
-
-- name: "PRELIM | capture /etc/password variables"
-  ansible.builtin.include_tasks: parse_etc_password.yml
-  tags:
-      - rule_5.5.2
-      - rule_5.6.2
-      - rule_6.2.9
-      - rule_6.2.10
-      - rule_6.2.11
-      - rhel9cis_section5
-      - rhel9cis_section6
-      - level1-server
-
-- name: "PRELIM | Interactive User accounts"
-  ansible.builtin.shell: 'cat /etc/passwd | grep -Ev "nologin|/sbin" | cut -d: -f6'
-  changed_when: false
-  register: interactive_users_home
-  tags:
-      - always
 
 - name: "PRELIM | Gather accounts with empty password fields"
   ansible.builtin.shell: "cat /etc/shadow | awk -F: '($2 == \"\" ) {j++;print $1; } END {exit j}'"
@@ -97,7 +126,7 @@
 
 - name: "PRELIM | Section 1.1 | Create list of mount points"
   ansible.builtin.set_fact:
-      mount_names: "{{ ansible_mounts | map(attribute='mount') | list }}"
+      mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
   tags:
       - level1-server
       - level1-workstation
@@ -133,8 +162,33 @@
       state: latest
   when:
       - rhel9cis_rule_1_2_4
-      - ansible_distribution != 'RedHat'
-      - ansible_distribution != 'OracleLinux'
+      - ansible_facts.distribution != 'RedHat'
+      - ansible_facts.distribution != 'OracleLinux'
+
+- name: "PRELIM | Check gpg keys are imported will cause 1.2.1 to fail if not | RedHat Only"
+  block:
+      - name: "PRELIM | Check gpg keys are imported will cause 1.2.1 to fail if not"
+        ansible.builtin.shell: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'
+        changed_when: false
+        failed_when: false
+        register: check_gpg_imported
+
+      - name: "PRELIM | Check key package matches RedHat"
+        ansible.builtin.shell: rpm -qi redhat-release | grep Signature
+        changed_when: false
+        failed_when: false
+        register: os_gpg_package_valid
+        when: "'not installed' in check_gpg_imported.stdout"
+
+      - name: "PRELIM | Force keys to be imported"
+        ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+        when:
+            - "'not installed' in check_gpg_imported.stdout"
+            - "'Key ID 199e2f91fd431d51' in os_gpg_package_valid.stdout"
+  when:
+      - rhel9cis_rule_1_2_1
+      - rhel9cis_force_gpg_key_import
+      - ansible_facts.distribution == 'RedHat'
 
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   ansible.builtin.package:
@@ -191,7 +245,7 @@
       path: "{{ rhel9_cis_sshd_config_file }}"
       owner: root
       group: root
-      mode: 0600
+      mode: '0600'
       state: touch
   when:
       - rhel9_cis_sshd_config_file != '/etc/ssh/sshd_config'
@@ -200,27 +254,6 @@
       - ssh
       - level1_server
       - level1_workstation
-
-- name: "PRELIM | Install authconfig"
-  ansible.builtin.package:
-      name: authconfig
-      state: present
-  become: true
-  when:
-      - rhel9cis_use_authconfig
-      - rhel9cis_rule_5_3_1 or
-        rhel9cis_rule_5_3_2 or
-        rhel9cis_rule_5_3_3 or
-       '"authconfig" not in ansible_facts.packages or
-       "auditd-lib" not in ansible_facts.packages'
-  tags:
-      - level1-server
-      - level1-workstation
-      - rule_5.3.1 or
-        rule_5.3.2 or
-        rule_5.3.3
-      - authconfig
-      - auditd
 
 - name: "PRELIM | 5.3.4 | Find all sudoers files."
   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"

@@ -2,7 +2,7 @@
 
 - name: "5.6.2 | PATCH | Ensure system accounts are secured"
   block:
-      - name: "5.6.2 | Ensure system accounts are secured | Set nologin"
+      - name: "5.6.2 | PATCH | Ensure system accounts are secured | Set nologin"
         ansible.builtin.user:
             name: "{{ item.id }}"
             shell: /usr/sbin/nologin
@@ -50,7 +50,7 @@
       state: "{{ item.state }}"
       marker: "# {mark} - CIS benchmark - Ansible-lockdown"
       create: true
-      mode: 0644
+      mode: '0644'
       block: |
         TMOUT={{ rhel9cis_shell_session_timeout.timeout }}
         export TMOUT
@@ -83,10 +83,10 @@
 - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive"
   block:
       - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Set umask for /etc/login.defs pam_umask settings"
-        ansible.builtin.lineinfile:
+        ansible.builtin.replace:
             path: "{{ item.path }}"
-            regexp: '(?i)(umask\s*)'
-            line: '{{ item.line }} 027'
+            regexp: (?i)(umask\s+\d\d\d)
+            replace: '{{ item.line }} 027'
         with_items:
             - { path: '/etc/bashrc', line: 'umask' }
             - { path: '/etc/profile', line: 'umask' }
@@ -97,6 +97,30 @@
             path: /etc/login.defs
             regexp: '^USERGROUPS_ENAB'
             line: USERGROUPS_ENAB no
+
+      - name: "5.6.5 | PATCH | Ensure default user umask is 027 or more restrictive | Add umask sessions for pamd"
+        community.general.pamd:
+            name: "{{ item }}"
+            type: session
+            control: required
+            module_path: pam_limits.so
+            new_type: session
+            new_module_path: pam_umask.so
+            new_control: optional
+            state: before
+        register: rhel9cis_pamd_umask_added
+        loop:
+            - system-auth
+            - password-auth
+
+      - name: "5.6.5 | AUDIT | Ensure default user umask is 027 or more restrictive | update umask settings if required"
+        ansible.builtin.replace:
+            path: "/etc/pam.d/{{ item }}"
+            regexp: ^(session\s+)(requisite|required)(\s+pam_umask.so)$
+            replace: \1optional\3
+        loop:
+            - system-auth
+            - password-auth
 
   when:
       - rhel9cis_rule_5_6_5

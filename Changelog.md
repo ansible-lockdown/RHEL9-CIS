@@ -1,5 +1,55 @@
 # Changes to rhel9CIS
 
+## 1.1.5 - Based on CIS v1.0.0
+
+- added new interactive user discoveries
+  - updated controls 6.2.10-6.2.14
+- audit
+  - steps moved to prelim
+  - update to coipy and archive logic and variables
+- removed vars not used
+- updated quotes used in mode tasks
+- pre-commit update
+- issues addressed
+  - #190 thanks to @ipruteanu-sie
+    - aligned logic for user shadow suite params (aligned with other repos)
+    - new variables to force changes to existing users added 5.6.1.1 - 5.6.1.2
+  - #198 thanks to @brakkio86
+
+## 1.1.4 - Based on CIS v1.0.0
+
+- 1.2.1 new option for a new system to import gpg key for 1.2.1 to pass redhat only
+- thanks to @ipruteanu-sie
+  - #156
+  - #165
+  - #180
+  - #181
+  - #183
+  - #184
+
+## 1.1.3 - Based on CIS v1.0.0
+
+- updated goss binary to 0.4.4
+- moved majority of audit variables to vars/audit.yml
+- new function to enable audit_only using remediation
+- removed some dupes in audit config
+
+## 1.1.2 - Based on CIS v1.0.0
+
+- updated audit binary versions - aligned with rhel9-cis-audit
+- lint updates
+- .secrets updated
+- file mode quoted
+- updated 5.6.5 thansk to feedback from S!ghs on discord community
+
+## 1.1.1 - Based on CIS v1.0.0
+
+- thanks to @agbrowne
+  - [#90](https://github.com/ansible-lockdown/RHEL9-CIS/issues/90)
+
+- thanks to @mnasiadka
+  - [#54](https://github.com/ansible-lockdown/RHEL9-CIS/pull/54)
+
 ## 1.1.0
 
 - new workflow configuration
@@ -81,8 +131,8 @@ Aligned benchmark audit version with remediate release
 
 ## 1.0.1
 
-Control 6_2_16 new variable added thanks to @dulin_gnet on rhel8  
-Will not follow ynlink in hoe directoris and amend permissions.
+Control 6_2_16 new variable added thanks to @dulin_gnet on rhel8
+Will not follow symlink in home directories and amend permissions.
 
 - rhel_09_6_2_16_home_follow_symlink: false
 

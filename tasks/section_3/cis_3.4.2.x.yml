@@ -46,7 +46,8 @@
             - not rhel9cis_nft_tables_autonewtable
 
       - name: "3.4.2.2 | AUDIT | Ensure an nftables table exists | Alert on no tables | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when:
             - rhel9cis_3_4_2_2_nft_tables.stdout | length == 0
             - not rhel9cis_nft_tables_autonewtable
@@ -193,6 +194,7 @@
                 - "{{ rhel9cis_3_4_2_5_servicesport.stdout_lines }}"
   when:
       - rhel9cis_rule_3_4_2_5
+      - rhel9cis_firewall == "firewalld"
   tags:
       - level1-server
       - level1-workstation

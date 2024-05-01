@@ -40,7 +40,7 @@
 
 ### Community
 
-Join us on our [Discord Server](https://discord.io/ansible-lockdown) to ask questions, discuss features, or just chat with other Ansible-Lockdown users.
+Join us on our [Discord Server](https://www.lockdownenterprise.com/discord) to ask questions, discuss features, or just chat with other Ansible-Lockdown users.
 
 ### Contributing
 
@@ -132,8 +132,8 @@ os_check: false
 - python-def (should be included in RHEL 9)
 - libselinux-python
 - pip packages
-  - jmespath ( complete list found in requirements.txt)
-- collections found in collections/requirememnts.yml
+  - jmespath
+- collections found in collections/requirements.yml
 
 pre-commit is available if installed on your host for pull request testing.
 

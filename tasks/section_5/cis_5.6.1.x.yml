@@ -1,10 +1,28 @@
 ---
 
 - name: "5.6.1.1 | PATCH | Ensure password expiration is 365 days or less"
-  ansible.builtin.lineinfile:
-      path: /etc/login.defs
-      regexp: '^PASS_MAX_DAYS'
-      line: "PASS_MAX_DAYS {{ rhel9cis_pass['max_days'] }}"
+  block:
+      - name: "5.6.1.1 | PATCH | Ensure password expiration is 365 days or less"
+        ansible.builtin.lineinfile:
+            path: /etc/login.defs
+            regexp: '^PASS_MAX_DAYS'
+            line: "PASS_MAX_DAYS {{ rhel9cis_pass['max_days'] }}"
+
+      - name: "5.6.1.1 | AUDIT | Ensure password expiration is 365 days or less | Get existing users PASS_MAX_DAYS"
+        ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && ($5> {{ rhel9cis_pass['max_days'] }} || $5< {{ rhel9cis_pass['max_days'] }} || $5 == -1)){print $1}' /etc/shadow"
+        changed_when: false
+        failed_when: false
+        register: discovered_max_days
+
+      - name: "5.6.1.1 | PATCH | Ensure password expiration is 365 days or less | Set existing users PASS_MAX_DAYS"
+        ansible.builtin.user:
+            name: "{{ item }}"
+            password_expire_max: "{{ rhel9cis_pass['max_days'] }}"
+        loop: "{{ discovered_max_days.stdout_lines }}"
+        when:
+            - discovered_max_days.stdout_lines | length > 0
+            - item in discovered_interactive_usernames.stdout
+            - rhel9cis_force_user_maxdays
   when:
       - rhel9cis_rule_5_6_1_1
   tags:
@@ -12,13 +30,31 @@
       - level1-workstation
       - patch
       - password
-      - rule_5.5.1.1
+      - rule_5.6.1.1
 
 - name: "5.6.1.2 | PATCH | Ensure minimum days between password changes is 7 or more"
-  ansible.builtin.lineinfile:
-      path: /etc/login.defs
-      regexp: '^PASS_MIN_DAYS'
-      line: "PASS_MIN_DAYS {{ rhel9cis_pass['min_days'] }}"
+  block:
+      - name: "5.6.1.2 | PATCH | Ensure minimum days between password changes is configured | set login.defs"
+        ansible.builtin.lineinfile:
+            path: /etc/login.defs
+            regexp: '^PASS_MIN_DAYS'
+            line: "PASS_MIN_DAYS {{ rhel9cis_pass['min_days'] }}"
+
+      - name: "5.6.1.2 | AUDIT | Ensure minimum days between password changes is configured | Get existing users PASS_MIN_DAYS"
+        ansible.builtin.shell: "awk -F: '/^[^:]+:[^!*]/ && $4< {{ rhel9cis_pass['min_days'] }} {print $1}' /etc/shadow"
+        changed_when: false
+        failed_when: false
+        register: discovered_min_days
+
+      - name: "5.6.1.2 | PATCH | Ensure minimum days between password changes is configured | Set existing users PASS_MIN_DAYS"
+        ansible.builtin.user:
+            name: "{{ item }}"
+            password_expire_max: "{{ rhel9cis_pass['min_days'] }}"
+        loop: "{{ discovered_min_days.stdout_lines }}"
+        when:
+            - discovered_min_days.stdout_lines | length > 0
+            - item in discovered_interactive_usernames.stdout
+            - rhel9cis_force_user_mindays
   when:
       - rhel9cis_rule_5_6_1_2
   tags:
@@ -29,10 +65,26 @@
       - rule_5.6.1.2
 
 - name: "5.6.1.3 | PATCH | Ensure password expiration warning days is 7 or more"
-  ansible.builtin.lineinfile:
-      path: /etc/login.defs
-      regexp: '^PASS_WARN_AGE'
-      line: "PASS_WARN_AGE {{ rhel9cis_pass['warn_age'] }}"
+  block:
+      - name: "5.6.1.3 | PATCH | Ensure password expiration warning days is 7 or more | set login.defs"
+        ansible.builtin.lineinfile:
+            path: /etc/login.defs
+            regexp: '^PASS_WARN_AGE'
+            line: "PASS_WARN_AGE {{ rhel9cis_pass['warn_age'] }}"
+
+      - name: "5.6.1.3 | AUDIT | Ensure password expiration warning days is 7 or more | Get existing users WARN_DAYS"
+        ansible.builtin.shell: "awk -F: '/^[^:]+:[^!*]/ && $6< {{ rhel9cis_pass['warn_age'] }} {print $1}' /etc/shadow"
+        changed_when: false
+        failed_when: false
+        register: discovered_warn_days
+
+      - name: "5.6.1.3 | PATCH | Ensure password expiration warning days is 7 or more | Set existing users WARN_DAYS"
+        ansible.builtin.shell: "chage --warndays {{ rhel9cis_pass['warn_age'] }} {{ item }}"
+        loop: "{{ discovered_warn_days.stdout_lines }}"
+        when:
+            - discovered_warn_days.stdout_lines | length > 0
+            - item in discovered_interactive_usernames.stdout
+            - rhel9cis_force_user_warnage
   when:
       - rhel9cis_rule_5_6_1_3
   tags:
@@ -40,7 +92,7 @@
       - level1-workstation
       - patch
       - password
-      - rule_5.5.1.3
+      - rule_5.6.1.3
 
 - name: "5.6.1.4 | PATCH | Ensure inactive password lock is 30 days or less"
   block:
@@ -97,7 +149,8 @@
             - not rhel9cis_futurepwchgdate_autofix
 
       - name: "5.6.1.5 | AUDIT | Ensure all users last password change date is in the past | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when:
             - rhel9cis_5_6_1_5_user_list.stdout | length > 0
             - not rhel9cis_futurepwchgdate_autofix
@@ -116,4 +169,4 @@
       - level1-server
       - level1-workstation
       - patch
-      - rule_5.5.1.5
+      - rule_5.6.1.5

@@ -1,11 +1,11 @@
 ---
 
-- name: "5.2.1 | Ensure permissions on /etc/ssh/sshd_config are configured"
+- name: "5.2.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
   ansible.builtin.file:
       path: "/etc/ssh/sshd_config"
       owner: root
       group: root
-      mode: 0600
+      mode: '0600'
   when:
       - rhel9cis_rule_5_2_1
   tags:
@@ -31,7 +31,7 @@
             path: "{{ item.path }}"
             owner: root
             group: root
-            mode: 0600
+            mode: '0600'
         loop: "{{ rhel9cis_5_2_2_ssh_private_host_key.files }}"
         loop_control:
             label: "{{ item.path }}"
@@ -60,7 +60,7 @@
             path: "{{ item.path }}"
             owner: root
             group: root
-            mode: 0644
+            mode: '0644'
         loop: "{{ rhel9cis_5_2_3_ssh_public_host_key.files }}"
         loop_control:
             label: "{{ item.path }}"
@@ -150,11 +150,18 @@
       - rule_5.2.6
 
 - name: "5.2.7 | PATCH | Ensure SSH root login is disabled"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#PermitRootLogin|^PermitRootLogin"
-      line: 'PermitRootLogin no'
-      validate: sshd -t -f %s
+  block:
+      - name: "5.2.7 | PATCH | Ensure SSH root login is disabled | config file"
+        ansible.builtin.lineinfile:
+            path: "{{ rhel9_cis_sshd_config_file }}"
+            regexp: "^#PermitRootLogin|^PermitRootLogin"
+            line: 'PermitRootLogin no'
+            validate: sshd -t -f %s
+
+      - name: "5.2.7 | PATCH | Ensure SSH root login is disabled | override file"
+        ansible.builtin.file:
+            path: /etc/ssh/sshd_config.d/01-permitrootlogin.conf
+            state: absent
   when:
       - rhel9cis_rule_5_2_7
   tags:
@@ -225,11 +232,21 @@
       - rule_5.2.11
 
 - name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#X11Forwarding|^X11Forwarding"
-      line: 'X11Forwarding no'
-      validate: sshd -t -f %s
+  block:
+
+      - name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled | config file"
+        ansible.builtin.lineinfile:
+            path: "{{ rhel9_cis_sshd_config_file }}"
+            regexp: "^#X11Forwarding|^X11Forwarding"
+            line: 'X11Forwarding no'
+            validate: sshd -t -f %s
+
+      - name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled | override"
+        ansible.builtin.lineinfile:
+            path: /etc/ssh/sshd_config.d/50-redhat.conf
+            regexp: "^#X11Forwarding|^X11Forwarding"
+            line: 'X11Forwarding no'
+            validate: sshd -t -f %s
   when:
       - rhel9cis_rule_5_2_12
   tags:

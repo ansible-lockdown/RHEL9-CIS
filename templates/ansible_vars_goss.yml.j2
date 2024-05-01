@@ -7,10 +7,10 @@ benchmark_version: '1.0.0'
 
 # Set if genuine RHEL (subscription manager check) not for derivatives e.g. CentOS
 # If run via script this is discovered and set
-host_os_distribution: {{ ansible_distribution | lower }}
+host_os_distribution: {{ ansible_facts.distribution | lower }}
 
 #  timeout for each command to run where set - default = 10seconds/10000ms
-timeout_ms: 60000
+timeout_ms: {{ audit_cmd_timeout }}
 
 # Taken from LE rhel9-cis
 rhel9cis_section1: {{ rhel9cis_section1 }}
@@ -239,7 +239,6 @@ rhel9cis_rule_4_1_4_10: {{ rhel9cis_rule_4_1_4_10 }}
 # 4.2.1 Configure rsyslog
 rhel9cis_rule_4_2_1_1: {{ rhel9cis_rule_4_2_1_1 }}
 rhel9cis_rule_4_2_1_2: {{ rhel9cis_rule_4_2_1_2 }}
-rhel9cis_rule_4_2_1_2: {{ rhel9cis_rule_4_2_1_3 }}
 rhel9cis_rule_4_2_1_3: {{ rhel9cis_rule_4_2_1_3 }}
 rhel9cis_rule_4_2_1_4: {{ rhel9cis_rule_4_2_1_4 }}
 rhel9cis_rule_4_2_1_5: {{ rhel9cis_rule_4_2_1_5 }}

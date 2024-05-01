@@ -7,7 +7,8 @@
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
       - name: "1.1.7.1 | AUDIT | Ensure separate partition exists for /home | Present"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
 
   vars:
       warn_control_id: '1.1.7.1'
@@ -31,14 +32,13 @@
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
       state: present
-      opts: defaults,{% if rhel9cis_rule_1_1_7_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_7_3 %}nosuid,{% endif %}
-  loop: "{{ ansible_mounts }}"
+      opts: defaults,{% if rhel9cis_rule_1_1_7_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_7_3 %}nosuid{% endif %}
+  loop: "{{ ansible_facts.mounts }}"
   loop_control:
       label: "{{ item.device }}"
   notify: Change_requires_reboot
   when:
       - item.mount == "/home"
-      - rhel9cis_rule_1_1_7_1
       - rhel9cis_rule_1_1_7_2 or
         rhel9cis_rule_1_1_7_3
   tags:
@@ -48,5 +48,4 @@
       - mounts
       - rule_1.1.7.2
       - rule_1.1.7.3
-      - rule_1.1.7.4
       - skip_ansible_lint

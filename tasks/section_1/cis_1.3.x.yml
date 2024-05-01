@@ -9,13 +9,13 @@
 
       - name: "1.3.1 | PATCH | Ensure AIDE is installed | Build AIDE DB"
         ansible.builtin.shell: /usr/sbin/aide --init
-        changed_when: false
-        failed_when: false
-        async: 45
-        poll: 0
         args:
             creates: /var/lib/aide/aide.db.new.gz
         when: not ansible_check_mode
+
+      - name: "1.3.1 | PATCH | Ensure AIDE is installed | Wait for file before continuing"
+        ansible.builtin.wait_for:
+            path: /var/lib/aide/aide.db.new.gz
 
       - name: "1.3.1 | PATCH | Ensure AIDE is installed | copy AIDE DB"
         ansible.builtin.copy:
@@ -54,20 +54,20 @@
       - patch
       - rule_1.3.2
 
-- name: "1.3.3 | Ensure cryptographic mechanisms are used to protect the integrity of audit tools"
+- name: "1.3.3 | PATCH | Ensure cryptographic mechanisms are used to protect the integrity of audit tools"
   ansible.builtin.blockinfile:
       path: /etc/aide.conf
       marker: "# {mark} Audit tools - CIS benchmark - Ansible-lockdown"
       block: |
-        /sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512
-        /sbin/auditd p+i+n+u+g+s+b+acl+xattrs+sha512
-        /sbin/augenrules p+i+n+u+g+s+b+acl+xattrs+sha512
-        /sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
-        /sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
-        /sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
+        /usr/sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512
+        /usr/sbin/auditd p+i+n+u+g+s+b+acl+xattrs+sha512
+        /usr/sbin/augenrules p+i+n+u+g+s+b+acl+xattrs+sha512
+        /usr/sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
+        /usr/sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
+        /usr/sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
       validate: aide -D --config %s
   when:
-      - rhel9cis_rule_1_3_2
+      - rhel9cis_rule_1_3_3
       - not system_is_ec2
   tags:
       - level1-server

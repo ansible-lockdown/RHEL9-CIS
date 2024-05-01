@@ -7,7 +7,8 @@
             msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
 
       - name: "1.1.3.1 | AUDIT | Ensure separate partition exists for /var | Present"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
   vars:
       warn_control_id: '1.1.3.1'
       required_mount: '/var'
@@ -30,8 +31,8 @@
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
       state: present
-      opts: defaults,{% if rhel9cis_rule_1_1_3_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_3_3 %}nosuid,{% endif %}
-  loop: "{{ ansible_mounts }}"
+      opts: defaults,{% if rhel9cis_rule_1_1_3_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_3_3 %}nosuid{% endif %}
+  loop: "{{ ansible_facts.mounts }}"
   loop_control:
       label: "{{ item.device }}"
   notify: Change_requires_reboot

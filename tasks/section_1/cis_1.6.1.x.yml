@@ -39,7 +39,6 @@
       policy: "{{ rhel9cis_selinux_pol }}"
       state: "{{ rhel9cis_selinux_enforce }}"
   when:
-      - not rhel9cis_selinux_disable
       - rhel9cis_rule_1_6_1_3
   tags:
       - level1-server
@@ -54,7 +53,6 @@
       policy: "{{ rhel9cis_selinux_pol }}"
       state: "{{ rhel9cis_selinux_enforce }}"
   when:
-      - not rhel9cis_selinux_disable
       - rhel9cis_rule_1_6_1_4
   tags:
       - level1-server
@@ -69,7 +67,6 @@
       policy: "{{ rhel9cis_selinux_pol }}"
       state: enforcing
   when:
-      - not rhel9cis_selinux_disable
       - rhel9cis_selinux_enforce == 'enforcing'
       - rhel9cis_rule_1_6_1_5
   tags:
@@ -93,7 +90,8 @@
         when: rhelcis_1_6_1_6_unconf_services.stdout | length > 0
 
       - name: "1.6.1.6 | AUDIT | Ensure no unconfined services exist | warning count"
-        ansible.builtin.import_tasks: warning_facts.yml
+        ansible.builtin.import_tasks:
+            file: warning_facts.yml
         when: rhelcis_1_6_1_6_unconf_services.stdout | length > 0
   vars:
       warn_control_id: '1.6.1.6'
