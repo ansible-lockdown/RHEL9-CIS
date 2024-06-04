@@ -18,7 +18,7 @@
             line: "password    requisite     pam_pwquality.so try_first_pass local_users_only enforce_for_root retry=3"
             insertbefore: '^#?password ?'
 
-      - name: "5.5.1 | PATCH | Ensure password creation requirements are configured | Set system-auth retry settings"
+      - name: "5.5.1 | PATCH | Ensure password creation requirements are configured | Set password-auth retry settings"
         ansible.builtin.lineinfile:
             path: /etc/pam.d/password-auth
             regexp: '^password\s*requisite\s*pam_pwquality.so'
@@ -78,10 +78,18 @@
       - rule_5.5.2
 
 - name: "5.5.3 | PATCH | Ensure password reuse is limited | pwquality"
-  ansible.builtin.lineinfile:
-      path: /etc/pam.d/system-auth
-      line: "password    requisite     pam_pwhistory.so try_first_pass enforce_for_root retry=3 remember={{ rhel9cis_pam_faillock.remember }}"
-      insertafter: '^password\s*requisite\s*pam_pwquality.so'
+  block:
+      - name: "5.5.3 | PATCH | Ensure password reuse is limited | Set system-auth remember Settings"
+        ansible.builtin.lineinfile:
+            path: /etc/pam.d/system-auth
+            line: "password    requisite     pam_pwhistory.so try_first_pass enforce_for_root retry=3 remember={{ rhel9cis_pam_faillock.remember }}"
+            insertafter: '^password\s*requisite\s*pam_pwquality.so'
+
+      - name: "5.5.3 | PATCH | Ensure password reuse is limited | Set password-auth remember Settings"
+        ansible.builtin.lineinfile:
+            path: /etc/pam.d/password-auth
+            line: "password    requisite     pam_pwhistory.so try_first_pass enforce_for_root retry=3 remember={{ rhel9cis_pam_faillock.remember }}"
+            insertafter: '^password\s*requisite\s*pam_pwquality.so'
   when:
       - rhel9cis_rule_5_5_3
   tags:
