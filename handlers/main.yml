@@ -81,7 +81,11 @@
 
 - name: Apply_authselect
   ansible.builtin.shell: authselect apply-changes
+  when: not rhel9cis_rule_5_4_2
 
+- name: Apply_authselect
+  ansible.builtin.shell: "authselect select custom/{{ rhel9cis_authselect['custom_profile_name'] }} {{ rhel9cis_authselect['options'] }} --force --backup=rhel9cis_commit_{{ ansible_date_time.epoch}}"
+  when: rhel9cis_rule_5_4_2
 ## Auditd tasks note order for handlers to run
 
 - name: Auditd immutable check
