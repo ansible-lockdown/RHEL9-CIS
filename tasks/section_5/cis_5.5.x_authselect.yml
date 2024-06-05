@@ -13,17 +13,19 @@
 
       - name: "5.5.1 | PATCH | Ensure password creation requirements are configured | Set system-auth retry settings | not Authselect"
         ansible.builtin.lineinfile:
-            path: /etc/pam.d/system-auth
+            path: "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/system-auth"
             regexp: '^password\s*requisite\s*pam_pwquality.so'
             line: "password    requisite     pam_pwquality.so try_first_pass local_users_only enforce_for_root retry=3"
             insertbefore: '^#?password ?'
+        notify: Apply_authselect
 
       - name: "5.5.1 | PATCH | Ensure password creation requirements are configured | Set password-auth retry settings | not Authselect"
         ansible.builtin.lineinfile:
-            path: /etc/pam.d/password-auth
+            path: "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/password-auth"
             regexp: '^password\s*requisite\s*pam_pwquality.so'
             line: "password    requisite     pam_pwquality.so try_first_pass local_users_only enforce_for_root retry=3"
             insertbefore: '^#?password ?'
+        notify: Apply_authselect
   when:
       - rhel9cis_rule_5_5_1
   tags:
@@ -50,8 +52,9 @@
             line: "auth    required     pam_faillock.so preauth silent audit deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time}}"
             insertafter: 'auth\s*(sufficient|required)\s*pam_env.so$'
         loop:
-            - "/etc/pam.d/system-auth"
-            - "/etc/pam.d/password-auth"
+            - "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/system-auth"
+            - "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/password-auth"
+        notify: Apply_authselect
 
       - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | Set authfail"
         ansible.builtin.lineinfile:
@@ -60,8 +63,9 @@
             line: "auth    required     pam_faillock.so authfail audit deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time}}"
             insertbefore: 'auth\s*(sufficient|required)\s*pam_deny.so$'
         loop:
-            - "/etc/pam.d/system-auth"
-            - "/etc/pam.d/password-auth"
+            - "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/system-auth"
+            - "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/password-auth"
+        notify: Apply_authselect
 
       - name: "5.5.2 | PATCH | Ensure lockout for failed password attempts is configured | Load account faillock.so"
         ansible.builtin.lineinfile:
@@ -70,8 +74,9 @@
             line: "account    required     pam_faillock.so"
             insertbefore: '^account\s*(sufficient|required)\s*pam_unix.so$'
         loop:
-            - "/etc/pam.d/system-auth"
-            - "/etc/pam.d/password-auth"
+            - "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/system-auth"
+            - "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/password-auth"
+        notify: Apply_authselect
   when:
       - rhel9cis_rule_5_5_2
   tags:
@@ -84,15 +89,17 @@
   block:
       - name: "5.5.3 | PATCH | Ensure password reuse is limited | Set system-auth remember Settings"
         ansible.builtin.lineinfile:
-            path: /etc/pam.d/system-auth
+            path: "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/system-auth"
             line: "password    requisite     pam_pwhistory.so try_first_pass enforce_for_root retry=3 remember={{ rhel9cis_pam_faillock.remember }}"
             insertafter: '^password\s*requisite\s*pam_pwquality.so'
+        notify: Apply_authselect
 
       - name: "5.5.3 | PATCH | Ensure password reuse is limited | Set password-auth remember Settings"
         ansible.builtin.lineinfile:
-            path: /etc/pam.d/password-auth
+            path: "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/password-auth"
             line: "password    requisite     pam_pwhistory.so try_first_pass enforce_for_root retry=3 remember={{ rhel9cis_pam_faillock.remember }}"
             insertafter: '^password\s*requisite\s*pam_pwquality.so'
+        notify: Apply_authselect
   when:
       - rhel9cis_rule_5_5_3
   tags:
@@ -117,15 +124,17 @@
 
       - name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 | password-auth"
         ansible.builtin.replace:
-            path: /etc/pam.d/password-auth
+            path: "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/password-auth"
             regexp: '^password\s*sufficient\s*pam_unix.so.*$'
             replace: 'password    sufficient    pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
+        notify: Apply_authselect
 
       - name: "5.5.4 | PATCH | Ensure password hashing algorithm is SHA-512 | system-auth"
         ansible.builtin.replace:
-            path: /etc/pam.d/system-auth
+            path: "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/system-auth"
             regexp: '^password\s*sufficient\s*pam_unix.so.*$'
             replace: 'password    sufficient     pam_unix.so sha512 shadow try_first_pass use_authtok remember={{ rhel9cis_pam_faillock.remember }}'
+        notify: Apply_authselect
   when:
       - rhel9cis_rule_5_5_4
   tags:

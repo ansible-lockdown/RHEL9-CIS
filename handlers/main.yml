@@ -79,6 +79,9 @@
   ansible.builtin.systemd:
       daemon-reload: true
 
+- name: Apply_authselect
+  ansible.builtin.shell: authselect apply-changes
+
 ## Auditd tasks note order for handlers to run
 
 - name: Auditd immutable check
