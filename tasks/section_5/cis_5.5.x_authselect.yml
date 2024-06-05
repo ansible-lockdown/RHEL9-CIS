@@ -49,7 +49,7 @@
         ansible.builtin.lineinfile:
             path: "{{ item }}"
             regexp: '^auth\s*(sufficient|required)\s*pam_faillock.so\s*preauth(.*)'
-            line: "auth    required     pam_faillock.so preauth silent audit deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time}}"
+            line: "auth         required     pam_faillock.so preauth silent audit deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time}}"
             insertafter: 'auth\s*(sufficient|required)\s*pam_env.so$'
         loop:
             - "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/system-auth"
@@ -60,7 +60,7 @@
         ansible.builtin.lineinfile:
             path: "{{ item }}"
             regexp: '^auth\s*(sufficient|required)\s*pam_faillock.so\s*authfail(.*)'
-            line: "auth    required     pam_faillock.so authfail audit deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time}}"
+            line: "auth         required     pam_faillock.so authfail audit deny={{ rhel9cis_pam_faillock.deny }} unlock_time={{ rhel9cis_pam_faillock.unlock_time}}"
             insertbefore: 'auth\s*(sufficient|required)\s*pam_deny.so$'
         loop:
             - "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/system-auth"
@@ -71,7 +71,7 @@
         ansible.builtin.lineinfile:
             path: "{{ item }}"
             regexp: '^account\s*(sufficient|required)\s*pam_faillock.so$'
-            line: "account    required     pam_faillock.so"
+            line: "account     required     pam_faillock.so"
             insertbefore: '^account\s*(sufficient|required)\s*pam_unix.so$'
         loop:
             - "/etc/authselect/custom/{{ rhel9cis_authselect['custom_profile_name'] }}/system-auth"
