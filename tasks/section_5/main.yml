@@ -20,9 +20,15 @@
   ansible.builtin.import_tasks:
       file: cis_5.4.x.yml
 
-- name: "SECTION | 5.5 | Configure PAM "
+- name: "SECTION | 5.5 | Configure PAM | not authselect"
   ansible.builtin.import_tasks:
       file: cis_5.5.x.yml
+  when: not rhel9cis_authselect_custom_profile_select
+
+- name: "SECTION | 5.5 | Configure PAM | authselect"
+  ansible.builtin.import_tasks:
+      file: cis_5.5.x_authselect.yml
+  when: rhel9cis_authselect_custom_profile_select
 
 - name: "SECTION | 5.6.1.x | Shadow Password Suite Parameters"
   ansible.builtin.import_tasks:
