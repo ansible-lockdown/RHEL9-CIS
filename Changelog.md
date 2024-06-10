@@ -1,5 +1,13 @@
 # Changes to rhel9CIS
 
+## 1.1.6 - Based on CIS v1.0.0
+
+- #190 - thanks to @ipruteanu-sie
+  - addressed requirements in PR with alternate method
+- #191 - thanks to @numericillustration
+  - Addressed authselect for pam
+- #193 thanks to brakkio86
+
 ## 1.1.5 - Based on CIS v1.0.0
 
 - added new interactive user discoveries
