@@ -203,6 +203,10 @@ pre-commit run
 
 ## Credits and Thanks
 
+Based on an original concept by Sam Doran
+
 Massive thanks to the fantastic community and all its members.
-This includes a huge thanks and credit to the original authors and maintainers on which this concept was created.
-Mark Bolwell, Sam Doran, George Nalen, Steve Williams, Fred Witty
+
+This includes a huge thanks and credit to the original authors and maintainers.
+
+Mark Bolwell, George Nalen, Steve Williams, Fred Witty
