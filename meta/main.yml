@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-    author: "Sam Doran, Josh Springer, Daniel Shepherd, Bas Meijeri, James Cassell, Mike Renfro, DFed, George Nalen, Mark Bolwell"
+    author: "MindPoint Group"
     description: "Apply the RHEL 9 CIS"
     company: "MindPoint Group"
     license: MIT
