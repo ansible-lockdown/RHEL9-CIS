@@ -258,7 +258,7 @@
 - name: "6.1.13 | AUDIT | Audit SUID executables"
   block:
       - name: "6.1.13 | AUDIT | Audit SUID executables | Find all SUID executables"
-        ansible.builtin.shell: df {{ item.mount }} -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -4000
+        ansible.builtin.shell: df {{ item.mount }} --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -4000
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_13_suid_perms
@@ -301,7 +301,7 @@
 - name: "6.1.14 | AUDIT | Audit SGID executables"
   block:
       - name: "6.1.14 | AUDIT | Audit SGID executables | Find all SGID executables"
-        ansible.builtin.shell: df {{ item.mount }} -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -2000
+        ansible.builtin.shell: df {{ item.mount }} --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -2000
         failed_when: false
         changed_when: false
         register: rhel_09_6_1_14_sgid_perms
