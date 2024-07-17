@@ -89,8 +89,8 @@
             group: root
             mode: '0644'
         loop:
-            - { regexp: '^user-db', line: 'user-db: user' }
-            - { regexp: '^system-db', line: 'system-db: local' }
+            - { regexp: '^user-db', line: 'user-db:user' }
+            - { regexp: '^system-db', line: 'system-db:local' }
 
       - name: "1.8.4 | PATCH | Ensure GDM screen locks when the user is idle | Make db directory"
         ansible.builtin.file:
