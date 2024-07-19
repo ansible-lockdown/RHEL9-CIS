@@ -1,7 +1,12 @@
 ## This file is managed by Ansible, YOUR CHANGES WILL BE LOST!
 
-{% if rhel9cis_rule_1_5_3 %}
-# Kernel sysctl
-# CIS 1.5.3
+{% if rhel9cis_rule_1_5_1 %}
+# Adress space randomise
+# CIS 1.5.1
 kernel.randomize_va_space = 2
+{% endif %}
+{% if rhel9cis_rule_1_5_2 %}
+# Ptrace scope
+# CIS 1.5.2
+kernel.yama.ptrace_scope = 1
 {% endif %}

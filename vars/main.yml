@@ -11,6 +11,7 @@ rhel9cis_allowed_crypto_policies_modules:
     - 'OSPP'
     - 'AD-SUPPORT'
     - 'AD-SUPPORT-LEGACY'
+    - 'NO-SHA1'
 
 # Used to control warning summary
 warn_control_list: ""

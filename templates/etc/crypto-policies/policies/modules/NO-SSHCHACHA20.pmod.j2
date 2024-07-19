@@ -1,0 +1,5 @@
+# This is a subpolicy to disable the chacha20-poly1305 ciphers
+# for the SSH protocol (libssh and OpenSSH)
+# Carried out as part of CIS Benchmark
+
+cipher@SSH = -CHACHA20-POLY1305
