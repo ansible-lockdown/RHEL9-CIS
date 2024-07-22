@@ -10,6 +10,7 @@
     - grub
     - patch
     - rule_1.4.1
+    - NIST800-53R5_AC-3
   ansible.builtin.copy:
     dest: /boot/grub2/user.cfg
     content: "GRUB2_PASSWORD={{ rhel9cis_bootloader_password_hash }}"  # noqa template-instead-of-copy
@@ -27,6 +28,7 @@
     - grub
     - patch
     - rule_1.4.2
+    - NIST800-53R5_AC-3
   block:
     - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
       ansible.builtin.file:

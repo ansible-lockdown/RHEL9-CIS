@@ -270,6 +270,7 @@
       - users
 
 - name: "PRELIM | Discover Interactive UID MIN and MIN from logins.def"
+  when: rhel9cis_discover_int_uid
   block:
       - name: "PRELIM | Capture UID_MIN information from logins.def"
         ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
@@ -291,13 +292,6 @@
             min_int_uid: "{{ uid_min_id.stdout }}"
             max_int_uid: "{{ uid_max_id.stdout }}"
             min_int_gid: "{{ gid_min_id.stdout }}"
-
-- name: "PRELIM | Output of uid findings"
-  ansible.builtin.debug:
-      msg: "{{ min_int_uid }} {{ max_int_uid }}"
-
-  when:
-      - not discover_int_uid
 
 - name: "PRELIM | Gather the package facts after prelim"
   ansible.builtin.package_facts:

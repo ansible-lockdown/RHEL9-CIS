@@ -9,6 +9,8 @@
     - patch
     - sysctl
     - rule_1.5.1
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-6.1
   block:
     - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
       ansible.builtin.set_fact:
@@ -45,6 +47,7 @@
     - patch
     - sysctl
     - rule_1.5.3
+    - NIST800-53R5_CM-6b
   ansible.builtin.lineinfile:
     path: /etc/systemd/coredump.conf
     regexp: '^ProcessSizeMax\s*=\s*.*[1-9]$'

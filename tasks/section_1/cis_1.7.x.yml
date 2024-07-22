@@ -9,6 +9,9 @@
     - banner
     - patch
     - rule_1.7.1
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-3
+    - NIST800-53R5_CM-6
   ansible.builtin.template:
     src: etc/motd.j2
     dest: /etc/motd
@@ -24,6 +27,9 @@
     - level1-workstation
     - patch
     - rule_1.7.2
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-3
+    - NIST800-53R5_CM-6
   ansible.builtin.template:
     src: etc/issue.j2
     dest: /etc/issue
@@ -40,6 +46,9 @@
     - banner
     - patch
     - rule_1.7.3
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-3
+    - NIST800-53R5_CM-6
   ansible.builtin.template:
     src: etc/issue.net.j2
     dest: /etc/issue.net
@@ -56,6 +65,8 @@
     - perms
     - patch
     - rule_1.7.4
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
   ansible.builtin.file:
     path: /etc/motd
     owner: root
@@ -71,6 +82,8 @@
     - perms
     - patch
     - rule_1.7.5
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
   ansible.builtin.file:
     path: /etc/issue
     owner: root
@@ -86,6 +99,8 @@
     - perms
     - patch
     - rule_1.7.6
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
   ansible.builtin.file:
     path: /etc/issue.net
     owner: root

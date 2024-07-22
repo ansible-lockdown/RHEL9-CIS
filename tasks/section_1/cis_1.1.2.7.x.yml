@@ -10,6 +10,7 @@
     - audit
     - mounts
     - rule_1_1_2.7.1
+    - NIST800-53R5_CM-7
   vars:
     warn_control_id: '1.1.2.7.1'
     required_mount: '/var/log/audit'
@@ -49,3 +50,5 @@
     - rule_1_1_2.7.2
     - rule_1_1_2.7.3
     - rule_1_1_2.7.4
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
