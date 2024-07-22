@@ -1,61 +1,51 @@
 ---
 
-- name: "2.3.1 | PATCH | Ensure telnet client is not installed"
-  ansible.builtin.package:
-      name: telnet
-      state: absent
+- name: "2.3.1 | PATCH | Ensure time synchronization is in use"
   when:
-      - not rhel9cis_telnet_required
-      - "'telnet' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_1
+    - rhel9cis_rule_2_3_1
+    - not system_is_container
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - telnet
-      - rule_2.3.1
+    - level1-server
+    - level1-workstation
+    - patch
+    - NIST800-53R5_AU-3
+    - NIST800-53R5_AU-12
+    - rule_2.3.1
+  ansible.builtin.package:
+    name: chrony
+    state: present
 
-- name: "2.3.2 | PATCH | Ensure LDAP client is not installed"
-  ansible.builtin.package:
-      name: openldap-clients
-      state: absent
+- name: "2.3.2 | PATCH | Ensure chrony is configured"
   when:
-      - not rhel9cis_openldap_clients_required
-      - "'openldap-clients' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_2
+    - rhel9cis_rule_2_3_2
+    - not system_is_container
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ldap
-      - rule_2.3.2
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_2.3.2
+    - NIST800-53R5_AU-3
+    - NIST800-53R5_AU-12
+  ansible.builtin.template:
+    src: etc/chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: '0644'
 
-- name: "2.3.3 | PATCH | Ensure TFTP client is not installed"
-  ansible.builtin.package:
-      name: tftp
-      state: absent
+- name: "2.3.3 | PATCH | Ensure chrony is not run as the root user"
   when:
-      - not rhel9cis_tftp_client
-      - "'tftp' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_3
+    - rhel9cis_rule_2_3_3
+    - not system_is_container
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - tftp
-      - rule_2.3.3
-
-- name: "2.3.4 | PATCH | Ensure FTP client is not installed"
-  ansible.builtin.package:
-      name: ftp
-      state: absent
-  when:
-      - not rhel9cis_ftp_client
-      - "'ftp' in ansible_facts.packages"
-      - rhel9cis_rule_2_3_4
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ftp
-      - rule_2.3.4
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_2.3.3
+  ansible.builtin.lineinfile:
+    path: /etc/sysconfig/chronyd
+    regexp: '^OPTIONS="(?!.* -u chrony.*)(.*)"'
+    line: OPTIONS="\1 -u chrony"
+    create: true
+    backrefs: true
+    mode: '0644'
