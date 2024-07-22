@@ -117,6 +117,8 @@
     - rhel9cis_crypto_policy_module | length > 0
   tags:
     - rule_1.6.1
+    - crypto
+    - NIST800-53R5_SC-6
   ansible.builtin.assert:
     that: rhel9cis_crypto_policy_module in rhel9cis_allowed_crypto_policies_modules
     fail_msg: "Crypto policy module is not a permitted version"
