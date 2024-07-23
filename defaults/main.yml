@@ -208,7 +208,7 @@ rhel9cis_rule_1_6_5: true
 rhel9cis_rule_1_6_6: true
 rhel9cis_rule_1_6_7: true
 
-# Coomand line warning banners
+# Command line warning banners
 rhel9cis_rule_1_7_1: true
 rhel9cis_rule_1_7_2: true
 rhel9cis_rule_1_7_3: true
