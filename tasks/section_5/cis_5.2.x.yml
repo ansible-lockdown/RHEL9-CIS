@@ -1,391 +1,165 @@
 ---
 
-- name: "5.2.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
-  ansible.builtin.file:
-      path: "/etc/ssh/sshd_config"
-      owner: root
-      group: root
-      mode: '0600'
+- name: "5.2.1 | PATCH | Ensure sudo is installed"
   when:
-      - rhel9cis_rule_5_2_1
+    - rhel9cis_rule_5_2_1
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - permissions
-      - rule_5.2.1
+    - level1-server
+    - level1-workstation
+    - patch
+    - sudo
+    - rule_5.2.1
+    - NIST800-53R5_AC-6
+  ansible.builtin.package:
+    name: sudo
+    state: present
 
-- name: "5.2.2 | PATCH | Ensure permissions on SSH private host key files are configured"
+- name: "5.2.2 | PATCH | Ensure sudo commands use pty"
+  when:
+    - rhel9cis_rule_5_2_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - sudo
+    - rule_5.2.2
+    - NIST800-53R5_AC-6
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    line: "Defaults    use_pty"
+    validate: '/usr/sbin/visudo -cf %s'
+
+- name: "5.2.3 | PATCH | Ensure sudo log file exists"
+  when:
+    - rhel9cis_rule_5_2_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - sudo
+    - rule_5.2.3
+    - NIST800-53R5_AU-3
+    - NIST800-53R5_AU-12
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    regexp: '^Defaults    logfile='
+    line: 'Defaults    logfile="{{ rhel9cis_sudolog_location }}"'
+    validate: '/usr/sbin/visudo -cf %s'
+
+- name: "5.2.4 | PATCH | Ensure users must provide password for escalation"
+  when:
+    - rhel9cis_rule_5_2_4
+  tags:
+    - level2-server
+    - level2-workstation
+    - patch
+    - sudo
+    - rule_5.2.4
+    - NIST800-53R5_AC-6
   block:
-      - name: "5.2.2 | AUDIT | Ensure permissions on SSH private host key files are configured | Find the SSH private host keys"
-        ansible.builtin.find:
-            paths: /etc/ssh
-            patterns: 'ssh_host_*_key'
-            recurse: true
-            file_type: any
-        register: rhel9cis_5_2_2_ssh_private_host_key
+    - name: "5.2.4 | AUDIT | Ensure users must provide password for escalation | discover accts with NOPASSWD"
+      ansible.builtin.shell: grep -Ei '(nopasswd)' /etc/sudoers /etc/sudoers.d/* | cut -d':' -f1
+      become: true
+      changed_when: false
+      failed_when: false
+      register: rhel9cis_5_2_4_nopasswd
 
-      - name: "5.2.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions on SSH private host keys"
-        ansible.builtin.file:
-            path: "{{ item.path }}"
-            owner: root
-            group: root
-            mode: '0600'
-        loop: "{{ rhel9cis_5_2_2_ssh_private_host_key.files }}"
-        loop_control:
-            label: "{{ item.path }}"
+    - name: "5.2.4 | PATCH | Ensure users must provide password for escalation"
+      when: rhel9cis_5_2_4_nopasswd.std | length > 0
+      ansible.builtin.replace:
+        path: "{{ item }}"
+        regexp: '^((?!#|{% for name in rhel9cis_sudoers_exclude_nopasswd_list %}{{ name }}{% if not loop.last -%}|{%- endif -%}{% endfor %}).*)NOPASSWD(.*)'
+        replace: '\1PASSWD\2'
+        validate: '/usr/sbin/visudo -cf %s'
+      loop: "{{ rhel9cis_5_2_4_nopasswd.stdout_lines }}"
+
+- name: "5.2.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
   when:
-      - rhel9cis_rule_5_2_2
+    - rhel9cis_rule_5_2_5
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - permissions
-      - rule_5.2.2
-
-- name: "5.2.3 | PATCH | Ensure permissions on SSH public host key files are configured"
+    - level1-server
+    - level1-workstation
+    - patch
+    - sudo
+    - rule_5.2.5
+    - NIST800-53R5_AC-6
   block:
-      - name: "5.2.3 | AUDIT | Ensure permissions on SSH public host key files are configured | Find the SSH public host keys"
-        ansible.builtin.find:
-            paths: /etc/ssh
-            patterns: 'ssh_host_*_key.pub'
-            recurse: true
-            file_type: any
-        register: rhel9cis_5_2_3_ssh_public_host_key
+    - name: "5.2.5 | AUDIT | Ensure re-authentication for privilege escalation is not disabled globally"
+      ansible.builtin.shell: grep -Ei '(!authenticate)' /etc/sudoers /etc/sudoers.d/* | cut -d':' -f1
+      become: true
+      changed_when: false
+      failed_when: false
+      register: rhel9cis_5_2_4_authenticate
 
-      - name: "5.2.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions on SSH public host keys"
-        ansible.builtin.file:
-            path: "{{ item.path }}"
-            owner: root
-            group: root
-            mode: '0644'
-        loop: "{{ rhel9cis_5_2_3_ssh_public_host_key.files }}"
-        loop_control:
-            label: "{{ item.path }}"
+    - name: "5.2.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
+      when: rhel9cis_5_2_4_authenticate.stdout | length > 0
+      ansible.builtin.replace:
+        path: "{{ item }}"
+        regexp: '^([^#].*)!authenticate(.*)'
+        replace: '\1authenticate\2'
+        validate: '/usr/sbin/visudo -cf %s'
+      loop: "{{ rhel9cis_5_2_4_authenticate.stdout_lines }}"
+
+- name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly"
   when:
-      - rhel9cis_rule_5_2_3
+    - rhel9cis_rule_5_2_6
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.3
-
-- name: "5.2.4 | PATCH | Ensure SSH access is limited"
+    - level1-server
+    - level1-workstation
+    - patch
+    - sudo
+    - rule_5.2.6
   block:
-      - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for allowusers"
-        ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: "^AllowUsers"
-            line: "AllowUsers {{ rhel9cis_sshd['allowusers'] }}"
-            validate: sshd -t -f %s
-        notify: Restart sshd
-        when: "rhel9cis_sshd['allowusers']|default('') | length > 0"
+    - name: "5.2.6 | AUDIT | Ensure sudo authentication timeout is configured correctly | Get files with timeout set"
+      ansible.builtin.shell: grep -is 'timestamp_timeout' /etc/sudoers /etc/sudoers.d/* | cut -d":" -f1 | uniq | sort
+      changed_when: false
+      failed_when: false
+      register: rhel9cis_5_2_6_timeout_files
 
-      - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for allowgroups"
-        ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: "^AllowGroups"
-            line: "AllowGroups {{ rhel9cis_sshd['allowgroups'] }}"
-            validate: sshd -t -f %s
-        notify: Restart sshd
-        when: "rhel9cis_sshd['allowgroups']|default('') | length > 0"
+    - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if no results"
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        regexp: 'Defaults timestamp_timeout='
+        line: "Defaults timestamp_timeout={{ rhel9cis_sudo_timestamp_timeout }}"
+        validate: '/usr/sbin/visudo -cf %s'
+      when: rhel9cis_5_2_6_timeout_files.stdout | length == 0
 
-      - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for denyusers"
-        ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: "^DenyUsers"
-            line: "DenyUsers {{ rhel9cis_sshd['denyusers'] }}"
-            validate: sshd -t -f %s
-        notify: Restart sshd
-        when: "rhel9cis_sshd['denyusers']|default('') | length > 0"
+    - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if has results"
+      ansible.builtin.replace:
+        path: "{{ item }}"
+        regexp: 'timestamp_timeout=(\d+)'
+        replace: "timestamp_timeout={{ rhel9cis_sudo_timestamp_timeout }}"
+        validate: '/usr/sbin/visudo -cf %s'
+      loop: "{{ rhel9cis_5_2_6_timeout_files.stdout_lines }}"
+      when: rhel9cis_5_2_6_timeout_files.stdout | length > 0
 
-      - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for denygroups"
-        ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: "^DenyGroups"
-            line: "DenyGroups {{ rhel9cis_sshd['denygroups'] }}"
-            validate: sshd -t -f %s
-        notify: Restart sshd
-        when: "rhel9cis_sshd['denygroups']|default('') | length > 0"
+- name: "5.2.7 | PATCH | Ensure access to the su command is restricted"
   when:
-      - rhel9cis_rule_5_2_4
+    - rhel9cis_rule_5_2_7
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.4
-
-- name: "5.2.5 | PATCH | Ensure SSH LogLevel is appropriate"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#LogLevel|^LogLevel"
-      line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_5
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - sshs
-      - rule_5.2.5
-
-- name: "5.2.6 | PATCH | Ensure SSH PAM is enabled"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#UsePAM|^UsePAM"
-      line: 'UsePAM yes'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_6
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.6
-
-- name: "5.2.7 | PATCH | Ensure SSH root login is disabled"
+    - level1-server
+    - level1-workstation
+    - patch
+    - sudo
+    - rule_5.2.7
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
   block:
-      - name: "5.2.7 | PATCH | Ensure SSH root login is disabled | config file"
-        ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: "^#PermitRootLogin|^PermitRootLogin"
-            line: 'PermitRootLogin no'
-            validate: sshd -t -f %s
+    - name: "5.2.7 | PATCH | Ensure access to the su command is restricted | Ensure sugroup exists"
+      ansible.builtin.group:
+        name: "{{ rhel9cis_sugroup }}"
+        state: present
+      register: rhel9cis_5_2_7_sugroup
 
-      - name: "5.2.7 | PATCH | Ensure SSH root login is disabled | override file"
-        ansible.builtin.file:
-            path: /etc/ssh/sshd_config.d/01-permitrootlogin.conf
-            state: absent
-  when:
-      - rhel9cis_rule_5_2_7
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.7
+    - name: "5.2.7 | PATCH | Ensure access to the su command is restricted | remove users from group"
+      ansible.builtin.lineinfile:
+        path: /etc/group
+        regexp: '^{{ rhel9cis_sugroup }}(:.:.*:).*$'
+        line: '{{ rhel9cis_sugroup }}\g<1>'
+        backrefs: true
 
-- name: "5.2.8 | PATCH | Ensure SSH HostbasedAuthentication is disabled"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#HostbasedAuthentication|^HostbasedAuthentication"
-      line: 'HostbasedAuthentication no'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_8
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.8
-
-- name: "5.2.9 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#PermitEmptyPasswords|^PermitEmptyPasswords"
-      line: 'PermitEmptyPasswords no'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_9
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.9
-
-- name: "5.2.10 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#PermitUserEnvironment|^PermitUserEnvironment"
-      line: 'PermitUserEnvironment no'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_10
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.10
-
-- name: "5.2.11 | PATCH | Ensure SSH IgnoreRhosts is enabled"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#IgnoreRhosts|^IgnoreRhosts"
-      line: 'IgnoreRhosts yes'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_11
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.11
-
-- name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled"
-  block:
-
-      - name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled | config file"
-        ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: "^#X11Forwarding|^X11Forwarding"
-            line: 'X11Forwarding no'
-            validate: sshd -t -f %s
-
-      - name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled | override"
-        ansible.builtin.lineinfile:
-            path: /etc/ssh/sshd_config.d/50-redhat.conf
-            regexp: "^#X11Forwarding|^X11Forwarding"
-            line: 'X11Forwarding no'
-            validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_12
-  tags:
-      - level2-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.12
-
-- name: "5.2.13 | PATCH | Ensure SSH AllowTcpForwarding is disabled"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#AllowTcpForwarding|^AllowTcpForwarding"
-      line: 'AllowTcpForwarding no'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_13
-  tags:
-      - level2-server
-      - level2-workstation
-      - patch
-      - ssh
-      - rule_5.2.13
-
-- name: "5.2.14 | PATCH | Ensure system-wide crypto policy is not over-ridden"
-  block:
-      - name: "5.2.14 | AUDIT | Ensure system-wide crypto policy is not over-ridden"
-        ansible.builtin.shell: grep -i '^\s*CRYPTO_POLICY=' /etc/sysconfig/sshd
-        changed_when: false
-        failed_when: ( ssh_crypto_discovery.rc not in [ 0, 1 ] )
-        register: ssh_crypto_discovery
-
-      - name: "5.2.14 | PATCH | Ensure system-wide crypto policy is not over-ridden"
-        ansible.builtin.shell: sed -ri "s/^\s*(CRYPTO_POLICY\s*=.*)$/# \1/" /etc/sysconfig/sshd
-        notify: Restart sshd
-        when: ssh_crypto_discovery.stdout | length > 0
-  when:
-      - rhel9cis_rule_5_2_14
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.14
-
-- name: "5.2.15 | PATCH | Ensure SSH warning banner is configured"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: '^Banner'
-      line: 'Banner /etc/issue.net'
-  when:
-      - rhel9cis_rule_5_2_15
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.15
-
-- name: "5.2.16 | PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: '^(#)?MaxAuthTries \d'
-      line: 'MaxAuthTries 4'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_16
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.16
-
-- name: "5.2.17 | PATCH | Ensure SSH MaxStartups is configured"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#MaxStartups|^MaxStartups"
-      line: 'MaxStartups 10:30:60'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_17
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.17
-
-- name: "5.2.18 | PATCH | Ensure SSH MaxSessions is set to 10 or less"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#MaxSessions|^MaxSessions"
-      line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_18
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.18
-
-- name: "5.2.19 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
-  ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      regexp: "^#LoginGraceTime|^LoginGraceTime"
-      line: "LoginGraceTime {{ rhel9cis_sshd['logingracetime'] }}"
-      validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_19
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.19
-
-- name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured"
-  block:
-      - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Add line in sshd_config for ClientAliveInterval"
-        ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: '^ClientAliveInterval'
-            line: "ClientAliveInterval {{ rhel9cis_sshd['clientaliveinterval'] }}"
-            validate: sshd -t -f %s
-
-      - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Ensure SSH ClientAliveCountMax set to <= 3"
-        ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
-            regexp: '^ClientAliveCountMax'
-            line: "ClientAliveCountMax {{ rhel9cis_sshd['clientalivecountmax'] }}"
-            validate: sshd -t -f %s
-  when:
-      - rhel9cis_rule_5_2_20
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - ssh
-      - rule_5.2.20
+    - name: "5.2.7 | PATCH | Ensure access to the su command is restricted | Setting pam_wheel to use_uid"
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/su
+        regexp: '^(#)?auth\s+required\s+pam_wheel\.so'
+        line: 'auth           required        pam_wheel.so use_uid group={{ rhel9cis_sugroup }}'
