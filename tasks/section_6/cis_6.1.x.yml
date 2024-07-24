@@ -1,366 +1,79 @@
 ---
 
-- name: "6.1.1 | PATCH | Ensure permissions on /etc/passwd are configured"
-  ansible.builtin.file:
-      path: /etc/passwd
-      owner: root
-      group: root
-      mode: '0644'
+- name: "6.1.1 | PATCH | Ensure AIDE is installed"
   when:
-      - rhel9cis_rule_6_1_1
+    - rhel9cis_config_aide
+    - rhel9cis_rule_6_1_1
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - permissions
-      - rule_6.1.1
-
-- name: "6.1.2 | PATCH | Ensure permissions on /etc/passwd- are configured"
-  ansible.builtin.file:
-      path: /etc/passwd-
-      owner: root
-      group: root
-      mode: '0644'
-  when:
-      - rhel9cis_rule_6_1_2
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - permissions
-      - rule_6.1.2
-
-- name: "6.1.3 | PATCH | Ensure permissions on /etc/group are configured"
-  ansible.builtin.file:
-      path: /etc/group
-      owner: root
-      group: root
-      mode: '0644'
-  when:
-      - rhel9cis_rule_6_1_3
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - permissions
-      - rule_6.1.3
-
-- name: "6.1.4 | PATCH | Ensure permissions on /etc/group- are configured"
-  ansible.builtin.file:
-      path: /etc/group-
-      owner: root
-      group: root
-      mode: '0644'
-  when:
-      - rhel9cis_rule_6_1_4
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - permissionss
-      - rule_6.1.4
-
-- name: "6.1.5 | PATCH | Ensure permissions on /etc/shadow are configured"
-  ansible.builtin.file:
-      path: /etc/shadow
-      owner: root
-      group: root
-      mode: '0000'
-  when:
-      - rhel9cis_rule_6_1_5
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - permissions
-      - rule_6.1.5
-
-- name: "6.1.6 | PATCH | Ensure permissions on /etc/shadow- are configured"
-  ansible.builtin.file:
-      path: /etc/shadow-
-      owner: root
-      group: root
-      mode: '0000'
-  when:
-      - rhel9cis_rule_6_1_6
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - permissions
-      - rule_6.1.6
-
-- name: "6.1.7 | PATCH | Ensure permissions on /etc/gshadow are configured"
-  ansible.builtin.file:
-      path: /etc/gshadow
-      owner: root
-      group: root
-      mode: '0000'
-  when:
-      - rhel9cis_rule_6_1_7
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - permissions
-      - rule_6.1.7
-
-- name: "6.1.8 | PATCH | Ensure permissions on /etc/gshadow- are configured"
-  ansible.builtin.file:
-      path: /etc/gshadow-
-      owner: root
-      group: root
-      mode: '0000'
-  when:
-      - rhel9cis_rule_6_1_8
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - permissions
-      - rule_6.1.8
-
-- name: "6.1.9 | PATCH | Ensure no world writable files exist"
+    - level1-server
+    - level1-workstation
+    - aide
+    - patch
+    - rule_6.1.1
+    - NIST800-53R5_AU-2
   block:
-      - name: "6.1.9 | AUDIT | Ensure no world writable files exist | Get list of world-writable files"
-        ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
-        failed_when: false
-        changed_when: false
-        register: rhel_09_6_1_9_perms_results
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed | Install AIDE"
+      ansible.builtin.package:
+        name: aide
+        state: present
 
-      - name: "6.1.9 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
-        ansible.builtin.file:
-            path: '{{ item }}'
-            mode: o-w
-            state: touch
-        loop: "{{ rhel_09_6_1_9_perms_results.stdout_lines }}"
-        when:
-            - rhel_09_6_1_9_perms_results.stdout_lines is defined
-            - rhel9cis_no_world_write_adjust
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB"
+      when: not ansible_check_mode
+      ansible.builtin.shell: /usr/sbin/aide --init
+      args:
+
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed | Wait for file before continuing"
+      ansible.builtin.wait_for:
+        path: /var/lib/aide/aide.db.new.gz
+
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed | copy AIDE DB"
+      ansible.builtin.copy:
+        src: /var/lib/aide/aide.db.new.gz
+        dest: /var/lib/aide/aide.db.gz
+        remote_src: true
+
+- name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked"
   when:
-      - rhel9cis_rule_6_1_9
+    - rhel9cis_rule_6_1_2
+    - not system_is_ec2
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - files
-      - permissions
-      - rule_6.1.9
+    - level1-server
+    - level1-workstation
+    - aide
+    - file_integrity
+    - patch
+    - rule_6.1.2
+    - NIST800-53R5_AU-2
+  ansible.builtin.cron:
+    name: Run AIDE integrity check
+    cron_file: "{{ rhel9cis_aide_cron['cron_file'] }}"
+    user: "{{ rhel9cis_aide_cron['cron_user'] }}"
+    minute: "{{ rhel9cis_aide_cron['aide_minute'] | default('0') }}"
+    hour: "{{ rhel9cis_aide_cron['aide_hour'] | default('5') }}"
+    day: "{{ rhel9cis_aide_cron['aide_day'] | default('*') }}"
+    month: "{{ rhel9cis_aide_cron['aide_month'] | default('*') }}"
+    weekday: "{{ rhel9cis_aide_cron['aide_weekday'] | default('*') }}"
+    job: "{{ rhel9cis_aide_cron['aide_job'] }}"
 
-- name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist"
-  block:
-      - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Finding all unowned files or directories"
-        ansible.builtin.shell: find "{{ item.mount }}" -xdev -nouser
-        changed_when: false
-        failed_when: false
-        check_mode: false
-        register: rhel_09_6_1_10_audit
-        loop: "{{ ansible_facts.mounts }}"
-        loop_control:
-            label: "{{ item.mount }}"
-        when:
-            - item['device'].startswith('/dev')
-            - not 'bind' in item['options']
-
-      - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | set fact"
-        ansible.builtin.set_fact:
-            rhel_09_6_1_10_unowned_files_found: true
-        loop: "{{ rhel_09_6_1_10_audit.results }}"
-        when:
-            - item | length > 0
-            - item.stdout is defined  # skipped items are part of results list, but don't have the registered module properties
-            - item.stdout | length > 0
-
-      - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Displaying any unowned files or directories"
-        ansible.builtin.debug:
-            msg: "Warning!! Missing owner on items in {{ rhel_09_6_1_10_audit.stdout_lines }}"
-        when: rhel_09_6_1_10_unowned_files_found
-
-      - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | warning"
-        ansible.builtin.import_tasks:
-            file: warning_facts.yml
-        vars:
-            warn_control_id: '6.1.10'
-        when: rhel_09_6_1_10_unowned_files_found
-  vars:
-      rhel_09_6_1_10_unowned_files_found: false
+- name: "6.1.3 | PATCH | Ensure cryptographic mechanisms are used to protect the integrity of audit tools"
   when:
-      - rhel9cis_rule_6_1_10
+    - rhel9cis_rule_6_1_3
+    - not system_is_ec2
   tags:
-      - level1-server
-      - level1-workstation
-      - audit
-      - files
-      - permissions
-      - rule_6.1.10
-
-- name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist"
-  block:
-      - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Finding all ungrouped files or directories"
-        ansible.builtin.shell: find "{{ item.mount }}" -xdev -nogroup
-        check_mode: false
-        failed_when: false
-        changed_when: false
-        register: rhel_09_6_1_11_audit
-        loop: "{{ ansible_facts.mounts }}"
-        loop_control:
-            label: "{{ item.mount }}"
-        when:
-            - item['device'].startswith('/dev')
-            - not 'bind' in item['options']
-
-      - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | set fact"
-        ansible.builtin.set_fact:
-            rhel_09_6_1_11_ungrouped_files_found: true
-        loop: "{{ rhel_09_6_1_11_audit.results }}"
-        when:
-            - item | length > 0
-            - item.stdout is defined  # skipped items are part of results list, but don't have the registered module properties
-            - item.stdout | length > 0
-
-      - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Displaying all ungrouped files or directories"
-        ansible.builtin.debug:
-            msg: "Warning!! Missing group on items in {{ rhel_09_6_1_11_audit.stdout_lines }}"
-        when: rhel_09_6_1_11_ungrouped_files_found
-
-      - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | warning"
-        ansible.builtin.import_tasks:
-            file: warning_facts.yml
-        vars:
-            warn_control_id: '6.1.11'
-        when: rhel_09_6_1_11_ungrouped_files_found
-  vars:
-      rhel_09_6_1_11_ungrouped_files_found: false
-  when:
-      - rhel9cis_rule_6_1_11
-  tags:
-      - level1-server
-      - level1-workstation
-      - audit
-      - files
-      - permissions
-      - rule_6.1.11
-
-- name: "6.1.12 | PATCH | Ensure sticky bit is set on all world-writable directories"
-  ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
-  changed_when: false
-  failed_when: false
-  when:
-      - rhel9cis_rule_6_1_12
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - stickybits
-      - permissons
-      - rule_6.1.12
-
-- name: "6.1.13 | AUDIT | Audit SUID executables"
-  block:
-      - name: "6.1.13 | AUDIT | Audit SUID executables | Find all SUID executables"
-        ansible.builtin.shell: "df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -4000"
-        failed_when: false
-        changed_when: false
-        register: rhel_09_6_1_13_suid_perms
-
-      - name: "6.1.13 | AUDIT | Audit SUID executables | Alert SUID executables exist"
-        ansible.builtin.debug:
-            msg: "Warning!! SUID set on items in {{ rhel_09_6_1_13_suid_perms.stdout_lines }}"
-        when:
-            - rhel_09_6_1_13_suid_perms.stdout is defined
-            - rhel_09_6_1_13_suid_perms.stdout | length > 0
-
-      - name: "6.1.13 | AUDIT | Audit SUID executables | Alert SUID executables exist | warning"
-        ansible.builtin.import_tasks:
-            file: warning_facts.yml
-        vars:
-            warn_control_id: '6.1.13'
-        when:
-            - rhel_09_6_1_13_suid_perms.stdout is defined
-            - rhel_09_6_1_13_suid_perms.stdout | length > 0
-  vars:
-      rhel9_6_1_13_suid_found: false
-  when:
-      - rhel9cis_rule_6_1_13
-  tags:
-      - level1-server
-      - level1-workstation
-      - manual
-      - audit
-      - files
-      - rule_6.1.13
-
-- name: "6.1.14 | AUDIT | Audit SGID executables"
-  block:
-      - name: "6.1.14 | AUDIT | Audit SGID executables | Find all SGID executables"
-        ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -2000
-        failed_when: false
-        changed_when: false
-        register: rhel_09_6_1_14_sgid_perms
-
-      - name: "6.1.14 | AUDIT | Audit SGID executables | Alert SGID executables exist"
-        ansible.builtin.debug:
-            msg: "Warning!! SGID set on items in {{ rhel_09_6_1_14_sgid_perms.stdout_lines }}"
-        when:
-            - rhel_09_6_1_14_sgid_perms.stdout is defined
-            - rhel_09_6_1_14_sgid_perms.stdout | length > 0
-
-      - name: "6.1.14 | AUDIT | Audit SGID executables| warning"
-        ansible.builtin.import_tasks:
-            file: warning_facts.yml
-        vars:
-            warn_control_id: '6.1.14'
-        when:
-            - rhel_09_6_1_14_sgid_perms.stdout is defined
-            - rhel_09_6_1_14_sgid_perms.stdout | length > 0
-  vars:
-      rhel9_6_1_14_sgid_found: false
-  when:
-      - rhel9cis_rule_6_1_14
-  tags:
-      - level1-server
-      - level1-workstation
-      - manual
-      - audit
-      - files
-      - rule_6.1.14
-
-- name: "6.1.15 | AUDIT | Audit system file permissions"
-  block:
-      - name: "6.1.15 | AUDIT | Audit system file permissions | Audit the packages"
-        ansible.builtin.shell: rpm -Va --nomtime --nosize --nomd5 --nolinkto
-        changed_when: false
-        failed_when: false
-        register: rhel9cis_6_1_15_packages_rpm
-
-      - name: "6.1.15 | AUDIT | Audit system file permissions | Create list and warning"
-        block:
-            - name: "6.1.15 | AUDIT | Audit system file permissions | Add file discrepancy list to system"
-              ansible.builtin.copy:
-                  dest: "{{ rhel9cis_rpm_audit_file }}"  # noqa template-instead-of-copy
-                  content: "{{ rhel9cis_6_1_15_packages_rpm.stdout }}"
-                  owner: root
-                  group: root
-                  mode: '0640'
-
-            - name: "6.1.15 | AUDIT | Audit system file permissions | Message out alert for package descrepancies"
-              ansible.builtin.debug:
-                  msg: |
-                     "Warning!! You have some package descrepancies issues.
-                      The file list can be found in {{ rhel9cis_rpm_audit_file }}"
-
-            - name: "6.1.15 | AUDIT | Audit system file permissions | warning count"
-              ansible.builtin.import_tasks:
-                  file: warning_facts.yml
-              vars:
-                  warn_control_id: '6.1.15'
-              when: rhel9cis_6_1_15_packages_rpm.stdout|length > 0
-  when:
-      - rhel9cis_rule_6_1_15
-  tags:
-      - level2-server
-      - level2-workstation
-      - manual
-      - audit
-      - permissions
-      - rule_6.1.15
+    - level1-server
+    - level1-workstation
+    - aide
+    - file_integrity
+    - patch
+    - rule_6.1.3
+  ansible.builtin.blockinfile:
+    path: /etc/aide.conf
+    marker: "# {mark} Audit tools - CIS benchmark - Ansible-lockdown"
+    block: |
+      /usr/sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512
+      /usr/sbin/auditd p+i+n+u+g+s+b+acl+xattrs+sha512
+      /usr/sbin/augenrules p+i+n+u+g+s+b+acl+xattrs+sha512
+      /usr/sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
+      /usr/sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
+      /usr/sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
+    validate: aide -D --config %s

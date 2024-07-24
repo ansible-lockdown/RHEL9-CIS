@@ -1,0 +1,62 @@
+---
+
+- name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured"
+  when:
+    - rhel9cis_rule_6_2_4_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - logfiles
+    - rule_6.2.4.1
+  block:
+    - name: "6.2.4.1 | AUDIT | Ensure access to all logfiles has been configured | find log files"
+      ansible.builtin.shell: find /var/log/ -type f -exec ls {} \;
+      changed_when: false
+      failed_when: false
+      register: discovered_logfiles
+
+    - name: "6.2.4.1 | AUDIT | Ensure access to all logfiles has been configured | set_fact"
+      when:
+        - discovered_logfiles.stdout_lines | length > 0
+        - discovered_logfiles is defined
+      ansible.builtin.set_fact:
+        discovered_logfiles_flattened: "{{ discovered_logfiles | json_query('stdout_lines[*]') | flatten }}"  # noqa: jinja[invalid]
+
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
+      when:
+        - discovered_logfiles_flattened is defined
+        - item == "/var/log/secure"
+        - item == "/var/log/auth.log"
+        - item == "/var/log/syslog"
+        - "'journal' in item"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'u-x,g-wx,o-rwx'
+      loop: "{{ discovered_logfiles_flattened }}"
+
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
+      when:
+        - discovered_logfiles_flattened is defined
+        - item == "/var/log/btmp"
+        - item == "/var/log/utmp"
+        - item == "/var/log/wtmp"
+        - item == "/var/log/lastlog"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'u-x,g-wx,o-rwx'
+        owner: root
+        group: root
+      loop: "{{ discovered_logfiles_flattened }}"
+
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
+      when:
+        - discovered_logfiles_flattened is defined
+        - "'sssd' in item"
+        - item == "/var/log/utmp"
+        - item == "/var/log/wtmp"
+        - item == "/var/log/lastlog"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'u-x,g-wx,o-rwx'
+      loop: "{{ discovered_logfiles_flattened }}"
