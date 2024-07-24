@@ -18,7 +18,7 @@
     - run_audit or audit_only
     - setup_audit
   tags:
-      - run_audit
+    - run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
 - name: "PRELIM | AUDIT | Interactive Users"
@@ -72,29 +72,33 @@
     - passwords
 
 - name: "PRELIM | Ensure python3-libselinux is installed"
+  when:
+    - '"python3-libselinux" not in ansible_facts.packages'
   ansible.builtin.package:
     name: python3-libselinux
     state: present
-  when:
-    - '"python3-libselinux" not in ansible_facts.packages'
 
 - name: "PRELIM | Section 1.1 | Create list of mount points"
   ansible.builtin.set_fact:
-      mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+    mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
   tags:
-      - level1-server
-      - level1-workstation
+    - level1-server
+    - level1-workstation
 
 - name: "PRELIM | Update to latest gpg keys"
-  ansible.builtin.package:
-      name: "{{ gpg_key_package }}"
-      state: latest
   when:
-      - rhel9cis_rule_1_2_1_1
-      - ansible_facts.distribution != 'RedHat'
-      - ansible_facts.distribution != 'OracleLinux'
+    - rhel9cis_rule_1_2_1_1
+    - ansible_facts.distribution != 'RedHat'
+    - ansible_facts.distribution != 'OracleLinux'
+  ansible.builtin.package:
+    name: "{{ gpg_key_package }}"
+    state: latest
 
 - name: "PRELIM | Check gpg keys are imported will cause 1.2.1.1 to fail if not | RedHat Only"
+  when:
+    - rhel9cis_rule_1_2_1_1
+    - rhel9cis_force_gpg_key_import
+    - ansible_facts.distribution == 'RedHat'
   block:
     - name: "PRELIM | Check gpg keys are imported will cause 1.2.1.1 to fail if not"
       ansible.builtin.shell: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'
@@ -103,26 +107,19 @@
       register: check_gpg_imported
 
     - name: "PRELIM | Check key package matches RedHat"
+      when: "'not installed' in check_gpg_imported.stdout"
       ansible.builtin.shell: rpm -qi redhat-release | grep Signature
       changed_when: false
       failed_when: false
       register: os_gpg_package_valid
-      when: "'not installed' in check_gpg_imported.stdout"
 
     - name: "PRELIM | Force keys to be imported"
-      ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
       when:
         - "'not installed' in check_gpg_imported.stdout"
         - "'Key ID 199e2f91fd431d51' in os_gpg_package_valid.stdout"
-  when:
-    - rhel9cis_rule_1_2_1_1
-    - rhel9cis_force_gpg_key_import
-    - ansible_facts.distribution == 'RedHat'
+      ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
 
 - name: "PRELIM | if systemd coredump"
-  ansible.builtin.stat:
-    path: /etc/systemd/coredump.conf
-  register: systemd_coredump
   when:
     - rhel9cis_rule_1_5_4
   tags:
@@ -130,8 +127,18 @@
     - level1-workstation
     - rule_1.5.4
     - systemd
+  ansible.builtin.stat:
+    path: /etc/systemd/coredump.conf
+  register: systemd_coredump
 
 - name: "PRELIM | Setup crypto-policy"
+  when:
+    - rhel9cis_rule_1_6_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - rule_1.6.1
+    - crypto
   block:
     - name: "PRELIM | Install crypto-policies | pkgs present"
       ansible.builtin.package:
@@ -151,16 +158,9 @@
         current_crypto_policy: "{{ rhel9cis_system_wide_crypto_policy.stdout.split(':')[0] }}"
 
     - name: "PRELIM | Gather system-wide crypto-policy module | set fact system policy submodule"
+      when: "':' in rhel9cis_system_wide_crypto_policy.stdout"
       ansible.builtin.set_fact:
         current_crypto_module: "{{ rhel9cis_system_wide_crypto_policy.stdout.split(':')[1] }}"
-      when: "':' in rhel9cis_system_wide_crypto_policy.stdout"
-  when:
-    - rhel9cis_rule_1_6_1
-  tags:
-    - level1-server
-    - level1-workstation
-    - rule_1.6.1
-    - crypto
 
 - name: "PRELIM | Set facts based on boot type"
   block:
@@ -170,15 +170,37 @@
       register: rhel_09_efi_boot
 
     - name: "PRELIM | set legacy boot and grub path | Bios"
+      when: not rhel_09_efi_boot.stat.exists
       ansible.builtin.set_fact:
         rhel9cis_legacy_boot: true
         grub2_path: /etc/grub2.cfg
-      when: not rhel_09_efi_boot.stat.exists
 
     - name: "PRELIM | set grub fact | UEFI"
+      when: rhel_09_efi_boot.stat.exists
       ansible.builtin.set_fact:
         grub2_path: /etc/grub2-efi.cfg
-      when: rhel_09_efi_boot.stat.exists
+
+- name: "PRELIM | AUDIT | Wireless adapter pre-requisites"
+  when:
+    - rhel9cis_rule_3_1_2
+    - not system_is_container
+  tags:
+    - always
+  block:
+    - name: "PRELIM | AUDIT | Discover is wirelss adapter on system"
+      ansible.builtin.shell: find /sys/class/net/*/ -type d -name wireless
+      register: discover_wireless_adapters
+      changed_when: false
+      failed_when: discover_wireless_adapters.rc not in [ 0, 1 ]
+
+    - name: "PRELIM | PATCH | Install Network-Manager | if wireless adpater present"
+      when:
+        - rhel9cis_install_network_manager
+        - discover_wireless_adapters.rc == 0
+        - "'network-manager' not in ansible_facts.packages"
+      ansible.builtin.package:
+        name: network-manager
+        state: present
 
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   ansible.builtin.package:
@@ -196,105 +218,104 @@
     - auditd
 
 - name: "PRELIM | 4.1.4.5 | Audit conf and rules files | list files"
-  ansible.builtin.find:
-      path: /etc/audit
-      file_type: file
-      recurse: true
-      patterns: '*.conf,*.rules'
-  register: auditd_conf_files
   when:
-      - rhel9cis_rule_4_1_4_5 or
-        rhel9cis_rule_4_1_4_6 or
-        rhel9cis_rule_4_1_4_7
+    - rhel9cis_rule_4_1_4_5 or
+      rhel9cis_rule_4_1_4_6 or
+      rhel9cis_rule_4_1_4_7
   tags:
-      - level2-server
-      - level2-workstation
-      - patch
-      - auditd
-      - rule_4.1.4.5
-      - rule_4.1.4.6
-      - rule_4.1.4.7
+    - level2-server
+    - level2-workstation
+    - patch
+    - auditd
+    - rule_4.1.4.5
+    - rule_4.1.4.6
+    - rule_4.1.4.7
+  ansible.builtin.find:
+    path: /etc/audit
+    file_type: file
+    recurse: true
+    patterns: '*.conf,*.rules'
+  register: auditd_conf_files
 
 - name: "PRELIM | Section 5.1 | Configure cron"
-  ansible.builtin.package:
-      name: cronie
-      state: present
-  become: true
   when:
-      - rhel9cis_rule_5_1_1
-      - '"cronie" not in ansible_facts.packages'
+    - rhel9cis_rule_5_1_1
+    - '"cronie" not in ansible_facts.packages'
   tags:
-      - level1-server
-      - level1-workstation
-      - rule_5.1.1
-      - cron
+    - level1-server
+    - level1-workstation
+    - rule_5.1.1
+    - cron
+  ansible.builtin.package:
+    name: cronie
+    state: present
 
 # Added to ensure ssh drop in file exists if not default /etc/ssh/sshd_config
 - name: "PRELIM | Section 5.2 | SSH"
-  ansible.builtin.file:
-      path: "{{ rhel9_cis_sshd_config_file }}"
-      owner: root
-      group: root
-      mode: '0600'
-      state: touch
   when:
-      - rhel9_cis_sshd_config_file != '/etc/ssh/sshd_config'
-      - "'openssh-server' in ansible_facts.packages"
+    - rhel9_cis_sshd_config_file != '/etc/ssh/sshd_config'
+    - "'openssh-server' in ansible_facts.packages"
   tags:
-      - ssh
-      - level1_server
-      - level1_workstation
+    - ssh
+    - level1_server
+    - level1_workstation
+  ansible.builtin.file:
+    path: "{{ rhel9_cis_sshd_config_file }}"
+    owner: root
+    group: root
+    mode: '0600'
+    state: touch
 
 - name: "PRELIM | 5.3.4 | Find all sudoers files."
+  when:
+    - rhel9cis_rule_5_3_4 or
+      rhel9cis_rule_5_3_5
+  tags:
+    - rule_5.3.4
+    - rule_5.3.5
   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
   changed_when: false
   failed_when: false
   check_mode: false
   register: rhel9cis_sudoers_files
-  when:
-      - rhel9cis_rule_5_3_4 or
-        rhel9cis_rule_5_3_5
-  tags:
-      - rule_5.3.4
-      - rule_5.3.5
 
 - name: "PRELIM | Gather UID 0 accounts other than root"
+  tags:
+    - rule_6.2.9
+    - level1-server
+    - level1-workstation
+    - users
   ansible.builtin.shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
   changed_when: false
   check_mode: false
   register: rhel9cis_uid_zero_accounts_except_root
-  tags:
-      - rule_6.2.9
-      - level1-server
-      - level1-workstation
-      - users
 
 - name: "PRELIM | Discover Interactive UID MIN and MIN from logins.def"
   when: rhel9cis_discover_int_uid
   block:
-      - name: "PRELIM | Capture UID_MIN information from logins.def"
-        ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
-        changed_when: false
-        register: uid_min_id
+    - name: "PRELIM | Capture UID_MIN information from logins.def"
+      ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+      changed_when: false
+      register: uid_min_id
 
-      - name: "PRELIM | Capture UID_MAX information from logins.def"
-        ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
-        changed_when: false
-        register: uid_max_id
+    - name: "PRELIM | Capture UID_MAX information from logins.def"
+      ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+      changed_when: false
+      register: uid_max_id
 
-      - name: "PRELIM | Capture GID_MIN information from logins.def"
-        ansible.builtin.shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
-        changed_when: false
-        register: gid_min_id
+    - name: "PRELIM | Capture GID_MIN information from logins.def"
+      ansible.builtin.shell: grep -w "^GID_MIN" /etc/login.defs | awk '{print $NF}'
+      changed_when: false
+      register: gid_min_id
 
-      - name: "PRELIM | set_facts for interactive uid/gid"
-        ansible.builtin.set_fact:
-            min_int_uid: "{{ uid_min_id.stdout }}"
-            max_int_uid: "{{ uid_max_id.stdout }}"
-            min_int_gid: "{{ gid_min_id.stdout }}"
+    - name: "PRELIM | set_facts for interactive uid/gid"
+      ansible.builtin.set_fact:
+        min_int_uid: "{{ uid_min_id.stdout }}"
+        max_int_uid: "{{ uid_max_id.stdout }}"
+        min_int_gid: "{{ gid_min_id.stdout }}"
 
 - name: "PRELIM | Gather the package facts after prelim"
-  ansible.builtin.package_facts:
-      manager: auto
   tags:
-      - always
+    - always
+  ansible.builtin.package_facts:
+    manager: auto
