@@ -63,15 +63,16 @@
       register: goss_available
 
     - name: Pre Audit Setup | If audit ensure goss is available
+      when:
+        - not goss_available.stat.exists
       ansible.builtin.assert:
-        that: goss_available.stat.exists
         msg: "Audit has been selected: unable to find goss binary at {{ audit_bin }}"
 
 - name: Pre Audit Setup | Copy ansible default vars values to test audit
+  when:
+    - run_audit
   tags:
     - goss_template
-    - run_audit
-  when:
     - run_audit
   ansible.builtin.template:
     src: ansible_vars_goss.yml.j2

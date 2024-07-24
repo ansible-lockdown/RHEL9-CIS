@@ -3,18 +3,28 @@
 
 min_ansible_version: 2.10.1
 rhel9cis_allowed_crypto_policies:
-    - 'DEFAULT'
-    - 'FUTURE'
-    - 'FIPS'
+  - 'DEFAULT'
+  - 'FUTURE'
+  - 'FIPS'
 
 rhel9cis_allowed_crypto_policies_modules:
-    - 'OSPP'
-    - 'AD-SUPPORT'
-    - 'AD-SUPPORT-LEGACY'
-    - 'NO-SHA1'
+  - 'OSPP'
+  - 'AD-SUPPORT'
+  - 'AD-SUPPORT-LEGACY'
+  - 'NO-SHA1'
+  - 'NO-SSHCBC'
+  - 'NO-SSHETM'
+  - 'NO-SSHWEAKCIPHER'
+  - 'NO-SSHWEAKMAC'
+  - 'NO-WEAKMAC'
 
 # Used to control warning summary
 warn_control_list: ""
 warn_count: 0
 
 gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
+
+## Control 6.3.3.x - Audit template
+# This variable governs if the auditd logic should be executed(if value is true).
+# NOTE: The current default value is likely to be overriden(via 'set_fact') by other further tasks(in sub-section 'Auditd rules').
+update_audit_template: false
