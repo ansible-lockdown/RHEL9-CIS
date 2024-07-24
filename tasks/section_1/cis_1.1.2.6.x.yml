@@ -12,8 +12,8 @@
     - rule_1_1_2.6.1
     - NIST800-53R5_CM-7
   vars:
-      warn_control_id: '1.1.2.6.1'
-      required_mount: '/var/log'
+    warn_control_id: '1.1.2.6.1'
+    required_mount: '/var/log'
   block:
     - name: "1.1.2.6.1 | AUDIT | Ensure separate partition exists for /var/log | Absent"
       ansible.builtin.debug:
@@ -24,9 +24,9 @@
         file: warning_facts.yml
 
 - name: |
-    "1.1.2.6.2 | PATCH | Ensure nodev option set on /var/log partition"
-    "1.1.2.6.3 | PATCH | Ensure nosuid option set on /var/log partition"
-    "1.1.2.6.4 | PATCH | Ensure noexec option set on /var/log partition"
+    "1.1.2.6.2 | PATCH | Ensure nodev option set on /var/log partition
+     1.1.2.6.3 | PATCH | Ensure nosuid option set on /var/log partition
+     1.1.2.6.4 | PATCH | Ensure noexec option set on /var/log partition"
   when:
     - item.mount == "/var/log"
     - rhel9cis_rule_1_1_2_6_2 or
@@ -42,7 +42,7 @@
     - rule_1_1_2.6.4
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
-  ansible.builtin.mount:
+  ansible.posix.mount:
     name: /var/log
     src: "{{ item.device }}"
     fstype: "{{ item.fstype }}"

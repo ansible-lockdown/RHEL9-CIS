@@ -51,8 +51,8 @@
         - not rhel9cis_avahi_mask
       ansible.builtin.package:
         name:
-            - avahi-autoipd
-            - avahi
+          - avahi-autoipd
+          - avahi
         state: absent
 
     - name: "2.1.2 | PATCH | Ensure avahi daemon services are not in use | Mask service"
@@ -255,8 +255,8 @@
         - not rhel9cis_message_mask
       ansible.builtin.package:
         name:
-            - dovecot
-            - cyrus-imapd
+          - dovecot
+          - cyrus-imapd
         state: absent
 
     - name: "2.1.8 | PATCH | Ensure message access server services are not in use | Mask service"
@@ -451,32 +451,32 @@
     - "'net-snmp' in ansible_facts.packages"
     - rhel9cis_rule_2_1_14
   tags:
-      - level1-server
-      - level1-workstation
-      - automation
-      - patch
-      - snmp
-      - NIST800-53R5_CM-7
-      - rule_2.1.14
+    - level1-server
+    - level1-workstation
+    - automation
+    - patch
+    - snmp
+    - NIST800-53R5_CM-7
+    - rule_2.1.14
   block:
-      - name: "2.1.14 | PATCH | Ensure snmp services are not in use | Remove package"
-        when:
-          - not rhel9cis_net_snmp_server
-          - not rhel9cis_net_snmp_mask
-        ansible.builtin.package:
-          name: net-snmp
-          state: absent
+    - name: "2.1.14 | PATCH | Ensure snmp services are not in use | Remove package"
+      when:
+        - not rhel9cis_net_snmp_server
+        - not rhel9cis_net_snmp_mask
+      ansible.builtin.package:
+        name: net-snmp
+        state: absent
 
-      - name: "2.1.14 | PATCH | Ensure snmp services are not in use | Mask service"
-        when:
-          - not rhel9cis_net_snmp_server
-          - rhel9cis_net_snmp_mask
-        notify: Systemd_daemon_reload
-        ansible.builtin.systemd:
-          name: snmpd.service
-          enabled: false
-          state: stopped
-          masked: true
+    - name: "2.1.14 | PATCH | Ensure snmp services are not in use | Mask service"
+      when:
+        - not rhel9cis_net_snmp_server
+        - rhel9cis_net_snmp_mask
+      notify: Systemd_daemon_reload
+      ansible.builtin.systemd:
+        name: snmpd.service
+        enabled: false
+        state: stopped
+        masked: true
 
 - name: "2.1.15 | PATCH | Ensure telnet server services are not in use"
   when:
@@ -669,20 +669,20 @@
 
 - name: "2.1.20 | PATCH | Ensure X window server services are not in use"
   when:
-      - not rhel9cis_xwindow_server
-      - "'xorg-x11-server-common' in ansible_facts.packages"
-      - rhel9cis_rule_2_1_20
+    - not rhel9cis_xwindow_server
+    - "'xorg-x11-server-common' in ansible_facts.packages"
+    - rhel9cis_rule_2_1_20
   tags:
-      - level1-server
-      - level1-workstation
-      - automated
-      - patch
-      - xwindow
-      - NIST800-53R5_CM-11
-      - rule_2.1.20
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - xwindow
+    - NIST800-53R5_CM-11
+    - rule_2.1.20
   ansible.builtin.package:
-      name: xorg-x11-server-common
-      state: absent
+    name: xorg-x11-server-common
+    state: absent
 
 - name: "2.1.21 | PATCH | Ensure mail transfer agents are configured for local-only mode"
   when:

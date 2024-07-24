@@ -25,8 +25,8 @@
 
 # skips if mount is absent
 - name: |
-    "1.1.2.4.2 | PATCH | Ensure nodev option set on /var partition"
-    "1.1.2.4.3 | PATCH | Ensure nosuid option set on /var partition"
+    "1.1.2.4.2 | PATCH | Ensure nodev option set on /var partition
+     1.1.2.4.3 | PATCH | Ensure nosuid option set on /var partition"
   when:
     - item.mount == "/var"
     - rhel9cis_rule_1_1_2_4_2 or
@@ -40,7 +40,7 @@
     - rule_1_1_2.4.3
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
-  ansible.builtin.mount:
+  ansible.posix.mount:
     name: /var
     src: "{{ item.device }}"
     fstype: "{{ item.fstype }}"

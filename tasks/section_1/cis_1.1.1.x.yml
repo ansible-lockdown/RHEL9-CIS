@@ -297,14 +297,14 @@
       failed_when: discovered_fs_modules_loaded.rc not in [ 0, 99 ]
       register: discovered_fs_modules_loaded
 
-    - name:  "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Output Warning"
+    - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Output Warning"
       when: discovered_fs_modules_loaded.stdout | length > 0
       ansible.builtin.debug:
         msg: |
           "Warning!! Discovered loaded Filesystem modules that need attention. This is a manual task
           {{ discovered_fs_modules_loaded.stdout_lines}}"
 
-    - name:  "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
+    - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
       when: discovered_fs_modules_loaded.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml

@@ -26,9 +26,9 @@
 
 # skips if mount is absent
 - name: |
-    "1.1.2.5.2 | PATCH | Ensure nodev option set on /var/tmp partition"
-    "1.1.2.5.3 | PATCH | Ensure nosuid option set on /var/tmp partition"
-    "1.1.2.5.4 | PATCH | Ensure noexec option set on /var/tmp partition"
+    "1.1.2.5.2 | PATCH | Ensure nodev option set on /var/tmp partition
+     1.1.2.5.3 | PATCH | Ensure nosuid option set on /var/tmp partition
+     1.1.2.5.4 | PATCH | Ensure noexec option set on /var/tmp partition"
   when:
     - item.mount == "/var/tmp"
     - rhel9cis_rule_1_1_2_5_2 or
@@ -44,7 +44,7 @@
     - rule_1_1_2.5.4
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
-  ansible.builtin.mount:
+  ansible.posix.mount:
     name: /var/tmp
     src: "{{ item.device }}"
     fstype: "{{ item.fstype }}"

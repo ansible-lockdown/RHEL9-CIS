@@ -51,7 +51,6 @@
         mode: '0644'
       notify: Reload dconf
 
-
 - name: "1.8.3 | PATCH | Ensure GDM disable-user-list option is enabled"
   when:
     - rhel9cis_rule_1_8_3

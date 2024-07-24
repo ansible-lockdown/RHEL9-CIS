@@ -12,8 +12,8 @@
     - rule_1_1_2.3.1
     - NIST800-53R5_CM-7
   vars:
-      warn_control_id: '1.1.2.3.1'
-      required_mount: '/home'
+    warn_control_id: '1.1.2.3.1'
+    required_mount: '/home'
   block:
     - name: "1.1.2.3.1 | AUDIT | Ensure separate partition exists for /home | Absent"
       ansible.builtin.debug:
@@ -40,7 +40,7 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
-  ansible.builtin.mount:
+  ansible.posix.mount:
     name: /home
     src: "{{ item.device }}"
     fstype: "{{ item.fstype }}"

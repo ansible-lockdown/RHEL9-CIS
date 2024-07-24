@@ -24,19 +24,9 @@
         file: warning_facts.yml
 
 - name: |
-    "1.1.2.7.2 | PATCH | Ensure nodev option set on /var/log/audit partition"
-    "1.1.2.7.3 | PATCH | Ensure nosuid option set on /var/log/audit partition"
-    "1.1.2.7.4 | PATCH | Ensure noexec option set on /var/log/audit partition"
-  ansible.builtin.mount:
-    name: /var/log/audit
-    src: "{{ item.device }}"
-    fstype: "{{ item.fstype }}"
-    state: present
-    opts: defaults,{% if rhel9cis_rule_1_1_2_7_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_2_7_3 %}nosuid,{% endif %}{% if rhel9cis_rule_1_1_2_7_4 %}noexec{% endif %}
-  loop: "{{ ansible_facts.mounts }}"
-  loop_control:
-    label: "{{ item.device }}"
-  notify: Change_requires_reboot
+    "1.1.2.7.2 | PATCH | Ensure nodev option set on /var/log/audit partition
+     1.1.2.7.3 | PATCH | Ensure nosuid option set on /var/log/audit partition
+     1.1.2.7.4 | PATCH | Ensure noexec option set on /var/log/audit partition"
   when:
     - item.mount == "/var/log/audit"
     - rhel9cis_rule_1_1_2_7_2 or
@@ -52,3 +42,13 @@
     - rule_1_1_2.7.4
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
+  ansible.posix.mount:
+    name: /var/log/audit
+    src: "{{ item.device }}"
+    fstype: "{{ item.fstype }}"
+    state: present
+    opts: defaults,{% if rhel9cis_rule_1_1_2_7_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_2_7_3 %}nosuid,{% endif %}{% if rhel9cis_rule_1_1_2_7_4 %}noexec{% endif %}
+  loop: "{{ ansible_facts.mounts }}"
+  loop_control:
+    label: "{{ item.device }}"
+  notify: Change_requires_reboot
