@@ -1,7 +1,7 @@
 ---
 
-- name: Apply RHEL9 CIS hardening
+- name: Apply ansible-lockdown hardening
   hosts: all
   become: true
   roles:
-      - role: "{{ playbook_dir }}"
+    - role: "{{ playbook_dir }}"
