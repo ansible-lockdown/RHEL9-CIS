@@ -21,7 +21,7 @@
         - discovered_logfiles.stdout_lines | length > 0
         - discovered_logfiles is defined
       ansible.builtin.set_fact:
-        discovered_logfiles_flattened: "{{ discovered_logfiles | json_query('stdout_lines[*]') | flatten }}"  # noqa: jinja[invalid]
+        discovered_logfiles_flattened: "{{ discovered_logfiles.stdout_lines | flatten }}"
 
     - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
       when:
