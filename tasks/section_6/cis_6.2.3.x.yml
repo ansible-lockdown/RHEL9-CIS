@@ -237,7 +237,7 @@
         - 'ModLoad imtcp'
         - 'InputTCPServerRun'
 
-- name: "6.2.3.8 | PATCH | Ensure logrotate is configured"
+- name: "6.2.3.8 | PATCH | Ensure rsyslog logrotate is configured"
   when:
     - rhel9cis_rule_6_2_3_8
   tags:
@@ -249,45 +249,21 @@
     - rule_6.2.3.8
     - NIST800-53R5_AU-8
   block:
-    - name: "6.2.3.8 | PATCH | Ensure logrotate is configured | installed"
+    - name: "6.2.3.8 | PATCH | Ensure rsyslog logrotate is configured | installed"
       ansible.builtin.package:
         name: rsyslog-logrotate
         state: present
 
-    - name: "6.2.3.8 | PATCH | Ensure logrotate is configured | scheduled"
+    - name: "6.2.3.8 | PATCH | Ensure rsyslog logrotate is configured | scheduled"
       ansible.builtin.systemd:
         name: logrotate.timer
         state: started
         enabled: true
 
-    - name: "6.2.3.8 | PATCH | Ensure logrotate is configured | set default conf"
-      ansible.builtin.replace:
-        path: "/etc/logrotate.conf"
-        regexp: '^(\s*)(daily|weekly|monthly|yearly)$'
-        replace: "\\1{{ rhel9cis_logrotate }}"
-
-    - name: "6.2.3.8 | AUDIT | Ensure logrotate is configured | Get non default logrotate settings"
-      ansible.builtin.find:
-        paths: /etc/logrotate.d/
-        contains: '^(\s*)(?!{{ rhel9cis_logrotate }})(daily|weekly|monthly|yearly)$'
-      register: log_rotates
-
-    - name: "6.2.3.8 | AUDIT | Ensure logrotate is configured"
-      when: log_rotates.matched > 0
-      vars:
-        warn_control_id: '6.2.3.8'
-      block:
-        - name: "6.2.3.8 | AUDIT | Ensure logrotate is configured | generate file list"
-          ansible.builtin.set_fact:
-            logrotate_non_def_conf: "{{ log_rotates.files | map(attribute='path') | join (', ') }}"
-
-        - name: "6.2.3.8 | AUDIT | Ensure logrotate is configured | List configured files"
-          ansible.builtin.debug:
-            msg: |
-              "Warning!! The following files are not covered by default logrotate settings ensure they match site policy"
-              "{{ logrotate_non_def_conf }}"
-          loop: "{{ log_rotates.files }}"
-
-        - name: "6.2.3.8 | AUDIT | Ensure logrotate is configured | Warning count"
-          ansible.builtin.import_tasks:
-            file: warning_facts.yml
+    - name: "6.2.3.8 | PATCH | Ensure logrotate is configured | set rsyslog conf"
+      ansible.builtin.template:
+        src: etc/logrotate.d/rsyslog.conf.j2
+        dest:  /etc/logrotate.d/rsyslog.conf
+        owner: root
+        group: root
+        mode: '0640'

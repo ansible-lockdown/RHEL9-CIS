@@ -1118,6 +1118,23 @@ rhel9cis_remote_log_retrycount: 100
 # of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
 rhel9cis_remote_log_queuesize: 1000
 
+## Control 6.2.3.8 rsyslog log rotate option
+# These variable allow you to change accordint to site policy settings
+# When to rotate options: hourly, daily, weekly, monthly, yearly
+rhel9cis_rsyslog_logrotate_rotated: weekly
+# Number of backlog files to keep
+rhel9cis_rsyslog_logrotate_keep: 4
+# compress file once rotated, false will not compress
+rhel9cis_rsyslog_logrotate_compress: true
+# If the log file is missing, go on to the next one without issuing an error message
+rhel9cis_rsyslog_logrotate_missingok:
+# Dont rotate file if has no contents, false will still rotate
+rhel9cis_rsyslog_logrotate_notifempty: true
+# rhel9cis_rsyslog_logrotate_create give the options to create permissions and ownerships
+# allows create iption to be used and sets options below based on mode owner group
+rhel9cis_rsyslog_logrotate_create: false
+rhel9cis_rsyslog_logrotate_create_opts: 0640 root root
+
 ## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # 'rhel9cis_journal_upload_url' is the ip address to upload the journal entries to
 #  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
