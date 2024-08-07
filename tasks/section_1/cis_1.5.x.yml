@@ -56,7 +56,7 @@
 - name: "1.5.4 | PATCH | Ensure core dump storage is disabled"
   when:
     - rhel9cis_rule_1_5_4
-    - systemd_coredump.stat.exists
+    - prelim_systemd_coredump.stat.exists
   tags:
     - level1-server
     - level1-workstation
