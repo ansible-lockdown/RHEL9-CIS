@@ -1,0 +1,11 @@
+# File created for CIS benchmark
+[Journal]
+{% if rhel9cis_rule_6_2_2_3 %}
+# Set compress CIS rule 6_2_2_3
+Compress=yes
+{% endif %}
+
+{% if rhel9cis_rule_6_2_2_4 %}
+# Set persistent storage CIS rule 6_2_2_4
+Storage=persistent
+{% endif %}

@@ -12,25 +12,27 @@
     - rule_6.1.1
     - NIST800-53R5_AU-2
   block:
-    - name: "6.1.1 | PATCH | Ensure AIDE is installed | Install AIDE"
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed"
       ansible.builtin.package:
         name: aide
         state: present
+      register: aide_installed
 
-    - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB"
-      when: not ansible_check_mode
-      ansible.builtin.shell: /usr/sbin/aide --init
-      args:
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB"
+      when: aide_installed.changed  # noqa: no-handler
+      block:
+        - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB"
+          ansible.builtin.shell: /usr/sbin/aide --init
 
-    - name: "6.1.1 | PATCH | Ensure AIDE is installed | Wait for file before continuing"
-      ansible.builtin.wait_for:
-        path: /var/lib/aide/aide.db.new.gz
+        - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB | Wait for file before continuing"
+          ansible.builtin.wait_for:
+            path: /var/lib/aide/aide.db.new.gz
 
-    - name: "6.1.1 | PATCH | Ensure AIDE is installed | copy AIDE DB"
-      ansible.builtin.copy:
-        src: /var/lib/aide/aide.db.new.gz
-        dest: /var/lib/aide/aide.db.gz
-        remote_src: true
+        - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB |copy AIDE DB"
+          ansible.builtin.copy:
+            src: /var/lib/aide/aide.db.new.gz
+            dest: /var/lib/aide/aide.db.gz
+            remote_src: true
 
 - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked"
   when:
