@@ -3,7 +3,6 @@
 - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured"
   when:
     - rhel9cis_rule_5_3_3_3_1
-    - rhel9cis_disruption_high
   tags:
     - level1-server
     - level1-workstation
@@ -18,13 +17,40 @@
       failed_when: rhel9_pwhistory_remember.rc not in [0, 1]
 
     - name: "5.3.3.3.1 | PATCH | Ensure password number of changed characters is configured | Ensure remember is set"
-      when: rhel9_pwhistory_remember.stdout | length > 0
+      when:
+        - rhel9_pwhistory_remember.stdout | length > 0
+        - not rhel9cis_allow_authselect_updates
       ansible.builtin.lineinfile:
         path: "/{{ rhel9cis_pam_confd_dir }}{{ rhel9cis_pam_pwhistory_file }}"
         regexp: ^(password\s+[^#\n\r]+\h+pam_pwhistory\.so\s+)(.*)(remember=\d+)
         line: '\1\2 remember={{ rhel9cis_pamd_pwhistory_remember }}'
         backrefs: true
       notify: Pam_auth_update_pwhistory
+
+    - name: "5.3.3.3.1 | PATCH | Ensure password number of changed characters is configured | Remove remember from pam files NOT AuthSelect"
+      when:
+        - not rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/pam.d/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwhistory\.so)(.*)\sremember=\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+
+    - name: "5.3.3.3.1 | PATCH | Ensure password number of changed characters is configured | Remove remember from pam files AuthSelect"
+      when:
+        - rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwhistory\.so)(.*)\sremember=\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+      notify: Authselect update
 
 - name: "5.3.3.3.2 | PATCH | Ensure password history is enforced for the root user"
   when:
@@ -38,13 +64,15 @@
     - pam
   block:
     - name: "5.3.3.3.2 | AUDIT | Ensure password history is enforced for the root user | Check existing files"
-      ansible.builtin.shell: grep -Psi -- '^\h*password\h+[^#\n\r]+\h+pam_pwhistory\.so\h+([^#\n\r]+\h+)?enforce_for_root\b' /etc/pam.d/common-password
+      ansible.builtin.shell: grep -Psi -- '^\h*password\h+[^#\n\r]+\h+pam_pwhistory\.so\h+([^#\n\r]+\h+)?enforce_for_root\b' /etc/pam.d/{system,password}-auth
       register: rhel9_pwhistory_enforce_for_root
       changed_when: false
       failed_when: rhel9_pwhistory_enforce_for_root.rc not in [0, 1]
 
     - name: "5.3.3.3.2 | PATCH | Ensure password history is enforced for the root user | Ensure remember is set"
-      when: rhel9_pwhistory_enforce_for_root.stdout | length > 0
+      when:
+        - not rhel9cis_allow_authselect_updates
+        - rhel9_pwhistory_enforce_for_root.stdout | length > 0
       ansible.builtin.lineinfile:
         path: "/{{ rhel9cis_pam_confd_dir }}{{ rhel9cis_pam_pwhistory_file }}"
         regexp: ^(password\h+[^#\n\r]+\h+pam_pwhistory\.so\h+)(.*)(enforce_for_root)
@@ -64,16 +92,32 @@
     - pam
   block:
     - name: "5.3.3.3.3 | AUDIT | Ensure pam_pwhistory includes use_authtok | Check existing files"
-      ansible.builtin.shell: grep -Psi -- '^\h*password\h+[^#\n\r]+\h+pam_pwhistory\.so\h+([^#\n\r]+\h+)?use_authtok\b' /etc/pam.d/common-password
+      ansible.builtin.shell: grep -Psi -- '^\h*password\h+[^#\n\r]+\h+pam_pwhistory\.so\h+([^#\n\r]+\h+)?use_authtok\b' /etc/pam.d/{system,password}-auth
       register: rhel9_pwhistory_use_authtok
       changed_when: false
       failed_when: rhel9_pwhistory_use_authtok.rc not in [0, 1]
 
     - name: "5.3.3.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok | Ensure remember is set"
-      when: rhel9_pwhistory_use_authtok.stdout | length > 0
+      when:
+        - not rhel9cis_allow_authselect_updates
+        - rhel9_pwhistory_use_authtok.stdout | length > 0
       ansible.builtin.lineinfile:
         path: "/{{ rhel9cis_pam_confd_dir }}{{ rhel9cis_pam_pwhistory_file }}"
         regexp: ^(password\h+[^#\n\r]+\h+pam_pwhistory\.so\h+)(.*)(use_authtok)
         line: '\1\2\3 use_authtok'
         backrefs: true
       notify: Pam_auth_update_pwhistory
+
+    - name: "PATCH | Ensure pam_pwhistory includes use_authtok | add authtok to pam files AuthSelect"
+      when:
+        - rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.lineinfile:
+        path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwhistory\.so)(.*)\suse_authtok(.*$)
+        line: \1\2 use_authtok\3
+        backrefs: true
+      loop:
+        - password
+        - system
+      notify: Authselect update

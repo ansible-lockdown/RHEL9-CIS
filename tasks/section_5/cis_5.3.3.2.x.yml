@@ -14,6 +14,7 @@
     - name: "5.3.3.2.1 | PATCH | Ensure password number of changed characters is configured | Remove difok from conf files except expected file"
       when:
         - item != rhel9cis_passwd_difok_file
+        - rhel9cis_disruption_high
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: 'difok\s*=\s*\d+\b'
@@ -31,6 +32,31 @@
         group: root
         mode: '0600'
 
+    - name: "5.3.3.2.1 | PATCH | Ensure password number of changed characters is configured | Remove difok from pam files Not AuthSelect"
+      when:
+        - not rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/pam.d/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\sdifok=\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+
+    - name: "5.3.3.2.1 | PATCH | Ensure password number of changed characters is configured | Remove difok from pam files AuthSelect"
+      when:
+        - rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\sdifok=\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+      notify: Authselect update
+
 - name: "5.3.3.2.2 | PATCH | Ensure password length is configured"
   when:
     - rhel9cis_rule_5_3_3_2_2
@@ -45,6 +71,7 @@
     - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Remove minlen from conf files except expected file"
       when:
         - item != rhel9cis_passwd_minlen_file
+        - rhel9cis_disruption_high
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: 'minlen\s*=\s*\d+\b'
@@ -62,6 +89,31 @@
         group: root
         mode: '0600'
 
+    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Remove minlen from pam files NOT AuthSelect"
+      when:
+        - not rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/pam.d/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\sminlen=\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+
+    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Remove minlen from pam files AuthSelect"
+      when:
+        - rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\sminlen=\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+      notify: Authselect update
+
 - name: "5.3.3.2.3 | PATCH | Ensure password complexity is configured"
   when:
     - rhel9cis_rule_5_3_3_2_3
@@ -76,6 +128,7 @@
     - name: "5.3.3.2.3 | PATCH | Ensure password complexity is configured | Remove pwd complex settings from conf files except expected file"
       when:
         - item != rhel9cis_passwd_complex_file
+        - rhel9cis_disruption_high
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: '(minclass|[dulo]credit)\s*=\s*(-\d|\d+)\b'
@@ -92,6 +145,31 @@
         owner: root
         group: root
         mode: '0600'
+
+    - name: "5.3.3.2.3 | PATCH | Ensure password complexity is configured | Remove complexity from pam files NOT AuthSelect"
+      when:
+        - not rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/pam.d/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\s(minclass=[0-3]|[dulo]credit=[^-]\d*)(.*$)
+        replace: \1\2\4
+      loop:
+        - password
+        - system
+
+    - name: "5.3.3.2.3 | PATCH | Ensure password complexity is configured | Remove complexity from pam files AuthSelect"
+      when:
+        - rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\s(minclass=[0-3]|[dulo]credit=[^-]\d*)(.*$)
+        replace: \1\2\4
+      loop:
+        - password
+        - system
+      notify: Authselect update
 
 - name: "5.3.3.2.4 | PATCH | Ensure password same consecutive characters is configured"
   when:
@@ -124,6 +202,31 @@
         group: root
         mode: '0600'
 
+    - name: "5.3.3.2.4 | PATCH | Ensure password same consecutive characters is configured | Remove maxrepeat from pam files NOT AuthSelect"
+      when:
+        - not rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/pam.d/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\smaxrepeat\s*=\s*\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+
+    - name: "5.3.3.2.4 | PATCH | Ensure password same consecutive characters is configured | Remove maxrepeat from pam files AuthSelect"
+      when:
+        - rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\smaxrepeat\s*=\s*\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+      notify: Authselect update
+
 - name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is is configured"
   when:
     - rhel9cis_rule_5_3_3_2_5
@@ -138,6 +241,7 @@
     - name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is configured | Remove maxsequence settings from conf files except expected file"
       when:
         - item != rhel9cis_passwd_maxsequence_file
+        - rhel9cis_disruption_high
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: 'maxsequence\s*=\s*\d+\b'
@@ -154,6 +258,31 @@
         owner: root
         group: root
         mode: '0600'
+
+    - name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is configured | Remove maxsequence from pam files NOT AuthSelect"
+      when:
+        - not rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/pam.d/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\smaxsequence\s*=\s*\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+
+    - name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is configured | Remove maxsequence from pam files AuthSelect"
+      when:
+        - rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\smaxsequence\s*=\s*\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+      notify: Authselect update
 
 - name: "5.3.3.2.6 | PATCH | Ensure password dictionary check is enabled"
   when:
@@ -185,6 +314,32 @@
         owner: root
         group: root
         mode: '0600'
+
+    - name: "5.3.3.2.6 | PATCH | Ensure password dictionary check is enabled | Remove dictcheck from pam files NOT AuthSelect"
+      when:
+        - not rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/pam.d/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\sdictcheck\s*=\s*\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+      notify: Authselect update
+
+    - name: "5.3.3.2.6 | PATCH | Ensure password dictionary check is enabled | Remove dictcheck from pam files AuthSelect"
+      when:
+        - rhel9cis_allow_authselect_updates
+        - rhel9cis_disruption_high
+      ansible.builtin.replace:
+        path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
+        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_pwquality\.so)(.*)\sdictcheck\s*=\s*\d*(.*$)
+        replace: \1\2\3
+      loop:
+        - password
+        - system
+      notify: Authselect update
 
 - name: "5.3.3.2.7 | PATCH | Ensure password quality is enforced for the root user"
   when:

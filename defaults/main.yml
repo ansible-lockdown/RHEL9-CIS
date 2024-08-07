@@ -35,10 +35,11 @@ rhel9cis_disruption_high: false
 # If you do not want the tasks from that section to get executed you simply set the variable to "false".
 rhel9cis_section1: true
 rhel9cis_section2: true
-rhel9cis_section3: false
-rhel9cis_section4: false
-rhel9cis_section5: false
-rhel9cis_section6: false
+rhel9cis_section3: true
+rhel9cis_section4: true
+rhel9cis_section5: true
+rhel9cis_section6: true
+rhel9cis_section7: true
 
 # This is used for audit purposes to run only specific level use the tags
 # e.g.
@@ -343,6 +344,7 @@ rhel9cis_rule_5_1_18: true
 rhel9cis_rule_5_1_19: true
 rhel9cis_rule_5_1_20: true
 rhel9cis_rule_5_1_21: true
+rhel9cis_rule_5_1_22: true
 ## 5.2 Configure Privilege Escalation
 rhel9cis_rule_5_2_1: true
 rhel9cis_rule_5_2_2: true
@@ -360,6 +362,7 @@ rhel9cis_rule_5_3_2_1: true
 rhel9cis_rule_5_3_2_2: true
 rhel9cis_rule_5_3_2_3: true
 rhel9cis_rule_5_3_2_4: true
+rhel9cis_rule_5_3_2_5: true
 # 5.3.3.1 Configure pam_faillock module
 rhel9cis_rule_5_3_3_1_1: true
 rhel9cis_rule_5_3_3_1_2: true
@@ -635,6 +638,8 @@ rhel9cis_chrony_server_minsources: 2
 # Mask
 # - false - leaves service in current status
 # - true - sets service name to masked
+#
+# Setting both Service and Mask to false will remove the package if exists
 rhel9cis_autofs_services: false
 rhel9cis_autofs_mask: true
 rhel9cis_avahi_server: false
@@ -696,13 +701,19 @@ rhel9cis_tftp_client: false
 # Mask
 # - false - leaves service in current status
 # - true - sets service name to masked
+#
+# Setting both Service and Mask to false will remove the package if exists
+#
 rhel9cis_bluetooth_service: false
-rhel9cis_bluetooth_mask: true
+rhel9cis_bluetooth_mask: false
 
 ## 3.1 IPv6 requirement toggle
 # This variable governs whether ipv6 is enabled or disabled.
 rhel9cis_ipv6_required: true
 
+## 3.1.2 wireless network requirements
+# if wireless adapetr found allow network manager to be installed
+rhel9cis_install_network_manager: false
 # 3.3 System network parameters (host only OR host and router)
 # This variable governs whether specific CIS rules
 # concerned with acceptance and routing of packages are skipped.
@@ -766,7 +777,7 @@ rhel9cis_sshd_allowusers: "{% if ansible_facts.user_id != 'root' %}{{ ansible_fa
 # (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
 # for users whose primary group or supplementary group list matches one of the patterns. This is done
 # by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
-# rhel9cis_sshd_allowgroups: "wheel"
+rhel9cis_sshd_allowgroups: ""
 
 # This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
 # for users whose user name matches one of the patterns. This is done
@@ -818,7 +829,7 @@ rhel9cis_ssh_loglevel: INFO
 # number, error messages will be written to the syslog file detailing the login failure.
 rhel9cis_ssh_maxauthtries: '4'
 
-## Control 5.1.7 MaxStartups
+## Control 5.1.17 MaxStartups
 # The MaxStartups parameter specifies the maximum number of concurrent unauthenticated connections to the SSH daemon.
 rhel9cis_ssh_maxstartups: '10:30:60'
 
@@ -866,53 +877,62 @@ rhel9cis_authselect_pkg_update: false  # NOTE the risks if system is using SSSD 
 # - 5.5.3 - Ensure password reuse is limited
 # - 5.5.4 - Ensure password hashing algorithm is SHA-512
 # - 5.4.2 -  Ensure authselect includes with-faillock
-rhel9cis_pam_faillock:
-  # - 5.3.3.1.1
-  # This variable sets the amount of tries a password can be entered, before a user is locked.
-  deny: 5
-  # - 5.3.3.1.2
-  # This variable sets the amount of time a user will be unlocked after the max amount of
-  #   password failures.
-  unlock_time: 900
-  # This variable represents the number of password change cycles, after which
-  # an user can re-use a password.
-  # CIS requires a value of 5 or more.
-  interval: 900
-  root_unlock_time: 60
-  # Choose options below for root options
-  root_option: even_deny_root
-  # root_option: "root_unlock_time = {{ root_unlock_time }}"
+# - 5.3.3.1.1
+# This variable sets the amount of tries a password can be entered, before a user is locked.
+rhel9cis_pam_faillock_deny: 5
+# - 5.3.3.1.2
+# This variable sets the amount of time a user will be unlocked after the max amount of
+#   password failures.
+rhel9cis_pam_faillock_unlock_time: 900
+# This variable represents the number of password change cycles, after which
+# an user can re-use a password.
+# CIS requires a value of 5 or more.
+# 5.3.3.1.3 Locking even deny root or root unlock times
+# rhel9cis_pamroot_lock_option options are
+# even_deny_root
+# root_unlock_time = {{ rhel9cis_root_unlock_time }}
+rhel9cis_root_unlock_time: 60
+rhel9cis_pamroot_lock_option: even_deny_root
+# rhel9cis_pamroot_lock_option: "root_unlock_time = {{ rhel9cis_root_unlock_time }}"
 
-## Control 5.3.3.2.x - Ensure password creation requirements are configured  - PAM
-rhel9cis_pam_password:
-  # - 5.3.3.2.1
-  # The pwquality difok option sets the number of characters in a password that must not
-  # be present in the old password.
-  difok: 2
-  # - 5.3.3.2.2
-  # minlen - Minimum acceptable size for the new password (plus one if credits are not
-  # disabled which is the default). Cannot be set to lower value than 6.
-  minlen: 14
-  # - 5.3.3.2.3
-  # Password complexity can be set through
-  # This variable set password complexity,the minimum number of
-  # character types that must be used (i.e., uppercase, lowercase, digits, other)
-  # Set to 2, passwords cannot have all lower/upper case.
-  # Set to 3, passwords needs numbers.
-  # set to 4, passwords will have to include all four types of characters.
-  minclass: 4
-  # - 5.3.3.2.4
-  # The pwquality maxrepeat option sets the maximum number of allowed same
-  # consecutive characters in a new password.
-  maxrepeat: 3
-  # - 5.3.3.2.5
-  # The pwquality maxsequence option sets the maximum length of monotonic character
-  # sequences in the new password. Examples of such sequence are 12345 or fedcb. The
-  # check is disabled if the value is 0.
-  maxseq: 3
+# 5.3.3.2.1 - password difok
+rhel9cis_passwd_difok_file: etc/security/pwquality.conf.d/50-pwdifok.conf  # pragma: allowlist secret
+rhel9cis_passwd_difok_value: 2
+
+# 5.3.3.2.2 - password minlength
+rhel9cis_passwd_minlen_file: etc/security/pwquality.conf.d/50-pwlength.conf  # pragma: allowlist secret
+rhel9cis_passwd_minlen_value: 14
+
+# 5.3.3.2.3 - password complex
+rhel9cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf  # pragma: allowlist secret
+rhel9cis_passwd_minclass: 3
+rhel9cis_passwd_dcredit: -1
+rhel9cis_passwd_ucredit: -2
+rhel9cis_passwd_ocredit: 0
+rhel9cis_passwd_lcredit: -2
+
+# 5.3.3.2.4 - password maxrepeat
+rhel9cis_passwd_maxrepeat_file: etc/security/pwquality.conf.d/50-pwrepeat.conf  # pragma: allowlist secret
+rhel9cis_passwd_maxrepeat_value: 3
+
+# 5.3.3.2.5 - password maxsequence
+rhel9cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequence.conf  # pragma: allowlist secret
+rhel9cis_passwd_maxsequence_value: 3
+
+# 5.3.3.2.6 - password dictcheck
+rhel9cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.conf  # pragma: allowlist secret
+rhel9cis_passwd_dictcheck_value: 1
+
+# 5.3.3.2.7 - password quality enforce
+rhel9cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality_enforce.conf  # pragma: allowlist secret
+rhel9cis_passwd_quality_enforce_value: 1
+
+# 5.3.3.2.8 - password quality enforce for root included with 5.3.3.2.7
+rhel9cis_passwd_quality_enforce_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
+rhel9cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
 
 # 5.3.3.4.x
-rhel9cis_passwd_hash_algo: sha512
+rhel9cis_passwd_hash_algo: sha512  # pragma: allowlist secret
 
 ## Section 5.4.1.x: Shadow Password Suite Parameters
 rhel9cis_pass:
@@ -952,32 +972,25 @@ rhel9cis_force_user_warnage: false
 # to 'false' will just display users in violation, while 'true' will expire those users passwords.
 rhel9cis_futurepwchgdate_autofix: true
 
-## Section 5.4 - Configure authselect: Custom authselect profile settings(name, profile to customize, options)
-## Controls:
-#  - 5.4.1 - Ensure custom authselect profile is used('custom_profile_name', 'default_file_to_copy' subsettings)
-#  - 5.4.2 - Ensure authselect includes with-faillock | with auth select profile('custom_profile_name')
-# Settings in place now will fail, they are placeholders from the control example. Due to the way many multiple
-# options and ways to configure this control needs to be enabled and settings adjusted to minimise risk.
-rhel9cis_authselect:
-  # This variable configures the name of the custom profile to be created and selected.
-  custom_profile_name: custom-profile
-  # This variable configures the ID of the existing profile that should be used as a base for the new profile.
-  default_file_to_copy: "sssd --symlink-meta"
-  options: with-sudo with-faillock without-nullok with-pwhistory
-
-## Control 5.4.1 - Ensure custom authselect profile is used
-# This variable governs if an authselect custom profile should be automatically created, by copying and
-# customizing one of the default profiles. The default profiles include: sssd, winbind, or the nis. This profile can then be
-# customized to follow site specific requirements.
-rhel9cis_authselect_custom_profile_create: false
-
-## Control 5.4.2 - Ensure authselect includes with-faillock | Create custom profiles
-# This variable governs if the existing custom profile should be selected(Note: please keep in mind that all future updates
-# to the PAM templates and meta files in the original profile will be reflected in your custom profile, too.)
-rhel9cis_authselect_custom_profile_select: false
-
 # 5.4.2.x
 rhel9cis_root_umask: '0027'  # 0027 or more restrictive
+
+## Control 5.4.3.2 - Configuring user shell timeout
+# This dictionary is related to ensuring the rule about user shell timeout
+# This variable represents the amount of seconds a command or process is allowed to
+# run before being forcefully terminated.
+# CIS requires a value of at most 900 seconds.
+rhel9cis_shell_session_timeout: 900
+# This variable specifies the path of the timeout setting file.
+# (TMOUT setting can be set in multiple files, but only one is required for the
+# rule to pass. Options are:
+# - a file in `/etc/profile.d/` ending in `.s`,
+# - `/etc/profile`, or
+# - `/etc/bash.bashrc`.
+rhel9cis_shell_session_file: /etc/profile.d/tmout.sh
+
+## Control 5.4.3.2 bash umask
+rhel9cis_bash_umask: '0027'  # 0027 or more restrictive
 
 ### Controls:
 # - 5.6.2 -  Ensure system accounts are secured
@@ -991,28 +1004,12 @@ rhel9cis_discover_int_uid: true
 # been set to `true`.
 min_int_uid: 1000
 ### Controls:
-# - 6.2.10 - Ensure local interactive user home directories exist
-# - 6.2.11 - Ensure local interactive users own their home directories
+# - Ensure local interactive user home directories exist
+# - Ensure local interactive users own their home directories
 # This variable sets the maximum number at which the search stops for UID
 # Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
 # been set to `true`.
 max_int_uid: 65533
-
-## Control 5.6.3 - Ensure default user shell timeout is 900 seconds or less
-# Session timeout setting file (TMOUT setting can be set in multiple files)
-# Timeout value is in seconds. (60 seconds * 10 = 600)
-rhel9cis_shell_session_timeout:
-  # This variable specifies the path of the timeout setting file.
-  # (TMOUT setting can be set in multiple files, but only one is required for the
-  # rule to pass. Options are:
-  # - a file in `/etc/profile.d/` ending in `.s`,
-  # - `/etc/profile`, or
-  # - `/etc/bash.bashrc`.
-  file: /etc/profile.d/tmout.sh
-  # This variable represents the amount of seconds a command or process is allowed to
-  # run before being forcefully terminated.
-  # CIS requires a value of at most 900 seconds.
-  timeout: 600
 
 ## Section6 vars
 
@@ -1118,23 +1115,6 @@ rhel9cis_remote_log_retrycount: 100
 # of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
 rhel9cis_remote_log_queuesize: 1000
 
-## Control 6.2.3.8 rsyslog log rotate option
-# These variable allow you to change accordint to site policy settings
-# When to rotate options: hourly, daily, weekly, monthly, yearly
-rhel9cis_rsyslog_logrotate_rotated: weekly
-# Number of backlog files to keep
-rhel9cis_rsyslog_logrotate_keep: 4
-# compress file once rotated, false will not compress
-rhel9cis_rsyslog_logrotate_compress: true
-# If the log file is missing, go on to the next one without issuing an error message
-rhel9cis_rsyslog_logrotate_missingok:
-# Dont rotate file if has no contents, false will still rotate
-rhel9cis_rsyslog_logrotate_notifempty: true
-# rhel9cis_rsyslog_logrotate_create give the options to create permissions and ownerships
-# allows create iption to be used and sets options below based on mode owner group
-rhel9cis_rsyslog_logrotate_create: false
-rhel9cis_rsyslog_logrotate_create_opts: 0640 root root
-
 ## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
 # 'rhel9cis_journal_upload_url' is the ip address to upload the journal entries to
 #  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
@@ -1158,7 +1138,7 @@ rhel9cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
 rhel9cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
 # ATTENTION: Uncomment the keyword below when values are set!
 
-## Control 6.2.2.6 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # Current variable configures the max amount of disk space the logs will use(thus, journal files
 # will not grow without bounds)
 # The variables below related to journald, please set these to your site specific values
@@ -1166,18 +1146,18 @@ rhel9cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
 # Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
 # See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
 rhel9cis_journald_systemmaxuse: 10M
-## Control 6.2.2.6 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # Current variable configures the amount of disk space to keep free for other uses.
 rhel9cis_journald_systemkeepfree: 100G
-## Control 6.2.2.6 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # This variable configures how much disk space the journal may use up at most.
 # Similar with 'rhel9cis_journald_systemmaxuse', but related to runtime space.
 rhel9cis_journald_runtimemaxuse: 10M
-## Control 6.2.2.6 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # This variable configures the actual amount of disk space to keep free
 # Similar with 'rhel9cis_journald_systemkeepfree', but related to runtime space.
 rhel9cis_journald_runtimekeepfree: 100G
-## Control 6.2.2.6 - Ensure journald log rotation is configured per site policy
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
@@ -1187,7 +1167,7 @@ rhel9cis_journald_runtimekeepfree: 100G
 # ATTENTION: Uncomment the keyword below when values are set!
 rhel9cis_journald_maxfilesec: 1month
 
-#  Control 6.3.1.3 - Ensure rhel9cis_audit_back_log_limit is sufficient
+##  Control 6.3.2.1 - Ensure audit_backlog_limit is sufficient
 # This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
 # system can buffer in memory, if the audit subsystem is unable to process them in real-time.
 # Buffering in memory is useful in situations, where the audit system is overwhelmed
@@ -1195,21 +1175,91 @@ rhel9cis_journald_maxfilesec: 1month
 # This variable should be set to a sufficient value. The CIS baseline recommends at least `8192` as value.
 rhel9cis_audit_back_log_limit: 8192
 
-## Advanced option found in auditd post and used in tempate 98_auditd_exceptions.rules.j2
+## Controls 6.3.2.x - What to do when log files fill up
+## Control 6.3.2.1 - Ensure audit log storage size is configured
+# This variable specifies the maximum size in MB that an audit log file can reach
+# before it is archived or deleted to make space for the new audit data.
+# This should be set based on your sites policy. CIS does not provide a specific value.
+rhel9cis_auditd_max_log_file_size: 10
+
+## Control 6.3.2.2
+# This variable determines what action the audit system should take when the maximum
+# size of a log file is reached.
+# The options for setting this variable are as follows:
+# - `ignore`: the system does nothing when the size of a log file is full;
+# - `syslog`: a message is sent to the system log indicating the problem;
+# - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;
+# - `rotate`: the log file is rotated (archived) and a new empty log file is created;
+# - `keep_logs`: the system attempts to keep as many logs as possible without violating disk space constraints.
+# CIS prescribes the value `keep_logs`.
+rhel9cis_auditd_max_log_file_action: keep_logs
+
+## Control 6.3.2.3
+# This variable determines how the system should act in case of issues with disk
+# The disk_full_action parameter tells the system what action to take when no free space is available on the partition that holds the audit log files.
+# Valid values are ignore, syslog, rotate, exec, suspend, single, and halt.
+#
+# The disk_error_action parameter tells the system what action to take when an error is detected on the partition that holds the audit log files.
+# Valid values are ignore, syslog, exec, suspend, single, and halt.
+#
+# CIS prescribes
+# disk_full_action parameter:
+# Set to halt - the auditd daemon will shutdown the system when the disk partition containing the audit logs becomes full.
+# Set to single - the auditd daemon will put the computer system in single user mode when the disk partition containing the audit logs becomes full.
+#
+# disk_error_action parameter:
+# Set to halt - the auditd daemon will shutdown the system when an error is detected on the partition that holds the audit log files.
+# Set to single - the auditd daemon will put the computer system in single user mode when an error is detected on the partition that holds the audit log files.
+# Set to syslog - the auditd daemon will issue no more than 5 consecutive warnings to syslog when an error is detected on the partition that holds the audit log files.
+rhel9cis_auditd_disk_full_action: halt
+rhel9cis_auditd_disk_error_action: syslog
+
+# Control 6.3.2.4
+# Wait to do when space left is low.
+# The space_left_action parameter tells the system what action to take when the system has detected that it is starting to get low on disk space.
+# Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
+# The admin_space_left_action parameter tells the system what action to take when the system has detected that it is low on disk space.
+# Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
+rhel9cis_auditd_space_left_action: email
+rhel9cis_auditd_admin_space_left_action: halt
+
+# This value governs if the below extra-vars for auditd should be used by the role
+rhel9cis_auditd_extra_conf_usage: false
+
+# 6.3.3.x allow exceptions for UID in auditd config
+## Advanced option found in auditd post
 # This variable governs if defining user exceptions for auditd logging is acceptable.
 rhel9cis_allow_auditd_uid_user_exclusions: false
 # This variable contains a list of uids to be excluded(users whose actions are not logged by auditd)
 rhel9cis_auditd_uid_exclude:
   - 1999
 
+# This can be used to configure other keys in auditd.conf
+# Example:
+rhel9cis_auditd_extra_conf:
+  admin_space_left: '10%'
+
 # Section 7 Vars
 
-## Control 6.1.9 - Ensure no world writable files exist
+# 7.1.12 Ensure no files or directories without an owner and a group exist
+rhel9cis_exclude_unowned_search_path: (! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*")
+
+# Control 7.1.12
+# The value of this variable specifies the owner that will be set for unowned files and directories.
+rhel9cis_unowned_owner: root
+rhel9cis_ungrouped_group: root
+# This variable is a toggle for enabling/disabling the automated
+# setting of an owner (specified in variable `rhel9cis_unowned_owner`)
+# for all unowned files and directories.
+# Possible values are `true` and `false`.
+rhel9cis_ownership_adjust: true
+
+## Control 7.1.13
+# This variable is a toggle for enabling/disabling the automated removal
+# of the SUID bit from all files on all mounts.
+# Possible values are `true` and `false`.
+rhel9cis_suid_sgid_adjust: false
+
+## Control 7.1.11 - Ensure no world writable files exist
 # Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable.
 rhel9cis_no_world_write_adjust: true
-
-## Control 6.2.16 - Ensure local interactive user dot files are not group or world writable
-# This boolean variable governs if current role should follow filesystem links for changes to
-# user home directory.
-rhel_09_6_2_16_home_follow_symlinks: false
-# thanks to @dulin-gnet and community for rhel9-cis feedback.

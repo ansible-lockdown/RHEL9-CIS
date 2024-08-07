@@ -194,7 +194,7 @@
       notify: Restart sshd
 
     - name: "5.1.7 | PATCH | Ensure sshd access is configured | Add line to sshd_config for denyusers"
-      when: "rhel9cis_sshd_denyusers'|default('') | length > 0"
+      when: "rhel9cis_sshd_denyusers | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ rhel9_cis_sshd_config_file }}"
         regexp: "^DenyUsers"
@@ -203,7 +203,7 @@
       notify: Restart sshd
 
     - name: "5.1.7 | PATCH | Ensure sshd access is configured | Add line to sshd_config for denygroups"
-      when: "rhel9cis_sshd_denygroups|default('') | length > 0"
+      when: "rhel9cis_sshd_denygroups | length > 0"
       ansible.builtin.lineinfile:
         path: "{{ rhel9_cis_sshd_config_file }}"
         regexp: "^DenyGroups"
@@ -500,17 +500,17 @@
 - name: "5.1.22 | PATCH | Ensure SSH PAM is enabled"
   when:
     - rhel9cis_rule_5_1_22
-    - NIST800-53R5_CM-1
-    - NIST800-53R5_CM-2
-    - NIST800-53R5_CM-6
-    - NIST800-53R5_CM-7
-    - NIST800-53R5_IA-5
   tags:
     - level1-server
     - level1-workstation
     - patch
     - ssh
     - rule_5.1.22
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9_cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*MaxStartupsUsePAM

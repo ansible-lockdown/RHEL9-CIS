@@ -42,7 +42,7 @@
 - name: "5.3.1.3 | PATCH | Ensure libpwquality is installed"
   when:
     - rhel9cis_rule_5_3_1_3
-    - ansible_facts.packages['libpwquality'][0]['version'] is version('1.4.4-8', '<')
+    - ansible_facts.packages['libpwquality'][0]['version'] is version('1.4.4-8', '<') or
       "'libpwquality' not in ansible_facts.packages"
   tags:
     - level1-server

@@ -55,7 +55,7 @@
     - NIST800-53R5_MP-2
   ansible.builtin.replace:
     path: "{{ item.path }}"
-    regexp: (?i)(umask\s+\d\d\d)
+    regexp: (?i)(umask\s+\d*)
     replace: '{{ item.line }} {{ rhel9cis_bash_umask }}'
   loop:
     - { path: '/etc/profile', line: 'umask' }
