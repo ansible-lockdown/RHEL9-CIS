@@ -192,6 +192,7 @@
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
       when:
         - rhel_09_7_1_11_perms_results.stdout_lines is defined
+        - rhel_09_7_1_11_perms_results.stdout_lines | length > 0
         - rhel9cis_no_world_write_adjust
       ansible.builtin.file:
         path: '{{ item }}'
@@ -200,7 +201,10 @@
       loop: "{{ rhel_09_7_1_11_perms_results.stdout_lines }}"
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable directories add sticky bit"
-      ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+      ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -o+w ! -perm -1002 2>/dev/null | xargs chmod a+t
+      failed_when: rhel9cis_set_stickybit.rc not in [ 0, 123 ]
+      changed_when: rhel9cis_set_stickybit.rc == 0
+      register: rhel9cis_set_stickybit
 
 - name: "7.1.12 | PATCH | Ensure no files or directories without an owner and a group exist"
   when:
@@ -250,7 +254,7 @@
         owner: "{{ rhel9cis_unowned_owner }}"
         group: "{{ rhel9cis_unowned_group }}"
       with_items:
-        - "{{ udiscovered_unowned_files_flatten }}"
+        - "{{ discovered_unowned_files_flatten }}"
 
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Warn Count"
       when:

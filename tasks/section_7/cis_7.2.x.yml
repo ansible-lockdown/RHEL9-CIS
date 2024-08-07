@@ -84,7 +84,7 @@
     - name: "7.2.3 | AUDIT | Ensure all groups in /etc/passwd exist in /etc/group | Print warning about users with invalid GIDs missing GID entries in /etc/group"
       when: discovered_passwd_gid_check.stdout | length > 0
       ansible.builtin.debug:
-        msg: "Warning!! The following users have non-existent GIDs (Groups): {{ discovered_passwd_gid_check.stdout_lines | join (', ') }}"
+        msg: "Warning!! The following users have non-existent GIDs (Groups): {{ discovered_passwd_gid_check.stdout_lines | join(', ') }}"
 
     - name: "7.2.3 | WARNING | Ensure all groups in /etc/passwd exist in /etc/group | warn_count"
       when: discovered_passwd_gid_check.stdout | length > 0
@@ -243,7 +243,7 @@
         state: directory
         owner: "{{ item.id }}"
         group: "{{ item.gid }}"
-      loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', min_int_uid | int ) | selectattr('uid', '<=', max_int_uid | int ) | list }}"
+      loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', max_int_uid | int) | list }}"
       loop_control:
         label: "{{ item.id }}"
 
@@ -316,31 +316,3 @@
         path: '{{ item }}'
         mode: 'go-w'
       with_items: "{{ discovered_homedir_dot_files.stdout_lines }}"
-
-- name: "7.2.4 | PATCH | Ensure shadow group is empty"
-  when:
-    - rhel9cis_rule_7_2_4
-  tags:
-    - level1-server
-    - level1-workstation
-    - patch
-    - rule_6.2.4
-    - user
-  vars:
-    warn_control_id: '7.2.4'
-  block:
-    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
-      ansible.builtin.getent:
-        database: group
-        split: ':'
-        key: shadow
-
-    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
-      ansible.builtin.debug:
-        msg: "Warning!! - You have users in the shadow group"
-      when: ansible_facts.getent_group.shadow[2] | length > 0
-
-    - name: "7.2.4 | AUDIT | Ensure shadow group is empty | check users in group"
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      when: ansible_facts.getent_group.shadow[2] | length > 0
