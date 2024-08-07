@@ -37,9 +37,9 @@
     - level1-workstation
     - patch
     - mounts
-    - rule_1_1_2.6.2
-    - rule_1_1_2.6.3
-    - rule_1_1_2.6.4
+    - rule_1.1.2.6.2
+    - rule_1.1.2.6.3
+    - rule_1.1.2.6.4
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
   ansible.posix.mount:
