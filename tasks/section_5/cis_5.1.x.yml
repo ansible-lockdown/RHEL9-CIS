@@ -161,7 +161,7 @@
 
     - name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured | submodule to crypto policy modules"
       ansible.builtin.set_fact:
-        rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':NO-SHA1' }}"
+        rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHWEAKMACS' }}"
 
 - name: "5.1.7 | PATCH | Ensure sshd access is configured"
   when:
