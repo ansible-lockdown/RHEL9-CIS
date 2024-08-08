@@ -251,6 +251,7 @@
         regexp: '^ClientAliveInterval'
         line: "ClientAliveInterval {{ rhel9cis_sshd_clientaliveinterval }}"
         validate: sshd -t -f %s
+      notify: Restart sshd
 
     - name: "5.1.9 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured | Ensure SSH ClientAliveCountMax set to <= 3"
       ansible.builtin.lineinfile:
@@ -258,6 +259,7 @@
         regexp: '^ClientAliveCountMax'
         line: "ClientAliveCountMax {{ rhel9cis_sshd_clientalivecountmax }}"
         validate: sshd -t -f %s
+      notify: Restart sshd
 
 - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled"
   when:
@@ -276,6 +278,7 @@
         regexp: ^(#|)\s*DisableForwarding
         line: 'DisableForwarding yes'
         validate: sshd -t -f %s
+      notify: Restart sshd
 
     - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled | override"
       ansible.builtin.lineinfile:
@@ -283,6 +286,7 @@
         regexp: ^(?i)(#|)\s*X11Forwarding
         line: 'X11Forwarding {{ rhel9cis_sshd_x11forwarding }}'
         validate: sshd -t -f %s
+      notify: Restart sshd
 
 - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled"
   when:
@@ -298,11 +302,22 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
-  ansible.builtin.lineinfile:
-    path: "{{ rhel9_cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*GSSAPIAuthentication
-    line: 'GSSAPIAuthentication no'
-    validate: sshd -t -f %s
+  block:
+    - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled | redhat file"
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config.d/50-redhat.conf
+        regexp: ^(?i)(#|)\s*GSSAPIAuthentication
+        line: GSSAPIAuthentication no
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+    - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled | ssh config"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9_cis_sshd_config_file }}"
+        regexp: ^(?i)(#|)\s*GSSAPIAuthentication
+        line: GSSAPIAuthentication no
+        validate: sshd -t -f %s
+      notify: Restart sshd
 
 - name: "5.1.12 | PATCH | Ensure sshd HostbasedAuthentication is disabled"
   when:
@@ -323,6 +338,7 @@
     regexp: ^(?i)(#|)\s*HostbasedAuthentication
     line: 'HostbasedAuthentication no'
     validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.13 | PATCH | Ensure sshd IgnoreRhosts is enabled"
   when:
@@ -343,6 +359,7 @@
     regexp: ^(?i)(#|)\s*IgnoreRhosts
     line: 'IgnoreRhosts yes'
     validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.14 | PATCH | Ensure sshd LoginGraceTime is set to one minute or less"
   when:
@@ -359,6 +376,7 @@
     regexp: ^(?i)(#|)\s*LoginGraceTime
     line: "LoginGraceTime {{ rhel9cis_sshd_logingracetime }}"
     validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.15 | PATCH | Ensure sshd LogLevel is appropriate"
   when:
@@ -377,6 +395,7 @@
     regexp: ^(?i)(#|)\s*LogLevel
     line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
     validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.16 | PATCH | Ensure sshd MaxAuthTries is set to 4 or less"
   when:
@@ -393,6 +412,7 @@
     regexp: '^(#)?MaxAuthTries \d'
     line: 'MaxAuthTries {{ rhel9cis_ssh_maxauthtries }}'
     validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.17 | PATCH | Ensure sshd MaxStartups is configured"
   when:
@@ -413,6 +433,7 @@
     regexp: ^(?i)(#|)\s*MaxStartups
     line: 'MaxStartups {{ rhel9cis_ssh_maxstartups }}'
     validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.18 | PATCH | Ensure SSH MaxSessions is set to 10 or less"
   when:
@@ -433,6 +454,7 @@
     regexp: ^(?i)(#|)\s*MaxSessions
     line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
     validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.19 | PATCH | Ensure sshd PermitEmptyPasswords is disabled"
   when:
@@ -453,6 +475,7 @@
     regexp: ^(?i)(#|)\s*PermitEmptyPasswords
     line: 'PermitEmptyPasswords no'
     validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.20 | PATCH | Ensure sshd PermitRootLogin is disabled"
   when:
@@ -471,11 +494,13 @@
         regexp: ^(?i)(#|)\s*PermitRootLogin
         line: 'PermitRootLogin no'
         validate: sshd -t -f %s
+      notify: Restart sshd
 
     - name: "5.1.20 | PATCH | Ensure sshd PermitRootLogin is disabled | override file"
       ansible.builtin.file:
         path: /etc/ssh/sshd_config.d/01-permitrootlogin.conf
         state: absent
+      notify: Restart sshd
 
 - name: "5.1.21 | PATCH | Ensure sshd PermitUserEnvironment is disabled"
   when:
@@ -493,9 +518,10 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9_cis_sshd_config_file }}"
-    regexp: "^#PermitUserEnvironment|^PermitUserEnvironment"
+    regexp: ^(?i)(#|)\s*PermitUserEnvironment
     line: 'PermitUserEnvironment no'
     validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.22 | PATCH | Ensure SSH PAM is enabled"
   when:
@@ -513,6 +539,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9_cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*MaxStartupsUsePAM
+    regexp: ^(?i)(#|)\s*UsePAM
     line: 'UsePAM yes'
     validate: sshd -t -f %s
+  notify: Restart sshd
