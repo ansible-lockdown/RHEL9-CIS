@@ -461,16 +461,16 @@
   block:
     - name: "2.1.14 | PATCH | Ensure snmp services are not in use | Remove package"
       when:
-        - not rhel9cis_net_snmp_server
-        - not rhel9cis_net_snmp_mask
+        - not rhel9cis_snmp_server
+        - not rhel9cis_snmp_mask
       ansible.builtin.package:
         name: net-snmp
         state: absent
 
     - name: "2.1.14 | PATCH | Ensure snmp services are not in use | Mask service"
       when:
-        - not rhel9cis_net_snmp_server
-        - rhel9cis_net_snmp_mask
+        - not rhel9cis_snmp_server
+        - rhel9cis_snmp_mask
       notify: Systemd_daemon_reload
       ansible.builtin.systemd:
         name: snmpd.service
