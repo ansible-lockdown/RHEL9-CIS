@@ -4,21 +4,6 @@
 # These values may be overriden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 
-## Usage on containerized images
-# The role discovers dynamically (in tasks/main.yml) whether it
-# is executed on a container image and sets the variable
-# system_is_container the true. Otherwise, the default value
-# 'false' is left unchanged.
-system_is_container: false
-# The filename of the existing yml file in role's  'vars/' sub-directory
-# to be used for managing the role-behavior when a container was detected:
-# (de)activating rules or for other tasks(e.g. disabling Selinux or a specific
-# firewall-type).
-container_vars_file: is_container.yml
-# rhel9cis is left off the front of this var for consistency in testing pipeline
-# system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
-system_is_ec2: false
-
 # Run the OS validation check
 # Supported OSs will not need for this to be changed - see README e.g. CentOS
 os_check: true

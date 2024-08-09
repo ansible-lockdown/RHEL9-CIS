@@ -28,3 +28,20 @@ gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
 # This variable governs if the auditd logic should be executed(if value is true).
 # NOTE: The current default value is likely to be overriden(via 'set_fact') by other further tasks(in sub-section 'Auditd rules').
 update_audit_template: false
+
+
+# Defaults
+## Usage on containerized images
+# The role discovers dynamically (in tasks/main.yml) whether it
+# is executed on a container image and sets the variable
+# system_is_container the true. Otherwise, the default value
+# 'false' is left unchanged.
+system_is_container: false
+# The filename of the existing yml file in role's  'vars/' sub-directory
+# to be used for managing the role-behavior when a container was detected:
+# (de)activating rules or for other tasks(e.g. disabling Selinux or a specific
+# firewall-type).
+container_vars_file: is_container.yml
+# rhel9cis is left off the front of this var for consistency in testing pipeline
+# system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
+system_is_ec2: false
