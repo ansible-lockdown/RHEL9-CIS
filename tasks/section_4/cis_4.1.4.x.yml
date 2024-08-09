@@ -65,6 +65,8 @@
   ansible.builtin.file:
       path: "{{ item.path }}"
       mode: 'u-x,g-wx,u-rwx'
+  failed_when: rhel9cis_4_1_4_5_file_list.state not in '[ file, absent ]'
+  register: rhel9cis_4_1_4_5_file_list
   loop: "{{ auditd_conf_files.files }}"
   loop_control:
       label: "{{ item.path }}"
@@ -81,6 +83,8 @@
   ansible.builtin.file:
       path: "{{ item.path }}"
       owner: root
+  failed_when: rhel9cis_4_1_4_6_file_list.state not in '[ file, absent ]'
+  register: rhel9cis_4_1_4_6_file_list
   loop: "{{ auditd_conf_files.files | default([]) }}"
   loop_control:
       label: "{{ item.path }}"
@@ -97,6 +101,8 @@
   ansible.builtin.file:
       path: "{{ item.path }}"
       group: root
+  failed_when: rhel9cis_4_1_4_7_file_list.state not in '[ file, absent ]'
+  register: rhel9cis_4_1_4_7_file_list
   loop: "{{ auditd_conf_files.files | default([]) }}"
   loop_control:
       label: "{{ item.path }}"
