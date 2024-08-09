@@ -114,26 +114,26 @@
 
 - name: "PRELIM | AUDIT | Check authselect profile is selected"
   when:
-      - rhel9cis_allow_authselect_updates
+    - rhel9cis_allow_authselect_updates
   tags:
-      - always
+    - always
   block:
-      - name: "PRELIM | AUDIT | Check authselect profile name has been updated"
-        ansible.builtin.assert:
-          that: rhel9cis_authselect_custom_profile_name != 'cis_example_profile'
-          fail_msg: "You still have the default name for your authselect profile"
+    - name: "PRELIM | AUDIT | Check authselect profile name has been updated"
+      ansible.builtin.assert:
+        that: rhel9cis_authselect_custom_profile_name != 'cis_example_profile'
+        fail_msg: "You still have the default name for your authselect profile"
 
-      - name: "PRELIM | AUDIT | Check authselect profile is selected"
-        ansible.builtin.shell: authselect current | head -1 | awk '{print $NF}'
-        changed_when: false
-        failed_when: prelim_authselect_current_profile.rc not in [ 0, 1 ]
-        register: prelim_authselect_current_profile
+    - name: "PRELIM | AUDIT | Check authselect profile is selected"
+      ansible.builtin.shell: authselect current | head -1 | awk '{print $NF}'
+      changed_when: false
+      failed_when: prelim_authselect_current_profile.rc not in [ 0, 1 ]
+      register: prelim_authselect_current_profile
 
-      - name: "PRELIM | AUDIT | Check authselect profile is selected"
-        ansible.builtin.assert:
-          that: prelim_authselect_current_profile is defined
-          success_msg: "Authselect is running and profile is selected"
-          fail_msg: Authselect updates have been selected there are issues with profile selection"
+    - name: "PRELIM | AUDIT | Check authselect profile is selected"
+      ansible.builtin.assert:
+        that: prelim_authselect_current_profile is defined
+        success_msg: "Authselect is running and profile is selected"
+        fail_msg: Authselect updates have been selected there are issues with profile selection"
 
 - name: "Ensure root password is set"
   when:

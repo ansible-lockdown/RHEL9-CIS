@@ -29,7 +29,6 @@ gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
 # NOTE: The current default value is likely to be overriden(via 'set_fact') by other further tasks(in sub-section 'Auditd rules').
 update_audit_template: false
 
-
 # Defaults
 ## Usage on containerized images
 # The role discovers dynamically (in tasks/main.yml) whether it
