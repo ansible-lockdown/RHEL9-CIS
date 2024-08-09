@@ -2,8 +2,8 @@
 ##### CI for use by github no need for action to be added
 ##### Inherited
 ci:
-    autofix_prs: false
-    skip: [detect-aws-credentials, ansible-lint ]
+  autofix_prs: false
+  skip: [detect-aws-credentials, ansible-lint ]
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -33,14 +33,12 @@ repos:
   rev: v1.5.0
   hooks:
   - id: detect-secrets
-    args: [ '--baseline', '.config/.secrets.baseline' ]
-    exclude: .config/.gitleaks-report.json
+    exclude: templates/etc/security/pwquality.conf.d/50-pwcomplexity.conf.j2:3
 
 - repo: https://github.com/gitleaks/gitleaks
   rev: v8.18.4
   hooks:
   - id: gitleaks
-    args: ['--baseline-path', '.config/.gitleaks-report.json']
 
 - repo: https://github.com/ansible-community/ansible-lint
   rev: v24.7.0
