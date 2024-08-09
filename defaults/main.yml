@@ -419,6 +419,7 @@ rhel9cis_rule_6_2_3_4: true
 rhel9cis_rule_6_2_3_5: true
 rhel9cis_rule_6_2_3_6: true
 rhel9cis_rule_6_2_3_7: true
+rhel9cis_rule_6_2_3_8: true
 ## 6.2.4 Configure Logfiles
 rhel9cis_rule_6_2_4_1: true
 ## 6.3 Configure Auditing
