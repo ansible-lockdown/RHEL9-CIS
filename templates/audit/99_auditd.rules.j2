@@ -46,6 +46,9 @@
 -w /etc/gshadow -p wa -k identity
 -w /etc/shadow -p wa -k identity
 -w /etc/security/opasswd -p wa -k identity
+-w /etc/nsswitch.conf -p wa -k identity
+-w /etc/pam.conf -p wa -k identity
+-w /etc/pam.d -p wa -k identity
 {% endif %}
 {% if rhel9cis_rule_6_3_3_9 %}
 -a always,exit -F arch=b64 -S chmod,fchmod,fchmodat -F auid>={{ prelim_min_int_uid }} -F auid!=unset -F key=perm_mod
@@ -83,7 +86,7 @@
 -a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k perm_chng
 {% endif %}
 {% if rhel9cis_rule_6_3_3_17 %}
--a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k priv_cmd
+-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k priv_chng
 {% endif %}
 {% if rhel9cis_rule_6_3_3_18 %}
 -a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k usermod

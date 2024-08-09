@@ -16,47 +16,37 @@
       failed_when: false
       register: discovered_logfiles
 
-    - name: "6.2.4.1 | AUDIT | Ensure access to all logfiles has been configured | set_fact"
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
       when:
         - discovered_logfiles.stdout_lines | length > 0
-        - discovered_logfiles is defined
-      ansible.builtin.set_fact:
-        discovered_logfiles_flattened: "{{ discovered_logfiles.stdout_lines | flatten }}"
-
-    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
-      when:
-        - discovered_logfiles_flattened is defined
-        - item == "/var/log/secure"
-        - item == "/var/log/auth.log"
-        - item == "/var/log/syslog"
-        - "'journal' in item"
+        - ('audit.log' in item or 'journal' in item) or
+          item == '/var/log/secure' or
+          item == '/var/log/syslog' or
+          item == '/var/log/messages' or
+          item == '/var/log/auth.log'
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-x,g-wx,o-rwx'
-      loop: "{{ discovered_logfiles_flattened }}"
+      loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
       when:
-        - discovered_logfiles_flattened is defined
-        - item == "/var/log/btmp"
-        - item == "/var/log/utmp"
-        - item == "/var/log/wtmp"
-        - item == "/var/log/lastlog"
+        - discovered_logfiles.stdout_lines | length > 0
+        - ('anaconda' in item or 'dnf' in item or 'secure' in item  or 'messages' in item or 'hawkey' in item)
       ansible.builtin.file:
         path: "{{ item }}"
-        mode: 'u-x,g-wx,o-rwx'
-        owner: root
-        group: root
-      loop: "{{ discovered_logfiles_flattened }}"
+        mode: 'u-x,g-x,o-rwx'
+      loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
       when:
-        - discovered_logfiles_flattened is defined
-        - "'sssd' in item"
-        - item == "/var/log/utmp"
-        - item == "/var/log/wtmp"
-        - item == "/var/log/lastlog"
+        - discovered_logfiles.stdout_lines | length > 0
+        - ('sssd' in item or 'lastlog' in item) or
+          item == "/var/log/btmp" or
+          item == "/var/log/utmp" or
+          item == "/var/log/wtmp" or
+          item == "/var/log/lastlog"
       ansible.builtin.file:
         path: "{{ item }}"
-        mode: 'u-x,g-wx,o-rwx'
-      loop: "{{ discovered_logfiles_flattened }}"
+        mode: 'ug-x,o-wx'
+      loop: "{{ discovered_logfiles.stdout_lines }}"

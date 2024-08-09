@@ -46,16 +46,32 @@
     - patch
     - rule_6.1.2
     - NIST800-53R5_AU-2
-  ansible.builtin.cron:
-    name: Run AIDE integrity check
-    cron_file: "{{ rhel9cis_aide_cron['cron_file'] }}"
-    user: "{{ rhel9cis_aide_cron['cron_user'] }}"
-    minute: "{{ rhel9cis_aide_cron['aide_minute'] | default('0') }}"
-    hour: "{{ rhel9cis_aide_cron['aide_hour'] | default('5') }}"
-    day: "{{ rhel9cis_aide_cron['aide_day'] | default('*') }}"
-    month: "{{ rhel9cis_aide_cron['aide_month'] | default('*') }}"
-    weekday: "{{ rhel9cis_aide_cron['aide_weekday'] | default('*') }}"
-    job: "{{ rhel9cis_aide_cron['aide_job'] }}"
+  block:
+    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked"
+      when: rhel9cis_aide_scan == "cron"
+      ansible.builtin.cron:
+        name: Run AIDE integrity check
+        cron_file: "{{ rhel9cis_aide_cron['cron_file'] }}"
+        user: "{{ rhel9cis_aide_cron['cron_user'] }}"
+        minute: "{{ rhel9cis_aide_cron['aide_minute'] | default('0') }}"
+        hour: "{{ rhel9cis_aide_cron['aide_hour'] | default('5') }}"
+        day: "{{ rhel9cis_aide_cron['aide_day'] | default('*') }}"
+        month: "{{ rhel9cis_aide_cron['aide_month'] | default('*') }}"
+        weekday: "{{ rhel9cis_aide_cron['aide_weekday'] | default('*') }}"
+        job: "{{ rhel9cis_aide_cron['aide_job'] }}"
+
+    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
+      when: rhel9cis_aide_scan == "timer"
+      ansible.builtin.systemd:
+        name: aidecheck.service
+        enabled: true
+
+    - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
+      when: rhel9cis_aide_scan == "timer"
+      ansible.builtin.systemd:
+        name: aidecheck.timer
+        state: running
+        enabled: true
 
 - name: "6.1.3 | PATCH | Ensure cryptographic mechanisms are used to protect the integrity of audit tools"
   when:

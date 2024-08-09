@@ -8,10 +8,15 @@
   ansible.builtin.import_tasks:
     file: cis_6.2.1.x.yml
 
-- name: "SECTION | 6.2.2 | Configure journald"
+- name: "SECTION | 6.2.2.1.x | Configure journald-remote"
   when: rhel9cis_syslog == 'journald'
   ansible.builtin.import_tasks:
     file: cis_6.2.2.1.x.yml
+
+- name: "SECTION | 6.2.2.x | Configure journald"
+  when: rhel9cis_syslog == 'journald'
+  ansible.builtin.import_tasks:
+    file: cis_6.2.2.x.yml
 
 - name: "SECTION | 6.2.3 | Configure rsyslog"
   when: rhel9cis_syslog == 'rsyslog'

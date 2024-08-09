@@ -51,7 +51,7 @@
     - rule_5.3.3.4.2
   block:
     - name: "5.3.3.4.2 | AUDIT | Ensure pam_unix does not include remember | capture state"
-      ansible.builtin.shell: grep -PH -- '^\h*^password\h*[^#\n\r]+\h+pam_unix\.so\b' /etc/pam.d/{password,system}-auth | grep -P -- '\bremember\b'
+      ansible.builtin.shell: grep -E "password.*pam_unix.so.*remember" /etc/pam.d/*-auth | cut -d ':' -f1 | uniq
       changed_when: false
       failed_when: rhel9cis_pam_remember.rc not in [ 0, 1 ]
       register: rhel9cis_pam_remember
@@ -61,9 +61,10 @@
         - not rhel9cis_allow_authselect_updates
         - rhel9cis_pam_remember.stdout | length > 0
       ansible.builtin.replace:
-        path: "/{{ rhel9cis_pam_confd_dir }}{{ rhel9cis_pam_pwunix_file }}"
-        regexp: remember=\d+
+        path: "{{ item }}"
+        regexp: remember
         replace: ''
+      loop: "{{ rhel9cis_pam_remember.stdout_lines }}"
 
     - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember  | Remove remember from pam files AuthSelect"
       when:
@@ -90,7 +91,7 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.3.3.4.3 | AUDIT | Ensure pam_unix includes a strong password hashing algorithm | capture state"
-      ansible.builtin.shell: grep -PH -- '^\h*password\h+([^#\n\r]+)\h+pam_unix\.so\h+([^#\n\r]+\h+)?("{{ rhel9cis_passwd_hash_algo }}")\b' /etc/pam.d/*-auth
+      ansible.builtin.shell: grep -E "password.*pam_unix.so.*(sha512|yescrypt)" /etc/pam.d/*-auth | cut -d ':' -f1 | uniq
       changed_when: false
       failed_when: rhel9cis_pam_pwhash.rc not in [ 0, 1 ]
       register: rhel9cis_pam_pwhash
@@ -100,17 +101,18 @@
         - not rhel9cis_allow_authselect_updates
         - rhel9cis_pam_remember.stdout | length > 0
       ansible.builtin.replace:
-        path: "/{{ rhel9cis_pam_confd_dir }}{{ rhel9cis_pam_pwunix_file }}"
+        path: "{{ item }}"
         regexp: "(md5|bigcrypt|sha256|blowfish|gost_yescrypt|sha512|yescrypt)"
         replace: '{{ rhel9cis_passwd_hash_algo }}'
+      loop: "{{ rhel9cis_pam_remember.stdout_lines }}"
 
-    - name: "5.3.3.4.3 | PATCH | Ensure pam_unix includes a strong password hashing algorithm | Remove remember from pam files AuthSelect"
+    - name: "5.3.3.4.3 | PATCH | Ensure pam_unix includes a strong password hashing algorithm | Add hash algorithm to pam files AuthSelect"
       when:
         - rhel9cis_allow_authselect_updates
       ansible.builtin.lineinfile:
         path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
-        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_unix\.so)(.*)(sha512|yescrypt)(.*$)
-        line: \1\2 {{ rhel9cis_passwd_hash_algo }}\4
+        regexp: ^(\s*password\s+)(requisite|required|sufficient)(\s+pam_unix.so\s)(.*)(sha512|yescrypt)(.*$)
+        line: \1\2\3\4{{ rhel9cis_passwd_hash_algo }}\6
         backrefs: true
       loop:
         - password
@@ -130,7 +132,7 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.3.3.4.4 | PATCH | Ensure pam_unix includes use_authtok | capture state"
-      ansible.builtin.shell: grep -PH -- '^\h*^password\h*[^#\n\r]+\h+pam_unix\.so\b' /etc/pam.d/{password,system}-auth | grep -Pv -- '\buse_authtok\b'
+      ansible.builtin.shell: grep -PH -- '^\h*^password\h*[^#\n\r]+\h+pam_unix.so\b' /etc/pam.d/{password,system}-auth | grep -Pv -- '\buse_authtok\b'
       changed_when: false
       failed_when: rhel9cis_pam_authtok.rc not in [ 0, 1 ]
       register: rhel9cis_pam_authtok
@@ -142,8 +144,8 @@
         - rhel9cis_pam_authtok.stdout | length > 0
       ansible.builtin.lineinfile:
         path: "{{ item }}"
-        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_unix\.so)(.*)use_authtok(.*$)
-        line: \1\2 use_authtok\3
+        regexp: ^(\s*password\s+)(requisite|required|sufficient)(\s+pam_unix.so\s)(.*)use_authtok(.*$)
+        line: \1\2\3\4use_authtok \5
         backrefs: true
       loop: "{{ rhel9cis_pam_authtok.stdout_lines }}"
 
@@ -152,8 +154,8 @@
         - rhel9cis_allow_authselect_updates
       ansible.builtin.lineinfile:
         path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
-        regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_unix\.so)(.*)use_authtok(.*$)
-        line: \1\2 use_authtok\3
+        regexp: ^(\s*password\s+)(requisite|required|sufficient)(\s+pam_unix.so\s)(.*)use_authtok(.*$)
+        line: \1\2\3\4use_authtok\5
         backrefs: true
       loop:
         - password

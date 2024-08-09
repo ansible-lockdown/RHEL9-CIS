@@ -1,9 +1,9 @@
 # CIS Configurations
 # 5.3.3.2.3 Ensure password complexity is configured
-{% if rhel9cis_passwd_complex_option == minclass %}
+{% if rhel9cis_passwd_complex_option == 'minclass' %}
 minclass = {{ rhel9cis_passwd_minclass }}
-{ %endif %}
-{% if rhel9cis_passwd_complex_option == credits %}
+{% endif %}
+{% if rhel9cis_passwd_complex_option == 'credits' %}
 dcredit = {{rhel9cis_passwd_dcredit }}
 ucredit = {{ rhel9cis_passwd_ucredit }}
 ocredit = {{ rhel9cis_passwd_ocredit }}
