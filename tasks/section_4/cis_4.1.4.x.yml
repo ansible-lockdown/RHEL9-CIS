@@ -23,7 +23,7 @@
             "4.1.4.3 | PATCH | Ensure only authorized groups are assigned ownership of audit log files"
         ansible.builtin.file:
             path: "{{ audit_discovered_logfile.stdout }}"
-            mode: "{% if auditd_logfile.stat.mode != '0600' %}0640{% endif %}"
+            mode: 'u-x,g-rw,o-rwx'
             owner: root
             group: root
   when:
@@ -50,7 +50,7 @@
         ansible.builtin.file:
             path: "{{ audit_discovered_logfile.stdout | dirname }}"
             state: directory
-            mode: '0750'
+            mode: 'g-w,o-rwx'
         when: not auditlog_dir.stat.mode is match('07(0|5)0')
   when:
       - rhel9cis_rule_4_1_4_4
@@ -64,7 +64,7 @@
 - name: "4.1.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive"
   ansible.builtin.file:
       path: "{{ item.path }}"
-      mode: "{{ '0600' if item.mode == '0600' else '0640' }}"
+      mode: 'u-x,g-wx,u-rwx'
   loop: "{{ auditd_conf_files.files }}"
   loop_control:
       label: "{{ item.path }}"
@@ -126,8 +126,7 @@
       - name: "4.1.4.8 | PATCH | Ensure audit tools are 755 or more restrictive | set if required"
         ansible.builtin.file:
             path: "{{ item.item }}"
-            mode: '0750'
-
+            mode: 'go-w'
         loop: "{{ audit_bins.results }}"
         loop_control:
             label: "{{ item.item }}"
