@@ -64,7 +64,7 @@
 - name: "4.1.4.5 | PATCH | Ensure audit configuration files are 640 or more restrictive"
   ansible.builtin.file:
       path: "{{ item.path }}"
-      mode: 'u-x,g-wx,u-rwx'
+      mode: 'u-x,g-wx,o-rwx'
   failed_when: rhel9cis_4_1_4_5_file_list.state not in '[ file, absent ]'
   register: rhel9cis_4_1_4_5_file_list
   loop: "{{ auditd_conf_files.files }}"
