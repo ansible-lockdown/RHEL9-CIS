@@ -105,7 +105,7 @@
     - audit_format == "documentation"
   block:
     - name: Pre Audit | Capture audit data if documentation format
-      ansible.builtin.shell: tail -2 "{{ pre_audit_outfile }}"  | tac | tr '\n' ' '
+      ansible.builtin.shell: tail -2 "{{ pre_audit_outfile }}" | tac | tr '\n' ' '
       register: pre_audit_summary
       changed_when: false
 
