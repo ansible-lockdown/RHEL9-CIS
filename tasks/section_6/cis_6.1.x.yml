@@ -150,7 +150,7 @@
 - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist"
   block:
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Finding all unowned files or directories"
-        ansible.builtin.shell: find "{{ item.mount }}" -xdev -nouser
+        ansible.builtin.shell: find "{{ item.mount }}" -xdev -nouser -not -fstype nfs
         changed_when: false
         failed_when: false
         check_mode: false
@@ -162,28 +162,21 @@
             - item['device'].startswith('/dev')
             - not 'bind' in item['options']
 
-      - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | set fact"
+      - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Flatten no_user_items results for easier use"
         ansible.builtin.set_fact:
-            rhel_09_6_1_10_unowned_files_found: true
-        loop: "{{ rhel_09_6_1_10_audit.results }}"
-        when:
-            - item | length > 0
-            - item.stdout is defined  # skipped items are part of results list, but don't have the registered module properties
-            - item.stdout | length > 0
+            discovered_unowned_files_flatten: "{{ rhel_09_6_1_10_audit.results | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Displaying any unowned files or directories"
         ansible.builtin.debug:
-            msg: "Warning!! Missing owner on items in {{ rhel_09_6_1_10_audit.stdout_lines }}"
-        when: rhel_09_6_1_10_unowned_files_found
+            msg: "Warning!! Missing owner on items in {{ discovered_unowned_files_flatten }}"
+        when: discovered_unowned_files_flatten | length > 0
 
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | warning"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
         vars:
             warn_control_id: '6.1.10'
-        when: rhel_09_6_1_10_unowned_files_found
-  vars:
-      rhel_09_6_1_10_unowned_files_found: false
+        when: discovered_unowned_files_flatten | length > 0
   when:
       - rhel9cis_rule_6_1_10
   tags:
@@ -209,28 +202,21 @@
             - item['device'].startswith('/dev')
             - not 'bind' in item['options']
 
-      - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | set fact"
+      - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Flatten no_user_items results for easier use"
         ansible.builtin.set_fact:
-            rhel_09_6_1_11_ungrouped_files_found: true
-        loop: "{{ rhel_09_6_1_11_audit.results }}"
-        when:
-            - item | length > 0
-            - item.stdout is defined  # skipped items are part of results list, but don't have the registered module properties
-            - item.stdout | length > 0
+            discovered_ungrouped_files_flatten: "{{ rhel_09_6_1_11_audit.results | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Displaying all ungrouped files or directories"
         ansible.builtin.debug:
-            msg: "Warning!! Missing group on items in {{ rhel_09_6_1_11_audit.stdout_lines }}"
-        when: rhel_09_6_1_11_ungrouped_files_found
+            msg: "Warning!! Missing group on items in {{ discovered_ungrouped_files_flatten }}"
+        when: discovered_ungrouped_files_flatten | length > 0
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | warning"
         ansible.builtin.import_tasks:
             file: warning_facts.yml
         vars:
             warn_control_id: '6.1.11'
-        when: rhel_09_6_1_11_ungrouped_files_found
-  vars:
-      rhel_09_6_1_11_ungrouped_files_found: false
+        when: discovered_ungrouped_files_flatten | length > 0
   when:
       - rhel9cis_rule_6_1_11
   tags:
