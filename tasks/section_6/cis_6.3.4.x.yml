@@ -50,6 +50,8 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     mode: 'u-x,g-wx,o-rwx'
+  failed_when: rhel9cis_6_3_4_5_file_list.state not in '[ file, absent ]'
+  register: rhel9cis_6_3_4_5_file_list
   loop: "{{ prelim_auditd_conf_files.files }}"
   loop_control:
     label: "{{ item.path }}"
