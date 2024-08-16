@@ -125,6 +125,7 @@
       regexp: "^#LogLevel|^LogLevel"
       line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_5
   tags:
@@ -140,6 +141,7 @@
       regexp: "^#UsePAM|^UsePAM"
       line: 'UsePAM yes'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_6
   tags:
@@ -162,6 +164,7 @@
         ansible.builtin.file:
             path: /etc/ssh/sshd_config.d/01-permitrootlogin.conf
             state: absent
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_7
   tags:
@@ -177,6 +180,7 @@
       regexp: "^#HostbasedAuthentication|^HostbasedAuthentication"
       line: 'HostbasedAuthentication no'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_8
   tags:
@@ -192,6 +196,7 @@
       regexp: "^#PermitEmptyPasswords|^PermitEmptyPasswords"
       line: 'PermitEmptyPasswords no'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_9
   tags:
@@ -207,6 +212,7 @@
       regexp: "^#PermitUserEnvironment|^PermitUserEnvironment"
       line: 'PermitUserEnvironment no'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_10
   tags:
@@ -222,6 +228,7 @@
       regexp: "^#IgnoreRhosts|^IgnoreRhosts"
       line: 'IgnoreRhosts yes'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_11
   tags:
@@ -240,6 +247,7 @@
             regexp: "^#X11Forwarding|^X11Forwarding"
             line: 'X11Forwarding no'
             validate: sshd -t -f %s
+        notify: Restart sshd
 
       - name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled | override"
         ansible.builtin.lineinfile:
@@ -247,6 +255,7 @@
             regexp: "^#X11Forwarding|^X11Forwarding"
             line: 'X11Forwarding no'
             validate: sshd -t -f %s
+        notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_12
   tags:
@@ -262,6 +271,7 @@
       regexp: "^#AllowTcpForwarding|^AllowTcpForwarding"
       line: 'AllowTcpForwarding no'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_13
   tags:
@@ -297,6 +307,7 @@
       path: "{{ rhel9_cis_sshd_config_file }}"
       regexp: '^Banner'
       line: 'Banner /etc/issue.net'
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_15
   tags:
@@ -312,6 +323,7 @@
       regexp: '^(#)?MaxAuthTries \d'
       line: 'MaxAuthTries 4'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_16
   tags:
@@ -327,6 +339,7 @@
       regexp: "^#MaxStartups|^MaxStartups"
       line: 'MaxStartups 10:30:60'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_17
   tags:
@@ -342,6 +355,7 @@
       regexp: "^#MaxSessions|^MaxSessions"
       line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_18
   tags:
@@ -357,6 +371,7 @@
       regexp: "^#LoginGraceTime|^LoginGraceTime"
       line: "LoginGraceTime {{ rhel9cis_sshd['logingracetime'] }}"
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_19
   tags:
@@ -374,6 +389,7 @@
             regexp: '^ClientAliveInterval'
             line: "ClientAliveInterval {{ rhel9cis_sshd['clientaliveinterval'] }}"
             validate: sshd -t -f %s
+        notify: Restart sshd
 
       - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Ensure SSH ClientAliveCountMax set to <= 3"
         ansible.builtin.lineinfile:
@@ -381,6 +397,7 @@
             regexp: '^ClientAliveCountMax'
             line: "ClientAliveCountMax {{ rhel9cis_sshd['clientalivecountmax'] }}"
             validate: sshd -t -f %s
+        notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_20
   tags:
