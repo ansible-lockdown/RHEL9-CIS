@@ -27,6 +27,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-x,g-wx,o-rwx'
+      failed_when: rhel9cis_logfile_list.state not in '[ file, absent ]'
+      register: rhel9cis_logfile_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
@@ -36,6 +38,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-x,g-x,o-rwx'
+      failed_when: rhel9cis_logfile_list.state not in '[ file, absent ]'
+      register: rhel9cis_logfile_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
@@ -49,4 +53,6 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'ug-x,o-wx'
+      failed_when: rhel9cis_logfile_list.state not in '[ file, absent ]'
+      register: rhel9cis_logfile_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
