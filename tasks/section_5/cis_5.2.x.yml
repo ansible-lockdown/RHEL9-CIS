@@ -57,21 +57,21 @@
     - rule_5.2.4
     - NIST800-53R5_AC-6
   block:
-    - name: "5.2.4 | AUDIT | Ensure users must provide password for escalation | discover accts with NOPASSWD"
+    - name: "5.2.4 | AUDIT | Ensure users must provide password for escalation | Discover accts with NOPASSWD"
       ansible.builtin.shell: grep -Ei '(nopasswd)' /etc/sudoers /etc/sudoers.d/* | cut -d':' -f1
       become: true
       changed_when: false
       failed_when: false
-      register: rhel9cis_5_2_4_nopasswd
+      register: discovered_nopasswd_sudoers
 
-    - name: "5.2.4 | PATCH | Ensure users must provide password for escalation"
-      when: rhel9cis_5_2_4_nopasswd.std | length > 0
+    - name: "5.2.4 | PATCH | Ensure users must provide password for escalation | Remove nopasswd for accounts not excluded"
+      when: discovered_nopasswd_sudoers.stdout | length > 0
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: '^((?!#|{% for name in rhel9cis_sudoers_exclude_nopasswd_list %}{{ name }}{% if not loop.last -%}|{%- endif -%}{% endfor %}).*)NOPASSWD(.*)'
         replace: '\1PASSWD\2'
         validate: '/usr/sbin/visudo -cf %s'
-      loop: "{{ rhel9cis_5_2_4_nopasswd.stdout_lines }}"
+      loop: "{{ discovered_nopasswd_sudoers.stdout_lines }}"
 
 - name: "5.2.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
   when:
