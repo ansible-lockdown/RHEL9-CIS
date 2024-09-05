@@ -37,7 +37,7 @@
         patterns: 'ssh_host_*_key'
         recurse: true
         file_type: any
-      register: rhel9cis_5_1_2_ssh_private_host_key
+      register: discovered_ssh_private_host_key
 
     - name: "5.1.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions on SSH private host keys"
       ansible.builtin.file:
@@ -45,7 +45,7 @@
         owner: root
         group: root
         mode: 'u-x,go-rwx'
-      loop: "{{ rhel9cis_5_1_2_ssh_private_host_key.files }}"
+      loop: "{{ discovered_ssh_private_host_key.files }}"
       loop_control:
         label: "{{ item.path }}"
 
@@ -67,7 +67,7 @@
         patterns: 'ssh_host_*_key.pub'
         recurse: true
         file_type: any
-      register: rhel9cis_5_1_3_ssh_public_host_key
+      register: discovered_ssh_public_host_key
 
     - name: "5.1.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions on SSH public host keys"
       ansible.builtin.file:
@@ -75,7 +75,7 @@
         owner: root
         group: root
         mode: 'u-x,go-wx'
-      loop: "{{ rhel9cis_5_1_3_ssh_public_host_key.files }}"
+      loop: "{{ discovered_ssh_public_host_key.files }}"
       loop_control:
         label: "{{ item.path }}"
 

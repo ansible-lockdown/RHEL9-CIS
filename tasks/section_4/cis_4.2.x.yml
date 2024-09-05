@@ -16,13 +16,13 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: rhel9cis_4_2_5_servicesport
+      register: discovered_services_and_ports
 
     - name: "4.2.1 | AUDIT | Ensure firewalld drops unnecessary services and ports | Show services and ports"
       ansible.builtin.debug:
         msg:
           - "The items below are the services and ports that are accepted, please correct as needed"
-          - "{{ rhel9cis_4_2_5_servicesport.stdout_lines }}"
+          - "{{ discovered_services_and_ports.stdout_lines }}"
 
 - name: "4.2.2 | PATCH | Ensure firewalld loopback traffic is configured | firewalld"
   when:

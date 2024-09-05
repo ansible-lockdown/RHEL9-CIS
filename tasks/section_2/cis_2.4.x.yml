@@ -141,12 +141,12 @@
     - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Check if cron.allow exists"
       ansible.builtin.stat:
         path: "/etc/cron.allow"
-      register: rhel9cis_2_4_1_8_cron_allow_state
+      register: discovered_cron_allow_state
 
     - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Ensure cron.allow is restricted to authorized users"
       ansible.builtin.file:
         path: /etc/cron.allow
-        state: '{{ "file" if  rhel9cis_2_4_1_8_cron_allow_state.stat.exists else "touch" }}'
+        state: '{{ "file" if  discovered_cron_allow_state.stat.exists else "touch" }}'
         owner: root
         group: root
         mode: u-x,g-wx,o-rwx
@@ -171,12 +171,12 @@
     - name: "2.4.2.1 | PATCH | Ensure at is restricted to authorized users | Check if at.allow exists"
       ansible.builtin.stat:
         path: "/etc/at.allow"
-      register: rhel9cis_rule_2_4_2_1_at_allow_state
+      register: discovered_at_allow_state
 
     - name: "2.4.2.1 | PATCH | Ensure at is restricted to authorized users | Ensure at.allow is restricted to authorized users"
       ansible.builtin.file:
         path: /etc/at.allow
-        state: '{{ "file" if rhel9cis_rule_2_4_2_1_at_allow_state.stat.exists else "touch" }}'
+        state: '{{ "file" if discovered_at_allow_state.stat.exists else "touch" }}'
         owner: root
         group: root
         mode: u-x,g-wx,o-rwx

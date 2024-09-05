@@ -17,10 +17,10 @@
     - name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition | check exists"
       ansible.builtin.shell: mount -l | grep -w /dev/shm
       changed_when: false
-      register: rhel9cis_1_8_1_1_mount_check
+      register: discovered_dev_shm_mount_check
 
     - name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition"
-      when: rhel9cis_1_8_1_1_mount_check.rc == 1
+      when: discovered_dev_shm_mount_check.rc == 1
       block:
         - name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition | Absent"
           ansible.builtin.debug:
