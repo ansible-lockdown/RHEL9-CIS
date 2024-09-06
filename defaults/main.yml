@@ -750,7 +750,7 @@ rhel9cis_nft_tables_autochaincreate: true
 # This value, containing the absolute filepath of the produced 'sshd' config file, allows usage of
 # drop-in files('/etc/ssh/ssh_config.d/{ssh_drop_in_name}.conf', supported by RHEL9) when CIS adopts them.
 # Otherwise, the default value is '/etc/ssh/ssh_config'.
-rhel9_cis_sshd_config_file: /etc/ssh/sshd_config
+rhel9cis_sshd_config_file: /etc/ssh/sshd_config
 
 ## Controls:
 ## - 5.1.7  - Ensure SSH access is limited

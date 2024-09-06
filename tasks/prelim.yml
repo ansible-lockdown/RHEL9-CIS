@@ -196,14 +196,14 @@
 # Added to ensure ssh drop in file exists if not default /etc/ssh/sshd_config
 - name: "PRELIM | PATCH | SSH Config file is not exist"
   when:
-    - rhel9_cis_sshd_config_file != '/etc/ssh/sshd_config'
+    - rhel9cis_sshd_config_file != '/etc/ssh/sshd_config'
     - "'openssh-server' in ansible_facts.packages"
   tags:
-    - ssh
+    - always
     - level1_server
     - level1_workstation
   ansible.builtin.file:
-    path: "{{ rhel9_cis_sshd_config_file }}"
+    path: "{{ rhel9cis_sshd_config_file }}"
     owner: root
     group: root
     mode: '0600'
