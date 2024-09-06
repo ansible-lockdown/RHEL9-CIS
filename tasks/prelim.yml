@@ -242,13 +242,13 @@
 # Added to ensure ssh drop in file exists if not default /etc/ssh/sshd_config
 - name: "PRELIM | Section 5.2 | SSH"
   ansible.builtin.file:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       owner: root
       group: root
       mode: '0600'
       state: touch
   when:
-      - rhel9_cis_sshd_config_file != '/etc/ssh/sshd_config'
+      - rhel9cis_sshd_config_file != '/etc/ssh/sshd_config'
       - "'openssh-server' in ansible_facts.packages"
   tags:
       - always
