@@ -251,9 +251,7 @@
       - rhel9_cis_sshd_config_file != '/etc/ssh/sshd_config'
       - "'openssh-server' in ansible_facts.packages"
   tags:
-      - ssh
-      - level1_server
-      - level1_workstation
+      - always
 
 - name: "PRELIM | 5.3.4 | Find all sudoers files."
   ansible.builtin.shell: "find /etc/sudoers /etc/sudoers.d/ -type f ! -name '*~' ! -name '*.*'"
