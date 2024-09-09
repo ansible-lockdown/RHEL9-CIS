@@ -747,7 +747,6 @@ rhel9cis_nft_tables_autonewtable: true
 # be created using as name the value stored by this variable.
 rhel9cis_nft_tables_tablename: filter
 
-
 ## Section5 vars
 
 ## Section 5.1 - SSH
