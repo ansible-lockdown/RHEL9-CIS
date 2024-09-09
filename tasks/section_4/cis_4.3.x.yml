@@ -66,15 +66,19 @@
       failed_when: false
       register: discovered_nftables_inconnectionrule
 
-    - name: "4.3.2| AUDIT | Ensure nftables established connections are configured | Gather outbound connection rules"
+    - name: "4.3.2 | AUDIT | Ensure nftables established connections are configured | Gather outbound connection rules"
       ansible.builtin.shell: nft list ruleset | awk '/hook output/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state'
       changed_when: false
       failed_when: false
       register: discovered_nftables_outconnectionrule
 
+    - name: "4.3.2| AUDIT | Ensure nftables established connections are configured | Create table is doesn't exist"
+      when: rhel9cis_nft_tables_autonewtable
+      ansible.builtin.shell: "nft add table inet {{ rhel9cis_nft_tables_tablename }}"
+
     - name: "4.3.2| PATCH | Ensure nftables established connections are configured | Add input tcp established accept policy"
       when: '"ip protocol tcp ct state established accept" not in discovered_nftables_inconnectionrule.stdout'
-      ansible.builtin.command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input ip protocol tcp ct state established accept
+      ansible.builtin.shell: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input ip protocol tcp ct state established accept
 
     - name: "4.3.2 | PATCH | Ensure nftables established connections are configured | Add input udp established accept policy"
       when: '"ip protocol udp ct state established accept" not in discovered_nftables_inconnectionrule.stdout'
