@@ -733,15 +733,20 @@ rhel9cis_firewall: firewalld
 rhel9cis_default_zone: public
 
 ## Controls 4.3.x nftables
-# This variable stores the name of the table to be used when configuring nftables(creating chains, configuring loopback
-# traffic, established connections, default deny). If 'rhel9cis_nft_tables_autonewtable' is set as true, a new table will
-# be created using as name the value stored by this variable.
-rhel9cis_nft_tables_tablename: filter
-## Ensure nftables base chains exist
+
+## 4.3.1 Ensure nftables base chains exist
 # This variable governs if a nftables base chain(entry point for packets from the networking stack) will be automatically
 # created, if needed. Without a chain, a hook for input, forward, and delete, packets that would flow through those
 # chains will not be touched by nftables.
 rhel9cis_nft_tables_autochaincreate: true
+
+## 4.3.2 Create tables if required
+rhel9cis_nft_tables_autonewtable: true
+# This variable stores the name of the table to be used when configuring nftables(creating chains, configuring loopback
+# traffic, established connections, default deny). If 'rhel9cis_nft_tables_autonewtable' is set as true, a new table will
+# be created using as name the value stored by this variable.
+rhel9cis_nft_tables_tablename: filter
+
 
 ## Section5 vars
 
