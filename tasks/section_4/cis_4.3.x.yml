@@ -1,5 +1,15 @@
 ---
 
+- name: "OPTIONAL | PATCH | Create Table if doesn't exist and required"
+  when:
+    - rhel9cis_nft_tables_autonewtable
+    - rhel9cis_rule_4_3_1
+    - rhel9cis_rule_4_3_2
+    - rhel9cis_rule_4_3_3
+    - rhel9cis_rule_4_3_4
+  tags: always
+  ansible.builtin.shell: "nft add table inet {{ rhel9cis_nft_tables_tablename }}"
+
 - name: "4.3.1 | PATCH | Ensure nftables base chains exist"
   when:
     - rhel9cis_rule_4_3_1
@@ -71,10 +81,6 @@
       changed_when: false
       failed_when: false
       register: discovered_nftables_outconnectionrule
-
-    - name: "4.3.2| AUDIT | Ensure nftables established connections are configured | Create table is doesn't exist"
-      when: rhel9cis_nft_tables_autonewtable
-      ansible.builtin.shell: "nft add table inet {{ rhel9cis_nft_tables_tablename }}"
 
     - name: "4.3.2| PATCH | Ensure nftables established connections are configured | Add input tcp established accept policy"
       when: '"ip protocol tcp ct state established accept" not in discovered_nftables_inconnectionrule.stdout'
