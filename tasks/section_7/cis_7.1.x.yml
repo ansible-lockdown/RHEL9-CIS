@@ -202,9 +202,9 @@
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable directories add sticky bit"
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -o+w ! -perm -1002 2>/dev/null | xargs chmod a+t
-      failed_when: rhel9cis_set_stickybit.rc not in [ 0, 123 ]
-      changed_when: rhel9cis_set_stickybit.rc == 0
-      register: rhel9cis_set_stickybit
+      failed_when: discovered_set_stickybit.rc not in [ 0, 123 ]
+      changed_when: discovered_set_stickybit.rc == 0
+      register: discovered_set_stickybit
 
 - name: "7.1.12 | PATCH | Ensure no files or directories without an owner and a group exist"
   when:
