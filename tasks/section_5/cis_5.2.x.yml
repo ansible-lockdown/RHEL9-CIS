@@ -77,7 +77,7 @@
   block:
       - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for allowusers"
         ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
+            path: "{{ rhel9cis_sshd_config_file }}"
             regexp: "^AllowUsers"
             line: "AllowUsers {{ rhel9cis_sshd['allowusers'] }}"
             validate: sshd -t -f %s
@@ -86,7 +86,7 @@
 
       - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for allowgroups"
         ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
+            path: "{{ rhel9cis_sshd_config_file }}"
             regexp: "^AllowGroups"
             line: "AllowGroups {{ rhel9cis_sshd['allowgroups'] }}"
             validate: sshd -t -f %s
@@ -95,7 +95,7 @@
 
       - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for denyusers"
         ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
+            path: "{{ rhel9cis_sshd_config_file }}"
             regexp: "^DenyUsers"
             line: "DenyUsers {{ rhel9cis_sshd['denyusers'] }}"
             validate: sshd -t -f %s
@@ -104,7 +104,7 @@
 
       - name: "5.2.4 | PATCH | Ensure SSH access is limited | Add line to sshd_config for denygroups"
         ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
+            path: "{{ rhel9cis_sshd_config_file }}"
             regexp: "^DenyGroups"
             line: "DenyGroups {{ rhel9cis_sshd['denygroups'] }}"
             validate: sshd -t -f %s
@@ -121,10 +121,11 @@
 
 - name: "5.2.5 | PATCH | Ensure SSH LogLevel is appropriate"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#LogLevel|^LogLevel"
       line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_5
   tags:
@@ -136,10 +137,11 @@
 
 - name: "5.2.6 | PATCH | Ensure SSH PAM is enabled"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#UsePAM|^UsePAM"
       line: 'UsePAM yes'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_6
   tags:
@@ -153,7 +155,7 @@
   block:
       - name: "5.2.7 | PATCH | Ensure SSH root login is disabled | config file"
         ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
+            path: "{{ rhel9cis_sshd_config_file }}"
             regexp: "^#PermitRootLogin|^PermitRootLogin"
             line: 'PermitRootLogin no'
             validate: sshd -t -f %s
@@ -162,6 +164,7 @@
         ansible.builtin.file:
             path: /etc/ssh/sshd_config.d/01-permitrootlogin.conf
             state: absent
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_7
   tags:
@@ -173,10 +176,11 @@
 
 - name: "5.2.8 | PATCH | Ensure SSH HostbasedAuthentication is disabled"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#HostbasedAuthentication|^HostbasedAuthentication"
       line: 'HostbasedAuthentication no'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_8
   tags:
@@ -188,10 +192,11 @@
 
 - name: "5.2.9 | PATCH | Ensure SSH PermitEmptyPasswords is disabled"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#PermitEmptyPasswords|^PermitEmptyPasswords"
       line: 'PermitEmptyPasswords no'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_9
   tags:
@@ -203,10 +208,11 @@
 
 - name: "5.2.10 | PATCH | Ensure SSH PermitUserEnvironment is disabled"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#PermitUserEnvironment|^PermitUserEnvironment"
       line: 'PermitUserEnvironment no'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_10
   tags:
@@ -218,10 +224,11 @@
 
 - name: "5.2.11 | PATCH | Ensure SSH IgnoreRhosts is enabled"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#IgnoreRhosts|^IgnoreRhosts"
       line: 'IgnoreRhosts yes'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_11
   tags:
@@ -236,10 +243,11 @@
 
       - name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled | config file"
         ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
+            path: "{{ rhel9cis_sshd_config_file }}"
             regexp: "^#X11Forwarding|^X11Forwarding"
             line: 'X11Forwarding no'
             validate: sshd -t -f %s
+        notify: Restart sshd
 
       - name: "5.2.12 | PATCH | Ensure SSH X11 forwarding is disabled | override"
         ansible.builtin.lineinfile:
@@ -247,6 +255,7 @@
             regexp: "^#X11Forwarding|^X11Forwarding"
             line: 'X11Forwarding no'
             validate: sshd -t -f %s
+        notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_12
   tags:
@@ -258,10 +267,11 @@
 
 - name: "5.2.13 | PATCH | Ensure SSH AllowTcpForwarding is disabled"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#AllowTcpForwarding|^AllowTcpForwarding"
       line: 'AllowTcpForwarding no'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_13
   tags:
@@ -294,9 +304,10 @@
 
 - name: "5.2.15 | PATCH | Ensure SSH warning banner is configured"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: '^Banner'
       line: 'Banner /etc/issue.net'
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_15
   tags:
@@ -308,10 +319,11 @@
 
 - name: "5.2.16 | PATCH | Ensure SSH MaxAuthTries is set to 4 or less"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: '^(#)?MaxAuthTries \d'
       line: 'MaxAuthTries 4'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_16
   tags:
@@ -323,10 +335,11 @@
 
 - name: "5.2.17 | PATCH | Ensure SSH MaxStartups is configured"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#MaxStartups|^MaxStartups"
       line: 'MaxStartups 10:30:60'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_17
   tags:
@@ -338,10 +351,11 @@
 
 - name: "5.2.18 | PATCH | Ensure SSH MaxSessions is set to 10 or less"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#MaxSessions|^MaxSessions"
       line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_18
   tags:
@@ -353,10 +367,11 @@
 
 - name: "5.2.19 | PATCH | Ensure SSH LoginGraceTime is set to one minute or less"
   ansible.builtin.lineinfile:
-      path: "{{ rhel9_cis_sshd_config_file }}"
+      path: "{{ rhel9cis_sshd_config_file }}"
       regexp: "^#LoginGraceTime|^LoginGraceTime"
       line: "LoginGraceTime {{ rhel9cis_sshd['logingracetime'] }}"
       validate: sshd -t -f %s
+  notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_19
   tags:
@@ -370,17 +385,19 @@
   block:
       - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Add line in sshd_config for ClientAliveInterval"
         ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
+            path: "{{ rhel9cis_sshd_config_file }}"
             regexp: '^ClientAliveInterval'
             line: "ClientAliveInterval {{ rhel9cis_sshd['clientaliveinterval'] }}"
             validate: sshd -t -f %s
+        notify: Restart sshd
 
       - name: "5.2.20 | PATCH | Ensure SSH Idle Timeout Interval is configured | Ensure SSH ClientAliveCountMax set to <= 3"
         ansible.builtin.lineinfile:
-            path: "{{ rhel9_cis_sshd_config_file }}"
+            path: "{{ rhel9cis_sshd_config_file }}"
             regexp: '^ClientAliveCountMax'
             line: "ClientAliveCountMax {{ rhel9cis_sshd['clientalivecountmax'] }}"
             validate: sshd -t -f %s
+        notify: Restart sshd
   when:
       - rhel9cis_rule_5_2_20
   tags:
