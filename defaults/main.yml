@@ -49,15 +49,10 @@ rhel9cis_selinux_disable: false
 # UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
 rhel9cis_legacy_boot: false
 
-## Python Binary
-## This is used for python3 Installations where python2 OS modules are used in ansible
-python2_bin: /bin/python2.7
-
 ## Benchmark name used by audting control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
 benchmark_version: 'v1.0.0'
-
 benchmark: RHEL9-CIS
 
 # Whether to skip the system reboot before audit
