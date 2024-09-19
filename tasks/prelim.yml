@@ -190,6 +190,13 @@
       - rhel9cis_force_gpg_key_import
       - ansible_facts.distribution == 'RedHat'
 
+- name: "PRELIM | Discover Gnome Desktop Environment"
+  ansible.builtin.stat:
+      path: /usr/share/gnome/gnome-version.xml
+  register: prelim_gnome_present
+  tags:
+      - always
+
 - name: "PRELIM | Section 4.1 | Configure System Accounting (auditd)"
   ansible.builtin.package:
       name: audit

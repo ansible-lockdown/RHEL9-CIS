@@ -521,6 +521,10 @@ rhel9cis_selinux_pol: targeted
 rhel9cis_selinux_enforce: enforcing
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
+## Control 1.8.1-10
+# This variable governs whether rules dealing with GUI specific packages(and/or their settings)
+# Discovered value can be overridden to true is required
+rhel9stig_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
 
 ## Section 2. Services
 
@@ -562,12 +566,6 @@ rhel9cis_chrony_server_minsources: 2
 # Set the respective variable to true to keep the service,
 # otherwise the service is stopped and disabled
 
-## Control 1.8.10-10, 2.2.1
-# This variable governs whether rules dealing with GUI specific packages(and/or their settings) should
-# be executed either to:
-# - secure GDM, if GUI is needed('rhel9cis_gui: true')
-# - or remove GDM and X-Windows-system, if no GUI is needed('rhel9cis_gui: false')
-rhel9cis_gui: false
 ## Control 2.2.2 - Ensure Avahi Server is not installed
 # This variable, when set to false, will specify that Avahi Server packages should be uninstalled.
 rhel9cis_avahi_server: false
