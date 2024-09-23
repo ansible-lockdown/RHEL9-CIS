@@ -524,7 +524,7 @@ rhel9cis_selinux_enforce: enforcing
 ## Control 1.8.1-10
 # This variable governs whether rules dealing with GUI specific packages(and/or their settings)
 # Discovered value can be overridden to true is required
-rhel9stig_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
+rhel9cis_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
 
 ## Section 2. Services
 
