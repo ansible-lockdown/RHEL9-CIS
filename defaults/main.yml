@@ -49,15 +49,10 @@ rhel9cis_selinux_disable: false
 # UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
 rhel9cis_legacy_boot: false
 
-## Python Binary
-## This is used for python3 Installations where python2 OS modules are used in ansible
-python2_bin: /bin/python2.7
-
 ## Benchmark name used by audting control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
 benchmark_version: 'v1.0.0'
-
 benchmark: RHEL9-CIS
 
 # Whether to skip the system reboot before audit
@@ -526,6 +521,10 @@ rhel9cis_selinux_pol: targeted
 rhel9cis_selinux_enforce: enforcing
 
 # Whether or not to run tasks related to auditing/patching the desktop environment
+## Control 1.8.1-10
+# This variable governs whether rules dealing with GUI specific packages(and/or their settings)
+# Discovered value can be overridden to true is required
+rhel9cis_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
 
 ## Section 2. Services
 
@@ -567,12 +566,6 @@ rhel9cis_chrony_server_minsources: 2
 # Set the respective variable to true to keep the service,
 # otherwise the service is stopped and disabled
 
-## Control 1.8.10-10, 2.2.1
-# This variable governs whether rules dealing with GUI specific packages(and/or their settings) should
-# be executed either to:
-# - secure GDM, if GUI is needed('rhel9cis_gui: true')
-# - or remove GDM and X-Windows-system, if no GUI is needed('rhel9cis_gui: false')
-rhel9cis_gui: false
 ## Control 2.2.2 - Ensure Avahi Server is not installed
 # This variable, when set to false, will specify that Avahi Server packages should be uninstalled.
 rhel9cis_avahi_server: false
