@@ -159,6 +159,22 @@
       ansible.builtin.set_fact:
         grub2_path: /etc/grub2-efi.cfg
 
+- name: "PRELIM | Discover Gnome Desktop Environment"
+  tags:
+      - always
+  ansible.builtin.stat:
+      path: /usr/share/gnome/gnome-version.xml
+  register: prelim_gnome_present
+
+- name: "PRELIM | Install dconf if gui installed"
+  when:
+      - rhel9cis_gui
+  tags:
+      - always
+  ansible.builtin.package:
+      name: dconf
+      state: present
+
 - name: "PRELIM | AUDIT | Wireless adapter pre-requisites"
   when:
     - rhel9cis_rule_3_1_2

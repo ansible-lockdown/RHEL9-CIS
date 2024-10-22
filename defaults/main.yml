@@ -569,7 +569,7 @@ rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and
 
 ## Control 1.8.x - Settings for GDM
 ## 1.8 GDM graphical interface
-rhel9cis_gui: false
+rhel9cis_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
 # This variable specifies the GNOME configuration database file to which configurations are written.
 # (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
 # The default database is 'local'.
