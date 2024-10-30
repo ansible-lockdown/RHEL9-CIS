@@ -164,7 +164,7 @@
 
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Flatten no_user_items results for easier use"
         ansible.builtin.set_fact:
-            discovered_unowned_files_flatten: "{{ rhel_09_6_1_10_audit.results | map(attribute='stdout_lines') | flatten }}"
+            discovered_unowned_files_flatten: "{{ rhel_09_6_1_10_audit.results | selectattr('stdout_lines', 'defined') | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.10 | AUDIT | Ensure no unowned files or directories exist | Displaying any unowned files or directories"
         ansible.builtin.debug:
@@ -204,7 +204,7 @@
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Flatten no_user_items results for easier use"
         ansible.builtin.set_fact:
-            discovered_ungrouped_files_flatten: "{{ rhel_09_6_1_11_audit.results | map(attribute='stdout_lines') | flatten }}"
+            discovered_ungrouped_files_flatten: "{{ rhel_09_6_1_11_audit.results | selectattr('stdout_lines', 'defined') | map(attribute='stdout_lines') | flatten }}"
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Displaying all ungrouped files or directories"
         ansible.builtin.debug:
