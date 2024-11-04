@@ -98,11 +98,11 @@
 - name: Auditd immutable check
   ansible.builtin.shell: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
   changed_when: false
-  register: auditd_immutable_check
+  register: discovered_auditd_immutable_check
 
 - name: Audit immutable fact
   when:
-    - auditd_immutable_check.stdout == '1'
+    - discovered_auditd_immutable_check.stdout == '1'
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"
   notify: Change_requires_reboot

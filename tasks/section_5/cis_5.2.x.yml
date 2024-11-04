@@ -89,16 +89,16 @@
       become: true
       changed_when: false
       failed_when: false
-      register: rhel9cis_5_2_4_authenticate
+      register: discovered_priv_reauth
 
     - name: "5.2.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
-      when: rhel9cis_5_2_4_authenticate.stdout | length > 0
+      when: discovered_priv_reauth.stdout | length > 0
       ansible.builtin.replace:
         path: "{{ item }}"
         regexp: '^([^#].*)!authenticate(.*)'
         replace: '\1authenticate\2'
         validate: '/usr/sbin/visudo -cf %s'
-      loop: "{{ rhel9cis_5_2_4_authenticate.stdout_lines }}"
+      loop: "{{ discovered_priv_reauth.stdout_lines }}"
 
 - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly"
   when:

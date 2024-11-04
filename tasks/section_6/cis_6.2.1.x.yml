@@ -32,26 +32,26 @@
     - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Check for override file"
       ansible.builtin.stat:
         path: /etc/tmpfiles.d/systemd.conf
-      register: tmpfile_override
+      register: discovered_tmpfile_override
 
     - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | If override file check for journal"
-      when: tmpfile_override.stat.exists
+      when: discovered_tmpfile_override.stat.exists
       ansible.builtin.shell: grep -E 'z /var/log/journal/%m/system.journal \d*' /usr/lib/tmpfiles.d/systemd.conf
-      register: journald_fileperms_override
+      register: discovered_journald_fileperms_override
       changed_when: false
-      failed_when: journald_fileperms_override.rc not in [ 0, 1 ]
+      failed_when: discovered_journald_fileperms_override.rc not in [ 0, 1 ]
 
     - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Warning if override found"
       when:
-        - tmpfile_override.stat.exists
-        - journald_fileperms_override.stdout | length > 0
+        - discovered_tmpfile_override.stat.exists
+        - discovered_journald_fileperms_override.stdout | length > 0
       ansible.builtin.debug:
         msg: "Warning!! - tmpfiles override found /usr/lib/tmpfiles.d/systemd.conf affecting journald files please confirm matches site policy"
 
     - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Warning if override found"
       when:
-        - tmpfile_override.stat.exists
-        - journald_fileperms_override.stdout | length > 0
+        - discovered_tmpfile_override.stat.exists
+        - discovered_journald_fileperms_override.stdout | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:

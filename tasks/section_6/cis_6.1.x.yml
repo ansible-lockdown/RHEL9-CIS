@@ -16,10 +16,10 @@
       ansible.builtin.package:
         name: aide
         state: present
-      register: aide_installed
+      register: discovered_aide_installed
 
     - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB"
-      when: aide_installed.changed  # noqa: no-handler
+      when: discovered_aide_installed.changed  # noqa: no-handler
       block:
         - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB"
           ansible.builtin.shell: /usr/sbin/aide --init
