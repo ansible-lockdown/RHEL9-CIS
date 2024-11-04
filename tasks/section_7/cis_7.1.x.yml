@@ -233,7 +233,7 @@
 
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Flatten no_user_items results for easier use"
       ansible.builtin.set_fact:
-        discovered_unowned_files_flatten: "{{ discovered_unowned_files.results | map(attribute='stdout_lines') | flatten }}"
+        discovered_unowned_files_flatten: "{{ discovered_unowned_files.results | selectattr('stdout_lines', 'defined') | map(attribute='stdout_lines') | flatten }}"
 
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Alert on unowned files and directories"
       when:
@@ -295,7 +295,7 @@
 
     - name: "7.1.13 | AUDIT | Audit SUID executables | Flatten suid_executables results for easier use"
       ansible.builtin.set_fact:
-        discovered_suid_sgid_files_flatten: "{{ discovered_suid_sgid_files.results | map(attribute='stdout_lines') | flatten }}"
+        discovered_suid_sgid_files_flatten: "{{ discovered_suid_sgid_files.results | selectattr('stdout_lines', 'defined') | map(attribute='stdout_lines') | flatten }}"
 
     - name: "7.1.13 | AUDIT | Audit SUID executables | Alert SUID executables exist"
       when:
