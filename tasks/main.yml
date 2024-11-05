@@ -86,29 +86,29 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: rhel9cis_ansible_user_password_set
+      register: prelim_ansible_user_password_set
 
     - name: "Check for local account {{ ansible_env.SUDO_USER }} | Check for local account"
-      when: rhel9cis_ansible_user_password_set.stdout == "not found"
+      when: prelim_ansible_user_password_set.stdout == "not found"
       ansible.builtin.debug:
         msg: "No local account found for {{ ansible_env.SUDO_USER }} user. Skipping local account checks."
 
     - name: "Check local account"
       when:
-        - rhel9cis_ansible_user_password_set.stdout != "not found"
+        - prelim_ansible_user_password_set.stdout != "not found"
       block:
         - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"
           ansible.builtin.assert:
             that:
-              - rhel9cis_ansible_user_password_set.stdout | length != 0
-              - rhel9cis_ansible_user_password_set.stdout != "!!"
+              - prelim_ansible_user_password_set.stdout | length != 0
+              - prelim_ansible_user_password_set.stdout != "!!"
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set - It can break access"
             success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user"
 
         - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"
           ansible.builtin.assert:
             that:
-              - not rhel9cis_ansible_user_password_set.stdout.startswith("!")
+              - not prelim_ansible_user_password_set.stdout.startswith("!")
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
             success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
 
@@ -149,11 +149,11 @@
     - name: "Ensure root password is set"
       ansible.builtin.shell: passwd -S root | egrep -e "(Password set, SHA512 crypt|Password locked)"
       changed_when: false
-      register: root_passwd_set
+      register: prelim_root_passwd_set
 
     - name: "Ensure root password is set"
       ansible.builtin.assert:
-        that: root_passwd_set.rc == 0
+        that: prelim_root_passwd_set.rc == 0
         fail_msg: "You have rule 5.4.2.4 enabled this requires that you have a root password set"
         success_msg: "You have a root password set"
 

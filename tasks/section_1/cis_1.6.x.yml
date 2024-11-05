@@ -55,12 +55,12 @@
         owner: root
         group: root
         mode: '0640'
-      register: no_sha1_template
+      register: discovered_no_sha1_template
 
     - name: "1.6.3 | PATCH | Ensure system wide crypto policy disables sha1 hash and signature support | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SHA1' }}"
-      changed_when: no_sha1_template is defined
+      changed_when: discovered_no_sha1_template is changed  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy
@@ -86,12 +86,12 @@
         owner: root
         group: root
         mode: '0640'
-      register: no_weakmac_template
+      register: discovered_no_weakmac_template
 
     - name: "1.6.4 | PATCH | Ensure system wide crypto policy disables macs less than 128 bits | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-WEAKMAC' }}"
-      changed_when: no_weakmac_template is defined
+      changed_when: discovered_no_weakmac_template is changed  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy
@@ -116,12 +116,12 @@
         owner: root
         group: root
         mode: '0640'
-      register: no_sshcbc_template
+      register: discovered_no_sshcbc_template
 
     - name: "1.6.5 | PATCH | Ensure system wide crypto policy disables cbc for ssh | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHCBC' }}"
-      changed_when: no_sshcbc_template is defined
+      changed_when: discovered_no_sshcbc_template is changed  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy
@@ -146,12 +146,12 @@
         owner: root
         group: root
         mode: '0640'
-      register: no_sshweakciphers_template
+      register: discovered_no_sshweakciphers_template
 
     - name: "1.6.6 | PATCH | Ensure system wide crypto policy disables chacha20-poly1305 for ssh | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHWEAKCIPHERS' }}"
-      changed_when: no_sshweakciphers_template is defined
+      changed_when: discovered_no_sshweakciphers_template is changed  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy
@@ -176,12 +176,12 @@
         owner: root
         group: root
         mode: '0640'
-      register: no_sshetm_template
+      register: discovered_no_sshetm_template
 
     - name: "1.6.7 | PATCH | Ensure system wide crypto policy disables EtM for ssh | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHETM' }}"
-      changed_when: no_sshetm_template is defined
+      changed_when: discovered_no_sshetm_template is changed  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy

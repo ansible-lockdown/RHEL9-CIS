@@ -18,7 +18,6 @@
     owner: root
     group: root
     mode: '0600'
-  register: sysctl_updated
   notify: Reload sysctl
   loop:
     - 60-kernel_sysctl.conf

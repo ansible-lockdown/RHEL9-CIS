@@ -187,18 +187,18 @@
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
       failed_when: false
       changed_when: false
-      register: rhel_09_7_1_11_perms_results
+      register: discovered_world_writable
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
       when:
-        - rhel_09_7_1_11_perms_results.stdout_lines is defined
-        - rhel_09_7_1_11_perms_results.stdout_lines | length > 0
+        - discovered_world_writable.stdout_lines is defined
+        - discovered_world_writable.stdout_lines | length > 0
         - rhel9cis_no_world_write_adjust
       ansible.builtin.file:
         path: '{{ item }}'
         mode: o-w
         state: touch
-      loop: "{{ rhel_09_7_1_11_perms_results.stdout_lines }}"
+      loop: "{{ discovered_world_writable.stdout_lines }}"
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable directories add sticky bit"
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -o+w ! -perm -1002 2>/dev/null | xargs chmod a+t
