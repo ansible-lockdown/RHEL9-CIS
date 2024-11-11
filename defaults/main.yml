@@ -1137,6 +1137,11 @@ rhel9cis_force_user_mindays: false
 # This can break current connecting user access
 rhel9cis_force_user_warnage: false
 
+## Control 5.6.2 - Ensure system accounts are secured | Set nologin
+# The system users on this list are allowed to have a shell (e.g. applications
+# that require a shell to function)
+rhel9cis_system_users_shell: []
+
 ## Control 5.6.3 - Ensure default user shell timeout is 900 seconds or less
 # Session timeout setting file (TMOUT setting can be set in multiple files)
 # Timeout value is in seconds. (60 seconds * 10 = 600)

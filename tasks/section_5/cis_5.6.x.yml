@@ -13,6 +13,7 @@
             - item.id != "shutdown"
             - item.id != "halt"
             - item.id != "nfsnobody"
+            - item.id not in rhel9cis_system_users_shell
             - item.uid < min_int_uid | int
             - item.shell != "/bin/false"
             - item.shell != "/usr/sbin/nologin"
