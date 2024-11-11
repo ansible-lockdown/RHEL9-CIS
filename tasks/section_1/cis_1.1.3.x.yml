@@ -31,7 +31,9 @@
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
       state: present
-      opts: "{{ item.options }}{% if ('nodev' not in item.options and rhel9cis_rule_1_1_3_2) %},nodev{% endif %}{% if ('nosuid' not in item.options and rhel9cis_rule_1_1_3_3) %},nosuid"
+      opts: "{{ item.options }}{% if ('nodev' not in item.options and rhel9cis_rule_1_1_3_2) %},nodev{% endif %}{% if ('nosuid' not in item.options and rhel9cis_rule_1_1_3_3) %},nosuid{% endif %}"
+  loop: "{{ ansible_facts.mounts }}"
+  loop_control:
       label: "{{ item.device }}"
   notify: Change_requires_reboot
   when:
