@@ -199,6 +199,7 @@
   when:
     - rhel9cis_rule_5_4_2_7
     - "item.id not in prelim_interactive_usernames.stdout"
+    - item.id not in rhel9cis_system_users_shell
     - "'root' not in item.id"
     - rhel9cis_disruption_high
   tags:
