@@ -40,7 +40,7 @@
       src: tmpfs
       fstype: tmpfs
       state: mounted
-      opts: defaults,{% if rhel9cis_rule_1_1_8_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_8_3 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_8_4 %}nosuid{% endif %}
+      opts: "{{ item.options }}{% if ('nodev' not in item.options and rhel9cis_rule_1_1_8_2) %},nodev{% endif %}{% if ('noexec' not in item.options and rhel9cis_rule_1_1_8_3) %},noexec{% endif %}{% if ('nosuid' not in item.options and rhel9cis_rule_1_1_8_4) %},nosuid{% endif %}"
   notify: Change_requires_reboot
   when:
       - rhel9cis_rule_1_1_8_2 or
