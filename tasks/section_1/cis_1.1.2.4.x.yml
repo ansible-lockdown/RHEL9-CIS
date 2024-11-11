@@ -45,7 +45,7 @@
     src: "{{ item.device }}"
     fstype: "{{ item.fstype }}"
     state: present
-    opts: defaults,{% if rhel9cis_rule_1_1_2_4_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_2_4_3 %}nosuid{% endif %}
+    opts: "{{ item.options }}{% if ('nodev' not in item.options and rhel9cis_rule_1_1_2_4_2) %},nodev{% endif %}{% if ('nosuid' not in item.options and rhel9cis_rule_1_1_2_4_2) %},nosuid{% endif %}"
   loop: "{{ ansible_facts.mounts }}"
   loop_control:
     label: "{{ item.device }}"
