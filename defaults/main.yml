@@ -992,6 +992,11 @@ rhel9cis_futurepwchgdate_autofix: true
 # 5.4.2.x
 rhel9cis_root_umask: '0027'  # 0027 or more restrictive
 
+## Control 5.4.2.7 - Ensure system accounts are secured | Set nologin
+# The system users on this list are allowed to have a shell (e.g. applications
+# that require a shell to function)
+rhel9cis_system_users_shell: []
+
 ## Control 5.4.3.2 - Configuring user shell timeout
 # This dictionary is related to ensuring the rule about user shell timeout
 # This variable represents the amount of seconds a command or process is allowed to
