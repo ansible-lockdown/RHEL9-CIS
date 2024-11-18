@@ -53,7 +53,7 @@ Refer to [Contributing Guide](./CONTRIBUTING.rst)
 
 This role **will make changes to the system** which may have unintended consequences. This is not an auditing tool but rather a remediation tool to be used after an audit has been conducted.
 
-Check Mode is not supported! The role will complete in check mode without errors, but it is not supported and should be used with caution. The RHEL8-CIS-Audit role or a compliance scanner should be used for compliance checking over check mode.
+Check Mode is not supported! The role will complete in check mode without errors, but it is not supported and should be used with caution. The RHEL9-CIS-Audit role or a compliance scanner should be used for compliance checking over check mode.
 
 This role was developed against a clean install of the Operating System. If you are implementing to an existing system please review this role for any site specific changes that are needed.
 
@@ -128,11 +128,9 @@ os_check: false
 **Technical Dependencies:**
 
 - Python3
-- Ansible 2.10+
+- Ansible 2.12+
 - python-def (should be included in RHEL 9)
 - libselinux-python
-- pip packages
-  - jmespath
 - collections found in collections/requirements.yml
 
 pre-commit is available if installed on your host for pull request testing.
