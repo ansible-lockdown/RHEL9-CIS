@@ -57,8 +57,6 @@
 - name: Grub2cfg
   ansible.builtin.shell: "grub2-mkconfig -o /boot/grub2/grub.cfg"
   ignore_errors: true  # noqa ignore-errors
-  tags:
-      - skip_ansible_lint
 
 - name: Restart rsyslog
   ansible.builtin.systemd:
@@ -102,8 +100,6 @@
 
 - name: Restart auditd
   ansible.builtin.shell: service auditd restart
-  tags:
-      - skip_ansible_lint
 
 - name: Change_requires_reboot
   ansible.builtin.set_fact:
