@@ -22,7 +22,6 @@
       - audit
       - mounts
       - rule_1.1.7.1
-      - skip_ansible_lint
 
 - name: |
     "1.1.7.2 | PATCH | Ensure nodev option set on /home partition
@@ -48,4 +47,3 @@
       - mounts
       - rule_1.1.7.2
       - rule_1.1.7.3
-      - skip_ansible_lint

@@ -85,7 +85,6 @@
       - manual
       - audit
       - rule_1.2.3
-      - skip_ansible_lint
 
 - name: "1.2.4 | AUDIT | Ensure repo_gpgcheck is globally activated"
   block:
