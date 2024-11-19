@@ -22,7 +22,6 @@
       - audit
       - mounts
       - rule_1.1.7.1
-      - skip_ansible_lint
 
 - name: |
     "1.1.7.2 | PATCH | Ensure nodev option set on /home partition
@@ -32,7 +31,7 @@
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
       state: present
-      opts: defaults,{% if rhel9cis_rule_1_1_7_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_7_3 %}nosuid{% endif %}
+      opts: "{{ item.options }}{% if ('nodev' not in item.options and rhel9cis_rule_1_1_7_2) %},nodev{% endif %}{% if ('nosuid' not in item.options and rhel9cis_rule_1_1_7_3) %},nosuid{% endif %}"
   loop: "{{ ansible_facts.mounts }}"
   loop_control:
       label: "{{ item.device }}"
@@ -48,4 +47,3 @@
       - mounts
       - rule_1.1.7.2
       - rule_1.1.7.3
-      - skip_ansible_lint

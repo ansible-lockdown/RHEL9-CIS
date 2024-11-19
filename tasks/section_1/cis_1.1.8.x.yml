@@ -29,7 +29,6 @@
       - audit
       - mounts
       - rule_1.1.8.1
-      - skip_ansible_lint
 
 - name: |
        "1.1.8.2 | PATCH | Ensure nodev option set on /dev/shm partition | Set nodev option

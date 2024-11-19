@@ -32,7 +32,7 @@
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
       state: present
-      opts: defaults,{% if rhel9cis_rule_1_1_2_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_2_3 %}noexec,{% endif %}{% if rhel9cis_rule_1_1_2_4 %}nosuid{% endif %}
+      opts: "{{ item.options }}{% if ('nodev' not in item.options and rhel9cis_rule_1_1_2_2) %},nodev{% endif %}{% if ('noexec' not in item.options and rhel9cis_rule_1_1_2_3) %},noexec{% endif %}{% if ('nosuid' not in item.options and rhel9cis_rule_1_1_2_4) %},nosuid{% endif %}"
   notify: Remount tmp
   loop: "{{ ansible_facts.mounts }}"
   loop_control:

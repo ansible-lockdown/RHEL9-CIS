@@ -131,7 +131,7 @@
       - name: "1.8.5 | PATCH | Ensure GDM screen locks cannot be overridden | Make lock file"
         ansible.builtin.template:
             src: etc/dconf/db/00-screensaver_lock.j2
-            dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-screensaver"
+            dest: "/etc/dconf/db/{{ rhel9cis_dconf_db_name }}.d/locks/00-screensaver_lock"
             owner: root
             group: root
             mode: '0644'
