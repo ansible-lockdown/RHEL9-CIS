@@ -17,7 +17,7 @@
   block:
     - name: "1.1.2.4.1 | AUDIT | Ensure separate partition exists for /var | Absent"
       ansible.builtin.debug:
-        msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
+        msg: "Warning!! {{ required_mount }} doesn't exist. Please investigate this manual task"
 
     - name: "1.1.2.4.1 | AUDIT | Ensure separate partition exists for /var | Present"
       ansible.builtin.import_tasks:
