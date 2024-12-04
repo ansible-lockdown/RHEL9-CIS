@@ -50,7 +50,7 @@
     - NIST800-53R5_CM-6b
   ansible.builtin.lineinfile:
     path: /etc/systemd/coredump.conf
-    regexp: '^ProcessSizeMax\s*=\s*.*[1-9]$'
+    regexp: '(?#)^ProcessSizeMax\s*=\s*.*[1-9].*$'
     line: 'ProcessSizeMax=0'
 
 - name: "1.5.4 | PATCH | Ensure core dump storage is disabled"
