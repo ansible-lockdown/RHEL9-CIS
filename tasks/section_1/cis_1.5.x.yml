@@ -1,8 +1,7 @@
 ---
 
 - name: "1.5.1 | PATCH | Ensure address space layout randomization (ASLR) is enabled"
-  when:
-    - rhel9cis_rule_1_5_1
+  when: rhel9cis_rule_1_5_1
   tags:
     - level1-server
     - level1-workstation
@@ -21,8 +20,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
 
 - name: "1.5.2 | PATCH | Ensure ptrace_scope is restricted"
-  when:
-    - rhel9cis_rule_1_5_2
+  when: rhel9cis_rule_1_5_2
   tags:
     - level1-server
     - level1-workstation
@@ -39,8 +37,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
 
 - name: "1.5.3 | PATCH | Ensure core dump backtraces are disabled"
-  when:
-    - rhel9cis_rule_1_5_3
+  when: rhel9cis_rule_1_5_3
   tags:
     - level1-server
     - level1-workstation

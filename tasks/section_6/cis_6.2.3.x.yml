@@ -18,8 +18,7 @@
     state: present
 
 - name: "6.2.3.2 | PATCH | Ensure rsyslog Service is enabled and active"
-  when:
-    - rhel9cis_rule_6_2_3_2
+  when: rhel9cis_rule_6_2_3_2
   tags:
     - level1-server
     - level1-workstation
@@ -35,8 +34,7 @@
     state: started
 
 - name: "6.2.3.3 | PATCH | Ensure journald is configured to send logs to rsyslog"
-  when:
-    - rhel9cis_rule_6_2_3_3
+  when: rhel9cis_rule_6_2_3_3
   tags:
     - level1-server
     - level1-workstation
@@ -54,8 +52,7 @@
   notify: Restart rsyslog
 
 - name: "6.2.3.4 | PATCH | Ensure rsyslog log file creation mode is configured"
-  when:
-    - rhel9cis_rule_6_2_3_4
+  when: rhel9cis_rule_6_2_3_4
   tags:
     - level1-server
     - level1-workstation
@@ -72,8 +69,7 @@
   notify: Restart rsyslog
 
 - name: "6.2.3.5 | PATCH | Ensure logging is configured"
-  when:
-    - rhel9cis_rule_6_2_3_5
+  when: rhel9cis_rule_6_2_3_5
   tags:
     - level1-server
     - level1-workstation
@@ -200,8 +196,7 @@
   notify: Restart rsyslog
 
 - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote client"
-  when:
-    - rhel9cis_rule_6_2_3_7
+  when: rhel9cis_rule_6_2_3_7
   tags:
     - level1-server
     - level1-workstation
@@ -238,8 +233,7 @@
         - 'InputTCPServerRun'
 
 - name: "6.2.3.8 | PATCH | Ensure rsyslog logrotate is configured"
-  when:
-    - rhel9cis_rule_6_2_3_8
+  when: rhel9cis_rule_6_2_3_8
   tags:
     - level1-server
     - level1-workstation
@@ -266,4 +260,4 @@
         dest: /etc/logrotate.d/rsyslog.conf
         owner: root
         group: root
-        mode: '0640'
+        mode: 'g-wx,o-rwx'

@@ -2,8 +2,7 @@
 
 # Skips if mount is absent
 - name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition"
-  when:
-    - rhel9cis_rule_1_1_2_2_1
+  when: rhel9cis_rule_1_1_2_2_1
   tags:
     - level1-server
     - level1-workstation
@@ -14,7 +13,7 @@
   vars:
     warn_control_id: '1.1.2.2.1'
   block:
-    - name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition | check exists"
+    - name: "1.1.2.2.1 | AUDIT | Ensure /dev/shm is a separate partition | check exists"  # noqa command-instead-of-module
       ansible.builtin.shell: mount -l | grep -w /dev/shm
       changed_when: false
       register: discovered_dev_shm_mount_check

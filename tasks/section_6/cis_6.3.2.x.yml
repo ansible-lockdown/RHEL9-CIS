@@ -1,8 +1,7 @@
 ---
 
 - name: "6.3.2.1 | PATCH | Ensure audit log storage size is configured"
-  when:
-    - rhel9cis_rule_6_3_2_1
+  when: rhel9cis_rule_6_3_2_1
   tags:
     - level2-server
     - level2-workstation
@@ -17,8 +16,7 @@
   notify: Restart auditd
 
 - name: "6.3.2.2 | PATCH | Ensure audit logs are not automatically deleted"
-  when:
-    - rhel9cis_rule_6_3_2_2
+  when: rhel9cis_rule_6_3_2_2
   tags:
     - level2-server
     - level2-workstation
@@ -33,8 +31,7 @@
   notify: Restart auditd
 
 - name: "6.3.2.3 | PATCH | Ensure system is disabled when audit logs are full"
-  when:
-    - rhel9cis_rule_6_3_2_3
+  when: rhel9cis_rule_6_3_2_3
   tags:
     - level2-server
     - level2-workstation
@@ -55,8 +52,7 @@
     - { regexp: '^disk_error_action', line: 'disk_error_action = {{ rhel9cis_auditd_disk_error_action }}' }
 
 - name: "6.3.2.4 | PATCH | Ensure system warns when audit logs are low on space"
-  when:
-    - rhel9cis_rule_6_3_2_4
+  when: rhel9cis_rule_6_3_2_4
   tags:
     - level2-server
     - level2-workstation
