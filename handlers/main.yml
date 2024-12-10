@@ -104,8 +104,8 @@
 
 - name: Start auditd process
   ansible.builtin.systemd_service:
-    name: auditd
-    state: started
+      name: auditd
+      state: started
   listen: Restart auditd
 
 - name: Change_requires_reboot
