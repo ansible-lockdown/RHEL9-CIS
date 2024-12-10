@@ -300,9 +300,7 @@
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Output Warning"
       when: discovered_fs_modules_loaded.stdout | length > 0
       ansible.builtin.debug:
-        msg: |
-          "Warning!! Discovered loaded Filesystem modules that need attention. This is a manual task
-          {{ discovered_fs_modules_loaded.stdout_lines}}"
+        msg: "{{ ['Warning!! Discovered loaded Filesystem modules that need attention. This is a manual task'] + discovered_fs_modules_loaded.stdout_lines }}"
 
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
       when: discovered_fs_modules_loaded.stdout | length > 0
