@@ -2,7 +2,7 @@
 
 ## Configure a RHEL 9 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
-### Based on [ CIS RedHat Enterprise Linux 9 Benchmark v2.0.0 ](https://www.cisecurity.org/cis-benchmarks/)
+### Based on [CIS RedHat Enterprise Linux 9 Benchmark v2.0.0](https://www.cisecurity.org/cis-benchmarks/)
 
 ---
 
