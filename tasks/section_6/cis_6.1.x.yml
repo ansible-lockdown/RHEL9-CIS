@@ -12,17 +12,44 @@
     - rule_6.1.1
     - NIST800-53R5_AU-2
   block:
+    block:
     - name: "6.1.1 | PATCH | Ensure AIDE is installed"
+      when:
+        - "'aide' not in ansible_facts.packages or
+          'aide-common' not in ansible_facts.packages"
       ansible.builtin.package:
-        name: aide
+        name: ['aide', 'aide-common']
         state: present
-      register: discovered_aide_installed
+        update_cache: true
+      register: discovered_aide_pkg_added
 
-    - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB"
-      when: discovered_aide_installed.changed  # noqa: no-handler
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed | Recapture packages"
+      when: discovered_aide_pkg_added.skipped is not defined
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: "6.1.1 | AUDIT | Ensure AIDE is installed | Check file exists"
+      ansible.builtin.stat:
+        path: "{{ rhel9cis_aide_db_file }}"
+      register: discovered_aide_db_file
+
+    - name: "6.1.1 | AUDIT | Ensure AIDE is installed | Check current db file age"
+      when: discovered_aide_db_file.stat.exists
+      ansible.builtin.find:
+        path: "{{ rhel9cis_aide_db_file | dirname }}"
+        pattern: "{{ rhel9cis_aide_db_file | basename }}"
+        age: "{{ rhel9cis_aide_db_file_age }}"
+      register: discovered_aide_db_age
+
+    - name: "6.1.1 | PATCH | Ensure AIDE is installed | Configure AIDE"
+      when:
+        - not ansible_check_mode
+        - not discovered_aide_db_file.stat.exists or
+          (discovered_aide_db_age.files | length > 0) or
+          rhel9cis_aide_db_recreate
       block:
         - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB"
-          ansible.builtin.shell: /usr/sbin/aide --init
+          ansible.builtin.shell: "{{ aide_initiate_command }}"
 
         - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB | Wait for file before continuing"
           ansible.builtin.wait_for:

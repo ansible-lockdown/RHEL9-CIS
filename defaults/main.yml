@@ -1034,14 +1034,23 @@ min_int_uid: 1000
 max_int_uid: 65533
 
 ## Section6 vars
-
-## Control 6.1.1 - allow aide to be configured
+## Control 6.1.x - allow aide to be configured
 # AIDE is a file integrity checking tool, similar in nature to Tripwire.
 # While it cannot prevent intrusions, it can detect unauthorized changes
 # to configuration files by alerting when the files are changed. Review
 # the AIDE quick start guide and AIDE documentation before proceeding.
 # By setting this variable to `true`, all of the settings related to AIDE will be applied!
 rhel9cis_config_aide: true
+
+# If DB file older than below will automatically rebuild DB
+# e.g. options:1w = 1 week, 1d = 1day 1h = 1 hour
+rhel9cis_aide_db_file_age: 1w
+
+# If aide already setup this forces a new DB to be created
+rhel9cis_aide_db_recreate: false
+
+# allows to change db file, not config need to be adjusted too
+rhel9cis_aide_db_file: /var/lib/aide/aide.db
 
 ## Control 6.1.2 AIDE cron settings
 

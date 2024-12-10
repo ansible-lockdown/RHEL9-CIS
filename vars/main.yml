@@ -44,3 +44,15 @@ container_vars_file: is_container.yml
 # rhel9cis is left off the front of this var for consistency in testing pipeline
 # system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
 system_is_ec2: false
+
+# Aide initiate command for new DB creation
+aide_initiate_command: aideinit -y -f
+
+# Audit vars
+audit_bins:
+  - /sbin/auditctl
+  - /sbin/aureport
+  - /sbin/ausearch
+  - /sbin/autrace
+  - /sbin/auditd
+  - /sbin/augenrules
