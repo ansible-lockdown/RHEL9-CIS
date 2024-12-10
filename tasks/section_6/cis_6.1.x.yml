@@ -12,13 +12,9 @@
     - rule_6.1.1
     - NIST800-53R5_AU-2
   block:
-    block:
     - name: "6.1.1 | PATCH | Ensure AIDE is installed"
-      when:
-        - "'aide' not in ansible_facts.packages or
-          'aide-common' not in ansible_facts.packages"
       ansible.builtin.package:
-        name: ['aide', 'aide-common']
+        name: "{{ aide_packages }}"
         state: present
         update_cache: true
       register: discovered_aide_pkg_added
@@ -48,10 +44,10 @@
           (discovered_aide_db_age.files | length > 0) or
           rhel9cis_aide_db_recreate
       block:
-        - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB"
+        - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB"
           ansible.builtin.shell: "{{ aide_initiate_command }}"
 
-        - name: "6.1.1 | PATCH | Ensure AIDE is installed| Build AIDE DB | Wait for file before continuing"
+        - name: "6.1.1 | PATCH | Ensure AIDE is installed | Build AIDE DB | Wait for file before continuing"
           ansible.builtin.wait_for:
             path: /var/lib/aide/aide.db.new.gz
 
