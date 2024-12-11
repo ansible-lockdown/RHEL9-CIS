@@ -72,7 +72,7 @@
       changed_when: false
       register: prelim_mount_output
 
-    - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - build fact
+    - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - build fact  # This is inherited and used in mountpoints tasks
       ansible.builtin.set_fact:
         prelim_mount_point_fs_and_options: >-
           {%- set prelim_mount_point_fs_and_options = {} -%}
