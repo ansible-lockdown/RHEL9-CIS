@@ -18,6 +18,7 @@
         regexp: '^(#)?install dccp(\\s|$)'
         line: "{{ item }}"
         create: true
+        mode: 'u-x,go-rwx'
       loop:
         - install dccp /bin/true
         - blacklist dccp
@@ -28,7 +29,7 @@
         regexp: "^(#)?blacklist cramfs(\\s|$)"
         line: "blacklist cramfs"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
 - name: "3.2.2 | PATCH | Ensure tipc kernel module is not available"
   when:
@@ -48,6 +49,7 @@
         regexp: '^(#)?install tipc(\\s|$)'
         line: "{{ item }}"
         create: true
+        mode: 'u-x,go-rwx'
       loop:
         - install tipc /bin/true
         - blacklist tipc
@@ -58,7 +60,7 @@
         regexp: "^(#)?blacklist tipc(\\s|$)"
         line: "blacklist tipc"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
 - name: "3.2.3 | PATCH | Ensure rds kernel module is not available"
   when:
@@ -78,6 +80,7 @@
         regexp: '^(#)?install rds(\\s|$)'
         line: "{{ item }}"
         create: true
+        mode: 'u-x,go-rwx'
       loop:
         - install rds /bin/true
         - blacklist rds
@@ -88,7 +91,7 @@
         regexp: "^(#)?blacklist rds(\\s|$)"
         line: "blacklist rds"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'
 
 - name: "3.2.4 | PATCH | Ensure sctp kernel module is not available"
   when:
@@ -108,6 +111,7 @@
         regexp: '^(#)?install sctp(\\s|$)'
         line: "{{ item }}"
         create: true
+        mode: 'u-x,go-rwx'
       loop:
         - install sctp /bin/true
         - blacklist sctp
@@ -118,4 +122,4 @@
         regexp: "^(#)?blacklist sctp(\\s|$)"
         line: "blacklist sctp"
         create: true
-        mode: '0600'
+        mode: 'u-x,go-rwx'

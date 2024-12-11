@@ -15,13 +15,15 @@
     - NIST800-53R5_SI-2
   block:
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | list installed pubkey keys"
-      ansible.builtin.shell: "rpm -qa | grep {{ os_gpg_key_pubkey_name }}"
+      ansible.builtin.shell: |
+        "rpm -qa | grep {{ os_gpg_key_pubkey_name }}"
       changed_when: false
       failed_when: false
       register: discovered_os_installed_pub_keys
 
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | Query found keys"
-      ansible.builtin.shell: 'rpm -q --queryformat "%{PACKAGER} %{VERSION}\\n" {{ os_gpg_key_pubkey_name }} | grep "{{ os_gpg_key_pubkey_content }}"'
+      ansible.builtin.shell: |
+        'rpm -q --queryformat "%{PACKAGER} %{VERSION}\\n" {{ os_gpg_key_pubkey_name }} | grep "{{ os_gpg_key_pubkey_content }}"'
       changed_when: false
       failed_when: false
       register: discovered_os_gpg_key_check
@@ -107,7 +109,7 @@
     warn_control_id: '1.2.1.4'
   block:
     - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Get repo list"
-      ansible.builtin.shell: dnf repolist
+      ansible.builtin.command: dnf repolist
       changed_when: false
       failed_when: false
       register: discovered_dnf_configured

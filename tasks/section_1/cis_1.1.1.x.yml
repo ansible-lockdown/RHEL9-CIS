@@ -284,15 +284,15 @@
     warn_control_id: '1.1.1.9'
   block:
     - name: "1.1.1.9 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
-      ansible.builtin.template:
+      ansible.builtin.copy:
         src: fs_with_cves.sh
         dest: /var/fs_with_cves.sh
         owner: root
         group: root
-        mode: '0744'
+        mode: 'u+x,go-wx'
 
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Run discovery script"
-      ansible.builtin.shell: /var/fs_with_cves.sh
+      ansible.builtin.command: /var/fs_with_cves.sh
       changed_when: false
       failed_when: discovered_fs_modules_loaded.rc not in [ 0, 99 ]
       register: discovered_fs_modules_loaded

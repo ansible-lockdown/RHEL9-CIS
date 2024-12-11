@@ -17,7 +17,7 @@
     - NIST800-53R5_CM-6
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
-  ansible.builtin.shell: passwd -l {{ item }}
+  ansible.builtin.command: passwd -l {{ item }}
   changed_when: false
   failed_when: false
   loop: "{{ prelim_uid_zero_accounts_except_root.stdout_lines }}"
@@ -194,6 +194,7 @@
     regexp: \s*umask
     line: "umask {{ rhel9cis_root_umask }}"
     create: true
+    mode: 'u+x,go-rwx'
 
 - name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell"
   when:

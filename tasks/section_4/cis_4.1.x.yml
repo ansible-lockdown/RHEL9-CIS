@@ -52,7 +52,7 @@
         name: "{{ rhel9cis_firewall }}"
         state: installed
 
-    - name: "4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | {{ rhel9cis_firewall }} started and enabled"
+    - name: "4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | {{ rhel9cis_firewall }} started and enabled"  # noqa name[template]
       ansible.builtin.systemd:
         name: "{{ rhel9cis_firewall }}"
         enabled: true

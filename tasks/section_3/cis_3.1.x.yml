@@ -40,7 +40,7 @@
   block:
     - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Check for network-manager tool"
       when: "'network-manager' in ansible_facts.packages"
-      ansible.builtin.shell: nmcli radio wifi
+      ansible.builtin.command: nmcli radio wifi
       changed_when: false
       failed_when: false
       check_mode: false
@@ -50,7 +50,7 @@
       when:
         - "'network-manager' in ansible_facts.packages"
         - "'enabled' in discovered_wifi_status.stdout"
-      ansible.builtin.shell: nmcli radio all off
+      ansible.builtin.command: nmcli radio all off
       changed_when: discovered_nmcli_radio_off.rc == 0
       register: discovered_nmcli_radio_off
 

@@ -146,7 +146,7 @@
     - name: "2.4.1.8 | PATCH | Ensure crontab is restricted to authorized users | Ensure cron.allow is restricted to authorized users"
       ansible.builtin.file:
         path: /etc/cron.allow
-        state: '{{ "file" if  discovered_cron_allow_state.stat.exists else "touch" }}'
+        state: '{{ "file" if discovered_cron_allow_state.stat.exists else "touch" }}'
         owner: root
         group: root
         mode: u-x,g-wx,o-rwx

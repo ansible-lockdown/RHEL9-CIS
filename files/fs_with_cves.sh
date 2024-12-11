@@ -1,10 +1,7 @@
-{% raw %}
-#! /usr/bin/env bash
+{% raw %}#! /usr/bin/env bash
 
 # Based on original Script provided by CIS
 # CVEs correct at time of creation - April2024
-
-#! /usr/bin/env bash
 
 {
    a_output=(); a_output2=(); a_modprope_config=(); a_excluded=(); a_available_modules=()
