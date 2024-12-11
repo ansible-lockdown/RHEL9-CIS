@@ -128,5 +128,5 @@
     dest: /etc/systemd/system/tmp.mount
     owner: root
     group: root
-    mode: "go-wx"
+    mode: 'go-wx'
   notify: *mount_option_notify
