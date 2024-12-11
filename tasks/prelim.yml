@@ -103,14 +103,14 @@
     - ansible_facts.distribution == 'RedHat'
   block:
     - name: "PRELIM | AUDIT | Import gpg keys | get data"
-      ansible.builtin.shell: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'
+      ansible.builtin.command: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
       register: prelim_check_gpg_imported
 
     - name: "PRELIM | AUDIT | Import gpg keys | Check Package"
       when: "'not installed' in prelim_check_gpg_imported.stdout"
-      ansible.builtin.shell: rpm -qi redhat-release | grep Signature
+      ansible.builtin.shell: rpm -qi redhat-release | grep Signature  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
       register: prelim_os_gpg_package_valid
@@ -119,7 +119,9 @@
       when:
         - "'not installed' in prelim_check_gpg_imported.stdout"
         - "'Key ID 199e2f91fd431d51' in prelim_os_gpg_package_valid.stdout"
-      ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+      ansible.builtin.rpm_key:
+        key: /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+        state: present
 
 - name: "PRELIM | AUDIT | Check systemd coredump"
   when:
@@ -150,7 +152,7 @@
         state: present
 
     - name: "PRELIM | AUDIT | Gather system-wide crypto-policy"
-      ansible.builtin.shell: 'update-crypto-policies --show'
+      ansible.builtin.command: 'update-crypto-policies --show'
       changed_when: false
       check_mode: false
       register: prelim_system_wide_crypto_policy
@@ -269,6 +271,7 @@
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d
     state: directory
+    mode: 'u+x,g-w,o-rwx'
 
 - name: "PRELIM | PATCH | Configure System Accounting (auditd)"
   when:
