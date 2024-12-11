@@ -34,7 +34,6 @@
 
 - name: "2.1.2 | PATCH | Ensure avahi daemon services are not in use"
   when: rhel9cis_rule_2_1_2
-
   tags:
     - level1-server
     - level2-workstation
