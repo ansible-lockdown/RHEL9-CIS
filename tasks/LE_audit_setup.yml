@@ -8,7 +8,7 @@
         audit_pkg_arch_name: AMD64
 
     - name: Pre Audit Setup | Set audit package name | ARM64
-      when: ansible_facts.machine == "aarch64"
+      when: ansible_facts.machine == "arm64"
       ansible.builtin.set_fact:
         audit_pkg_arch_name: ARM64
 
@@ -20,13 +20,13 @@
     owner: root
     group: root
     checksum: "{{ audit_bin_version[audit_pkg_arch_name + '_checksum'] }}"
-    mode: '0555'
+    mode: 'u+x,go-w'
 
 - name: Pre Audit Setup | Copy audit binary
   when: get_audit_binary_method == 'copy'
   ansible.builtin.copy:
     src: "{{ audit_bin_copy_location }}"
     dest: "{{ audit_bin }}"
-    mode: '0555'
     owner: root
     group: root
+    mode: 'u+x,go-w'
