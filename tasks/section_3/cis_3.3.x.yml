@@ -61,8 +61,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
 - name: "3.3.3 | PATCH | Ensure bogus ICMP responses are ignored"
-  when:
-    - rhel9cis_rule_3_3_3
+  when: rhel9cis_rule_3_3_3
   tags:
     - level1-server
     - level1-workstation
@@ -85,8 +84,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
 - name: "3.3.4 | PATCH | Ensure broadcast ICMP requests are ignored"
-  when:
-    - rhel9cis_rule_3_3_4
+  when: rhel9cis_rule_3_3_4
   tags:
     - level1-server
     - level1-workstation
@@ -109,8 +107,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
 - name: "3.3.5 | PATCH | Ensure ICMP redirects are not accepted"
-  when:
-    - rhel9cis_rule_3_3_5
+  when: rhel9cis_rule_3_3_5
   tags:
     - level1-server
     - level1-workstation
@@ -144,8 +141,7 @@
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl.conf"
 
 - name: "3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted"
-  when:
-    - rhel9cis_rule_3_3_6
+  when: rhel9cis_rule_3_3_6
   tags:
     - level1-server
     - level1-workstation
@@ -179,8 +175,7 @@
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl.conf"
 
 - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
-  when:
-    - rhel9cis_rule_3_3_7
+  when: rhel9cis_rule_3_3_7
   tags:
     - level1-server
     - level1-workstation
@@ -203,8 +198,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
 - name: "3.3.8 | PATCH | Ensure source routed packets are not accepted"
-  when:
-    - rhel9cis_rule_3_3_8
+  when: rhel9cis_rule_3_3_8
   tags:
     - level1-server
     - level1-workstation
@@ -237,8 +231,7 @@
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl.conf"
 
 - name: "3.3.9 | PATCH | Ensure suspicious packets are logged"
-  when:
-    - rhel9cis_rule_3_3_9
+  when: rhel9cis_rule_3_3_9
   tags:
     - level1-server
     - level1-workstation
@@ -257,8 +250,7 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
 - name: "3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled"
-  when:
-    - rhel9cis_rule_3_3_10
+  when: rhel9cis_rule_3_3_10
   tags:
     - level1-server
     - level1-workstation

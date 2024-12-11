@@ -1,8 +1,7 @@
 ---
 
 - name: "4.2.1 | AUDIT | Ensure firewalld drops unnecessary services and ports"
-  when:
-    - rhel9cis_rule_4_2_1
+  when: rhel9cis_rule_4_2_1
   tags:
     - level1-server
     - level1-workstation
@@ -25,8 +24,7 @@
           - "{{ discovered_services_and_ports.stdout_lines }}"
 
 - name: "4.2.2 | PATCH | Ensure firewalld loopback traffic is configured | firewalld"
-  when:
-    - rhel9cis_rule_4_2_2
+  when: rhel9cis_rule_4_2_2
   tags:
     - level1-server
     - level1-workstation

@@ -17,43 +17,37 @@
   when:
     - run_audit or audit_only
     - setup_audit
-  tags:
-    - run_audit
+  tags: run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
 - name: "PRELIM | AUDIT | Interactive Users"
-  tags:
-    - always
+  tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1 }'
   changed_when: false
   register: prelim_interactive_usernames
 
 - name: "PRELIM | AUDIT | Interactive User accounts home directories"
-  tags:
-    - always
+  tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
   changed_when: false
   register: prelim_interactive_users_home
 
 - name: "PRELIM | AUDIT | Interactive UIDs"
-  tags:
-    - always
+  tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
   changed_when: false
   register: prelim_interactive_uids
 
 - name: "PRELIM | AUDIT | Capture /etc/password variables"
+  tags: always
   ansible.builtin.include_tasks:
     file: parse_etc_password.yml
-  tags:
-    - always
 
 - name: "PRELIM | PATCH | Ensure python3-libselinux is installed"
-  when:
-    - '"python3-libselinux" not in ansible_facts.packages'
+  when: '"python3-libselinux" not in ansible_facts.packages'
   ansible.builtin.package:
     name: python3-libselinux
     state: present
@@ -108,14 +102,14 @@
       failed_when: false
       register: prelim_check_gpg_imported
 
-    - name: "PRELIM | AUDIT | Import gpg keys | Check Package"
+    - name: "PRELIM | AUDIT | Import gpg keys | Check Package"  # noqa command-instead-of-module
       when: "'not installed' in prelim_check_gpg_imported.stdout"
       ansible.builtin.shell: rpm -qi redhat-release | grep Signature  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
       register: prelim_os_gpg_package_valid
 
-    - name: "PRELIM | PATCH | Force keys to be imported"
+    - name: "PRELIM | PATCH | Force keys to be imported"  # noqa command-instead-of-module
       when:
         - "'not installed' in prelim_check_gpg_imported.stdout"
         - "'Key ID 199e2f91fd431d51' in prelim_os_gpg_package_valid.stdout"
@@ -124,8 +118,7 @@
         state: present
 
 - name: "PRELIM | AUDIT | Check systemd coredump"
-  when:
-    - rhel9cis_rule_1_5_4
+  when: rhel9cis_rule_1_5_4
   tags:
     - level1-server
     - level1-workstation
@@ -208,7 +201,7 @@
     - always
   block:
     - name: "PRELIM | AUDIT | Discover is wirelss adapter on system"
-      ansible.builtin.shell: find /sys/class/net/*/ -type d -name wireless
+      ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false
       failed_when: discover_wireless_adapters.rc not in [ 0, 1 ]
@@ -247,7 +240,7 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     owner: root
     group: root
-    mode: '0600'
+    mode: 'go-rwx'
     state: touch
 
 - name: "PRELIM | AUDIT | Gather UID 0 accounts other than root"

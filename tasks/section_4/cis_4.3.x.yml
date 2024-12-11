@@ -12,8 +12,7 @@
   changed_when: true
 
 - name: "4.3.1 | PATCH | Ensure nftables base chains exist"
-  when:
-    - rhel9cis_rule_4_3_1
+  when: rhel9cis_rule_4_3_1
   tags:
     - level1-server
     - level1-workstation
@@ -65,8 +64,7 @@
         - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" output { type filter hook output priority 0 \; }
 
 - name: "4.3.2 | PATCH | Ensure nftables established connections are configured"
-  when:
-    - rhel9cis_rule_4_3_2
+  when: rhel9cis_rule_4_3_2
   tags:
     - level1-server
     - level1-workstation

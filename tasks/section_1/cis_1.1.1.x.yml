@@ -1,8 +1,7 @@
 ---
 
 - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available"
-  when:
-    - rhel9cis_rule_1_1_1_1
+  when: rhel9cis_rule_1_1_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -17,7 +16,7 @@
         regexp: "^(#)?install cramfs(\\s|$)"
         line: "install cramfs /bin/true"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -25,7 +24,7 @@
         regexp: "^(#)?blacklist cramfs(\\s|$)"
         line: "blacklist cramfs"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available | Disable cramfs"
       when:
@@ -35,8 +34,7 @@
         state: absent
 
 - name: "1.1.1.2 | PATCH | Ensure freevxfs kernel module is not available"
-  when:
-    - rhel9cis_rule_1_1_1_2
+  when: rhel9cis_rule_1_1_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -51,7 +49,7 @@
         regexp: "^(#)?install freevxfs(\\s|$)"
         line: "install freevxfs /bin/true"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.2 | PATCH | Ensure freevxfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -59,18 +57,16 @@
         regexp: "^(#)?blacklist freevxfs(\\s|$)"
         line: "blacklist freevxfs"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.2 | PATCH | Ensure freevxfs kernel module is not available | Disable freevxfs"
-      when:
-        - not system_is_container
+      when: not system_is_container
       community.general.modprobe:
         name: freevxfs
         state: absent
 
 - name: "1.1.1.3 | PATCH | Ensure hfs kernel module is not available"
-  when:
-    - rhel9cis_rule_1_1_1_3
+  when: rhel9cis_rule_1_1_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -85,7 +81,7 @@
         regexp: "^(#)?install hfs(\\s|$)"
         line: "install hfs /bin/true"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.3 | PATCH | Ensure hfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -93,18 +89,16 @@
         regexp: "^(#)?blacklist hfs(\\s|$)"
         line: "blacklist hfs"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.3 | PATCH | Ensure hfs kernel module is not available | Disable hfs"
-      when:
-        - not system_is_container
+      when: not system_is_container
       community.general.modprobe:
         name: hfs
         state: absent
 
 - name: "1.1.1.4 | PATCH | Ensure hfsplus kernel module is not available"
-  when:
-    - rhel9cis_rule_1_1_1_4
+  when: rhel9cis_rule_1_1_1_4
   tags:
     - level1-server
     - level1-workstation
@@ -119,7 +113,7 @@
         regexp: "^(#)?install hfsplus(\\s|$)"
         line: "install hfsplus /bin/true"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.4 | PATCH | Ensure hfsplus kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -127,18 +121,16 @@
         regexp: "^(#)?blacklist hfsplus(\\s|$)"
         line: "blacklist hfsplus"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.4 | PATCH | Ensure hfsplus kernel module is not available | Disable hfsplus"
-      when:
-        - not system_is_container
+      when: not system_is_container
       community.general.modprobe:
         name: hfsplus
         state: absent
 
 - name: "1.1.1.5 | PATCH | Ensure jffs2 kernel module is not available"
-  when:
-    - rhel9cis_rule_1_1_1_5
+  when: rhel9cis_rule_1_1_1_5
   tags:
     - level1-server
     - level1-workstation
@@ -153,7 +145,7 @@
         regexp: "^(#)?install jffs2(\\s|$)"
         line: "install jffs2 /bin/true"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.5 | PATCH | Ensure jffs2 kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -161,18 +153,16 @@
         regexp: "^(#)?blacklist jffs2(\\s|$)"
         line: "blacklist jffs2"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.5 | PATCH | Ensure jffs2 kernel module is not available | Disable jffs2"
-      when:
-        - not system_is_container
+      when: not system_is_container
       community.general.modprobe:
         name: jffs2
         state: absent
 
 - name: "1.1.1.6 | PATCH | Ensure squashfs kernel module is not available"
-  when:
-    - rhel9cis_rule_1_1_1_6
+  when: rhel9cis_rule_1_1_1_6
   tags:
     - level2-server
     - level2-workstation
@@ -187,7 +177,7 @@
         regexp: "^(#)?install squashfs(\\s|$)"
         line: "install squashfs /bin/true"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.6 | PATCH | Ensure squashfs kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -195,18 +185,16 @@
         regexp: "^(#)?blacklist squashfs(\\s|$)"
         line: "blacklist squashfs"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.6 | PATCH | Ensure squashfs kernel module is not available | Disable squashfs"
-      when:
-        - not system_is_container
+      when: not system_is_container
       community.general.modprobe:
         name: squashfs
         state: absent
 
 - name: "1.1.1.7 | PATCH | Ensure udf kernel module is not available"
-  when:
-    - rhel9cis_rule_1_1_1_7
+  when: rhel9cis_rule_1_1_1_7
   tags:
     - level2-server
     - level2-workstation
@@ -221,7 +209,7 @@
         regexp: "^(#)?install udf(\\s|$)"
         line: "install udf /bin/true"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.7 | PATCH | Ensure udf kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -229,18 +217,16 @@
         regexp: "^(#)?blacklist udf(\\s|$)"
         line: "blacklist udf"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.7 | PATCH | Ensure udf kernel module is not available | Disable udf"
-      when:
-        - not system_is_container
+      when: not system_is_container
       community.general.modprobe:
         name: udf
         state: absent
 
 - name: "1.1.1.8 | PATCH | Ensure usb-storage kernel module is not available"
-  when:
-    - rhel9cis_rule_1_1_1_8
+  when: rhel9cis_rule_1_1_1_8
   tags:
     - level1-server
     - level2-workstation
@@ -255,7 +241,7 @@
         regexp: "^(#)?install usb-storage(\\s|$)"
         line: "install usb-storage /bin/true"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.8 | PATCH | Ensure usb-storage kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
@@ -263,18 +249,16 @@
         regexp: "^(#)?blacklist usb-storage(\\s|$)"
         line: "blacklist usb-storage"
         create: true
-        mode: '0600'
+        mode: 'go-rwx'
 
     - name: "1.1.1.8 | PATCH | Ensure usb-storage kernel module is not available | Disable usb"
-      when:
-        - not system_is_container
+      when: not system_is_container
       community.general.modprobe:
         name: usb-storage
         state: absent
 
 - name: "1.1.1.9 | PATCH | Ensure unused filesystems kernel modules are not available"
-  when:
-    - rhel9cis_rule_1_1_1_9
+  when: rhel9cis_rule_1_1_1_9
   tags:
     - level1-server
     - level1-workstation

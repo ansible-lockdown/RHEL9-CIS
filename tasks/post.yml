@@ -1,9 +1,7 @@
 ---
-# Post tasks
 
 - name: POST | Gather the package facts after remediation
-  tags:
-    - always
+  tags: always
   ansible.builtin.package_facts:
     manager: auto
 
@@ -17,7 +15,7 @@
     dest: "/etc/sysctl.d/{{ item }}"
     owner: root
     group: root
-    mode: '0600'
+    mode: 'go-rwx'
   notify: Reload sysctl
   loop:
     - 60-kernel_sysctl.conf

@@ -16,12 +16,11 @@
     content: "GRUB2_PASSWORD={{ rhel9cis_bootloader_password_hash }}"  # noqa template-instead-of-copy
     owner: root
     group: root
-    mode: '0600'
+    mode: 'go-rwx'
   notify: Grub2cfg
 
 - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
-  when:
-    - rhel9cis_rule_1_4_2
+  when: rhel9cis_rule_1_4_2
   tags:
     - level1-server
     - level1-workstation
@@ -41,5 +40,5 @@
         access_time: preserve
       loop:
         - { path: 'grub.cfg', mode: '0700' }
-        - { path: 'grubenv', mode: '0600' }
-        - { path: 'user.cfg', mode: '0600' }
+        - { path: 'grubenv', mode: 'go-rwx' }
+        - { path: 'user.cfg', mode: 'go-rwx' }

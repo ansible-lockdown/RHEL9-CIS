@@ -83,7 +83,7 @@
     path: /etc/shadow
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.6 | PATCH | Ensure permissions on /etc/shadow- are configured"
   when:
@@ -100,7 +100,7 @@
     path: /etc/shadow-
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.7 | PATCH | Ensure permissions on /etc/gshadow are configured"
   when:
@@ -117,7 +117,7 @@
     path: /etc/gshadow
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.8 | PATCH | Ensure permissions on /etc/gshadow- are configured"
   when:
@@ -134,7 +134,7 @@
     path: /etc/gshadow-
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.9 | PATCH | Ensure permissions on /etc/shells are configured"
   when:
@@ -196,7 +196,7 @@
         - rhel9cis_no_world_write_adjust
       ansible.builtin.file:
         path: '{{ item }}'
-        mode: o-w
+        mode: 'o-w'
         state: touch
       loop: "{{ discovered_world_writable.stdout_lines }}"
 

@@ -243,8 +243,7 @@
   register: discovered_auditd_immutable_check
 
 - name: Audit immutable fact
-  when:
-    - discovered_auditd_immutable_check.stdout == '1'
+  when: discovered_auditd_immutable_check.stdout == '1'
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"
   notify: Change_requires_reboot
