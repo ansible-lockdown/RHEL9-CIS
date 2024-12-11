@@ -83,7 +83,7 @@
     path: /etc/shadow
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.6 | PATCH | Ensure permissions on /etc/shadow- are configured"
   when:
@@ -100,7 +100,7 @@
     path: /etc/shadow-
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.7 | PATCH | Ensure permissions on /etc/gshadow are configured"
   when:
@@ -117,7 +117,7 @@
     path: /etc/gshadow
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.8 | PATCH | Ensure permissions on /etc/gshadow- are configured"
   when:
@@ -134,7 +134,7 @@
     path: /etc/gshadow-
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.9 | PATCH | Ensure permissions on /etc/shells are configured"
   when:
@@ -196,7 +196,7 @@
         - rhel9cis_no_world_write_adjust
       ansible.builtin.file:
         path: '{{ item }}'
-        mode: o-w
+        mode: 'o-w'
         state: touch
       loop: "{{ discovered_world_writable.stdout_lines }}"
 
@@ -221,7 +221,7 @@
     warn_control_id: '7.1.12'
   block:
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Get list files or directories"
-      ansible.builtin.shell: find {{ rhel9cis_exclude_unowned_search_path }} {{ item.mount }} -xdev \( -nouser -o -nogroup \) -not -fstype nfs
+      ansible.builtin.command: find {{ rhel9cis_exclude_unowned_search_path }} {{ item.mount }} -xdev \( -nouser -o -nogroup \) -not -fstype nfs
       changed_when: false
       failed_when: false
       check_mode: false
@@ -283,7 +283,7 @@
     warn_control_id: '7.1.13'
   block:
     - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Find SUID and SGID"
-      ansible.builtin.shell: find {{ item.mount }} -xdev -type f -perm \( -02000 or -04000 \) -not -fstype nfs
+      ansible.builtin.command: find {{ item.mount }} -xdev -type f -perm \( -02000 or -04000 \) -not -fstype nfs
       changed_when: false
       failed_when: false
       check_mode: false

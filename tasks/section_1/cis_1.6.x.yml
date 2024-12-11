@@ -1,8 +1,7 @@
 ---
 
 - name: "1.6.1 | AUDIT | Ensure system-wide crypto policy is not legacy"
-  when:
-    - rhel9cis_rule_1_6_1
+  when: rhel9cis_rule_1_6_1
   tags:
     - level1-server
     - level1-workstation
@@ -18,8 +17,7 @@
     - Set Crypto Policy
 
 - name: "1.6.2 | PATCH | Ensure system wide crypto policy is not set in sshd configuration"
-  when:
-    - rhel9cis_rule_1_6_2
+  when: rhel9cis_rule_1_6_2
   tags:
     - level1-server
     - level1-workstation
@@ -54,7 +52,7 @@
         dest: /etc/crypto-policies/policies/modules/NO-SHA1.pmod
         owner: root
         group: root
-        mode: '0640'
+        mode: 'g-wx,o-rwx'
       register: discovered_no_sha1_template
 
     - name: "1.6.3 | PATCH | Ensure system wide crypto policy disables sha1 hash and signature support | submodule to crypto policy modules"
@@ -85,7 +83,7 @@
         dest: /etc/crypto-policies/policies/modules/NO-WEAKMAC.pmod
         owner: root
         group: root
-        mode: '0640'
+        mode: 'g-wx,o-rwx'
       register: discovered_no_weakmac_template
 
     - name: "1.6.4 | PATCH | Ensure system wide crypto policy disables macs less than 128 bits | submodule to crypto policy modules"
@@ -115,7 +113,7 @@
         dest: /etc/crypto-policies/policies/modules/NO-SSHCBC.pmod
         owner: root
         group: root
-        mode: '0640'
+        mode: 'g-wx,o-rwx'
       register: discovered_no_sshcbc_template
 
     - name: "1.6.5 | PATCH | Ensure system wide crypto policy disables cbc for ssh | submodule to crypto policy modules"
@@ -145,7 +143,7 @@
         dest: /etc/crypto-policies/policies/modules/NO-SSHWEAKCIPHERS.pmod
         owner: root
         group: root
-        mode: '0640'
+        mode: 'g-wx,o-rwx'
       register: discovered_no_sshweakciphers_template
 
     - name: "1.6.6 | PATCH | Ensure system wide crypto policy disables chacha20-poly1305 for ssh | submodule to crypto policy modules"
@@ -175,7 +173,7 @@
         dest: /etc/crypto-policies/policies/modules/NO-SSHETM.pmod
         owner: root
         group: root
-        mode: '0640'
+        mode: 'g-wx,o-rwx'
       register: discovered_no_sshetm_template
 
     - name: "1.6.7 | PATCH | Ensure system wide crypto policy disables EtM for ssh | submodule to crypto policy modules"

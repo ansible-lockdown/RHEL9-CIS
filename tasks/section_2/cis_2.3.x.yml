@@ -31,7 +31,7 @@
     dest: /etc/chrony.conf
     owner: root
     group: root
-    mode: '0644'
+    mode: 'go-wx'
 
 - name: "2.3.3 | PATCH | Ensure chrony is not run as the root user"
   when:
@@ -48,4 +48,4 @@
     line: OPTIONS="\1 -u chrony"
     create: true
     backrefs: true
-    mode: '0644'
+    mode: 'go-wx'

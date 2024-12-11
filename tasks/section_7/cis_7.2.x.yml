@@ -237,7 +237,7 @@
     - users
     - rule_7.2.8
   block:
-    - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Create dir if absent"
+    - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Create dir if absent"  # noqa risky-file-permissions
       ansible.builtin.file:
         path: "{{ item.dir }}"
         state: directory

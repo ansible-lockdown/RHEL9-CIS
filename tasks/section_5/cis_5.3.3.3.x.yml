@@ -1,8 +1,7 @@
 ---
 
 - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured"
-  when:
-    - rhel9cis_rule_5_3_3_3_1
+  when: rhel9cis_rule_5_3_3_3_1
   tags:
     - level1-server
     - level1-workstation
@@ -48,8 +47,7 @@
       notify: Authselect update
 
 - name: "5.3.3.3.2 | PATCH | Ensure password history is enforced for the root user"
-  when:
-    - rhel9cis_rule_5_3_3_3_2
+  when: rhel9cis_rule_5_3_3_3_2
   tags:
     - level1-server
     - level1-workstation
@@ -95,8 +93,7 @@
       notify: Authselect update
 
 - name: "5.3.3.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok"
-  when:
-    - rhel9cis_rule_5_3_3_3_3
+  when: rhel9cis_rule_5_3_3_3_3
   tags:
     - level1-server
     - level1-workstation

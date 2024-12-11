@@ -1,8 +1,7 @@
 ---
 
 - name: "6.2.1.1 | PATCH | Ensure journald service is enabled and active"
-  when:
-    - rhel9cis_rule_6_2_1_1
+  when: rhel9cis_rule_6_2_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -15,8 +14,7 @@
     state: started
 
 - name: "6.2.1.2 | PATCH | Ensure journald log file access is configured"
-  when:
-    - rhel9cis_rule_6_2_1_2
+  when: rhel9cis_rule_6_2_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -27,7 +25,7 @@
     - name: "6.2.1.2 | PATCH | Ensure journald log file access is configured | Default file permissions"
       ansible.builtin.file:
         path: /usr/lib/tmpfiles.d/systemd.conf
-        mode: '0640'
+        mode: 'g-wx,o-rwx'
 
     - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Check for override file"
       ansible.builtin.stat:
@@ -58,8 +56,7 @@
         warn_control_id: '6.2.1.2'
 
 - name: "6.2.1.3 | PATCH | Ensure journald log file rotation is configured"
-  when:
-    - rhel9cis_rule_6_2_1_3
+  when: rhel9cis_rule_6_2_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -74,7 +71,7 @@
         dest: /etc/systemd/journald.conf.d/rotation.conf
         owner: root
         group: root
-        mode: '0640'
+        mode: 'g-wx,o-rwx'
 
     - name: "6.2.1.3 | PATCH | Ensure journald log file rotation is configured | comment out current entries"
       ansible.builtin.replace:
@@ -89,8 +86,7 @@
         - '^(\s*MaxFileSec\s*=.*)'
 
 - name: "6.2.1.4 | PATCH | Ensure only one logging system is in use"
-  when:
-    - rhel9cis_rule_6_2_1_4
+  when: rhel9cis_rule_6_2_1_4
   tags:
     - level1-server
     - level1-workstation
