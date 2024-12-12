@@ -8,7 +8,7 @@
     AUDIT_CONTENT_LOCATION: "{{ audit_conf_dest | default('/opt') }}"
     AUDIT_FILE: goss.yml
 
-- name: Post Audit | Ensure audit files readable by users
+- name: Post Audit | ensure audit files readable by users
   ansible.builtin.file:
     path: "{{ item }}"
     mode: '0644'
@@ -22,8 +22,8 @@
   block:
     - name: Post Audit | Capture audit data if json format
       ansible.builtin.shell: grep -E '"summary-line.*Count:.*Failed' "{{ post_audit_outfile }}" | cut -d'"' -f4
-      register: post_audit_summary
       changed_when: false
+      register: post_audit_summary
 
     - name: Post Audit | Set Fact for audit summary
       ansible.builtin.set_fact:
@@ -33,9 +33,9 @@
   when: audit_format == "documentation"
   block:
     - name: Post Audit | Capture audit data if documentation format
-      ansible.builtin.shell: tail -2 "{{ post_audit_outfile }}" | tac | tr '\n' ' '
-      register: post_audit_summary
+      ansible.builtin.shell: tail -2 "{{ pre_audit_outfile }}"  | tac | tr '\n' ' '
       changed_when: false
+      register: post_audit_summary
 
     - name: Post Audit | Set Fact for audit summary
       ansible.builtin.set_fact:

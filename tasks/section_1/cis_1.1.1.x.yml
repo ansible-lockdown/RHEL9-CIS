@@ -268,7 +268,7 @@
     warn_control_id: '1.1.1.9'
   block:
     - name: "1.1.1.9 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
-      ansible.builtin.template:
+      ansible.builtin.copy:
         src: fs_with_cves.sh
         dest: /var/fs_with_cves.sh
         owner: root
@@ -284,9 +284,7 @@
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Output Warning"
       when: discovered_fs_modules_loaded.stdout | length > 0
       ansible.builtin.debug:
-        msg: |
-          "Warning!! Discovered loaded Filesystem modules that need attention. This is a manual task
-          {{ discovered_fs_modules_loaded.stdout_lines }}"
+        msg: "{{ ['Warning!! Discovered loaded Filesystem modules that need attention. This is a manual task'] + discovered_fs_modules_loaded.stdout_lines }}"
 
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
       when: discovered_fs_modules_loaded.stdout | length > 0

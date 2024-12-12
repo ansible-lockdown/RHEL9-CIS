@@ -2,7 +2,7 @@
 - name: Audit_Only | Create local Directories for hosts
   when: fetch_audit_files
   ansible.builtin.file:
-    mode: "0755"
+    mode: 'u+x,go-w'
     path: "{{ audit_capture_files_dir }}/{{ inventory_hostname }}"
     recurse: true
     state: directory
@@ -14,7 +14,7 @@
   ansible.builtin.fetch:
     dest: "{{ audit_capture_files_dir }}/{{ inventory_hostname }}/"
     flat: true
-    mode: "0644"
+    mode: 'go-wx'
     src: "{{ pre_audit_outfile }}"
 
 - name: Audit_only | Show Audit Summary

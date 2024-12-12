@@ -18,7 +18,7 @@
         - rhel9cis_authselect_custom_profile_name not in prelim_authselect_current_profile.stdout or
           prelim_authselect_current_profile.stdout is not defined
       ansible.builtin.command: "/usr/bin/authselect create-profile {{ rhel9cis_authselect_custom_profile_name }} -b {{ rhel9cis_authselect_default_profile_to_copy }}"
-      changed_when: true
+      changed_when: false
       args:
         creates: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}"
 
@@ -61,7 +61,8 @@
   notify: Authselect update
   block:
     - name: "5.3.2.2 | AUDIT | Ensure pam_faillock module is enabled | Get current config"
-      ansible.builtin.shell: authselect current | grep faillock
+      ansible.builtin.shell: |
+        authselect current | grep faillock
       changed_when: false
       failed_when: discovered_authselect_current_faillock.rc not in [ 0, 1 ]
       register: discovered_authselect_current_faillock
@@ -70,7 +71,6 @@
       when: discovered_authselect_current_faillock.rc != 0
       ansible.builtin.command: "/usr/bin/authselect select custom/{{ rhel9cis_authselect_custom_profile_name }}{% if rhel9cis_rule_5_3_2_2 %} with-faillock{% endif %}{% if rhel9cis_rule_5_3_2_3 %} with-pwquality{% endif %}{% if rhel9cis_rule_5_3_2_4 %} with-pwhistory{% endif %}{% if rhel9cis_rule_5_3_3_4_1 %} without-nullok{% endif %}"
       changed_when: true
-      notify: Authselect update
 
 - name: "5.3.2.3 | PATCH | Ensure pam_pwquality module is enabled"
   when:
@@ -87,12 +87,13 @@
     - rule_5.3.2.3
   block:
     - name: "5.3.2.3 | AUDIT | Ensure pam_pwquality module is enabled | Get current config"
-      ansible.builtin.shell: authselect current | grep quality
+      ansible.builtin.shell: |
+        authselect current | grep quality
       changed_when: false
       failed_when: discovered_authselect_current_quality.rc not in [ 0, 1 ]
       register: discovered_authselect_current_quality
 
-    - name: "5.3.2.3 | AUDIT | Ensure pam_pwquality module is enabled | Add feature if missing"
+    - name: "5.3.2.3 | PATCH | Ensure pam_pwquality module is enabled | Add feature if missing"
       when: discovered_authselect_current_quality.rc != 0
       ansible.builtin.command: "/usr/bin/authselect select custom/{{ rhel9cis_authselect_custom_profile_name }}{% if rhel9cis_rule_5_3_2_2 %} with-faillock{% endif %}{% if rhel9cis_rule_5_3_2_3 %} with-pwquality{% endif %}{% if rhel9cis_rule_5_3_2_4 %} with-pwhistory{% endif %}{% if rhel9cis_rule_5_3_3_4_1 %} without-nullok{% endif %}"
       changed_when: true
@@ -113,7 +114,8 @@
     - rule_5.3.2.4
   block:
     - name: "5.3.2.4 | AUDIT | Ensure pam_pwhistory module is enabled | Get current config"
-      ansible.builtin.shell: authselect current | grep pwhistory
+      ansible.builtin.shell: |
+        authselect current | grep pwhistory
       changed_when: false
       failed_when: discovered_authselect_current_history.rc not in [ 0, 1 ]
       register: discovered_authselect_current_history

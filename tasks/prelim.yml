@@ -52,10 +52,34 @@
     name: python3-libselinux
     state: present
 
-- name: "PRELIM | AUDIT | Section 1.1 | Create list of mount points"
+- name: PRELIM | AUDIT | Section 1.1 | Create list of mount points
   tags: always
   ansible.builtin.set_fact:
-    mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+    prelim_mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+
+- name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options
+  tags: always
+  block:
+    - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - call mount  # noqa command-instead-of-module
+      ansible.builtin.shell: |
+        mount | awk '{print $1, $3, $5, $6}'
+      changed_when: false
+      register: prelim_mount_output
+
+    - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - build fact  # This is inherited and used in mountpoints tasks
+      ansible.builtin.set_fact:
+        prelim_mount_point_fs_and_options: >-
+          {%- set prelim_mount_point_fs_and_options = {} -%}
+          {%- for line in prelim_mount_output.stdout_lines -%}
+          {%- set fields = line.split() -%}
+          {%- set _ = prelim_mount_point_fs_and_options.update({fields[1]: {'src': fields[0], 'fs_type': fields[2], 'original_options': fields[3][1:-1].split(','), 'options': fields[3][1:-1].split(',')}}) -%}
+          {%- endfor -%}
+          {{ prelim_mount_point_fs_and_options }}
+
+    - name: "PRELIM | AUDIT | Debug of mount variables to assist in troubleshooting"
+      when: rhel9cis_debug_mount_data
+      ansible.builtin.debug:
+        msg: "{{ prelim_mount_point_fs_and_options }}"
 
 - name: "PRELIM | PATCH | Update to latest gpg keys"
   when:
@@ -80,7 +104,7 @@
 
     - name: "PRELIM | AUDIT | Import gpg keys | Check Package"  # noqa command-instead-of-module
       when: "'not installed' in prelim_check_gpg_imported.stdout"
-      ansible.builtin.shell: rpm -qi redhat-release | grep Signature
+      ansible.builtin.shell: rpm -qi redhat-release | grep Signature  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
       register: prelim_os_gpg_package_valid
@@ -89,8 +113,9 @@
       when:
         - "'not installed' in prelim_check_gpg_imported.stdout"
         - "'Key ID 199e2f91fd431d51' in prelim_os_gpg_package_valid.stdout"
-      ansible.builtin.command: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
-      changed_when: false
+      ansible.builtin.rpm_key:
+        key: /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+        state: present
 
 - name: "PRELIM | AUDIT | Check systemd coredump"
   when: rhel9cis_rule_1_5_4
@@ -239,7 +264,7 @@
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d
     state: directory
-    mode: 'go-w'
+    mode: 'u+x,g-w,o-rwx'
 
 - name: "PRELIM | PATCH | Configure System Accounting (auditd)"
   when:

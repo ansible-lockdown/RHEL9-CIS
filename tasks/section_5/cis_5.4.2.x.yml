@@ -190,9 +190,7 @@
     regexp: \s*umask
     line: "umask {{ rhel9cis_root_umask }}"
     create: true
-    owner: root
-    group: root
-    mode: 'go-rwx'
+    mode: 'u+x,go-rwx'
 
 - name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell"
   when:

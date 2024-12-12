@@ -101,7 +101,7 @@
         line: "{{ rhel9cis_pamroot_lock_option }}"
         insertafter: '^# end of pam-auth-update config'
         create: true
-        mode: 'go-rwx'
+        mode: 'u-x,go-wx'
 
     - name: "5.3.3.1.3 | PATCH | Ensure password failed attempts lockout includes root account | remove lockout from pam files NOT AuthSelect"
       when:

@@ -5,11 +5,11 @@
   ansible.builtin.include_tasks:
     file: LE_audit_setup.yml
 
-- name: Pre Audit Setup | Ensure {{ audit_conf_dir }} exists # noqa name[template]
+- name: Pre Audit Setup | Ensure existence of {{ audit_conf_dir }}  # noqa name[template]
   ansible.builtin.file:
     path: "{{ audit_conf_dir }}"
+    mode: 'go-w'
     state: directory
-    mode: "0755"
 
 - name: Pre Audit Setup | If using git for content set up
   when: audit_content == 'git'
@@ -52,10 +52,10 @@
     - name: Pre Audit Setup | Check for goss file
       ansible.builtin.stat:
         path: "{{ audit_bin }}"
-      register: discovered_goss_available
+      register: prelim_goss_available
 
     - name: Pre Audit Setup | If audit ensure goss is available
-      when: not discovered_goss_available.stat.exists
+      when: not prelim_goss_available.stat.exists
       ansible.builtin.assert:
         msg: "Audit has been selected: unable to find goss binary at {{ audit_bin }}"
 
@@ -67,10 +67,10 @@
   ansible.builtin.template:
     src: ansible_vars_goss.yml.j2
     dest: "{{ audit_vars_path }}"
-    mode: "0600"
+    mode: 'go-rwx'
 
-- name: Pre Audit | Run pre_remediation {{ benchmark }} audit # noqa name[template]
-  ansible.builtin.command: "{{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -o {{ pre_audit_outfile }} -g \"{{ group_names }}\""
+- name: Pre Audit | Run pre_remediation audit {{ benchmark }}  # noqa name[template]
+  ansible.builtin.command: "{{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -o {{ pre_audit_outfile }} -g \"{{ group_names }}\""  # noqa yaml[line-length]
   changed_when: true
   environment:
     AUDIT_BIN: "{{ audit_bin }}"
@@ -93,7 +93,7 @@
   when: audit_format == "documentation"
   block:
     - name: Pre Audit | Capture audit data if documentation format
-      ansible.builtin.shell: tail -2 "{{ pre_audit_outfile }}" | tac | tr '\n' ' '
+      ansible.builtin.shell: tail -2 "{{ pre_audit_outfile }}"  | tac | tr '\n' ' '
       changed_when: false
       register: pre_audit_summary
 

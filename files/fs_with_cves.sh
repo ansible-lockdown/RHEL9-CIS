@@ -1,4 +1,4 @@
-{% raw %}#! /usr/bin/env bash
+#! /usr/bin/env bash
 
 # Based on original Script provided by CIS
 # CVEs correct at time of creation - April2024
@@ -54,4 +54,3 @@
       #[ "${#a_output[@]}" -gt 0 ] && printf '%s\n' "" "-- Correctly set: --" "${a_output[@]}" ""
    fi
 }
-{% endraw %}

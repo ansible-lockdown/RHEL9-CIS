@@ -22,19 +22,22 @@
     - NIST800-55_CA-9
   block:
     - name: "4.3.1 | AUDIT | Ensure nftables base chains exist | Get current chains for INPUT"
-      ansible.builtin.shell: nft list ruleset | grep 'hook input'
+      ansible.builtin.shell: |
+        nft list ruleset | grep 'hook input'
       changed_when: false
       failed_when: false
       register: discovered_nftables_input_chains
 
     - name: "4.3.1 | AUDIT | Ensure nftables base chains exist | Get current chains for FORWARD"
-      ansible.builtin.shell: nft list ruleset | grep 'hook forward'
+      ansible.builtin.shell: |
+        nft list ruleset | grep 'hook forward'
       changed_when: false
       failed_when: false
       register: discovered_nftables_forward_chains
 
     - name: "4.3.1 | AUDIT | Ensure nftables base chains exist | Get current chains for OUTPUT"
-      ansible.builtin.shell: nft list ruleset | grep 'hook output'
+      ansible.builtin.shell: |
+        nft list ruleset | grep 'hook output'
       changed_when: false
       failed_when: false
       register: discovered_nftables_output_chains
@@ -71,13 +74,14 @@
     - NIST800-55_CA-9
   block:
     - name: "4.3.2 | AUDIT | Ensure nftables established connections are configured | Gather incoming connection rules"
-      ansible.builtin.shell: nft list ruleset | awk '/hook input/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state'
+      ansible.builtin.shell: |
+        nft list ruleset | awk '/hook input/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state'
       changed_when: false
       failed_when: false
       register: discovered_nftables_inconnectionrule
 
     - name: "4.3.2 | AUDIT | Ensure nftables established connections are configured | Gather outbound connection rules"
-      ansible.builtin.shell: nft list ruleset | awk '/hook output/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state'
+      ansible.builtin.command: nft list ruleset | awk '/hook output/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state'
       changed_when: false
       failed_when: false
       register: discovered_nftables_outconnectionrule
@@ -123,25 +127,29 @@
     - NIST800-55_CA-9
   block:
     - name: "4.3.3 | AUDIT | Ensure nftables default deny firewall policy | Check for hook input deny policy"
-      ansible.builtin.shell: nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep 'hook input'
+      ansible.builtin.shell: |
+        nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep 'hook input'
       failed_when: false
       changed_when: false
       register: discovered_nftables_inputpolicy
 
     - name: "4.3.3 | AUDIT | Ensure nftables default deny firewall policy | Check for hook forward deny policy"
-      ansible.builtin.shell: nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep 'hook forward'
+      ansible.builtin.shell: |
+        nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep 'hook forward'
       failed_when: false
       changed_when: false
       register: discovered_nftables_forwardpolicy
 
     - name: "4.3.3 | AUDIT | Ensure nftables default deny firewall policy | Check for hook output deny policy"
-      ansible.builtin.shell: nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep 'hook output'
+      ansible.builtin.shell: |
+        nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep 'hook output'
       failed_when: false
       changed_when: false
       register: discovered_nftables_outputpolicy
 
     - name: "4.3.3 | AUDIT | Ensure nftables default deny firewall policy | Check for SSH allow"
-      ansible.builtin.shell: nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep 'ssh'
+      ansible.builtin.shell: |
+        nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep 'ssh'
       failed_when: false
       changed_when: false
       register: discovered_nftables_sshallowcheck
@@ -177,19 +185,22 @@
     - NIST800-55_CA-9
   block:
     - name: "4.3.4 | AUDIT | Ensure nftables loopback traffic is configured | Gather iif lo accept existence | nftables"
-      ansible.builtin.shell: nft list ruleset | awk '/hook input/,/}/' | grep 'iif "lo" accept'
+      ansible.builtin.shell: |
+        nft list ruleset | awk '/hook input/,/}/' | grep 'iif "lo" accept'
       changed_when: false
       failed_when: false
       register: discovered_nftables_iiflo
 
     - name: "4.3.4 | AUDIT | Ensure nftables loopback traffic is configured | Gather ip saddr existence | nftables"
-      ansible.builtin.shell: nft list ruleset | awk '/hook input/,/}/' | grep 'ip saddr'
+      ansible.builtin.shell: |
+        nft list ruleset | awk '/hook input/,/}/' | grep 'ip saddr'
       changed_when: false
       failed_when: false
       register: discovered_nftables_ipsaddr
 
     - name: "4.3.4 | AUDIT | Ensure nftables loopback traffic is configured | Gather ip6 saddr existence | nftables"
-      ansible.builtin.shell: nft list ruleset | awk '/hook input/,/}/' | grep 'ip6 saddr'
+      ansible.builtin.shell: |
+        nft list ruleset | awk '/hook input/,/}/' | grep 'ip6 saddr'
       changed_when: false
       failed_when: false
       register: discovered_nftables_ip6saddr

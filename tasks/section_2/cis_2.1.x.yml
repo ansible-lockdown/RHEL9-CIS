@@ -676,8 +676,8 @@
   vars:
     warn_control_id: '2.1.22'
   block:
-    - name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface | Get list of services"  # noqa command-instead-of-module
-      ansible.builtin.command: systemctl list-units --type=service
+    - name: "2.1.22 | AUDIT | Ensure only approved services are listening on a network interface | Get list of services"
+      ansible.builtin.command: systemctl list-units --type=service  # noqa command-instead-of-module
       changed_when: false
       failed_when: discovered_running_services.rc not in [ 0, 1 ]
       check_mode: false
