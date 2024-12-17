@@ -152,8 +152,8 @@ Below is an example of the tag section from a control within this role. Using th
 
 ```sh
       tags:
-      - level1-server
-      - level1-workstation
+      - level1_server
+      - level1_workstation
       - scored
       - avahi
       - services
