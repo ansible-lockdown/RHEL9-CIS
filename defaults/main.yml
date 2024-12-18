@@ -1055,7 +1055,7 @@ rhel9cis_aide_db_file_age: 1w
 rhel9cis_aide_db_recreate: false
 
 # allows to change db file, not config need to be adjusted too
-rhel9cis_aide_db_file: /var/lib/aide/aide.db
+rhel9cis_aide_db_file: /var/lib/aide/aide.db.gz
 
 ## Control 6.1.2 AIDE cron settings
 
