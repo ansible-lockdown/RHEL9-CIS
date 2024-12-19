@@ -23,7 +23,7 @@
   ansible.builtin.import_tasks:
       file: warning_facts.yml
   vars:
-      warn_control_id: 'Auditd template updated, see diff output for details'
+      warn_control_id: 'Auditd template updated, validate as expected'
   when:
       - rhel9cis_auditd_template_updated.changed
       - rhel9cis_auditd_file.stat.exists
