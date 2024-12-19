@@ -63,10 +63,10 @@ This role **will make changes to the system** which may have unintended conseque
 It is possible to to only run level 1 or level 2 controls for CIS.
 This is managed using tags:
 
-- level1_server
-- level1_workstation
-- level2_server
-- level2_workstation
+- level1-server
+- level1-workstation
+- level2-server
+- level2-workstation
 
 The control found in defaults main also need to reflect this as this control the testing thet takes place if you are using the audit component.
 
@@ -152,8 +152,8 @@ Below is an example of the tag section from a control within this role. Using th
 
 ```sh
       tags:
-      - level1_server
-      - level1_workstation
+      - level1-server
+      - level1-workstation
       - scored
       - avahi
       - services
