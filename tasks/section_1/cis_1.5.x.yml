@@ -18,7 +18,7 @@
 - name: "1.5.2 | PATCH | Ensure core dump backtraces are disabled"
   ansible.builtin.lineinfile:
       path: /etc/systemd/coredump.conf
-      regexp: '^ProcessSizeMax\s*=\s*.*[1-9]$'
+      regexp: '^ProcessSizeMax\s*=\s*.*[1-9].*'
       line: 'ProcessSizeMax=0'
   when:
       - rhel9cis_rule_1_5_2
