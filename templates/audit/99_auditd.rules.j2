@@ -1,6 +1,6 @@
 ## Ansible controlled file
 # Added as part of ansible-lockdown CIS baseline
-# provided by MindPointGroup LLC
+# provided by Mindpoint Group - A Tyto Athene Company / Ansible Lockdown
 ### YOUR CHANGES WILL BE LOST!
 
 # This template will set all of the auditd configurations via a handler in the role in one task instead of individually
@@ -30,7 +30,7 @@
 -w /etc/sysconfig/network-scripts -p wa -k system-locale
 {% endif %}
 {% if rhel9cis_rule_6_3_3_6 %}
-{% for proc in priv_procs.stdout_lines -%}
+{% for proc in discovered_priv_procs.stdout_lines -%}
 -a always,exit -F path={{ proc }} -F perm=x -F auid>={{ prelim_min_int_uid }} -F auid!=unset -k privileged
 {% endfor %}
 {% endif %}

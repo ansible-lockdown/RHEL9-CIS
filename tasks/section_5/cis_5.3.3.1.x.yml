@@ -1,8 +1,7 @@
 ---
 
 - name: "5.3.3.1.1 | PATCH | Ensure password failed attempts lockout is configured"
-  when:
-    - rhel9cis_rule_5_3_3_1_1
+  when: rhel9cis_rule_5_3_3_1_1
   tags:
     - level1-server
     - level1-workstation
@@ -44,8 +43,7 @@
       notify: Authselect update
 
 - name: "5.3.3.1.2 | PATCH | Ensure password unlock time is configured"
-  when:
-    - rhel9cis_rule_5_3_3_1_2
+  when: rhel9cis_rule_5_3_3_1_2
   tags:
     - level1-server
     - level1-workstation
@@ -87,8 +85,7 @@
       notify: Authselect update
 
 - name: "5.3.3.1.3 | PATCH | Ensure password failed attempts lockout includes root account"
-  when:
-    - rhel9cis_rule_5_3_3_1_3
+  when: rhel9cis_rule_5_3_3_1_3
   tags:
     - level1-server
     - level1-workstation
@@ -104,6 +101,7 @@
         line: "{{ rhel9cis_pamroot_lock_option }}"
         insertafter: '^# end of pam-auth-update config'
         create: true
+        mode: 'u-x,go-wx'
 
     - name: "5.3.3.1.3 | PATCH | Ensure password failed attempts lockout includes root account | remove lockout from pam files NOT AuthSelect"
       when:

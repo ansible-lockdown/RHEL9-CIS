@@ -495,6 +495,11 @@ rhel9cis_rule_7_2_9: true
 
 ## Section 1 vars
 
+## Ability to enabe debug on mounts to assist in troubleshooting
+# Mount point changes are set based upon facts created in Prelim
+# these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.
+rhel9cis_debug_mount_data: false
+
 ## Control 1.1.2
 # If set to `true`, rule will be implemented using the `tmp.mount` systemd-service,
 # otherwise fstab configuration will be used.
@@ -569,7 +574,7 @@ rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and
 
 ## Control 1.8.x - Settings for GDM
 ## 1.8 GDM graphical interface
-rhel9cis_gui: false
+rhel9cis_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
 # This variable specifies the GNOME configuration database file to which configurations are written.
 # (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
 # The default database is 'local'.
@@ -992,6 +997,11 @@ rhel9cis_futurepwchgdate_autofix: true
 # 5.4.2.x
 rhel9cis_root_umask: '0027'  # 0027 or more restrictive
 
+## Control 5.4.2.7 - Ensure system accounts are secured | Set nologin
+# The system users on this list are allowed to have a shell (e.g. applications
+# that require a shell to function)
+rhel9cis_system_users_shell: []
+
 ## Control 5.4.3.2 - Configuring user shell timeout
 # This dictionary is related to ensuring the rule about user shell timeout
 # This variable represents the amount of seconds a command or process is allowed to
@@ -1029,14 +1039,23 @@ min_int_uid: 1000
 max_int_uid: 65533
 
 ## Section6 vars
-
-## Control 6.1.1 - allow aide to be configured
+## Control 6.1.x - allow aide to be configured
 # AIDE is a file integrity checking tool, similar in nature to Tripwire.
 # While it cannot prevent intrusions, it can detect unauthorized changes
 # to configuration files by alerting when the files are changed. Review
 # the AIDE quick start guide and AIDE documentation before proceeding.
 # By setting this variable to `true`, all of the settings related to AIDE will be applied!
 rhel9cis_config_aide: true
+
+# If DB file older than below will automatically rebuild DB
+# e.g. options:1w = 1 week, 1d = 1day 1h = 1 hour
+rhel9cis_aide_db_file_age: 1w
+
+# If aide already setup this forces a new DB to be created
+rhel9cis_aide_db_recreate: false
+
+# allows to change db file, not config need to be adjusted too
+rhel9cis_aide_db_file: /var/lib/aide/aide.db.gz
 
 ## Control 6.1.2 AIDE cron settings
 

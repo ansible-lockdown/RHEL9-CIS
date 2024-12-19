@@ -83,7 +83,7 @@
     path: /etc/shadow
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.6 | PATCH | Ensure permissions on /etc/shadow- are configured"
   when:
@@ -100,7 +100,7 @@
     path: /etc/shadow-
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.7 | PATCH | Ensure permissions on /etc/gshadow are configured"
   when:
@@ -117,7 +117,7 @@
     path: /etc/gshadow
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.8 | PATCH | Ensure permissions on /etc/gshadow- are configured"
   when:
@@ -134,7 +134,7 @@
     path: /etc/gshadow-
     owner: root
     group: root
-    mode: '0000'
+    mode: 'ugo-rwx'
 
 - name: "7.1.9 | PATCH | Ensure permissions on /etc/shells are configured"
   when:
@@ -187,18 +187,18 @@
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
       failed_when: false
       changed_when: false
-      register: rhel_09_7_1_11_perms_results
+      register: discovered_world_writable
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable files if they exist (Configurable)"
       when:
-        - rhel_09_7_1_11_perms_results.stdout_lines is defined
-        - rhel_09_7_1_11_perms_results.stdout_lines | length > 0
+        - discovered_world_writable.stdout_lines is defined
+        - discovered_world_writable.stdout_lines | length > 0
         - rhel9cis_no_world_write_adjust
       ansible.builtin.file:
         path: '{{ item }}'
-        mode: o-w
+        mode: 'o-w'
         state: touch
-      loop: "{{ rhel_09_7_1_11_perms_results.stdout_lines }}"
+      loop: "{{ discovered_world_writable.stdout_lines }}"
 
     - name: "7.1.11 | PATCH | Ensure no world writable files exist | Adjust world-writable directories add sticky bit"
       ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -o+w ! -perm -1002 2>/dev/null | xargs chmod a+t
@@ -221,7 +221,7 @@
     warn_control_id: '7.1.12'
   block:
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Get list files or directories"
-      ansible.builtin.shell: find {{ rhel9cis_exclude_unowned_search_path }} {{ item.mount }} -xdev \( -nouser -o -nogroup \) -not -fstype nfs
+      ansible.builtin.command: find {{ rhel9cis_exclude_unowned_search_path }} {{ item.mount }} -xdev \( -nouser -o -nogroup \) -not -fstype nfs
       changed_when: false
       failed_when: false
       check_mode: false
@@ -233,7 +233,7 @@
 
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Flatten no_user_items results for easier use"
       ansible.builtin.set_fact:
-        discovered_unowned_files_flatten: "{{ discovered_unowned_files.results | map(attribute='stdout_lines') | flatten }}"
+        discovered_unowned_files_flatten: "{{ discovered_unowned_files.results | selectattr('stdout_lines', 'defined') | map(attribute='stdout_lines') | flatten }}"
 
     - name: "7.1.12 | AUDIT | Ensure no files or directories without an owner and a group exist | Alert on unowned files and directories"
       when:
@@ -283,7 +283,7 @@
     warn_control_id: '7.1.13'
   block:
     - name: "7.1.13 | AUDIT | Ensure SUID and SGID files are reviewed | Find SUID and SGID"
-      ansible.builtin.shell: find {{ item.mount }} -xdev -type f -perm \( -02000 or -04000 \) -not -fstype nfs
+      ansible.builtin.command: find {{ item.mount }} -xdev -type f -perm \( -02000 or -04000 \) -not -fstype nfs
       changed_when: false
       failed_when: false
       check_mode: false
@@ -295,7 +295,7 @@
 
     - name: "7.1.13 | AUDIT | Audit SUID executables | Flatten suid_executables results for easier use"
       ansible.builtin.set_fact:
-        discovered_suid_sgid_files_flatten: "{{ discovered_suid_sgid_files.results | map(attribute='stdout_lines') | flatten }}"
+        discovered_suid_sgid_files_flatten: "{{ discovered_suid_sgid_files.results | selectattr('stdout_lines', 'defined') | map(attribute='stdout_lines') | flatten }}"
 
     - name: "7.1.13 | AUDIT | Audit SUID executables | Alert SUID executables exist"
       when:

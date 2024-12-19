@@ -28,8 +28,7 @@
       loop: "{{ discovered_pam_nullok.stdout_lines }}"
 
     - name: "5.3.3.4.1 | PATCH | Ensure password number of changed characters is configured | Remove nullok from pam files AuthSelect"
-      when:
-        - rhel9cis_allow_authselect_updates
+      when: rhel9cis_allow_authselect_updates
       ansible.builtin.replace:
         path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
         regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_unix\.so)(.*)\snullok(.*$)
@@ -67,8 +66,7 @@
       loop: "{{ discovered_pam_remember.stdout_lines }}"
 
     - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember  | Remove remember from pam files AuthSelect"
-      when:
-        - rhel9cis_allow_authselect_updates
+      when: rhel9cis_allow_authselect_updates
       ansible.builtin.replace:
         path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
         regexp: ^(\s*password\s+(requisite|required|sufficient)\s+pam_unix\.so)(.*)\sremember\s*=\s*=\d*(.*$)
@@ -107,8 +105,7 @@
       loop: "{{ discovered_pam_remember.stdout_lines }}"
 
     - name: "5.3.3.4.3 | PATCH | Ensure pam_unix includes a strong password hashing algorithm | Add hash algorithm to pam files AuthSelect"
-      when:
-        - rhel9cis_allow_authselect_updates
+      when: rhel9cis_allow_authselect_updates
       ansible.builtin.lineinfile:
         path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
         regexp: ^(\s*password\s+)(requisite|required|sufficient)(\s+pam_unix.so\s)(.*)(sha512|yescrypt)(.*$)
@@ -150,8 +147,7 @@
       loop: "{{ discovered_pam_authtok.stdout_lines }}"
 
     - name: "5.3.3.4.4 | PATCH | Ensure pam_unix includes use_authtok | Add use_authtok pam files AuthSelect"
-      when:
-        - rhel9cis_allow_authselect_updates
+      when: rhel9cis_allow_authselect_updates
       ansible.builtin.lineinfile:
         path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
         regexp: ^(\s*password\s+)(requisite|required|sufficient)(\s+pam_unix.so\s)(.*)use_authtok(.*$)

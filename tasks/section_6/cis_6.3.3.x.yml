@@ -2,8 +2,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.1 | PATCH | Ensure changes to system administration scope (sudoers) is collected"
-  when:
-    - rhel9cis_rule_6_3_3_1
+  when: rhel9cis_rule_6_3_3_1
   tags:
     - level2-server
     - level2-workstation
@@ -16,8 +15,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.2 | PATCH | Ensure actions as another user are always logged"
-  when:
-    - rhel9cis_rule_6_3_3_2
+  when: rhel9cis_rule_6_3_3_2
   tags:
     - level2-server
     - level2-workstation
@@ -30,8 +28,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.3 | PATCH | Ensure events that modify the sudo log file are collected"
-  when:
-    - rhel9cis_rule_6_3_3_3
+  when: rhel9cis_rule_6_3_3_3
   tags:
     - level2-server
     - level2-workstation
@@ -43,8 +40,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.4 | PATCH | Ensure events that modify date and time information are collected"
-  when:
-    - rhel9cis_rule_6_3_3_4
+  when: rhel9cis_rule_6_3_3_4
   tags:
     - level2-server
     - level2-workstation
@@ -58,8 +54,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.5 | PATCH | Ensure events that modify the system's network environment are collected"
-  when:
-    - rhel9cis_rule_6_3_3_5
+  when: rhel9cis_rule_6_3_3_5
   tags:
     - level2-server
     - level2-workstation
@@ -73,8 +68,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.6 | PATCH | Ensure use of privileged commands is collected"
-  when:
-    - rhel9cis_rule_6_3_3_6
+  when: rhel9cis_rule_6_3_3_6
   tags:
     - level2-server
     - level2-workstation
@@ -88,7 +82,7 @@
       changed_when: false
       failed_when: false
       check_mode: false
-      register: priv_procs
+      register: discovered_priv_procs
 
     - name: "6.3.3.6 | PATCH | Ensure use of privileged commands is collected"
       ansible.builtin.set_fact:
@@ -97,8 +91,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.7 | PATCH | Ensure unsuccessful file access attempts are collected"
-  when:
-    - rhel9cis_rule_6_3_3_7
+  when: rhel9cis_rule_6_3_3_7
   tags:
     - level2-server
     - level2-workstation
@@ -111,8 +104,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.8 | PATCH | Ensure events that modify user/group information are collected"
-  when:
-    - rhel9cis_rule_6_3_3_8
+  when: rhel9cis_rule_6_3_3_8
   tags:
     - level2-server
     - level2-workstation
@@ -125,8 +117,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.9 | PATCH | Ensure discretionary access control permission modification events are collected"
-  when:
-    - rhel9cis_rule_6_3_3_9
+  when: rhel9cis_rule_6_3_3_9
   tags:
     - level2-server
     - level2-workstation
@@ -140,8 +131,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.10 | PATCH | Ensure successful file system mounts are collected"
-  when:
-    - rhel9cis_rule_6_3_3_10
+  when: rhel9cis_rule_6_3_3_10
   tags:
     - level2-server
     - level2-workstation
@@ -154,8 +144,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.11 | PATCH | Ensure session initiation information is collected"
-  when:
-    - rhel9cis_rule_6_3_3_11
+  when: rhel9cis_rule_6_3_3_11
   tags:
     - level2-server
     - level2-workstation
@@ -168,8 +157,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.12 | PATCH | Ensure login and logout events are collected"
-  when:
-    - rhel9cis_rule_6_3_3_12
+  when: rhel9cis_rule_6_3_3_12
   tags:
     - level2-server
     - level2-workstation
@@ -182,8 +170,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.13 | PATCH | Ensure file deletion events by users are collected"
-  when:
-    - rhel9cis_rule_6_3_3_13
+  when: rhel9cis_rule_6_3_3_13
   tags:
     - level2-server
     - level2-workstation
@@ -197,8 +184,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.14 | PATCH | Ensure events that modify the system's Mandatory Access Controls are collected"
-  when:
-    - rhel9cis_rule_6_3_3_14
+  when: rhel9cis_rule_6_3_3_14
   tags:
     - level2-server
     - level2-workstation
@@ -212,8 +198,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.15 | PATCH | Ensure successful and unsuccessful attempts to use the chcon command are recorded"
-  when:
-    - rhel9cis_rule_6_3_3_15
+  when: rhel9cis_rule_6_3_3_15
   tags:
     - level2-server
     - level2- workstation
@@ -228,8 +213,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.16 | PATCH | Ensure successful and unsuccessful attempts to use the setfacl command are recorded"
-  when:
-    - rhel9cis_rule_6_3_3_16
+  when: rhel9cis_rule_6_3_3_16
   tags:
     - level2-server
     - level2-workstation
@@ -244,8 +228,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.17 | PATCH | Ensure successful and unsuccessful attempts to use the chacl command are recorded"
-  when:
-    - rhel9cis_rule_6_3_3_17
+  when: rhel9cis_rule_6_3_3_17
   tags:
     - level2-server
     - level2-workstation
@@ -260,8 +243,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.18 | PATCH | Ensure successful and unsuccessful attempts to use the usermod command are recorded"
-  when:
-    - rhel9cis_rule_6_3_3_18
+  when: rhel9cis_rule_6_3_3_18
   tags:
     - level2-server
     - level2-workstation
@@ -276,8 +258,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.19 | PATCH | Ensure kernel module loading and unloading and modification is collected"
-  when:
-    - rhel9cis_rule_6_3_3_19
+  when: rhel9cis_rule_6_3_3_19
   tags:
     - level2-server
     - level2-workstation
@@ -291,8 +272,7 @@
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.20 | PATCH | Ensure the audit configuration is immutable"
-  when:
-    - rhel9cis_rule_6_3_3_20
+  when: rhel9cis_rule_6_3_3_20
   tags:
     - level2-server
     - level2-workstation
@@ -306,8 +286,7 @@
     update_audit_template: true
 
 - name: "6.3.3.21 | AUDIT | Ensure the running and on disk configuration is the same"
-  when:
-    - rhel9cis_rule_6_3_3_21
+  when: rhel9cis_rule_6_3_3_21
   tags:
     - level2-server
     - level2-workstation
@@ -321,8 +300,7 @@
       - "Please run augenrules --load if you suspect there is a configuration that is not active"
 
 - name: Auditd | 6.3.3.x | Auditd controls updated
-  when:
-    - update_audit_template
+  when: update_audit_template
   ansible.builtin.debug:
     msg: "Auditd Controls handled in POST using template - updating /etc/auditd/rules.d/99_auditd.rules"
   changed_when: false

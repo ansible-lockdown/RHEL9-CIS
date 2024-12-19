@@ -1,54 +1,95 @@
 ---
 
-- name: "1.1.2.6.1 | AUDIT | Ensure separate partition exists for /var/log"
+- name: "1/.1 | PATCH | Ensure /var/log is a separate partition"
   when:
-    - required_mount not in mount_names
     - rhel9cis_rule_1_1_2_6_1
+    - required_mount not in prelim_mount_names
   tags:
-    - level2-server
-    - level2-workstation
+    - level1-server
+    - level1-workstation
     - audit
     - mounts
-    - rule_1_1_2.6.1
+    - rule_1.1.2.6.1
     - NIST800-53R5_CM-7
   vars:
     warn_control_id: '1.1.2.6.1'
     required_mount: '/var/log'
   block:
-    - name: "1.1.2.6.1 | AUDIT | Ensure separate partition exists for /var/log | Absent"
-      ansible.builtin.debug:
-        msg: "Warning!! {{ required_mount }} doesn't exist. This is a manual task"
+    - name: "1.1.2.6.1 | AUDIT | Ensure /var/log is a separate partition | check for mount"
+      ansible.builtin.command: findmnt -kn "{{ required_mount }}"
+      changed_when: false
+      failed_when: discovered_var_log_mount.rc not in [ 0, 1 ]
+      register: discovered_var_log_mount
 
-    - name: "1.1.2.6.1 | AUDIT | Ensure separate partition exists for /var/log | Present"
+    - name: "1.1.2.6.1 | AUDIT | Ensure /var/log is a separate partition | Absent"
+      when: discovered_var_log_mount is undefined
+      ansible.builtin.debug:
+        msg: "Warning!! {{ required_mount }} is not mounted on a separate partition"
+
+    - name: "1.1.2.6.1 | AUDIT | Ensure /var/log is a separate partition | Present"
+      when: discovered_var_log_mount is undefined
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
-- name: |
-    "1.1.2.6.2 | PATCH | Ensure nodev option set on /var/log partition
-     1.1.2.6.3 | PATCH | Ensure nosuid option set on /var/log partition
-     1.1.2.6.4 | PATCH | Ensure noexec option set on /var/log partition"
+- name: "1.1.2.6.2 | PATCH | Ensure nodev option set on /var/log partition"
   when:
-    - item.mount == "/var/log"
-    - rhel9cis_rule_1_1_2_6_2 or
-      rhel9cis_rule_1_1_2_6_3 or
-      rhel9cis_rule_1_1_2_6_4
+    - prelim_mount_point_fs_and_options[mount_point] is defined
+    - rhel9cis_rule_1_1_2_6_2
   tags:
     - level1-server
     - level1-workstation
     - patch
     - mounts
     - rule_1.1.2.6.2
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
+  vars:
+    mount_point: "/var/log"
+    required_option: nodev
+  notify: &mount_option_notify
+    - "Remount {{ mount_point }}"
+  ansible.builtin.set_fact: &mount_option_set_fact
+    prelim_mount_point_fs_and_options: |
+      {{ prelim_mount_point_fs_and_options | combine({mount_point: {'options': (prelim_mount_point_fs_and_options[mount_point]['options'] + [required_option])}}, recursive=True) }}
+  changed_when: &mount_option_changed_when
+    - required_option not in prelim_mount_point_fs_and_options[mount_point]['original_options']
+
+- name: "1.1.2.6.3 | PATCH | Ensure nosuid option set on /var/log partition"
+  when:
+    - prelim_mount_point_fs_and_options[mount_point] is defined
+    - rhel9cis_rule_1_1_2_6_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - mounts
     - rule_1.1.2.6.3
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
+  vars:
+    mount_point: "/var/log"
+    required_option: nosuid
+  notify: *mount_option_notify
+  ansible.builtin.set_fact:
+    <<: *mount_option_set_fact
+  changed_when: *mount_option_changed_when
+
+- name: "1.1.2.6.4 | PATCH | Ensure noexec option set on /var/log partition"
+  when:
+    - prelim_mount_point_fs_and_options[mount_point] is defined
+    - rhel9cis_rule_1_1_2_6_4
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - mounts
     - rule_1.1.2.6.4
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
-  ansible.posix.mount:
-    name: /var/log
-    src: "{{ item.device }}"
-    fstype: "{{ item.fstype }}"
-    state: present
-    opts: defaults,{% if rhel9cis_rule_1_1_2_6_2 %}nodev,{% endif %}{% if rhel9cis_rule_1_1_2_6_3 %}nosuid,{% endif %}{% if rhel9cis_rule_1_1_2_6_4 %}noexec{% endif %}
-  loop: "{{ ansible_facts.mounts }}"
-  loop_control:
-    label: "{{ item.device }}"
-  notify: Change_requires_reboot
+  vars:
+    mount_point: "/var/log"
+    required_option: noexec
+  notify: *mount_option_notify
+  ansible.builtin.set_fact:
+    <<: *mount_option_set_fact
+  changed_when: *mount_option_changed_when

@@ -1,8 +1,7 @@
 ---
 
 - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured"
-  when:
-    - rhel9cis_rule_6_2_4_1
+  when: rhel9cis_rule_6_2_4_1
   tags:
     - level1-server
     - level1-workstation

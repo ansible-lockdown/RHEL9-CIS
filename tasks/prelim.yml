@@ -17,52 +17,69 @@
   when:
     - run_audit or audit_only
     - setup_audit
-  tags:
-    - run_audit
+  tags: run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
 - name: "PRELIM | AUDIT | Interactive Users"
-  tags:
-    - always
+  tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1 }'
   changed_when: false
   register: prelim_interactive_usernames
 
 - name: "PRELIM | AUDIT | Interactive User accounts home directories"
-  tags:
-    - always
+  tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
   changed_when: false
   register: prelim_interactive_users_home
 
 - name: "PRELIM | AUDIT | Interactive UIDs"
-  tags:
-    - always
+  tags: always
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
   changed_when: false
   register: prelim_interactive_uids
 
 - name: "PRELIM | AUDIT | Capture /etc/password variables"
+  tags: always
   ansible.builtin.include_tasks:
     file: parse_etc_password.yml
-  tags:
-    - always
 
 - name: "PRELIM | PATCH | Ensure python3-libselinux is installed"
-  when:
-    - '"python3-libselinux" not in ansible_facts.packages'
+  when: '"python3-libselinux" not in ansible_facts.packages'
   ansible.builtin.package:
     name: python3-libselinux
     state: present
 
-- name: "PRELIM | AUDIT | Section 1.1 | Create list of mount points"
-  tags:
-    - Always
+- name: PRELIM | AUDIT | Section 1.1 | Create list of mount points
+  tags: always
   ansible.builtin.set_fact:
-    mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+    prelim_mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+
+- name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options
+  tags: always
+  block:
+    - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - call mount  # noqa command-instead-of-module
+      ansible.builtin.shell: |
+        mount | awk '{print $1, $3, $5, $6}'
+      changed_when: false
+      register: prelim_mount_output
+
+    - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - build fact  # This is inherited and used in mountpoints tasks
+      ansible.builtin.set_fact:
+        prelim_mount_point_fs_and_options: >-
+          {%- set prelim_mount_point_fs_and_options = {} -%}
+          {%- for line in prelim_mount_output.stdout_lines -%}
+          {%- set fields = line.split() -%}
+          {%- set _ = prelim_mount_point_fs_and_options.update({fields[1]: {'src': fields[0], 'fs_type': fields[2], 'original_options': fields[3][1:-1].split(','), 'options': fields[3][1:-1].split(',')}}) -%}
+          {%- endfor -%}
+          {{ prelim_mount_point_fs_and_options }}
+
+    - name: "PRELIM | AUDIT | Debug of mount variables to assist in troubleshooting"
+      when: rhel9cis_debug_mount_data
+      ansible.builtin.debug:
+        msg: "{{ prelim_mount_point_fs_and_options }}"
 
 - name: "PRELIM | PATCH | Update to latest gpg keys"
   when:
@@ -80,27 +97,28 @@
     - ansible_facts.distribution == 'RedHat'
   block:
     - name: "PRELIM | AUDIT | Import gpg keys | get data"
-      ansible.builtin.shell: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'
+      ansible.builtin.command: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
       register: prelim_check_gpg_imported
 
-    - name: "PRELIM | AUDIT | Import gpg keys | Check Package"
+    - name: "PRELIM | AUDIT | Import gpg keys | Check Package"  # noqa command-instead-of-module
       when: "'not installed' in prelim_check_gpg_imported.stdout"
-      ansible.builtin.shell: rpm -qi redhat-release | grep Signature
+      ansible.builtin.shell: rpm -qi redhat-release | grep Signature  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
       register: prelim_os_gpg_package_valid
 
-    - name: "PRELIM | PATCH | Force keys to be imported"
+    - name: "PRELIM | PATCH | Force keys to be imported"  # noqa command-instead-of-module
       when:
         - "'not installed' in prelim_check_gpg_imported.stdout"
         - "'Key ID 199e2f91fd431d51' in prelim_os_gpg_package_valid.stdout"
-      ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+      ansible.builtin.rpm_key:
+        key: /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+        state: present
 
 - name: "PRELIM | AUDIT | Check systemd coredump"
-  when:
-    - rhel9cis_rule_1_5_4
+  when: rhel9cis_rule_1_5_4
   tags:
     - level1-server
     - level1-workstation
@@ -127,7 +145,7 @@
         state: present
 
     - name: "PRELIM | AUDIT | Gather system-wide crypto-policy"
-      ansible.builtin.shell: 'update-crypto-policies --show'
+      ansible.builtin.command: 'update-crypto-policies --show'
       changed_when: false
       check_mode: false
       register: prelim_system_wide_crypto_policy
@@ -159,6 +177,22 @@
       ansible.builtin.set_fact:
         grub2_path: /etc/grub2-efi.cfg
 
+- name: "PRELIM | Discover Gnome Desktop Environment"
+  tags:
+    - always
+  ansible.builtin.stat:
+    path: /usr/share/gnome/gnome-version.xml
+  register: prelim_gnome_present
+
+- name: "PRELIM | Install dconf if gui installed"
+  when:
+    - rhel9cis_gui
+  tags:
+    - always
+  ansible.builtin.package:
+    name: dconf
+    state: present
+
 - name: "PRELIM | AUDIT | Wireless adapter pre-requisites"
   when:
     - rhel9cis_rule_3_1_2
@@ -167,7 +201,7 @@
     - always
   block:
     - name: "PRELIM | AUDIT | Discover is wirelss adapter on system"
-      ansible.builtin.shell: find /sys/class/net/*/ -type d -name wireless
+      ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false
       failed_when: discover_wireless_adapters.rc not in [ 0, 1 ]
@@ -206,7 +240,7 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     owner: root
     group: root
-    mode: '0600'
+    mode: 'go-rwx'
     state: touch
 
 - name: "PRELIM | AUDIT | Gather UID 0 accounts other than root"
@@ -230,6 +264,7 @@
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d
     state: directory
+    mode: 'u+x,g-w,o-rwx'
 
 - name: "PRELIM | PATCH | Configure System Accounting (auditd)"
   when:

@@ -237,13 +237,13 @@
     - users
     - rule_7.2.8
   block:
-    - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Create dir if absent"
+    - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Create dir if absent"  # noqa risky-file-permissions
       ansible.builtin.file:
         path: "{{ item.dir }}"
         state: directory
         owner: "{{ item.id }}"
         group: "{{ item.gid }}"
-      loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', max_int_uid | int) | list }}"
+      loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', prelim_max_int_uid | int) | list }}"
       loop_control:
         label: "{{ item.id }}"
 

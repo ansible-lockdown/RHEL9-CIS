@@ -1,8 +1,7 @@
 ---
 
 - name: "6.3.4.1 | PATCH | Ensure the audit log file directory mode is configured"
-  when:
-    - rhel9cis_rule_6_3_4_1
+  when: rhel9cis_rule_6_3_4_1
   tags:
     - level2-server
     - level2-workstation
@@ -39,8 +38,7 @@
     group: root
 
 - name: "6.3.4.5 | PATCH | Ensure audit configuration files mode is configured"
-  when:
-    - rhel9cis_rule_6_3_4_5
+  when: rhel9cis_rule_6_3_4_5
   tags:
     - level2-server
     - level2-workstation
@@ -57,8 +55,7 @@
     label: "{{ item.path }}"
 
 - name: "6.3.4.6 | PATCH | Ensure audit configuration files owner is configured"
-  when:
-    - rhel9cis_rule_6_3_4_6
+  when: rhel9cis_rule_6_3_4_6
   tags:
     - level2-server
     - level2-workstation
@@ -75,8 +72,7 @@
     label: "{{ item.path }}"
 
 - name: "6.3.4.7 | PATCH | Ensure audit configuration files group owner is configured"
-  when:
-    - rhel9cis_rule_6_3_4_7
+  when: rhel9cis_rule_6_3_4_7
   tags:
     - level2-server
     - level2-workstation
@@ -93,8 +89,7 @@
     label: "{{ item.path }}"
 
 - name: "6.3.4.8 | PATCH | Ensure audit tools mode is configured"
-  when:
-    - rhel9cis_rule_6_3_4_8
+  when: rhel9cis_rule_6_3_4_8
   tags:
     - level2-server
     - level2-workstation
@@ -105,17 +100,10 @@
   ansible.builtin.file:
     path: "{{ item }}"
     mode: 'go-w'
-  loop:
-    - /sbin/auditctl
-    - /sbin/aureport
-    - /sbin/ausearch
-    - /sbin/autrace
-    - /sbin/auditd
-    - /sbin/augenrules
+  loop: "{{ audit_bins }}"
 
 - name: "6.3.4.9 | PATCH | Ensure audit tools owner is configured"
-  when:
-    - rhel9cis_rule_6_3_4_9
+  when: rhel9cis_rule_6_3_4_9
   tags:
     - level2-server
     - level2-workstation
@@ -126,17 +114,10 @@
     path: "{{ item }}"
     owner: root
     group: root
-  loop:
-    - /sbin/auditctl
-    - /sbin/aureport
-    - /sbin/ausearch
-    - /sbin/autrace
-    - /sbin/auditd
-    - /sbin/augenrules
+  loop: "{{ audit_bins }}"
 
 - name: "6.3.4.10 | PATCH | Ensure audit tools group owner is configured"
-  when:
-    - rhel9cis_rule_6_3_4_10
+  when: rhel9cis_rule_6_3_4_10
   tags:
     - level2-server
     - level2-workstation
@@ -147,10 +128,4 @@
   ansible.builtin.file:
     path: "{{ item }}"
     group: root
-  loop:
-    - /sbin/auditctl
-    - /sbin/aureport
-    - /sbin/ausearch
-    - /sbin/autrace
-    - /sbin/auditd
-    - /sbin/augenrules
+  loop: "{{ audit_bins }}"
