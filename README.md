@@ -75,7 +75,7 @@ The control found in defaults main also need to reflect this as this control the
 CIS release always contains changes, it is highly recommended to review the new references and available variables. This have changed significantly since ansible-lockdown initial release.
 This is now compatible with python3 if it is found to be the default interpreter. This does come with pre-requisites which it configures the system accordingly.
 
-Further details can be seen in the [Changelog](./ChangeLog.md)
+Further details can be seen in the [Changelog](./Changelog.md)
 
 ## Auditing (new)
 
