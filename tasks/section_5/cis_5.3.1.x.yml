@@ -1,0 +1,55 @@
+---
+
+- name: "5.3.1.1 | PATCH | Ensure latest version of pam is installed"
+  when:
+    - rhel9cis_rule_5_3_1_1
+    - ansible_facts.packages['pam'][0]['version'] is version('1.5.1-19', '<') or
+      "'pam' not in ansible_facts.packages"
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - pam
+    - rule_5.3.1.1
+  ansible.builtin.package:
+    name: pam
+    state: latest
+
+- name: "5.3.1.2 | PATCH | Ensure latest version of authselect is installed"
+  when:
+    - rhel9cis_rule_5_3_1_2
+    - rhel9cis_authselect_pkg_update
+    - ansible_facts.packages['authselect'][0]['version'] is version('1.2.6-2', '<') or
+      "'authselect' not in ansible_facts.packages"
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - pam
+    - rule_5.3.1.2
+  block:
+    - name: "5.3.1.2 | PATCH | Ensure latest version of authselect is installed | Patch"
+      ansible.builtin.package:
+        name: authselect
+        state: latest
+      register: discovered_authselect_updated
+
+    - name: "5.3.1.2 | AUDIT | Ensure latest version of authselect is installed | Patch"
+      when: discovered_authselect_updated.changed  # noqa no-handler
+      ansible.builtin.set_fact:
+        authselect_update: OK
+
+- name: "5.3.1.3 | PATCH | Ensure libpwquality is installed"
+  when:
+    - rhel9cis_rule_5_3_1_3
+    - ansible_facts.packages['libpwquality'][0]['version'] is version('1.4.4-8', '<') or
+      "'libpwquality' not in ansible_facts.packages"
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - pam
+    - rule_5.3.1.3
+  ansible.builtin.package:
+    name: libpwquality
+    state: latest

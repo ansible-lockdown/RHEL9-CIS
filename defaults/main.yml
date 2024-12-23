@@ -4,24 +4,15 @@
 # These values may be overriden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 
-## Usage on containerized images
-# The role discovers dynamically (in tasks/main.yml) whether it
-# is executed on a container image and sets the variable
-# system_is_container the true. Otherwise, the default value
-# 'false' is left unchanged.
-system_is_container: false
-# The filename of the existing yml file in role's  'vars/' sub-directory
-# to be used for managing the role-behavior when a container was detected:
-# (de)activating rules or for other tasks(e.g. disabling Selinux or a specific
-# firewall-type).
-container_vars_file: is_container.yml
-# rhel9cis is left off the front of this var for consistency in testing pipeline
-# system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
-system_is_ec2: false
-
 # Run the OS validation check
 # Supported OSs will not need for this to be changed - see README e.g. CentOS
 os_check: true
+
+# Disruption is high
+## Run tests that are considered higher risk and could have a system impact if not properly tested
+## Default false
+## Will be fine if clean new unconfigured build
+rhel9cis_disruption_high: false
 
 ## Switching on/off specific baseline sections
 # These variables govern whether the tasks of a particular section are to be executed when running the role.
@@ -33,8 +24,9 @@ rhel9cis_section3: true
 rhel9cis_section4: true
 rhel9cis_section5: true
 rhel9cis_section6: true
+rhel9cis_section7: true
 
-# This is used for audit purposes to run only specifc level use the tags
+# This is used for audit purposes to run only specific level use the tags
 # e.g.
 # - level1-server
 # - level2-workstation
@@ -52,7 +44,8 @@ rhel9cis_legacy_boot: false
 ## Benchmark name used by audting control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
-benchmark_version: 'v1.0.0'
+benchmark_version: 'v2.0.0'
+
 benchmark: RHEL9-CIS
 
 # Whether to skip the system reboot before audit
@@ -61,6 +54,10 @@ skip_reboot: true
 
 # default value will change to true but wont reboot if not enabled but will error
 change_requires_reboot: false
+
+###
+### Settings for associated Audit role using Goss
+###
 
 ###########################################
 ### Goss is required on the remote host ###
@@ -120,61 +117,98 @@ audit_log_dir: '/opt'
 
 # Section 1 is Initial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
 # Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
+# Filesystem kernel modules
 rhel9cis_rule_1_1_1_1: true
 rhel9cis_rule_1_1_1_2: true
-rhel9cis_rule_1_1_2_1: true
-rhel9cis_rule_1_1_2_2: true
-rhel9cis_rule_1_1_2_3: true
-rhel9cis_rule_1_1_2_4: true
-rhel9cis_rule_1_1_3_1: true
-rhel9cis_rule_1_1_3_2: true
-rhel9cis_rule_1_1_3_3: true
-rhel9cis_rule_1_1_4_1: true
-rhel9cis_rule_1_1_4_2: true
-rhel9cis_rule_1_1_4_3: true
-rhel9cis_rule_1_1_4_4: true
-rhel9cis_rule_1_1_5_1: true
-rhel9cis_rule_1_1_5_2: true
-rhel9cis_rule_1_1_5_3: true
-rhel9cis_rule_1_1_5_4: true
-rhel9cis_rule_1_1_6_1: true
-rhel9cis_rule_1_1_6_2: true
-rhel9cis_rule_1_1_6_3: true
-rhel9cis_rule_1_1_6_4: true
-rhel9cis_rule_1_1_7_1: true
-rhel9cis_rule_1_1_7_2: true
-rhel9cis_rule_1_1_7_3: true
-rhel9cis_rule_1_1_8_1: true
-rhel9cis_rule_1_1_8_2: true
-rhel9cis_rule_1_1_8_3: true
-rhel9cis_rule_1_1_8_4: true
-rhel9cis_rule_1_1_9: true
-rhel9cis_rule_1_2_1: true
-rhel9cis_rule_1_2_2: true
-rhel9cis_rule_1_2_3: true
-rhel9cis_rule_1_2_4: true
-rhel9cis_rule_1_3_1: true
-rhel9cis_rule_1_3_2: true
-rhel9cis_rule_1_3_3: true
+rhel9cis_rule_1_1_1_3: true
+rhel9cis_rule_1_1_1_4: true
+rhel9cis_rule_1_1_1_5: true
+rhel9cis_rule_1_1_1_6: true
+rhel9cis_rule_1_1_1_7: true
+rhel9cis_rule_1_1_1_8: true
+rhel9cis_rule_1_1_1_9: true
+# Filesystems
+# /tmp
+rhel9cis_rule_1_1_2_1_1: true
+rhel9cis_rule_1_1_2_1_2: true
+rhel9cis_rule_1_1_2_1_3: true
+rhel9cis_rule_1_1_2_1_4: true
+# /dev/shm
+rhel9cis_rule_1_1_2_2_1: true
+rhel9cis_rule_1_1_2_2_2: true
+rhel9cis_rule_1_1_2_2_3: true
+rhel9cis_rule_1_1_2_2_4: true
+# /home
+rhel9cis_rule_1_1_2_3_1: true
+rhel9cis_rule_1_1_2_3_2: true
+rhel9cis_rule_1_1_2_3_3: true
+# /var
+rhel9cis_rule_1_1_2_4_1: true
+rhel9cis_rule_1_1_2_4_2: true
+rhel9cis_rule_1_1_2_4_3: true
+# /var/tmp
+rhel9cis_rule_1_1_2_5_1: true
+rhel9cis_rule_1_1_2_5_2: true
+rhel9cis_rule_1_1_2_5_3: true
+rhel9cis_rule_1_1_2_5_4: true
+# /var/log
+rhel9cis_rule_1_1_2_6_1: true
+rhel9cis_rule_1_1_2_6_2: true
+rhel9cis_rule_1_1_2_6_3: true
+rhel9cis_rule_1_1_2_6_4: true
+# /var/log/audit
+rhel9cis_rule_1_1_2_7_1: true
+rhel9cis_rule_1_1_2_7_2: true
+rhel9cis_rule_1_1_2_7_3: true
+rhel9cis_rule_1_1_2_7_4: true
+
+# Package Mgmt
+# Config Pkg Repos
+rhel9cis_rule_1_2_1_1: true
+rhel9cis_rule_1_2_1_2: true
+rhel9cis_rule_1_2_1_3: true
+rhel9cis_rule_1_2_1_4: true
+# Package updates
+rhel9cis_rule_1_2_2_1: true
+
+# Selinux
+rhel9cis_rule_1_3_1_1: true
+rhel9cis_rule_1_3_1_2: true
+rhel9cis_rule_1_3_1_3: true
+rhel9cis_rule_1_3_1_4: true
+rhel9cis_rule_1_3_1_5: true
+rhel9cis_rule_1_3_1_6: true
+rhel9cis_rule_1_3_1_7: true
+rhel9cis_rule_1_3_1_8: true
+
+# Bootloader
 rhel9cis_rule_1_4_1: true
 rhel9cis_rule_1_4_2: true
+
+# Additional Process Hardening
 rhel9cis_rule_1_5_1: true
 rhel9cis_rule_1_5_2: true
 rhel9cis_rule_1_5_3: true
-rhel9cis_rule_1_6_1_1: true
-rhel9cis_rule_1_6_1_2: true
-rhel9cis_rule_1_6_1_3: true
-rhel9cis_rule_1_6_1_4: true
-rhel9cis_rule_1_6_1_5: true
-rhel9cis_rule_1_6_1_6: true
-rhel9cis_rule_1_6_1_7: true
-rhel9cis_rule_1_6_1_8: true
+rhel9cis_rule_1_5_4: true
+
+# Config system wide Crypto
+rhel9cis_rule_1_6_1: true
+rhel9cis_rule_1_6_2: true
+rhel9cis_rule_1_6_3: true
+rhel9cis_rule_1_6_4: true
+rhel9cis_rule_1_6_5: true
+rhel9cis_rule_1_6_6: true
+rhel9cis_rule_1_6_7: true
+
+# Command line warning banners
 rhel9cis_rule_1_7_1: true
 rhel9cis_rule_1_7_2: true
 rhel9cis_rule_1_7_3: true
 rhel9cis_rule_1_7_4: true
 rhel9cis_rule_1_7_5: true
 rhel9cis_rule_1_7_6: true
+
+# Gnome Display Manager
 rhel9cis_rule_1_8_1: true
 rhel9cis_rule_1_8_2: true
 rhel9cis_rule_1_8_3: true
@@ -185,42 +219,68 @@ rhel9cis_rule_1_8_7: true
 rhel9cis_rule_1_8_8: true
 rhel9cis_rule_1_8_9: true
 rhel9cis_rule_1_8_10: true
-rhel9cis_rule_1_9: true
-rhel9cis_rule_1_10: true
 
 # Section 2 rules are controling Services (Special Purpose Services, and service clients)
+## Configure Server Services
 rhel9cis_rule_2_1_1: true
 rhel9cis_rule_2_1_2: true
+rhel9cis_rule_2_1_3: true
+rhel9cis_rule_2_1_4: true
+rhel9cis_rule_2_1_5: true
+rhel9cis_rule_2_1_6: true
+rhel9cis_rule_2_1_7: true
+rhel9cis_rule_2_1_8: true
+rhel9cis_rule_2_1_9: true
+rhel9cis_rule_2_1_10: true
+rhel9cis_rule_2_1_11: true
+rhel9cis_rule_2_1_12: true
+rhel9cis_rule_2_1_13: true
+rhel9cis_rule_2_1_14: true
+rhel9cis_rule_2_1_15: true
+rhel9cis_rule_2_1_16: true
+rhel9cis_rule_2_1_17: true
+rhel9cis_rule_2_1_18: true
+rhel9cis_rule_2_1_19: true
+rhel9cis_rule_2_1_20: true
+rhel9cis_rule_2_1_21: true
+rhel9cis_rule_2_1_22: true
+
+## Configure Client Services
 rhel9cis_rule_2_2_1: true
 rhel9cis_rule_2_2_2: true
 rhel9cis_rule_2_2_3: true
 rhel9cis_rule_2_2_4: true
 rhel9cis_rule_2_2_5: true
-rhel9cis_rule_2_2_6: true
-rhel9cis_rule_2_2_7: true
-rhel9cis_rule_2_2_8: true
-rhel9cis_rule_2_2_9: true
-rhel9cis_rule_2_2_10: true
-rhel9cis_rule_2_2_11: true
-rhel9cis_rule_2_2_12: true
-rhel9cis_rule_2_2_13: true
-rhel9cis_rule_2_2_14: true
-rhel9cis_rule_2_2_15: true
-rhel9cis_rule_2_2_16: true
-rhel9cis_rule_2_2_17: true
-rhel9cis_rule_2_2_18: true
+
+## Configure Time Synchronization
 rhel9cis_rule_2_3_1: true
 rhel9cis_rule_2_3_2: true
 rhel9cis_rule_2_3_3: true
-rhel9cis_rule_2_3_4: true
-rhel9cis_rule_2_4: true
 
-# Section 3 rules are used for securely configuring the network configuration(kernel params, ACL, Firewall settings)
+## Job Schedulers
+### cron
+rhel9cis_rule_2_4_1_1: true
+rhel9cis_rule_2_4_1_2: true
+rhel9cis_rule_2_4_1_3: true
+rhel9cis_rule_2_4_1_4: true
+rhel9cis_rule_2_4_1_5: true
+rhel9cis_rule_2_4_1_6: true
+rhel9cis_rule_2_4_1_7: true
+rhel9cis_rule_2_4_1_8: true
+### at
+rhel9cis_rule_2_4_2_1: true
+
+# Section 3 Network
+## Network Devices
 rhel9cis_rule_3_1_1: true
 rhel9cis_rule_3_1_2: true
 rhel9cis_rule_3_1_3: true
+## Network Kernel Modules
 rhel9cis_rule_3_2_1: true
 rhel9cis_rule_3_2_2: true
+rhel9cis_rule_3_2_3: true
+rhel9cis_rule_3_2_4: true
+# Network Kernel Parameters
 rhel9cis_rule_3_3_1: true
 rhel9cis_rule_3_3_2: true
 rhel9cis_rule_3_3_3: true
@@ -230,78 +290,24 @@ rhel9cis_rule_3_3_6: true
 rhel9cis_rule_3_3_7: true
 rhel9cis_rule_3_3_8: true
 rhel9cis_rule_3_3_9: true
-rhel9cis_rule_3_4_1_1: true
-rhel9cis_rule_3_4_1_2: true
-rhel9cis_rule_3_4_2_1: true
-rhel9cis_rule_3_4_2_2: true
-rhel9cis_rule_3_4_2_3: true
-rhel9cis_rule_3_4_2_4: true
-rhel9cis_rule_3_4_2_5: true
-rhel9cis_rule_3_4_2_6: true
-rhel9cis_rule_3_4_2_7: true
+rhel9cis_rule_3_3_10: true
+rhel9cis_rule_3_3_11: true
 
-# Section 4 rules are Logging and Auditing (Configure System Accounting (auditd),
-# Configure Data Retention, and Configure Logging)
-rhel9cis_rule_4_1_1_1: true
-rhel9cis_rule_4_1_1_2: true
-rhel9cis_rule_4_1_1_3: true
-rhel9cis_rule_4_1_1_4: true
-rhel9cis_rule_4_1_2_1: true
-rhel9cis_rule_4_1_2_2: true
-rhel9cis_rule_4_1_2_3: true
-rhel9cis_rule_4_1_3_1: true
-rhel9cis_rule_4_1_3_2: true
-rhel9cis_rule_4_1_3_3: true
-rhel9cis_rule_4_1_3_4: true
-rhel9cis_rule_4_1_3_5: true
-rhel9cis_rule_4_1_3_6: true
-rhel9cis_rule_4_1_3_7: true
-rhel9cis_rule_4_1_3_8: true
-rhel9cis_rule_4_1_3_9: true
-rhel9cis_rule_4_1_3_10: true
-rhel9cis_rule_4_1_3_11: true
-rhel9cis_rule_4_1_3_12: true
-rhel9cis_rule_4_1_3_13: true
-rhel9cis_rule_4_1_3_14: true
-rhel9cis_rule_4_1_3_15: true
-rhel9cis_rule_4_1_3_16: true
-rhel9cis_rule_4_1_3_17: true
-rhel9cis_rule_4_1_3_18: true
-rhel9cis_rule_4_1_3_19: true
-rhel9cis_rule_4_1_3_20: true
-rhel9cis_rule_4_1_3_21: true
-rhel9cis_rule_4_1_4_1: true
-rhel9cis_rule_4_1_4_2: true
-rhel9cis_rule_4_1_4_3: true
-rhel9cis_rule_4_1_4_4: true
-rhel9cis_rule_4_1_4_5: true
-rhel9cis_rule_4_1_4_6: true
-rhel9cis_rule_4_1_4_7: true
-rhel9cis_rule_4_1_4_8: true
-rhel9cis_rule_4_1_4_9: true
-rhel9cis_rule_4_1_4_10: true
-rhel9cis_rule_4_2_1_1: true
-rhel9cis_rule_4_2_1_2: true
-rhel9cis_rule_4_2_1_3: true
-rhel9cis_rule_4_2_1_4: true
-rhel9cis_rule_4_2_1_5: true
-rhel9cis_rule_4_2_1_6: true
-rhel9cis_rule_4_2_1_7: true
-rhel9cis_rule_4_2_2_1_1: true
-rhel9cis_rule_4_2_2_1_2: true
-rhel9cis_rule_4_2_2_1_3: true
-rhel9cis_rule_4_2_2_1_4: true
-rhel9cis_rule_4_2_2_2: true
-rhel9cis_rule_4_2_2_3: true
-rhel9cis_rule_4_2_2_4: true
-rhel9cis_rule_4_2_2_5: true
-rhel9cis_rule_4_2_2_6: true
-rhel9cis_rule_4_2_2_7: true
-rhel9cis_rule_4_2_3: true
-rhel9cis_rule_4_3: true
+# Section 4 Firewalls
+## Firewall utility
+rhel9cis_rule_4_1_1: true
+rhel9cis_rule_4_1_2: true
+## Configure firewalld
+rhel9cis_rule_4_2_1: true
+rhel9cis_rule_4_2_2: true
+# Configure nftables
+rhel9cis_rule_4_3_1: true
+rhel9cis_rule_4_3_2: true
+rhel9cis_rule_4_3_3: true
+rhel9cis_rule_4_3_4: true
 
-# Section 5 rules control Access, Authentication, and Authorization (Configure time-based job schedulers,
-# Configure sudo, Configure SSH Server, Configure PAM and User Accounts and Environment)
+## Section 5
+## 5.1. Configure SSH Server
 rhel9cis_rule_5_1_1: true
 rhel9cis_rule_5_1_2: true
 rhel9cis_rule_5_1_3: true
@@ -311,6 +317,20 @@ rhel9cis_rule_5_1_6: true
 rhel9cis_rule_5_1_7: true
 rhel9cis_rule_5_1_8: true
 rhel9cis_rule_5_1_9: true
+rhel9cis_rule_5_1_10: true
+rhel9cis_rule_5_1_11: true
+rhel9cis_rule_5_1_12: true
+rhel9cis_rule_5_1_13: true
+rhel9cis_rule_5_1_14: true
+rhel9cis_rule_5_1_15: true
+rhel9cis_rule_5_1_16: true
+rhel9cis_rule_5_1_17: true
+rhel9cis_rule_5_1_18: true
+rhel9cis_rule_5_1_19: true
+rhel9cis_rule_5_1_20: true
+rhel9cis_rule_5_1_21: true
+rhel9cis_rule_5_1_22: true
+## 5.2 Configure Privilege Escalation
 rhel9cis_rule_5_2_1: true
 rhel9cis_rule_5_2_2: true
 rhel9cis_rule_5_2_3: true
@@ -318,77 +338,167 @@ rhel9cis_rule_5_2_4: true
 rhel9cis_rule_5_2_5: true
 rhel9cis_rule_5_2_6: true
 rhel9cis_rule_5_2_7: true
-rhel9cis_rule_5_2_8: true
-rhel9cis_rule_5_2_9: true
-rhel9cis_rule_5_2_10: true
-rhel9cis_rule_5_2_12: true
-rhel9cis_rule_5_2_11: true
-rhel9cis_rule_5_2_13: true
-rhel9cis_rule_5_2_14: true
-rhel9cis_rule_5_2_15: true
-rhel9cis_rule_5_2_16: true
-rhel9cis_rule_5_2_17: true
-rhel9cis_rule_5_2_18: true
-rhel9cis_rule_5_2_19: true
-rhel9cis_rule_5_2_20: true
-rhel9cis_rule_5_3_1: true
-rhel9cis_rule_5_3_2: true
-rhel9cis_rule_5_3_3: true
-rhel9cis_rule_5_3_4: true
-rhel9cis_rule_5_3_5: true
-rhel9cis_rule_5_3_6: true
-rhel9cis_rule_5_3_7: true
-rhel9cis_rule_5_4_1: true
-rhel9cis_rule_5_4_2: true
-rhel9cis_rule_5_5_1: true
-rhel9cis_rule_5_5_2: true
-rhel9cis_rule_5_5_3: true
-rhel9cis_rule_5_5_4: true
-rhel9cis_rule_5_6_1_1: true
-rhel9cis_rule_5_6_1_2: true
-rhel9cis_rule_5_6_1_3: true
-rhel9cis_rule_5_6_1_4: true
-rhel9cis_rule_5_6_1_5: true
-rhel9cis_rule_5_6_2: true
-rhel9cis_rule_5_6_3: true
-rhel9cis_rule_5_6_4: true
-rhel9cis_rule_5_6_5: true
-rhel9cis_rule_5_6_6: true
+# 5.3.1.x Configure PAM software packages
+rhel9cis_rule_5_3_1_1: true
+rhel9cis_rule_5_3_1_2: true
+rhel9cis_rule_5_3_1_3: true
+# 5.3.2 Configure authselect
+rhel9cis_rule_5_3_2_1: true
+rhel9cis_rule_5_3_2_2: true
+rhel9cis_rule_5_3_2_3: true
+rhel9cis_rule_5_3_2_4: true
+rhel9cis_rule_5_3_2_5: true
+# 5.3.3.1 Configure pam_faillock module
+rhel9cis_rule_5_3_3_1_1: true
+rhel9cis_rule_5_3_3_1_2: true
+rhel9cis_rule_5_3_3_1_3: true
+# 5.3.3.2 Configure pam_pwquality module
+rhel9cis_rule_5_3_3_2_1: true
+rhel9cis_rule_5_3_3_2_2: true
+rhel9cis_rule_5_3_3_2_3: true
+rhel9cis_rule_5_3_3_2_4: true
+rhel9cis_rule_5_3_3_2_5: true
+rhel9cis_rule_5_3_3_2_6: true
+rhel9cis_rule_5_3_3_2_7: true
+rhel9cis_rule_5_3_3_2_8: true
+# 5.3.3.3 Configure pam_pwhistory module
+# This are added as part of 5.3.2.4 using jinja2 template
+rhel9cis_rule_5_3_3_3_1: true
+rhel9cis_rule_5_3_3_3_2: true
+rhel9cis_rule_5_3_3_3_3: true
+# 5.3.3.4 Configure pam_unix module
+rhel9cis_rule_5_3_3_4_1: true
+rhel9cis_rule_5_3_3_4_2: true
+rhel9cis_rule_5_3_3_4_3: true
+rhel9cis_rule_5_3_3_4_4: true
+# 5.4 User Accounts and Environment
+# 5.4.1 Configure shadow password suite parameters
+rhel9cis_rule_5_4_1_1: true
+rhel9cis_rule_5_4_1_2: true
+rhel9cis_rule_5_4_1_3: true
+rhel9cis_rule_5_4_1_4: true
+rhel9cis_rule_5_4_1_5: true
+rhel9cis_rule_5_4_1_6: true
+# 5.4.2 Configure root and system accounts and environment
+rhel9cis_rule_5_4_2_1: true
+rhel9cis_rule_5_4_2_2: true
+rhel9cis_rule_5_4_2_3: true
+rhel9cis_rule_5_4_2_4: true
+rhel9cis_rule_5_4_2_5: true
+rhel9cis_rule_5_4_2_6: true
+rhel9cis_rule_5_4_2_7: true
+rhel9cis_rule_5_4_2_8: true
+# 5.4.2 Configure user default environment
+rhel9cis_rule_5_4_3_1: true
+rhel9cis_rule_5_4_3_2: true
+rhel9cis_rule_5_4_3_3: true
 
-# Section 6 rules controls System Maintenance (System File Permissions and User and Group Settings)
+# Section 6 Logging and Auditing
+## 6.1 Configure Integrity Checking
 rhel9cis_rule_6_1_1: true
 rhel9cis_rule_6_1_2: true
 rhel9cis_rule_6_1_3: true
-rhel9cis_rule_6_1_4: true
-rhel9cis_rule_6_1_5: true
-rhel9cis_rule_6_1_6: true
-rhel9cis_rule_6_1_7: true
-rhel9cis_rule_6_1_8: true
-rhel9cis_rule_6_1_9: true
-rhel9cis_rule_6_1_10: true
-rhel9cis_rule_6_1_11: true
-rhel9cis_rule_6_1_12: true
-rhel9cis_rule_6_1_13: true
-rhel9cis_rule_6_1_14: true
-rhel9cis_rule_6_1_15: true
-rhel9cis_rule_6_2_1: true
-rhel9cis_rule_6_2_2: true
-rhel9cis_rule_6_2_3: true
-rhel9cis_rule_6_2_4: true
-rhel9cis_rule_6_2_5: true
-rhel9cis_rule_6_2_6: true
-rhel9cis_rule_6_2_7: true
-rhel9cis_rule_6_2_8: true
-rhel9cis_rule_6_2_9: true
-rhel9cis_rule_6_2_10: true
-rhel9cis_rule_6_2_11: true
-rhel9cis_rule_6_2_12: true
-rhel9cis_rule_6_2_13: true
-rhel9cis_rule_6_2_14: true
-rhel9cis_rule_6_2_15: true
-rhel9cis_rule_6_2_16: true
+## 6.2.1 Configure systemd-journald service
+rhel9cis_rule_6_2_1_1: true
+rhel9cis_rule_6_2_1_2: true
+rhel9cis_rule_6_2_1_3: true
+rhel9cis_rule_6_2_1_4: true
+## 6.2.2.x Configure journald
+rhel9cis_rule_6_2_2_1_1: true
+rhel9cis_rule_6_2_2_1_2: true
+rhel9cis_rule_6_2_2_1_3: true
+rhel9cis_rule_6_2_2_1_4: true
+rhel9cis_rule_6_2_2_2: true
+rhel9cis_rule_6_2_2_3: true
+rhel9cis_rule_6_2_2_4: true
+## 6.2.3 Configure rsyslog
+rhel9cis_rule_6_2_3_1: true
+rhel9cis_rule_6_2_3_2: true
+rhel9cis_rule_6_2_3_3: true
+rhel9cis_rule_6_2_3_4: true
+rhel9cis_rule_6_2_3_5: true
+rhel9cis_rule_6_2_3_6: true
+rhel9cis_rule_6_2_3_7: true
+rhel9cis_rule_6_2_3_8: true
+## 6.2.4 Configure Logfiles
+rhel9cis_rule_6_2_4_1: true
+## 6.3 Configure Auditing
+## 6.3.1 Configure auditd Service
+rhel9cis_rule_6_3_1_1: true
+rhel9cis_rule_6_3_1_2: true
+rhel9cis_rule_6_3_1_3: true
+rhel9cis_rule_6_3_1_4: true
+## 6.3.2 Configure Data Retention
+rhel9cis_rule_6_3_2_1: true
+rhel9cis_rule_6_3_2_2: true
+rhel9cis_rule_6_3_2_3: true
+rhel9cis_rule_6_3_2_4: true
+## 6.3.3 Configure auditd Rules
+rhel9cis_rule_6_3_3_1: true
+rhel9cis_rule_6_3_3_2: true
+rhel9cis_rule_6_3_3_3: true
+rhel9cis_rule_6_3_3_4: true
+rhel9cis_rule_6_3_3_5: true
+rhel9cis_rule_6_3_3_6: true
+rhel9cis_rule_6_3_3_7: true
+rhel9cis_rule_6_3_3_8: true
+rhel9cis_rule_6_3_3_9: true
+rhel9cis_rule_6_3_3_10: true
+rhel9cis_rule_6_3_3_11: true
+rhel9cis_rule_6_3_3_12: true
+rhel9cis_rule_6_3_3_13: true
+rhel9cis_rule_6_3_3_14: true
+rhel9cis_rule_6_3_3_15: true
+rhel9cis_rule_6_3_3_16: true
+rhel9cis_rule_6_3_3_17: true
+rhel9cis_rule_6_3_3_18: true
+rhel9cis_rule_6_3_3_19: true
+rhel9cis_rule_6_3_3_20: true
+rhel9cis_rule_6_3_3_21: true
+## 6.3.4 Configure auditd File Access
+rhel9cis_rule_6_3_4_1: true
+rhel9cis_rule_6_3_4_2: true
+rhel9cis_rule_6_3_4_3: true
+rhel9cis_rule_6_3_4_4: true
+rhel9cis_rule_6_3_4_5: true
+rhel9cis_rule_6_3_4_6: true
+rhel9cis_rule_6_3_4_7: true
+rhel9cis_rule_6_3_4_8: true
+rhel9cis_rule_6_3_4_9: true
+rhel9cis_rule_6_3_4_10: true
+
+# Section 7 System Maintenance
+## 7.1 System File Permissions
+rhel9cis_rule_7_1_1: true
+rhel9cis_rule_7_1_2: true
+rhel9cis_rule_7_1_3: true
+rhel9cis_rule_7_1_4: true
+rhel9cis_rule_7_1_5: true
+rhel9cis_rule_7_1_6: true
+rhel9cis_rule_7_1_7: true
+rhel9cis_rule_7_1_8: true
+rhel9cis_rule_7_1_9: true
+rhel9cis_rule_7_1_10: true
+rhel9cis_rule_7_1_11: true
+rhel9cis_rule_7_1_12: true
+rhel9cis_rule_7_1_13: true
+## 7.2 Local User and Group Settings
+rhel9cis_rule_7_2_1: true
+rhel9cis_rule_7_2_2: true
+rhel9cis_rule_7_2_3: true
+rhel9cis_rule_7_2_4: true
+rhel9cis_rule_7_2_5: true
+rhel9cis_rule_7_2_6: true
+rhel9cis_rule_7_2_7: true
+rhel9cis_rule_7_2_8: true
+rhel9cis_rule_7_2_9: true
 
 ## Section 1 vars
+
+## Ability to enabe debug on mounts to assist in troubleshooting
+# Mount point changes are set based upon facts created in Prelim
+# these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.
+rhel9cis_debug_mount_data: false
 
 ## Control 1.1.2
 # If set to `true`, rule will be implemented using the `tmp.mount` systemd-service,
@@ -412,97 +522,7 @@ rhel9cis_rhel_default_repo: true
 # support it(like RedHat), installation of packages will fail.
 rhel9cis_rule_enable_repogpg: true
 
-## Control 1.4.1
-# This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value
-# must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
-# this format: 'grub.pbkdf2.sha512.<Rounds>.<Salt>.<Checksum>'
-rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
-
-## Control 1.4.1
-# This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
-rhel9cis_set_boot_pass: true
-
-## Control 1.8.x - Settings for GDM
-# This variable specifies the GNOME configuration database file to which configurations are written.
-# (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
-# The default database is 'local'.
-rhel9cis_dconf_db_name: local
-# This variable governs the number of seconds of inactivity before the screen goes blank.
-# Set max value for idle-delay in seconds (between 1 and 900)
-rhel9cis_screensaver_idle_delay: 900
-# This variable governs the number of seconds the screen remains blank before it is locked.
-# Set max value for lock-delay in seconds (between 0 and 5)
-rhel9cis_screensaver_lock_delay: 5
-
-## Control 1.10
-# This variable contains the value to be set as the system-wide crypto policy. Current rule enforces NOT USING
-# 'LEGACY' value(as it is less secure, it just ensures compatibility with legacy systems), therefore
-# possible values for this variable are, as explained by RedHat docs:
-#  -'DEFAULT': reasonable default policy for today's standards (balances usability and security)
-#  -'FUTURE': conservative security level that is believed to withstand any near-term future attacks
-#  -'FIPS': A level that conforms to the FIPS140-2 requirements
-rhel9cis_crypto_policy: 'DEFAULT'
-## Control 1.10
-# This variable contains the value of the crypto policy module(combinations of policies and
-# sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
-# using 'rhel9cis_allowed_crypto_policies_modules' variable.
-rhel9cis_crypto_policy_module: ''
-
-# System network parameters (host only OR host and router)
-# This variable governs whether specific CIS rules
-# concerned with acceptance and routing of packages are skipped.
-rhel9cis_is_router: false
-
-## IPv6 requirement toggle
-# This variable governs whether ipv6 is enabled or disabled.
-rhel9cis_ipv6_required: true
-
-## Control 1.3.1 - allow aide to be configured
-# AIDE is a file integrity checking tool, similar in nature to Tripwire.
-# While it cannot prevent intrusions, it can detect unauthorized changes
-# to configuration files by alerting when the files are changed. Review
-# the AIDE quick start guide and AIDE documentation before proceeding.
-# By setting this variable to `true`, all of the settings related to AIDE will be applied!
-rhel9cis_config_aide: true
-
-## Control 1.3.2 AIDE cron settings
-# These are the crontab settings for periodical checking of the filesystem's integrity using AIDE.
-# The sub-settings of this variable provide the parameters required to configure
-# the cron job on the target system.
-# Cron is a time-based job scheduling program in Unix OS, which allows tasks to be scheduled
-# and executed automatically at a certain point in time.
-rhel9cis_aide_cron:
-    # This variable represents the user account under which the cron job for AIDE will run.
-    cron_user: root
-    # This variable represents the path to the AIDE crontab file.
-    cron_file: /etc/cron.d/aide_cron
-    # This variable represents the actual command or script that the cron job
-    # will execute for running AIDE.
-    aide_job: '/usr/sbin/aide --check'
-    # These variables define the schedule for the cron job
-    # This variable governs the minute of the time of day when the AIDE cronjob is run.
-    # It must be in the range `0-59`.
-    aide_minute: 0
-    # This variable governs the hour of the time of day when the AIDE cronjob is run.
-    # It must be in the range `0-23`.
-    aide_hour: 5
-    # This variable governs the day of the month when the AIDE cronjob is run.
-    # `*` signifies that the job is run on all days; furthermore, specific days
-    # can be given in the range `1-31`; several days can be concatenated with a comma.
-    # The specified day(s) can must be in the range  `1-31`.
-    aide_day: '*'
-    # This variable governs months when the AIDE cronjob is run.
-    # `*` signifies that the job is run in every month; furthermore, specific months
-    # can be given in the range `1-12`; several months can be concatenated with commas.
-    # The specified month(s) can must be in the range  `1-12`.
-    aide_month: '*'
-    # This variable governs the weekdays, when the AIDE cronjob is run.
-    # `*` signifies that the job is run on all weekdays; furthermore, specific weekdays
-    # can be given in the range `0-7` (both `0` and `7` represent Sunday); several weekdays
-    # can be concatenated with commas.
-    aide_weekday: '*'
-
-## Control 1.6.1.3|4|5 - SELinux policy settings
+## Control 1.3.1.3|4|5 - SELinux policy settings
 # This selects type of policy; targeted or mls( multilevel )
 # mls should not be used, since it will disable unconfined policy module
 # and may prevent some services from running. Requires SELinux not being disabled (by
@@ -520,11 +540,51 @@ rhel9cis_selinux_pol: targeted
 # Even though logging still occurs.
 rhel9cis_selinux_enforce: enforcing
 
-# Whether or not to run tasks related to auditing/patching the desktop environment
-## Control 1.8.1-10
-# This variable governs whether rules dealing with GUI specific packages(and/or their settings)
-# Discovered value can be overridden to true is required
+## Control 1.4.1
+# This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value
+# must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
+# this format: 'grub.pbkdf2.sha512.<Rounds>.<Salt>.<Checksum>'
+rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
+
+## Control 1.4.1
+# This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
+rhel9cis_set_boot_pass: true
+
+## Control 1.6
+# This variable contains the value to be set as the system-wide crypto policy. Current rule enforces NOT USING
+# 'LEGACY' value(as it is less secure, it just ensures compatibility with legacy systems), therefore
+# possible values for this variable are, as explained by RedHat docs:
+#  -'DEFAULT': reasonable default policy for today's standards (balances usability and security)
+#  -'FUTURE': conservative security level that is believed to withstand any near-term future attacks
+#  -'FIPS': A level that conforms to the FIPS140-2 requirements
+rhel9cis_crypto_policy: 'DEFAULT'
+## Control 1.6
+# This variable contains the value of the crypto policy module(combinations of policies and
+# sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
+# using 'rhel9cis_allowed_crypto_policies_modules' variable.
+rhel9cis_crypto_policy_module: ''
+
+## Controls:
+# - 1.7.1 - Ensure message of the day is configured properly
+# - 1.7.2 - Ensure local login warning banner is configured properly
+# - 1.7.3 - Ensure remote login warning banner is configured properly
+# This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
+rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
+# End Banner
+
+## Control 1.8.x - Settings for GDM
+## 1.8 GDM graphical interface
 rhel9cis_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
+# This variable specifies the GNOME configuration database file to which configurations are written.
+# (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
+# The default database is 'local'.
+rhel9cis_dconf_db_name: local
+# This variable governs the number of seconds of inactivity before the screen goes blank.
+# Set max value for idle-delay in seconds (between 1 and 900)
+rhel9cis_screensaver_idle_delay: 900
+# This variable governs the number of seconds the screen remains blank before it is locked.
+# Set max value for lock-delay in seconds (between 0 and 5)
+rhel9cis_screensaver_lock_delay: 5
 
 ## Section 2. Services
 
@@ -537,10 +597,10 @@ rhel9cis_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
 # The default setting for the `options` is `minpoll` but `iburst` can be used, please refer to the documentation
 # of the time synchronization mechanism you are using.
 rhel9cis_time_synchronization_servers:
-    - 0.pool.ntp.org
-    - 1.pool.ntp.org
-    - 2.pool.ntp.org
-    - 3.pool.ntp.org
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
 ## Control 2.1.2 - Time Synchronization servers
 # This variable should contain the default options to be used for every NTP server hostname defined
 # within the 'rhel9cis_time_synchronization_servers' var.
@@ -561,159 +621,94 @@ rhel9cis_chrony_server_makestep: "1.0 3"
 # improve the reliability, because multiple sources will need to correspond with each other.
 rhel9cis_chrony_server_minsources: 2
 
-## Section 2.2 Special Purposes
-# Service configuration variables (boolean).
-# Set the respective variable to true to keep the service,
-# otherwise the service is stopped and disabled
-
-## Control 2.2.2 - Ensure Avahi Server is not installed
-# This variable, when set to false, will specify that Avahi Server packages should be uninstalled.
+# Service configuration
+# Options are
+# Service
+# - false - removes package
+# - true - leaves package installed
+# Mask
+# - false - leaves service in current status
+# - true - sets service name to masked
+#
+# Setting both Service and Mask to false will remove the package if exists
+rhel9cis_autofs_services: false
+rhel9cis_autofs_mask: false
 rhel9cis_avahi_server: false
-## Control 2.2.3 -  Ensure CUPS is not installed
-# This variable, when set to false, will specify that CUPS(Common UNIX Printing System) package should be uninstalled.
-rhel9cis_cups_server: false
-## Control 2.2.4 - Ensure DHCP Server is not installed
-# This variable, when set to false, will specify that DHCP server package should be uninstalled.
+rhel9cis_avahi_mask: false
 rhel9cis_dhcp_server: false
-## Control 2.2.5 - Ensure DNS Server is not installed
-# This variable, when set to false, will specify that DNS server package should be uninstalled.
+rhel9cis_dhcp_mask: false
 rhel9cis_dns_server: false
-## Control 2.2.14 - Ensure dnsmasq is not installed
-# This variable, when set to false, will specify that dnsmasq package should be uninstalled.
+rhel9cis_dns_mask: false
 rhel9cis_dnsmasq_server: false
-## Control 2.2.6 - Ensure VSFTP Server is not installed
-# This variable, when set to false, will specify that VSFTP server package should be uninstalled.
-rhel9cis_vsftpd_server: false
-## Control 2.2.7 - Ensure TFTP Server is not installed
-# This variable, when set to false, will specify that TFTP server package should be uninstalled.
-rhel9cis_tftp_server: false
-## Control 2.2.8 - Ensure a web server is not installed - HTTPD
-# This variable, when set to false, will specify that webserver packages(HTTPD) should be uninstalled.
-rhel9cis_httpd_server: false
-## Control 2.2.8 - Ensure a web server is not installed - NGINX
-# This variable, when set to false, will specify that webserver packages(NGINX) should be uninstalled.
-rhel9cis_nginx_server: false
-## Control 2.2.9 - Ensure IMAP and POP3 server is not installed - dovecot
-# This variable, when set to false, will specify that IMAP and POP3 servers(dovecot) should be uninstalled.
-rhel9cis_dovecot_server: false
-## Control 2.2.9 - Ensure IMAP and POP3 server is not installed - cyrus-imapd
-# This variable, when set to false, will specify that IMAP and POP3 servers(cyrus-imapd) should be uninstalled.
-rhel9cis_imap_server: false
-## Control 2.2.10 - Ensure Samba is not enabled
-# This variable, when set to false, will specify that 'samba' package should be uninstalled.
+rhel9cis_dnsmasq_mask: false
 rhel9cis_samba_server: false
-## Control 2.2.11 - Ensure HTTP Proxy Server is not installed
-# This variable, when set to false, will specify that 'squid' package should be uninstalled.
-rhel9cis_squid_server: false
-## Control 2.2.12 - Ensure net-snmp is not installed
-# This variable, when set to false, will specify that 'net-snmp' package should be uninstalled.
+rhel9cis_samba_mask: false
+rhel9cis_ftp_server: false
+rhel9cis_ftp_mask: false
+rhel9cis_message_server: false  # This is for messaging dovecot and cyrus-imap
+rhel9cis_message_mask: false
+rhel9cis_nfs_server: true
+rhel9cis_nfs_mask: true
+rhel9cis_nis_server: true  # set to mask if nis client required
+rhel9cis_nis_mask: false
+rhel9cis_print_server: false  # replaces cups
+rhel9cis_print_mask: false
+rhel9cis_rpc_server: true
+rhel9cis_rpc_mask: true
+rhel9cis_rsync_server: false
+rhel9cis_rsync_mask: false
 rhel9cis_snmp_server: false
-## Control 2.2.13 - Ensure telnet-server is not installed
-# This variable, when set to false, will specify that 'telnet-server' package should be uninstalled.
+rhel9cis_snmp_mask: false
 rhel9cis_telnet_server: false
-## Control 2.2.15 - Ensure mail transfer agent is configured for local-only mode
-# This variable, when system is NOT a mailserver, will configure Postfix to listen only on the loopback interface(the virtual
-# network interface that the server uses to communicate internally.
+rhel9cis_telnet_mask: false
+rhel9cis_tftp_server: false
+rhel9cis_tftp_mask: false
+rhel9cis_squid_server: false
+rhel9cis_squid_mask: false
+rhel9cis_httpd_server: false
+rhel9cis_httpd_mask: false
+rhel9cis_nginx_server: false
+rhel9cis_nginx_mask: false
+rhel9cis_xinetd_server: false
+rhel9cis_xinetd_mask: false
+rhel9cis_xwindow_server: false  # will remove mask not an option
 rhel9cis_is_mail_server: false
-
-# Note the options
-# Client package configuration variables.
-# Packages are used for client services and Server- only remove if you dont use the client service
-# Set the respective variable to `true` to keep the
-# client package, otherwise it is uninstalled (false).
-
-## Control 2.2.16 - Ensure nfs-utils is not installed or the nfs-server service is masked"
-# This variable specifies if the usage of NFS SERVER is needed. Execution of the rule which secures (by uninstalling or masking service)
-# NFS(if it's NOT needed) will depend on the var used in conjunction('rhel9cis_use_nfs_service') with current one, respectively:
-# - if Server IS NOT needed('false') and:
-#    - Service IS NOT needed('rhel9cis_use_nfs_service: false'): 'nfs-utils' package will be removed
-#    - Service IS needed('rhel9cis_use_nfs_service: true'): impossible to need the service without the server
-# - if Server IS needed('true') and:
-#    - Service IS NOT needed('rhel9cis_use_nfs_service: false'): 'nfs-server' service will be masked
-#    - Service IS needed('rhel9cis_use_nfs_service: true'): Rule will be SKIPPED.
-#  | Server  | Service | Result                                                    |
-#  |---------|---------|-----------------------------------------------------------|
-#  | false   | false   | Remove package                                            |
-#  | false   | true    | Needing 'service' without needing 'server' makes no sense |
-#  | true    | false   | Mask 'service'                                            |
-#  | true    | true    | SKIP RULE, BOTH 'service' and 'server' are required       |
-rhel9cis_use_nfs_server: false
-## Control 2.2.16 - Ensure nfs-utils is not installed or the nfs-server service is masked.
-# This variable specifies if the usage of NFS SERVICE is needed. If it's:
-#   - needed('true'): rule which uninstalls/masks-service WILL NOT be executed at all
-#   - not needed('false'): rule which uninstalls/masks-service WILL be executed, its behavior being
-#    controlled by the var used in conjunction with current one:
-#          - removing 'nfs-utils' package('rhel9cis_use_nfs_server' set to 'false')
-#          - masking the 'nfs-server' service('rhel9cis_use_nfs_server' set to 'true')
-rhel9cis_use_nfs_service: false
-
-## Control 2.2.17 - Ensure rpcbind is not installed or the rpcbind services are masked
-# This variable specifies if the usage of RPC SERVER is needed. Execution of the rule which secures (by uninstalling or masking service)
-# RPC(if it's NOT needed) will depend on the var used in conjunction('rhel9cis_use_rpc_service') with current one, respectively:
-# - if Server IS NOT needed('false') and:
-#    - Service IS NOT needed('rhel9cis_use_rpc_service: false'): 'rpcbind' package will be removed
-#    - Service IS needed('rhel9cis_use_rpc_service: true'): impossible to need the service without the server
-# - if Server IS needed('true') and:
-#    - Service IS NOT needed('rhel9cis_use_rpc_service: false'): 'rpcbind.socket' service will be masked
-#    - Service IS needed('rhel9cis_use_rpc_service: true'): Rule will be SKIPPED.
-#  | Server  | Service | Result                                                    |
-#  |---------|---------|-----------------------------------------------------------|
-#  | false   | false   | Remove package                                            |
-#  | false   | true    | Needing 'service' without needing 'server' makes no sense |
-#  | true    | false   | Mask 'service'                                            |
-#  | true    | true    | SKIP RULE, BOTH 'service' and 'server' are required       |
-rhel9cis_use_rpc_server: false
-## Control 2.2.17 - Ensure rpcbind is not installed or the rpcbind services are masked
-# This variable specifies if the usage of RPC SERVICE is needed. If it's:
-#   - needed('true'): rule which uninstalls/masks-service WILL NOT be executed at all
-#   - not needed('false'): rule which uninstalls/masks-service WILL be executed, its behavior being controlled by the var
-#     used in conjunction with current one:
-#          - removing 'rpcbind' package('rhel9cis_use_rpc_server' set to 'false')
-#          - masking the 'rpcbind.socket' service('rhel9cis_use_rpc_server' set to 'true')
-rhel9cis_use_rpc_service: false
-
-## Control 2.2.18 - Ensure rsync service is not enabled
-# This variable specifies if the usage of RSYNC SERVER is needed. Execution of the rule which secures (by uninstalling or masking service)
-# RSYNC(if it's NOT needed) will depend on the var used in conjunction('rhel9cis_use_rsync_service') with current one, respectively:
-# - if Server IS NOT needed('false') and:
-#    - Service IS NOT needed('rhel9cis_use_rsync_service: false'): 'rsync-daemon' package will be removed
-#    - Service IS needed('rhel9cis_use_rsync_service: true'): impossible to need the service without the server
-# - if Server IS needed('true') and:
-#    - Service IS NOT needed('rhel9cis_use_rsync_service: false'): 'rsyncd' service will be masked
-#    - Service IS needed('rhel9cis_use_rsync_service: true'): Rule will be SKIPPED.
-#  | Server  | Service | Result                                                    |
-#  |---------|---------|-----------------------------------------------------------|
-#  | false   | false   | Remove package                                            |
-#  | false   | true    | Needing 'service' without needing 'server' makes no sense |
-#  | true    | false   | Mask 'service'                                            |
-#  | true    | true    | SKIP RULE, BOTH 'service' and 'server' are required       |
-rhel9cis_use_rsync_server: false
-## Control 2.2.18 - Ensure rsync service is not enabled
-# This variable specifies if the usage of RSYNC SERVICE is needed. If it's:
-#   - needed('true'): rule which uninstalls/masks-service WILL NOT be executed at all
-#   - not needed('false'): rule which uninstalls/masks-service WILL be executed, its behavior being controlled by the var
-#     used in conjunction with current one:
-#          - removing 'rsync-daemon' package('rhel9cis_use_rsync_server' set to 'false')
-#          - masking the 'rsyncd' service('rhel9cis_use_rsync_server' set to 'true')
-rhel9cis_use_rsync_service: false
 
 ## Section 2.3 Service clients
 
-## Control - 2.3.1 - Ensure telnet client is not installed
-# Set this variable to `true` to keep package `telnet`; otherwise, the package is uninstalled.
-rhel9cis_telnet_required: false
-## Control - 2.3.2 - Ensure LDAP client is not installed
-# Set this variable to `true` to keep package `openldap-clients`; otherwise, the package is uninstalled.
-rhel9cis_openldap_clients_required: false
-## Control - 2.3.3 - Ensure FTP client is not installed
-# Set this variable to `true` to keep package `tftp`; otherwise, the package is uninstalled.
-rhel9cis_tftp_client: false
-## Control - 2.3.4 - Ensure FTP client is not installed
-# Set this variable to `true` to keep package `ftp`; otherwise, the package is uninstalled.
 rhel9cis_ftp_client: false
+rhel9cis_openldap_clients_required: false
+rhel9cis_ypbind_required: false  # Same package as NIS server
+rhel9cis_telnet_required: false
+rhel9cis_tftp_client: false
 
 ## Section 3 vars
 ## Sysctl
+# Service configuration
+# Options are
+# Service
+# - false - removes package
+# - true - leaves package installed
+# Mask
+# - false - leaves service in current status
+# - true - sets service name to masked
+#
+# Setting both Service and Mask to false will remove the package if exists
+#
+rhel9cis_bluetooth_service: false
+rhel9cis_bluetooth_mask: false
+
+## 3.1 IPv6 requirement toggle
+# This variable governs whether ipv6 is enabled or disabled.
+rhel9cis_ipv6_required: true
+
+## 3.1.2 wireless network requirements
+# if wireless adapetr found allow network manager to be installed
+rhel9cis_install_network_manager: false
+# 3.3 System network parameters (host only OR host and router)
+# This variable governs whether specific CIS rules
+# concerned with acceptance and routing of packages are skipped.
+rhel9cis_is_router: false
 
 # This variable governs if the task which updates sysctl(including sysctl reload) is executed.
 # NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
@@ -727,6 +722,7 @@ rhel9cis_flush_ipv4_route: false
 # NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
 rhel9cis_flush_ipv6_route: false
 
+# Section 4 vars
 ### Firewall Service to install and configure - Options are:
 # 1) either 'firewalld'
 # 2) or 'nftables'
@@ -736,221 +732,29 @@ rhel9cis_flush_ipv6_route: false
 #### masked = leave package if installed and mask the service
 rhel9cis_firewall: firewalld
 
-## Control 3.4.2.1 - Ensure firewalld default zone is set
+## Control 4.2.x - Ensure firewalld default zone is set
 # This variable will set the firewalld default zone(that is used for everything that is not explicitly bound/assigned
 # to another zone): if there is no zone assigned to a connection, interface or source, only the default zone is used.
 rhel9cis_default_zone: public
 
-## Control 3.4.2.2 - Ensure at least one nftables table exists
-# This variable governs if a table will be automatically created in nftables. Without a table (no default one), nftables
-# will not filter network traffic, so if this variable is set to 'false' and no tables exist, an alarm will be triggered!
-rhel9cis_nft_tables_autonewtable: true
-## Controls 3.4.2.{2|3|4|6|7} nftables
-# This variable stores the name of the table to be used when configuring nftables(creating chains, configuring loopback
-# traffic, established connections, default deny). If 'rhel9cis_nft_tables_autonewtable' is set as true, a new table will
-# be created using as name the value stored by this variable.
-rhel9cis_nft_tables_tablename: filter
-## Control 3.4.2.3 - Ensure nftables base chains exist
+## Controls 4.3.x nftables
+
+## 4.3.1 Ensure nftables base chains exist
 # This variable governs if a nftables base chain(entry point for packets from the networking stack) will be automatically
 # created, if needed. Without a chain, a hook for input, forward, and delete, packets that would flow through those
 # chains will not be touched by nftables.
 rhel9cis_nft_tables_autochaincreate: true
 
-## Controls:
-# - 1.7.1 - Ensure message of the day is configured properly
-# - 1.7.2 - Ensure local login warning banner is configured properly
-# - 1.7.3 - Ensure remote login warning banner is configured properly
-# This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
-rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
-# End Banner
-
-## Section4 vars
-### 4.1 Configure System Accounting
-#### 4.1.2 Configure Data Retention
-## Controls what actions, when log files fill up
-# This variable controls how the audit system behaves when
-# log files are getting too full and space is getting too low.
-rhel9cis_auditd:
-    # This variable tells the system what action to take when the system has detected
-    # that it is starting to get low on disk space. Options are the same as for `admin_space_left_action`.
-    space_left_action: email
-    # This variable should contain a valid email address or alias(default value is root),
-    # which will be used to send a warning when configured action is 'email'.
-    action_mail_acct: root
-    # This variable determines the action the audit system should take when disk
-    # space runs low.
-    # The options for setting this variable are as follows:
-    # - `ignore`: the system does nothing when presented with the aforementioned issue;
-    # - `syslog`: a message is sent to the system log about disk space running low;
-    # - `suspend`: the system suspends recording audit events until more space is available;
-    # - `halt`: the system is halted when disk space is critically low.
-    # - `single`: the audit daemon will put the computer system in single user mode
-    # CIS prescribes either `halt` or `single`.
-    admin_space_left_action: halt
-    # The max_log_file parameter should be based on your sites policy.
-    max_log_file: 10
-    # This variable determines what action the audit system should take when the maximum
-    # size of a log file is reached.
-    #  The options for setting this variable are as follows:
-    # - `ignore`: the system does nothing when the size of a log file is full;
-    # - `syslog`: a message is sent to the system log indicating the problem;
-    # - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;
-    # - `rotate`: the log file is rotated (archived) and a new empty log file is created;
-    # - `keep_logs`: the system attempts to keep as many logs as possible without violating disk space constraints.
-    # CIS prescribes the value `keep_logs`.
-    max_log_file_action: keep_logs
-
-# This value governs if the below extra-vars for auditd should be used by the role
-rhel9cis_auditd_extra_conf_usage: false
-
-# This can be used to configure other keys in auditd.conf
-# Example:
-# rhel9cis_auditd_extra_conf:
-#     admin_space_left: '10%'
-
-# These variables governs the threshold(MegaBytes) under which the audit daemon should perform a
-# specific action to alert that the system is running low on disk space.
-rhel9cis_auditd_extra_conf:
-    # Must be lower than the 'space_left' variable.
-    admin_space_left: 50
-    space_left: 75
-
-##  Control 4.1.1.4 - Ensure rhel9cis_audit_back_log_limit is sufficient
-# This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
-# system can buffer in memory, if the audit subsystem is unable to process them in real-time.
-# Buffering in memory is useful in situations, where the audit system is overwhelmed
-# with incoming audit events, and needs to temporarily store them until they can be processed.
-# This variable should be set to a sufficient value. The CIS baseline recommends at least `8192` as value.
-rhel9cis_audit_back_log_limit: 8192
-
-## Control 4.1.3.x - Audit template
-# This variable governs if the auditd logic should be executed(if value is true).
-# NOTE: The current default value is likely to be overriden(via 'set_fact') by other further tasks(in sub-section 'Auditd rules').
-update_audit_template: false
-
-## Advanced option found in auditd post
-# This variable governs if defining user exceptions for auditd logging is acceptable.
-rhel9cis_allow_auditd_uid_user_exclusions: false
-# This variable contains a list of uids to be excluded(users whose actions are not logged by auditd)
-rhel9cis_auditd_uid_exclude:
-    - 1999
-
-## Preferred method of logging
-## Whether rsyslog or journald preferred method for local logging
-## Control 4.2.1 | Configure rsyslog
-## Control 4.2.2 | Configure journald
-# This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
-# or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
-# practices are written wholly independent of each other.
-rhel9cis_syslog: rsyslog
-## Control 4.2.1.5 | PATCH | Ensure logging is configured
-# This variable governs if current Ansible role should manage syslog settings
-# in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
-rhel9cis_rsyslog_ansiblemanaged: true
-
-## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
-# remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
-# over UDP or TCP, will not be performed.
-rhel9cis_remote_log_server: false
-## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value of the 'target' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
-# destination server. For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
-rhel9cis_remote_log_host: logagg.example.com
-## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value of the 'port' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server. The default value for this destination port is 514.
-# For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
-rhel9cis_remote_log_port: 514
-## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the value("TCP"/"UDP") of the 'protocol' parameter to be configured when enabling
-# forwarding syslog messages to a remote log server. The default value for the 'omfwd' plug-in is UDP.
-# For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
-rhel9cis_remote_log_protocol: tcp
-## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable governs how often an action is retried(value is passed to 'action.resumeRetryCount' parameter) before
-# it is considered to have failed(that roughly translates to discarded messages). The default value is 0, but
-# when set to "-1"(eternal), this setting would prevent rsyslog from dropping messages when retrying to connect
-# if server is not responding. For this value to be reflected in the configuration, the variable which enables the
-# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
-rhel9cis_remote_log_retrycount: 100
-## Control 4.2.1.6 - Ensure rsyslog is configured to send logs to a remote log host
-# This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
-# For this value to be reflected in the configuration, the variable which enables the automatic configuration
-# of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
-rhel9cis_remote_log_queuesize: 1000
-
-## Control 4.2.1.7 - Ensure rsyslog is not configured to receive logs from a remote client
-# This variable expresses whether the system is used as a log server or not. If set to:
-#  - 'false', current system will act as a log CLIENT, thus it should NOT receive data from other hosts.
-#  - 'true', current system will act as a log SERVER, enabling centralised log management(by protecting log integrity
-# from local attacks on remote clients)
-rhel9cis_system_is_log_server: false
-
-## Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
-# 'rhel9cis_journal_upload_url' is the ip address to upload the journal entries to
-#  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
-#  number may be specified after a colon (":"), otherwise 19532 will be used by default.
-rhel9cis_journal_upload_url: 192.168.50.42
-## The paths below have the default paths/files, but allow user to create custom paths/filenames
-
-## Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
-# This variable specifies the path to the private key file used by the remote journal
-# server to authenticate itself to the client. This key is used alongside the server's
-# public certificate to establish secure communication.
-rhel9cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
-## Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
-# This variable specifies the path to the public certificate file of the remote journal
-# server. This certificate is used to verify the authenticity of the remote server.
-rhel9cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
-## Control 4.2.2.1.2 - Ensure systemd-journal-remote is configured
-# This variable specifies the path to a file containing one or more public certificates
-# of certificate authorities (CAs) that the client trusts. These trusted certificates are used
-# to validate the authenticity of the remote server's certificate.
-rhel9cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
-# ATTENTION: Uncomment the keyword below when values are set!
-
-## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# Current variable configures the max amount of disk space the logs will use(thus, journal files
-# will not grow without bounds)
-# The variables below related to journald, please set these to your site specific values
-# These variable specifies how much disk space the journal may use up at most
-# Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
-# See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
-rhel9cis_journald_systemmaxuse: 10M
-## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# Current variable configures the amount of disk space to keep free for other uses.
-rhel9cis_journald_systemkeepfree: 100G
-## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# This variable configures how much disk space the journal may use up at most.
-# Similar with 'rhel9cis_journald_systemmaxuse', but related to runtime space.
-rhel9cis_journald_runtimemaxuse: 10M
-## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# This variable configures the actual amount of disk space to keep free
-# Similar with 'rhel9cis_journald_systemkeepfree', but related to runtime space.
-rhel9cis_journald_runtimekeepfree: 100G
-## Control 4.2.2.6 - Ensure journald log rotation is configured per site policy
-# Current variable governs the settings for log retention(how long the log files will be kept).
-# Thus, it specifies the maximum time to store entries in a single journal
-# file before rotating to the next one. Set to 0 to turn off this feature.
-# The given values is interpreted as seconds, unless suffixed with the units
-# `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
-# Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
-# ATTENTION: Uncomment the keyword below when values are set!
-rhel9cis_journald_maxfilesec: 1month
-
-## Control 4.3 - Ensure logrotate is configured
-# This variable defines the log file rotation period.
-# Options are: daily, weekly, monthly, yearly.
-rhel9cis_logrotate: "daily"
+## 4.3.2 Create tables if required
+rhel9cis_nft_tables_autonewtable: true
+# This variable stores the name of the table to be used when configuring nftables(creating chains, configuring loopback
+# traffic, established connections, default deny). If 'rhel9cis_nft_tables_autonewtable' is set as true, a new table will
+# be created using as name the value stored by this variable.
+rhel9cis_nft_tables_tablename: filter
 
 ## Section5 vars
 
-## Section 5.2 - SSH
+## Section 5.1 - SSH
 
 # This value, containing the absolute filepath of the produced 'sshd' config file, allows usage of
 # drop-in files('/etc/ssh/ssh_config.d/{ssh_drop_in_name}.conf', supported by RHEL9) when CIS adopts them.
@@ -958,44 +762,51 @@ rhel9cis_logrotate: "daily"
 rhel9cis_sshd_config_file: /etc/ssh/sshd_config
 
 ## Controls:
-## - 5.2.4  - Ensure SSH access is limited
-## - 5.2.19 - Ensure SSH LoginGraceTime is set to one minute or less
-## - 5.2.20 - Ensure SSH Idle Timeout Interval is configured
-rhel9cis_sshd:
-    # This variable sets the maximum number of unresponsive "keep-alive" messages
-    # that can be sent from the server to the client before the connection is considered
-    # inactive and thus, closed.
-    clientalivecountmax: 3
-    # This variable sets the time interval in seconds between sending "keep-alive"
-    # messages from the server to the client. These types of messages are intended to
-    # keep the connection alive and prevent it being terminated due to inactivity.
-    clientaliveinterval: 15
-    # This variable specifies the amount of seconds allowed for successful authentication to
-    # the SSH server.
-    logingracetime: 60
-    # This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
-    # access for users whose user name matches one of the patterns. This is done
-    # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
-    # If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
-    # allowusers: ""
+## - 5.1.7  - Ensure SSH access is limited
+# This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
+# access for users whose user name matches one of the patterns. This is done
+# by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
+# If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
+rhel9cis_sshd_allowusers: "{% if ansible_facts.user_id != 'root' %}{{ ansible_facts.user_id }}{% elif ansible_env.SUDO_USER is defined %}{{ ansible_env.SUDO_USER }}{% endif %}"
 
-    # (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
-    # for users whose primary group or supplementary group list matches one of the patterns. This is done
-    # by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
-    # allowgroups: "wheel"
+# (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
+# for users whose primary group or supplementary group list matches one of the patterns. This is done
+# by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
+rhel9cis_sshd_allowgroups: ""
 
-    # This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
-    # for users whose user name matches one of the patterns. This is done
-    # by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
-    # If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
-    denyusers: "nobody"
+# This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
+# for users whose user name matches one of the patterns. This is done
+# by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
+# If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
+rhel9cis_sshd_denyusers: "nobody"
 
-    # This variable, if specified, configures a list of GROUP name patterns, separated by spaces,
-    # to prevent SSH access for users whose primary group or supplementary group list matches one of the patterns. This is done
-    # by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
-    denygroups: ""
+# This variable, if specified, configures a list of GROUP name patterns, separated by spaces,
+# to prevent SSH access for users whose primary group or supplementary group list matches one of the patterns. This is done
+# by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
+rhel9cis_sshd_denygroups: ""
 
-## Control 5.2.5 - Ensure SSH LogLevel is appropriate
+## - 5.1.9 - ClientAlive and CountMax
+# default settings allow 45 seconds e.g. count x interval
+# This variable sets the maximum number of unresponsive "keep-alive" messages
+# that can be sent from the server to the client before the connection is considered
+# inactive and thus, closed.
+rhel9cis_sshd_clientalivecountmax: 3
+# This variable sets the time interval in seconds between sending "keep-alive"
+# messages from the server to the client. These types of messages are intended to
+# keep the connection alive and prevent it being terminated due to inactivity.
+rhel9cis_sshd_clientaliveinterval: 15
+
+## Control 5.1.12 - disable forwarding
+# By Default this will also disablex11 forwarding
+# set 'yes' if x11 is required this can be changed to run in /etc/ssh/ssh_config.d/50-redhat.conf
+rhel9cis_sshd_x11forwarding: 'no'
+
+## - 5.2.14 - Ensure SSH LoginGraceTime is set to one minute or less
+# This variable specifies the amount of seconds allowed for successful authentication to
+# the SSH server.
+rhel9cis_sshd_logingracetime: 60
+
+## Control 5.2.15 - Ensure SSH LogLevel is appropriate
 # This variable is used to control the verbosity of the logging produced by the SSH server.
 # The options for setting it are as follows:
 # - `QUIET`: Minimal logging;
@@ -1007,193 +818,488 @@ rhel9cis_sshd:
 # - `DEBUG(x)`: Whereas x = debug level 1 to 3, DEBUG=DEBUG1.
 rhel9cis_ssh_loglevel: INFO
 
-## Control 5.2.18 - Ensure SSH MaxSessions is set to 10 or less
+## Control 5.1.16 MaxAuthTries configured
+# The MaxAuthTries parameter specifies the maximum number of authentication
+# attempts permitted per connection. When the login failure count reaches half the
+# number, error messages will be written to the syslog file detailing the login failure.
+rhel9cis_ssh_maxauthtries: '4'
+
+## Control 5.1.17 MaxStartups
+# The MaxStartups parameter specifies the maximum number of concurrent unauthenticated connections to the SSH daemon.
+rhel9cis_ssh_maxstartups: '10:30:60'
+
+## Control 5.1.18 - Ensure SSH MaxSessions is set to 10 or less
 # This variable value specifies the maximum number of open sessions that are permitted from
 # a given location
 rhel9cis_ssh_maxsessions: 4
 
-## Control 5.6.1.4 - Ensure inactive password lock is 30 days or less
-rhel9cis_inactivelock:
-    # This variable specifies the number of days of inactivity before an account will be locked.
-    # CIS requires a value of 30 days or less.
-    lock_days: 30
-
-## Section 5.4 - Configure authselect: Custom authselect profile settings(name, profile to customize, options)
-## Controls:
-#  - 5.4.1 - Ensure custom authselect profile is used('custom_profile_name', 'default_file_to_copy' subsettings)
-#  - 5.4.2 - Ensure authselect includes with-faillock | with auth select profile('custom_profile_name')
-# Settings in place now will fail, they are placeholders from the control example. Due to the way many multiple
-# options and ways to configure this control needs to be enabled and settings adjusted to minimise risk.
-rhel9cis_authselect:
-    # This variable configures the name of the custom profile to be created and selected.
-    custom_profile_name: custom-profile
-    # This variable configures the ID of the existing profile that should be used as a base for the new profile.
-    default_file_to_copy: "sssd --symlink-meta"
-    options: with-sudo with-faillock without-nullok
-
-## Control 5.4.1 - Ensure custom authselect profile is used
-# This variable governs if an authselect custom profile should be automatically created, by copying and
-# customizing one of the default profiles. The default profiles include: sssd, winbind, or the nis. This profile can then be
-# customized to follow site specific requirements.
-rhel9cis_authselect_custom_profile_create: false
-
-## Control 5.4.2 - Ensure authselect includes with-faillock | Create custom profiles
-# This variable governs if the existing custom profile should be selected(Note: please keep in mind that all future updates
-# to the PAM templates and meta files in the original profile will be reflected in your custom profile, too.)
-rhel9cis_authselect_custom_profile_select: false
-
-## Control 5.5.1 - Ensure password creation requirements are configured  - PAM
-rhel9cis_pam_password:
-    # This variable sets the minimum chars a password needs to be set.
-    minlen: 14
-    # This variable set password complexity,the minimum number of
-    # character types that must be used (i.e., uppercase, lowercase, digits, other)
-    # Set to 2, passwords cannot have all lower/upper case.
-    # Set to 3, passwords needs numbers.
-    # set to 4, passwords will have to include all four types of characters.
-    minclass: 4
-
-## Controls
-# - 5.5.2 - Ensure lockout for failed password attempts is configured
-# - 5.5.3 - Ensure password reuse is limited
-# - 5.5.4 - Ensure password hashing algorithm is SHA-512
-# - 5.4.2 -  Ensure authselect includes with-faillock
-rhel9cis_pam_faillock:
-    # This variable sets the amount of time a user will be unlocked after the max amount of
-    #   password failures.
-    unlock_time: 900
-    # This variable sets the amount of tries a password can be entered, before a user is locked.
-    deny: 5
-    # This variable represents the number of password change cycles, after which
-    # an user can re-use a password.
-    # CIS requires a value of 5 or more.
-    remember: 5
-
-# UID settings for interactive users
-# These are discovered via logins.def if set true
-discover_int_uid: false
-### Controls:
-# - 5.6.2 -  Ensure system accounts are secured
-# - 6.2.10 - Ensure local interactive user home directories exist
-# - 6.2.11 - Ensure local interactive users own their home directories
-# This variable sets the minimum number from which to search for UID
-# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
-# been set to `true`.
-min_int_uid: 1000
-### Controls:
-# - 6.2.10 - Ensure local interactive user home directories exist
-# - 6.2.11 - Ensure local interactive users own their home directories
-# This variable sets the maximum number at which the search stops for UID
-# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
-# been set to `true`.
-max_int_uid: 65533
-
-## Control 5.3.3 - Ensure sudo log file exists
+## Control 5.2.x - Ensure sudo log file exists
 # By default, sudo logs through syslog(3). However, to specify a custom log file, the
 # 'logfile' parameter will be used, setting it with current variable's value.
 # This variable defines the path and file name of the sudo log file.
 rhel9cis_sudolog_location: "/var/log/sudo.log"
 
-## Control 5.3.6 -Ensure sudo authentication timeout is configured correctly
+## Control 5.2.x -Ensure sudo authentication timeout is configured correctly
 # This variable sets the duration (in minutes) during which a user's authentication credentials
 # are cached after successfully authenticating using "sudo". This allows the user to execute
 # multiple commands with elevated privileges without needing to re-enter their password for each
 # command within the specified time period. CIS requires a value of at most 15 minutes.
 rhel9cis_sudo_timestamp_timeout: 15
 
-## Control 5.4.2 - authselect and faillock
-## This option is used at your own risk it will enable faillock for users
-## Only to be used on a new clean system if not using authselect
-## THIS CAN BREAK ACCESS EVEN FOR ROOT - PLEASE UNDERSTAND RISKS !
-rhel9cis_add_faillock_without_authselect: false
-# This needs to be set to 'ACCEPT'(as string), besides setting 'rhel9cis_add_faillock_without_authselect'
-# to 'true', in order to include the 'with-failock' option to the current authselect profile.
-rhel9cis_5_4_2_risks: NEVER
+## Control 5.2.4
+# This will leave NOPASSWD intact for these users
+rhel9cis_sudoers_exclude_nopasswd_list:
+  - ec2-user
+  - vagrant
 
-## Section 5.6.1.x: Shadow Password Suite Parameters
-rhel9cis_pass:
-    ## Control 5.6.1.1 - Ensure password expiration is 365 days or less
-    # This variable governs after how many days a password expires.
-    # CIS requires a value of 365 or less.
-    max_days: 365
-    ## Control 5.6.1.2 - Ensure minimum days between password changes is 7 or more
-    # This variable specifies the minimum number of days allowed between changing
-    # passwords. CIS requires a value of at least 1.
-    min_days: 7
-    ## Control 5.6.1.3 - Ensure password expiration warning days is 7 or more
-    # This variable governs, how many days before a password expires, the user will be warned.
-    # CIS requires a value of at least 7.
-    warn_age: 7
+## Control 5.2 - Ensure access to the 'su' command is restricted
+# This variable determines the name of the group of users that are allowed to use the su command.
+# CIS requires that such a group be CREATED(named according to site policy) and be kept EMPTY.
+rhel9cis_sugroup: sugroup
 
-## Allow the forcing of setting user_max_days for logins.
+## 5.3.x PAM and Authselect
+# Do not use authselect if:
+# Your host is part of Linux Identity Management.
+# Joining your host to an IdM domain with the ipa-client-install command automatically configures SSSD authentication on your host.
+# Your host is part of Active Directory via SSSD.
+# Calling the realm join command to join your host to an Active Directory domain automatically configures SSSD authentication on your host.
+rhel9cis_allow_authselect_updates: true
+##
+rhel9cis_authselect_pkg_update: false  # NOTE the risks if system is using SSSD or using ipa-client-install
+
+## PAM AND Authselect
+
+# To create a new profile (best for greenfield fresh sites not configured)
+# This allows creation of a custom profile using an existing one to build from
+# will only create if profiel does not already exist
+## options true or false
+rhel9cis_authselect_custom_profile_create: true
+## Controls:
+#  - 5.3.2.1 - Ensure custom authselect profile is used
+# Settings in place now will fail, they are placeholders from the control example. Due to the way many multiple
+# options and ways to configure this control needs to be enabled and settings adjusted to minimise risk.
+
+# This variable configures the name of the custom profile to be created and selected.
+# To be changed from default - cis_example_profile
+rhel9cis_authselect_custom_profile_name: cis_example_profile
+# Name of the existing authselect profile to copy - options can be found with
+# ```authselect list``` on the host to be configured
+rhel9cis_authselect_default_profile_to_copy: "sssd --symlink-meta"
+
+## Controls
+# - 5.3.3. - Ensure lockout for failed password attempts is configured
+# - 5.5.3 - Ensure password reuse is limited
+# - 5.5.4 - Ensure password hashing algorithm is SHA-512
+# - 5.4.2 -  Ensure authselect includes with-faillock
+# - 5.3.3.1.1
+# This variable sets the amount of tries a password can be entered, before a user is locked.
+rhel9cis_pam_faillock_deny: 5
+# - 5.3.3.1.2
+# This variable sets the amount of time a user will be unlocked after the max amount of
+#   password failures.
+rhel9cis_pam_faillock_unlock_time: 900
+# This variable represents the number of password change cycles, after which
+# an user can re-use a password.
+# CIS requires a value of 5 or more.
+# 5.3.3.1.3 Locking even deny root or root unlock times
+# rhel9cis_pamroot_lock_option options are
+# even_deny_root
+# root_unlock_time = {{ rhel9cis_root_unlock_time }}
+rhel9cis_root_unlock_time: 60
+rhel9cis_pamroot_lock_option: even_deny_root
+# rhel9cis_pamroot_lock_option: "root_unlock_time = {{ rhel9cis_root_unlock_time }}"
+
+# 5.3.3.2.1 - password difok
+rhel9cis_passwd_difok_file: etc/security/pwquality.conf.d/50-pwdifok.conf  # pragma: allowlist secret
+rhel9cis_passwd_difok_value: 2
+
+# 5.3.3.2.2 - password minlength
+rhel9cis_passwd_minlen_file: etc/security/pwquality.conf.d/50-pwlength.conf  # pragma: allowlist secret
+rhel9cis_passwd_minlen_value: 14
+
+# 5.3.3.2.3 - password complex
+rhel9cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf  # pragma: allowlist secret
+# Choose if using minclass or credits options
+# Options are: minclass or credits
+# ensure only one is selected
+rhel9cis_passwd_complex_option: minclass  # pragma: allowlist secret
+rhel9cis_passwd_minclass: 3
+# rhel9cis_passwd_complex: credits
+rhel9cis_passwd_dcredit: -1
+rhel9cis_passwd_ucredit: -2
+rhel9cis_passwd_ocredit: 0
+rhel9cis_passwd_lcredit: -2
+
+# 5.3.3.2.4 - password maxrepeat
+rhel9cis_passwd_maxrepeat_file: etc/security/pwquality.conf.d/50-pwrepeat.conf  # pragma: allowlist secret
+rhel9cis_passwd_maxrepeat_value: 3
+
+# 5.3.3.2.5 - password maxsequence
+rhel9cis_passwd_maxsequence_file: etc/security/pwquality.conf.d/50-pwmaxsequence.conf  # pragma: allowlist secret
+rhel9cis_passwd_maxsequence_value: 3
+
+# 5.3.3.2.6 - password dictcheck
+rhel9cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.conf  # pragma: allowlist secret
+rhel9cis_passwd_dictcheck_value: 1
+
+# 5.3.3.2.7 - password quality enforce
+rhel9cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality_enforce.conf  # pragma: allowlist secret
+rhel9cis_passwd_quality_enforce_value: 1
+
+# 5.3.3.2.8 - password quality enforce for root included with 5.3.3.2.7
+rhel9cis_passwd_quality_enforce_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
+rhel9cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
+
+# PWhistory
+## 5.3.3.3.1 remember history
+# rhel9cis_pamd_pwhistory_remember: <N> -  <N> is the number of old passwords to remember
+rhel9cis_pamd_pwhistory_remember: 24
+
+# 5.3.3.4.x
+rhel9cis_passwd_hash_algo: sha512  # pragma: allowlist secret
+
+## Control 5.6.1.1 - Ensure password expiration is 365 days or less
+# This variable governs after how many days a password expires.
+# CIS requires a value of 365 or less.
+rhel9cis_pass_max_days: 365
+## Control 5.6.1.2 - Ensure minimum days between password changes is 7 or more
+# This variable specifies the minimum number of days allowed between changing
+# passwords. CIS requires a value of at least 1.
+rhel9cis_pass_min_days: 7
+## Control 5.6.1.3 - Ensure password expiration warning days is 7 or more
+# This variable governs, how many days before a password expires, the user will be warned.
+# CIS requires a value of at least 7.
+rhel9cis_pass_warn_age: 7
+
+## Control 5.4.1.x - Ensure inactive password lock is 30 days or less
+rhel9cis_inactivelock:
+  # This variable specifies the number of days of inactivity before an account will be locked.
+  # CIS requires a value of 30 days or less.
+  lock_days: 30
+
+## 5.4.1.x Allow the forcing of setting user_max_days for logins.
 # This can break current connecting user access
 rhel9cis_force_user_maxdays: false
 
-## Allow the force setting of minimum days between changing the password
+## 5.4.1.x Allow the force setting of minimum days between changing the password
 # This can break current connecting user access
 rhel9cis_force_user_mindays: false
 
-## Allow the forcing of of number of days before warning users of password expiry
+## 5.4.1.x Allow the forcing of of number of days before warning users of password expiry
 # This can break current connecting user access
 rhel9cis_force_user_warnage: false
 
-## Control 5.6.2 - Ensure system accounts are secured | Set nologin
-# The system users on this list are allowed to have a shell (e.g. applications
-# that require a shell to function)
-rhel9cis_system_users_shell: []
-
-## Control 5.6.3 - Ensure default user shell timeout is 900 seconds or less
-# Session timeout setting file (TMOUT setting can be set in multiple files)
-# Timeout value is in seconds. (60 seconds * 10 = 600)
-rhel9cis_shell_session_timeout:
-    # This variable specifies the path of the timeout setting file.
-    # (TMOUT setting can be set in multiple files, but only one is required for the
-    # rule to pass. Options are:
-    # - a file in `/etc/profile.d/` ending in `.s`,
-    # - `/etc/profile`, or
-    # - `/etc/bash.bashrc`.
-    file: /etc/profile.d/tmout.sh
-    # This variable represents the amount of seconds a command or process is allowed to
-    # run before being forcefully terminated.
-    # CIS requires a value of at most 900 seconds.
-    timeout: 600
-
-## Control 5.6.1.5 - Ensure all users last password change date is in the past
+## Control 5.4.1.x - Ensure all users last password change date is in the past
 # Allow ansible to expire password for account with a last changed date in the future. Setting it
 # to 'false' will just display users in violation, while 'true' will expire those users passwords.
 rhel9cis_futurepwchgdate_autofix: true
 
-## Control 5.3.7 - Ensure access to the 'su' command is restricted
-# This variable determines the name of the group of users that are allowed to use the su command.
-# CIS requires that such a group be CREATED(named according to site policy) and be kept EMPTY.
-rhel9cis_sugroup: nosugroup
+# 5.4.2.x
+rhel9cis_root_umask: '0027'  # 0027 or more restrictive
+
+## Control 5.4.2.7 - Ensure system accounts are secured | Set nologin
+# The system users on this list are allowed to have a shell (e.g. applications
+# that require a shell to function)
+rhel9cis_system_users_shell: []
+
+## Control 5.4.3.2 - Configuring user shell timeout
+# This dictionary is related to ensuring the rule about user shell timeout
+# This variable represents the amount of seconds a command or process is allowed to
+# run before being forcefully terminated.
+# CIS requires a value of at most 900 seconds.
+rhel9cis_shell_session_timeout: 900
+# This variable specifies the path of the timeout setting file.
+# (TMOUT setting can be set in multiple files, but only one is required for the
+# rule to pass. Options are:
+# - a file in `/etc/profile.d/` ending in `.s`,
+# - `/etc/profile`, or
+# - `/etc/bash.bashrc`.
+rhel9cis_shell_session_file: /etc/profile.d/tmout.sh
+
+## Control 5.4.3.2 bash umask
+rhel9cis_bash_umask: '0027'  # 0027 or more restrictive
+
+### Controls:
+# - 5.6.2 -  Ensure system accounts are secured
+# - 6.2.10 - Ensure local interactive user home directories exist
+# - 6.2.11 - Ensure local interactive users own their home directories
+# UID settings for interactive users
+# These are discovered via logins.def if set true
+rhel9cis_discover_int_uid: true
+# This variable sets the minimum number from which to search for UID
+# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
+# been set to `true`.
+min_int_uid: 1000
+### Controls:
+# - Ensure local interactive user home directories exist
+# - Ensure local interactive users own their home directories
+# This variable sets the maximum number at which the search stops for UID
+# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
+# been set to `true`.
+max_int_uid: 65533
 
 ## Section6 vars
+## Control 6.1.x - allow aide to be configured
+# AIDE is a file integrity checking tool, similar in nature to Tripwire.
+# While it cannot prevent intrusions, it can detect unauthorized changes
+# to configuration files by alerting when the files are changed. Review
+# the AIDE quick start guide and AIDE documentation before proceeding.
+# By setting this variable to `true`, all of the settings related to AIDE will be applied!
+rhel9cis_config_aide: true
 
-## Control 6.1.15 - Audit system file permissions | Create list and warning
-# The RPM package-manager has many useful options. For example, using option:
-#  - '-V': RPM can automatically check if system packages are correctly installed
-#  - '-qf': RPM can be used to determine which package a particular file belongs to
-# Auditing system file-permissions takes advantage of the combination of those two options and, therefore, is able to
-# detect any discrepancy regarding installed packages, redirecting the output of this combined
-# command into a specific file. If no output is returned, the package is installed correctly.
-# Current variable stores the preferred absolute filepath for such a file, therefore if this file
-# contains any lines, an alert message will be generated to warn about each discrepancy.
-rhel9cis_rpm_audit_file: /var/tmp/rpm_file_check
+# If DB file older than below will automatically rebuild DB
+# e.g. options:1w = 1 week, 1d = 1day 1h = 1 hour
+rhel9cis_aide_db_file_age: 1w
 
-## Control 6.1.9 - Ensure no world writable files exist
+# If aide already setup this forces a new DB to be created
+rhel9cis_aide_db_recreate: false
+
+# allows to change db file, not config need to be adjusted too
+rhel9cis_aide_db_file: /var/lib/aide/aide.db.gz
+
+## Control 6.1.2 AIDE cron settings
+
+## How the aide schedule is run either cron or timer
+rhel9cis_aide_scan: cron
+
+# These are the crontab settings for periodical checking of the filesystem's integrity using AIDE.
+# The sub-settings of this variable provide the parameters required to configure
+# the cron job on the target system.
+# Cron is a time-based job scheduling program in Unix OS, which allows tasks to be scheduled
+# and executed automatically at a certain point in time.
+rhel9cis_aide_cron:
+  # This variable represents the user account under which the cron job for AIDE will run.
+  cron_user: root
+  # This variable represents the path to the AIDE crontab file.
+  cron_file: /etc/cron.d/aide_cron
+  # This variable represents the actual command or script that the cron job
+  # will execute for running AIDE.
+  aide_job: '/usr/sbin/aide --check'
+  # These variables define the schedule for the cron job
+  # This variable governs the minute of the time of day when the AIDE cronjob is run.
+  # It must be in the range `0-59`.
+  aide_minute: 0
+  # This variable governs the hour of the time of day when the AIDE cronjob is run.
+  # It must be in the range `0-23`.
+  aide_hour: 5
+  # This variable governs the day of the month when the AIDE cronjob is run.
+  # `*` signifies that the job is run on all days; furthermore, specific days
+  # can be given in the range `1-31`; several days can be concatenated with a comma.
+  # The specified day(s) can must be in the range  `1-31`.
+  aide_day: '*'
+  # This variable governs months when the AIDE cronjob is run.
+  # `*` signifies that the job is run in every month; furthermore, specific months
+  # can be given in the range `1-12`; several months can be concatenated with commas.
+  # The specified month(s) can must be in the range  `1-12`.
+  aide_month: '*'
+  # This variable governs the weekdays, when the AIDE cronjob is run.
+  # `*` signifies that the job is run on all weekdays; furthermore, specific weekdays
+  # can be given in the range `0-7` (both `0` and `7` represent Sunday); several weekdays
+  # can be concatenated with commas.
+  aide_weekday: '*'
+#
+## Preferred method of logging
+## Whether rsyslog or journald preferred method for local logging
+## Control 6.2.3 | Configure rsyslog
+## Control 6.2.1 | Configure journald
+# This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
+# or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
+# practices are written wholly independent of each other.
+rhel9cis_syslog: journald
+
+## Control 6.2.2.x & 6.2.3.x - Ensure rsyslog is not configured to receive logs from a remote client
+# This variable expresses whether the system is used as a log server or not. If set to:
+#  - 'false', current system will act as a log CLIENT, thus it should NOT receive data from other hosts.
+#  - 'true', current system will act as a log SERVER, enabling centralised log management(by protecting log integrity
+# from local attacks on remote clients)
+rhel9cis_system_is_log_server: false
+
+## Control 6.2.3.5 | PATCH | Ensure logging is configured
+# This variable governs if current Ansible role should manage syslog settings
+# in /etc/rsyslog.conf file, namely mail, news and misc(warn, messages)
+rhel9cis_rsyslog_ansiblemanaged: true
+
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
+# remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
+# over UDP or TCP, will not be performed.
+rhel9cis_remote_log_server: false
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the value of the 'target' parameter to be configured when enabling
+# forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
+# destination server. For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
+rhel9cis_remote_log_host: logagg.example.com
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the value of the 'port' parameter to be configured when enabling
+# forwarding syslog messages to a remote log server. The default value for this destination port is 514.
+# For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
+rhel9cis_remote_log_port: 514
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the value("TCP"/"UDP") of the 'protocol' parameter to be configured when enabling
+# forwarding syslog messages to a remote log server. The default value for the 'omfwd' plug-in is UDP.
+# For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
+rhel9cis_remote_log_protocol: tcp
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable governs how often an action is retried(value is passed to 'action.resumeRetryCount' parameter) before
+# it is considered to have failed(that roughly translates to discarded messages). The default value is 0, but
+# when set to "-1"(eternal), this setting would prevent rsyslog from dropping messages when retrying to connect
+# if server is not responding. For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
+rhel9cis_remote_log_retrycount: 100
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
+# For this value to be reflected in the configuration, the variable which enables the automatic configuration
+# of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
+rhel9cis_remote_log_queuesize: 1000
+
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# 'rhel9cis_journal_upload_url' is the ip address to upload the journal entries to
+#  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
+#  number may be specified after a colon (":"), otherwise 19532 will be used by default.
+rhel9cis_journal_upload_url: 192.168.50.42
+## The paths below have the default paths/files, but allow user to create custom paths/filenames
+
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to the private key file used by the remote journal
+# server to authenticate itself to the client. This key is used alongside the server's
+# public certificate to establish secure communication.
+rhel9cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to the public certificate file of the remote journal
+# server. This certificate is used to verify the authenticity of the remote server.
+rhel9cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to a file containing one or more public certificates
+# of certificate authorities (CAs) that the client trusts. These trusted certificates are used
+# to validate the authenticity of the remote server's certificate.
+rhel9cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
+# ATTENTION: Uncomment the keyword below when values are set!
+
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# Current variable configures the max amount of disk space the logs will use(thus, journal files
+# will not grow without bounds)
+# The variables below related to journald, please set these to your site specific values
+# These variable specifies how much disk space the journal may use up at most
+# Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
+# See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
+rhel9cis_journald_systemmaxuse: 10M
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# Current variable configures the amount of disk space to keep free for other uses.
+rhel9cis_journald_systemkeepfree: 100G
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# This variable configures how much disk space the journal may use up at most.
+# Similar with 'rhel9cis_journald_systemmaxuse', but related to runtime space.
+rhel9cis_journald_runtimemaxuse: 10M
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# This variable configures the actual amount of disk space to keep free
+# Similar with 'rhel9cis_journald_systemkeepfree', but related to runtime space.
+rhel9cis_journald_runtimekeepfree: 100G
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# Current variable governs the settings for log retention(how long the log files will be kept).
+# Thus, it specifies the maximum time to store entries in a single journal
+# file before rotating to the next one. Set to 0 to turn off this feature.
+# The given values is interpreted as seconds, unless suffixed with the units
+# `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
+# Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
+# ATTENTION: Uncomment the keyword below when values are set!
+rhel9cis_journald_maxfilesec: 1month
+
+##  Control 6.3.2.1 - Ensure audit_backlog_limit is sufficient
+# This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
+# system can buffer in memory, if the audit subsystem is unable to process them in real-time.
+# Buffering in memory is useful in situations, where the audit system is overwhelmed
+# with incoming audit events, and needs to temporarily store them until they can be processed.
+# This variable should be set to a sufficient value. The CIS baseline recommends at least `8192` as value.
+rhel9cis_audit_back_log_limit: 8192
+
+## Controls 6.3.2.x - What to do when log files fill up
+## Control 6.3.2.1 - Ensure audit log storage size is configured
+# This variable specifies the maximum size in MB that an audit log file can reach
+# before it is archived or deleted to make space for the new audit data.
+# This should be set based on your sites policy. CIS does not provide a specific value.
+rhel9cis_auditd_max_log_file_size: 10
+
+## Control 6.3.2.2
+# This variable determines what action the audit system should take when the maximum
+# size of a log file is reached.
+# The options for setting this variable are as follows:
+# - `ignore`: the system does nothing when the size of a log file is full;
+# - `syslog`: a message is sent to the system log indicating the problem;
+# - `suspend`: the system suspends recording audit events until the log file is cleared or rotated;
+# - `rotate`: the log file is rotated (archived) and a new empty log file is created;
+# - `keep_logs`: the system attempts to keep as many logs as possible without violating disk space constraints.
+# CIS prescribes the value `keep_logs`.
+rhel9cis_auditd_max_log_file_action: keep_logs
+
+## Control 6.3.2.3
+# This variable determines how the system should act in case of issues with disk
+# The disk_full_action parameter tells the system what action to take when no free space is available on the partition that holds the audit log files.
+# Valid values are ignore, syslog, rotate, exec, suspend, single, and halt.
+#
+# The disk_error_action parameter tells the system what action to take when an error is detected on the partition that holds the audit log files.
+# Valid values are ignore, syslog, exec, suspend, single, and halt.
+#
+# CIS prescribes
+# disk_full_action parameter:
+# Set to halt - the auditd daemon will shutdown the system when the disk partition containing the audit logs becomes full.
+# Set to single - the auditd daemon will put the computer system in single user mode when the disk partition containing the audit logs becomes full.
+#
+# disk_error_action parameter:
+# Set to halt - the auditd daemon will shutdown the system when an error is detected on the partition that holds the audit log files.
+# Set to single - the auditd daemon will put the computer system in single user mode when an error is detected on the partition that holds the audit log files.
+# Set to syslog - the auditd daemon will issue no more than 5 consecutive warnings to syslog when an error is detected on the partition that holds the audit log files.
+rhel9cis_auditd_disk_full_action: halt
+rhel9cis_auditd_disk_error_action: syslog
+
+# Control 6.3.2.4
+# Wait to do when space left is low.
+# The space_left_action parameter tells the system what action to take when the system has detected that it is starting to get low on disk space.
+# Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
+# The admin_space_left_action parameter tells the system what action to take when the system has detected that it is low on disk space.
+# Valid values are ignore, syslog, rotate, email, exec, suspend, single, and halt.
+rhel9cis_auditd_space_left_action: email
+rhel9cis_auditd_admin_space_left_action: halt
+
+# This value governs if the below extra-vars for auditd should be used by the role
+rhel9cis_auditd_extra_conf_usage: false
+
+# 6.3.3.x allow exceptions for UID in auditd config
+## Advanced option found in auditd post
+# This variable governs if defining user exceptions for auditd logging is acceptable.
+rhel9cis_allow_auditd_uid_user_exclusions: false
+# This variable contains a list of uids to be excluded(users whose actions are not logged by auditd)
+rhel9cis_auditd_uid_exclude:
+  - 1999
+
+# This can be used to configure other keys in auditd.conf
+# Example:
+rhel9cis_auditd_extra_conf:
+  admin_space_left: '10%'
+
+# Section 7 Vars
+
+# 7.1.12 Ensure no files or directories without an owner and a group exist
+rhel9cis_exclude_unowned_search_path: (! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*")
+
+# Control 7.1.12
+# The value of this variable specifies the owner that will be set for unowned files and directories.
+rhel9cis_unowned_owner: root
+rhel9cis_ungrouped_group: root
+# This variable is a toggle for enabling/disabling the automated
+# setting of an owner (specified in variable `rhel9cis_unowned_owner`)
+# for all unowned files and directories.
+# Possible values are `true` and `false`.
+rhel9cis_ownership_adjust: true
+
+## Control 7.1.13
+# This variable is a toggle for enabling/disabling the automated removal
+# of the SUID bit from all files on all mounts.
+# Possible values are `true` and `false`.
+rhel9cis_suid_sgid_adjust: false
+
+## Control 7.1.11 - Ensure no world writable files exist
 # Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable.
 rhel9cis_no_world_write_adjust: true
-
-## Control 6.2.16 - Ensure local interactive user dot files are not group or world writable
-# This boolean variable governs if current role should follow filesystem links for changes to
-# user home directory.
-rhel_09_6_2_16_home_follow_symlinks: false
-# thanks to @dulin-gnet and community for rhel8-cis feedback.
-
-#### Goss Configuration Settings ####
-# Set correct env for the run_audit.sh script from https://github.com/ansible-lockdown/{{ benchmark }}-Audit.git"
-audit_run_script_environment:
-    AUDIT_BIN: "{{ audit_bin }}"
-    AUDIT_FILE: 'goss.yml'
-    AUDIT_CONTENT_LOCATION: "{{ audit_out_dir }}"

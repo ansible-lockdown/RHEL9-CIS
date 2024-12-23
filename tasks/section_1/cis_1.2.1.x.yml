@@ -1,0 +1,122 @@
+---
+
+- name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured"
+  when:
+    - rhel9cis_rule_1_2_1_1
+    - ansible_facts.distribution == "RedHat" or
+      ansible_facts.distribution == "Rocky" or
+      ansible_facts.distribution == "AlmaLinux"
+  tags:
+    - level1-server
+    - level1-workstation
+    - manual
+    - patch
+    - rule_1.2.1.1
+    - NIST800-53R5_SI-2
+  block:
+    - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | List installed pubkey keys"
+      ansible.builtin.shell: "rpm -qa | grep {{ os_gpg_key_pubkey_name }}"  # noqa command-instead-of-module
+      changed_when: false
+      failed_when: false
+      register: discovered_os_installed_pub_keys
+
+    - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | Query found keys"
+      ansible.builtin.shell: |
+        'rpm -q --queryformat "%{PACKAGER} %{VERSION}\\n" {{ os_gpg_key_pubkey_name }} | grep "{{ os_gpg_key_pubkey_content }}"'
+      changed_when: false
+      failed_when: false
+      register: discovered_os_gpg_key_check
+
+    - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | If expected keys fail"
+      when:
+        - discovered_os_installed_pub_keys.rc == 1 or
+          discovered_os_gpg_key_check.rc == 1
+      ansible.builtin.fail:
+        msg: Installed GPG Keys do not meet expected values or expected keys are not installed
+
+- name: "1.2.1.2 | PATCH | Ensure gpgcheck is globally activated"
+  when: rhel9cis_rule_1_2_1_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - rule_1.2.1.2
+    - NIST800-53R5_SI-2
+  block:
+    - name: "1.2.1.2 | AUDIT | Ensure gpgcheck is globally activated | Find repos"
+      ansible.builtin.find:
+        paths: /etc/yum.repos.d
+        patterns: "*.repo"
+      register: discovered_yum_repos
+
+    - name: "1.2.1.2 | PATCH | Ensure gpgcheck is globally activated | Update yum.repos"
+      ansible.builtin.replace:
+        name: "{{ item.path }}"
+        regexp: ^gpgcheck\s*=\s*0
+        replace: "gpgcheck=1"
+      loop: "{{ discovered_yum_repos.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+
+- name: "1.2.1.3 | AUDIT | Ensure repo_gpgcheck is globally activated"
+  when:
+    - rhel9cis_rule_1_2_1_3
+    - rhel9cis_rule_enable_repogpg
+    - not rhel9cis_rhel_default_repo
+  tags:
+    - level1-server
+    - level1-workstation
+    - manual
+    - audit
+    - rule_1.2.1.3
+    - NIST800-53R5_SI-2
+  block:
+    - name: "1.2.1.3 | PATCH | Ensure repo_gpgcheck is globally activated | dnf.conf"
+      ansible.builtin.lineinfile:
+        path: /etc/dnf/dnf.conf
+        regexp: '^repo_gpgcheck'
+        line: repo_gpgcheck=1
+
+    - name: "1.2.1.3 | AUDIT| Ensure repo_gpgcheck is globally activated | get repo files"
+      ansible.builtin.find:
+        paths: /etc/yum.repos.d
+        patterns: "*.repo"
+      register: discovered_repo_files
+
+    - name: "1.2.1.3 | PATCH | Ensure repo_gpgcheck is globally activated | amend repo files"
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: ^repo_gpgcheck\s*=s*0
+        replace: repo_gpgcheck=1
+      loop: "{{ discovered_repo_files.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+
+- name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured"
+  when: rhel9cis_rule_1_2_1_4
+  tags:
+    - level1-server
+    - level1-workstation
+    - manual
+    - audit
+    - rule_1.2.1.4
+    - NIST800-53R5_SI-2
+  vars:
+    warn_control_id: '1.2.1.4'
+  block:
+    - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Get repo list"
+      ansible.builtin.command: dnf repolist
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_dnf_configured
+
+    - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Display repo list"
+      ansible.builtin.debug:
+        msg:
+          - "Warning!! Below are the configured repos. Please review and make sure all align with site policy"
+          - "{{ discovered_dnf_configured.stdout_lines }}"
+
+    - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured | Warn Count"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml

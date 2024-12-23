@@ -1,0 +1,57 @@
+---
+
+- name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured"
+  when: rhel9cis_rule_6_2_4_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - logfiles
+    - rule_6.2.4.1
+  block:
+    - name: "6.2.4.1 | AUDIT | Ensure access to all logfiles has been configured | find log files"
+      ansible.builtin.shell: find /var/log/ -type f -exec ls {} \;
+      changed_when: false
+      failed_when: false
+      register: discovered_logfiles
+
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
+      when:
+        - discovered_logfiles.stdout_lines | length > 0
+        - ('audit.log' in item or 'journal' in item) or
+          item == '/var/log/secure' or
+          item == '/var/log/syslog' or
+          item == '/var/log/messages' or
+          item == '/var/log/auth.log'
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'u-x,g-wx,o-rwx'
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.stdout_lines }}"
+
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
+      when:
+        - discovered_logfiles.stdout_lines | length > 0
+        - ('anaconda' in item or 'dnf' in item or 'secure' in item  or 'messages' in item or 'hawkey' in item)
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'u-x,g-x,o-rwx'
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.stdout_lines }}"
+
+    - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions"
+      when:
+        - discovered_logfiles.stdout_lines | length > 0
+        - ('sssd' in item or 'lastlog' in item) or
+          item == "/var/log/btmp" or
+          item == "/var/log/utmp" or
+          item == "/var/log/wtmp" or
+          item == "/var/log/lastlog"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: 'ug-x,o-wx'
+      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
+      register: discovered_logfile_list
+      loop: "{{ discovered_logfiles.stdout_lines }}"

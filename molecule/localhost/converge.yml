@@ -8,7 +8,7 @@
   vars:
       ansible_user: "{{ lookup('env', 'USER') }}"
       role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
-      rhel9cis_rule_5_3_4: false
+      rhel9cis_rule_5_2_4: false
 
   pre_tasks:
   tasks:
