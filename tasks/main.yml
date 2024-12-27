@@ -106,22 +106,22 @@
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
             success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
 
-- name: "PRELIM | AUDIT | Check authselect profile is selected"
+- name: "Check authselect profile is selected"
   when: rhel9cis_allow_authselect_updates
   tags: always
   block:
-    - name: "PRELIM | AUDIT | Check authselect profile name has been updated"
+    - name: "Check authselect profile name has been updated | Ensure name from default is changed"
       ansible.builtin.assert:
         that: rhel9cis_authselect_custom_profile_name != 'cis_example_profile'
         fail_msg: "You still have the default name for your authselect profile"
 
-    - name: "PRELIM | AUDIT | Check authselect profile is selected"
+    - name: "Check authselect profile is selected | Check current profile"
       ansible.builtin.shell: authselect current | head -1 | awk '{print $NF}'
       changed_when: false
       failed_when: prelim_authselect_current_profile.rc not in [ 0, 1 ]
       register: prelim_authselect_current_profile
 
-    - name: "PRELIM | AUDIT | Check authselect profile is selected"
+    - name: "Check authselect profile is selected | Ensure profile name is set"
       ansible.builtin.assert:
         that: prelim_authselect_current_profile is defined
         success_msg: "Authselect is running and profile is selected"
