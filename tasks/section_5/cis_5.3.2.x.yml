@@ -143,8 +143,8 @@
     - name: "5.3.2.5 | AUDIT | Ensure pam_unix module is enabled"
       ansible.builtin.command: grep -P -- '\b(pam_unix\.so)\b' /etc/authselect/"$(head -1 /etc/authselect/authselect.conf)"/{system,password}-auth
       changed_when: false
-      failed_when: discovered_discovered_authselect_pam_unix.rc not in [ 0, 1 ]
-      register: discovered_discovered_authselect_pam_unix
+      failed_when: discovered_authselect_pam_unix.rc not in [ 0, 1 ]
+      register: discovered_authselect_pam_unix
 
     - name: "5.3.2.5 | PATCH | Ensure pam_unix module is enabled | system-auth"
       when: "'system-auth:password' not in discovered_authselect_pam_unix.stdout"
