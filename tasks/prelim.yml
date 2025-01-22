@@ -177,14 +177,14 @@
       ansible.builtin.set_fact:
         grub2_path: /etc/grub2-efi.cfg
 
-- name: "PRELIM | Discover Gnome Desktop Environment"
+- name: "PRELIM | AUDIT | Discover Gnome Desktop Environment"
   tags:
     - always
   ansible.builtin.stat:
     path: /usr/share/gnome/gnome-version.xml
   register: prelim_gnome_present
 
-- name: "PRELIM | Install dconf if gui installed"
+- name: "PRELIM | PATCH | Install dconf if gui installed"
   when:
     - rhel9cis_gui
   tags:
@@ -242,6 +242,15 @@
     group: root
     mode: 'go-rwx'
     state: touch
+
+- name: "PRELIM | AUDIT | Capture pam secuirty related files"
+  tags: always
+  ansible.builtin.find:
+    paths:
+      - /etc/security/pwquality.conf.d/
+      - /etc/pam.d/
+    patterns: '*-auth,*.conf'
+  register: prelim_pam_pwquality_confs
 
 - name: "PRELIM | AUDIT | Gather UID 0 accounts other than root"
   when: rhel9cis_rule_5_4_2_1
@@ -326,7 +335,7 @@
       changed_when: false
       register: prelim_uid_max_id
 
-    - name: "PRELIM | AUDIT | set_facts for interactive uid/gid"
+    - name: "PRELIM | AUDIT | Set Fact for interactive uid/gid"
       ansible.builtin.set_fact:
         prelim_min_int_uid: "{{ prelim_uid_min_id.stdout }}"
         prelim_max_int_uid: "{{ prelim_uid_max_id.stdout }}"
