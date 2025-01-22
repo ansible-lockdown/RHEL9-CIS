@@ -18,10 +18,9 @@
         path: "{{ item }}"
         regexp: 'difok\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
-        - /etc/pam.d/*-auth
+      loop:
+        - /etc/security/pwquality.conf
+        - "{{ prelim_pam_pwquality_confs.files | default ([]) }}"
 
     - name: "5.3.3.2.1 | PATCH | Ensure password number of changed characters is configured | Ensure difok file exists"
       ansible.builtin.template:
@@ -74,10 +73,9 @@
         path: "{{ item }}"
         regexp: 'minlen\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
-        - '/etc/pam.d/*-auth'
+      loop:
+        - /etc/security/pwquality.conf
+        - "{{ prelim_pam_pwquality_confs.files | default ([]) }}"
 
     - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Ensure minlen file exists"
       ansible.builtin.template:
@@ -130,10 +128,9 @@
         path: "{{ item }}"
         regexp: '(minclass|[dulo]credit)\s*=\s*(-\d|\d+)\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
-        - '/etc/pam.d/*-auth'
+      loop:
+        - /etc/security/pwquality.conf
+        - "{{ prelim_pam_pwquality_confs.files | default ([]) }}"
 
     - name: "5.3.3.2.3 | PATCH | Ensure password complexity is configured | Ensure complexity file exists"
       ansible.builtin.template:
@@ -184,10 +181,9 @@
         path: "{{ item }}"
         regexp: 'maxrepeat\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
-        - '/etc/pam.d/*-auth'
+      loop:
+        - /etc/security/pwquality.conf
+        - "{{ prelim_pam_pwquality_confs.files | default ([]) }}"
 
     - name: "5.3.3.2.4 | PATCH | Ensure password same consecutive characters is configured | Ensure maxrepeat file exists"
       ansible.builtin.template:
@@ -240,10 +236,9 @@
         path: "{{ item }}"
         regexp: 'maxsequence\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
-        - '/etc/pam.d/*-auth'
+      loop:
+        - /etc/security/pwquality.conf
+        - "{{ prelim_pam_pwquality_confs.files | default ([]) }}"
 
     - name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is configured | Ensure maxsequence file exists"
       ansible.builtin.template:
@@ -295,10 +290,9 @@
         path: "{{ item }}"
         regexp: 'dictcheck\s*=\s*\d+\b'
         replace: ''
-      with_fileglob:
-        - '/etc/security/pwquality.conf'
-        - '/etc/security/pwquality.conf.d/*.conf'
-        - '/etc/pam.d/*-auth'
+      loop:
+        - /etc/security/pwquality.conf
+        - "{{ prelim_pam_pwquality_confs.files | default ([]) }}"
 
     - name: "5.3.3.2.6 | PATCH | Ensure password dictionary check is enabled | Ensure dictcheck file exists"
       ansible.builtin.template:
