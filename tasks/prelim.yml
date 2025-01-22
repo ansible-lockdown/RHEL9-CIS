@@ -243,13 +243,12 @@
     mode: 'go-rwx'
     state: touch
 
-- name: "PRELIM | AUDIT | Capture pam secuirty related files"
+- name: "PRELIM | AUDIT | Capture pam security related files"
   tags: always
   ansible.builtin.find:
     paths:
       - /etc/security/pwquality.conf.d/
-      - /etc/pam.d/
-    patterns: '*-auth,*.conf'
+    patterns: '*.conf'
   register: prelim_pam_pwquality_confs
 
 - name: "PRELIM | AUDIT | Gather UID 0 accounts other than root"
