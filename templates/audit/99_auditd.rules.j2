@@ -138,7 +138,6 @@
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F auid=>{{ prelim_min_int_uid }} -F auid!=unset -k mounts
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -F auid=>{{ prelim_min_int_uid }} -F auid!=unset -k mounts
 {% endif %}
-{% endif %}
 {% if rhel9cis_rule_6_3_3_11 %}
 -w /var/run/utmp -p wa -k session
 -w /var/log/wtmp -p wa -k session
