@@ -69,7 +69,7 @@
     - pam
   block:
     - name: "5.3.3.3.3 | AUDIT | Ensure pam_pwhistory includes use_authtok | Check existing files"
-      ansible.builtin.shell: grep -Psi -- '^\h*password\h+[^#\n\r]+\h+pam_pwhistory\.so\h+([^#\n\r]+\h+)?use_authtok\b' /etc/pam.d/{system,password}-auth
+      ansible.builtin.shell: grep -Psic -- '^\h*password\h+[^#\n\r]+\h+pam_pwhistory\.so\h+([^#\n\r]+\h+)?use_authtok\b' /etc/pam.d/{system,password}-auth
       register: discovered_pwhistory_use_authtok
       changed_when: false
       failed_when: discovered_pwhistory_use_authtok.rc not in [0, 1]
@@ -81,9 +81,9 @@
         - rhel9cis_disruption_high
       ansible.builtin.lineinfile:
         path: "{{ item }}"
-        regexp: ^(password\h+[^#\n\r]+\h+pam_pwhistory\.so\h+)(.*)(use_authtok)
-        line: '\1\2 use_authtok'
-        backrefs: true
+        regexp: ^password\s*pam_pwhistory\.so\s*.*\s(!?use_authtok)
+        line: password   required     pam_pwhistory.so use_authtok
+        insertbefore: ^password.*pam_deny.so
       loop:
         - /etc/pam.d/password-auth
         - /etc/pam.d/system-auth
