@@ -287,15 +287,15 @@
     warn_control_id: '7.2.9'
   block:
     - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured | Check for files"
-      ansible.builtin.shell: find /home/ -name "\.*" -perm /g+w,o+w
+      ansible.builtin.shell: find /home/ -name "\.*"
       changed_when: false
-      failed_when: discovered_homedir_dot_files.rc not in [ 0, 1 ]
+      failed_when: discovered_homedir_hidden_files.rc not in [ 0, 1 ]
       check_mode: false
-      register: discovered_homedir_dot_files
+      register: discovered_homedir_hidden_files
 
     - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured | Warning on files found"
       when:
-        - discovered_homedir_dot_files.stdout | length > 0
+        - discovered_homedir_hidden_files.stdout | length > 0
         - rhel9cis_dotperm_ansiblemanaged
       ansible.builtin.debug:
         msg:
@@ -303,16 +303,18 @@
 
     - name: "7.2.9 | PATCH | Ensure local interactive user dot files access is configured | Set warning count"
       when:
-        - discovered_homedir_dot_files.stdout | length > 0
+        - discovered_homedir_hidden_files.stdout | length > 0
         - rhel9cis_dotperm_ansiblemanaged
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
     - name: "7.2.9 | PATCH | Ensure local interactive user dot files access is configured | Changes files if configured"
       when:
-        - discovered_homedir_dot_files.stdout | length > 0
+        - discovered_homedir_hidden_files.stdout | length > 0
         - rhel9cis_dotperm_ansiblemanaged
       ansible.builtin.file:
         path: '{{ item }}'
         mode: 'go-w'
-      with_items: "{{ discovered_homedir_dot_files.stdout_lines }}"
+        owner: "{{ rhel9cis_passwd | selectattr('dir', 'in', prelim_interactive_users_home.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='uid') | last }}"
+        group: "{{ rhel9cis_passwd | selectattr('dir', 'in', prelim_interactive_users_home.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='gid') | last }}"
+      with_items: "{{ discovered_homedir_hidden_files.stdout_lines }}"
