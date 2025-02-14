@@ -1,116 +1,145 @@
+---
 
-## This file is managed by Ansible, YOUR CHANGED WILL BE LOST!
-## metadata for benchmark
 
-## metadata for Audit benchmark
-benchmark_version: '1.0.0'
+# Enable logrunning potential resource intensive tests
+run_heavy_tests: {{ audit_run_heavy_tests }}
 
-# Set if genuine RHEL (subscription manager check) not for derivatives e.g. CentOS
-# If run via script this is discovered and set
-host_os_distribution: {{ ansible_facts.distribution | lower }}
-
-#  timeout for each command to run where set - default = 10seconds/10000ms
+# Extend default command timeout for longer running tests
 timeout_ms: {{ audit_cmd_timeout }}
 
-# Taken from LE rhel9-cis
+## Switching on/off specific baseline sections
+# These variables govern whether the tasks of a particular section are to be executed when running the role.
+# E.g: If you want to execute the tasks of Section 1 you should set the "_section1" variable to true.
+# If you do not want the tasks from that section to get executed you simply set the variable to "false".
 rhel9cis_section1: {{ rhel9cis_section1 }}
 rhel9cis_section2: {{ rhel9cis_section2 }}
 rhel9cis_section3: {{ rhel9cis_section3 }}
 rhel9cis_section4: {{ rhel9cis_section4 }}
 rhel9cis_section5: {{ rhel9cis_section5 }}
 rhel9cis_section6: {{ rhel9cis_section6 }}
+rhel9cis_section7: {{ rhel9cis_section7 }}
 
+# This is used for audit purposes to run only specific level use the tags
+# e.g.
+# - level1-server
+# - level2-workstation
 rhel9cis_level_1: {{ rhel9cis_level_1 }}
 rhel9cis_level_2: {{ rhel9cis_level_2 }}
 
+## Section 1.6 - Mandatory Access Control
+# This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
+# 'rhel9cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
 rhel9cis_selinux_disable: {{ rhel9cis_selinux_disable }}
-
-#  to enable rules that may have IO impact on a system e.g. full filesystem scans or CPU heavy
-run_heavy_tests: true
-
-#  True is BIOS based system else set to false
-{% if rhel9cis_legacy_boot is defined %}
+# This variable is used in a preliminary task, handling grub2 paths either in case of
+# UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
 rhel9cis_legacy_boot: {{ rhel9cis_legacy_boot }}
-{% endif %}
 
-rhel9cis_set_boot_pass: {{ rhel9cis_set_boot_pass }}
+## Benchmark name used by audting control role
+# The audit variable found at the base
+## metadata for Audit benchmark
+benchmark_version: 'v2.0.0'
+
+benchmark: RHEL9-CIS
 
 # These variables correspond with the CIS rule IDs or paragraph numbers defined in
 # the CIS benchmark documents.
 # PLEASE NOTE: These work in coordination with the section # group variables and tags.
 # You must enable an entire section in order for the variables below to take effect.
-# Section 1 rules
-# 1.1.1 Disable unused filesystems
+
+# Section 1 is Initial setup (FileSystem Configuration, Configure Software Updates, Filesystem Integrity Checking, Secure Boot Settings,
+# Additional Process Hardening, Mandatory Access Control, Command Line Warning Banners, and GNOME Display Manager)
+# Filesystem kernel modules
 rhel9cis_rule_1_1_1_1: {{ rhel9cis_rule_1_1_1_1 }}
 rhel9cis_rule_1_1_1_2: {{ rhel9cis_rule_1_1_1_2 }}
-# 1.1.2 Configure /tmp
-rhel9cis_rule_1_1_2_1: {{ rhel9cis_rule_1_1_2_1 }}
-rhel9cis_rule_1_1_2_2: {{ rhel9cis_rule_1_1_2_2 }}
-rhel9cis_rule_1_1_2_3: {{ rhel9cis_rule_1_1_2_3 }}
-rhel9cis_rule_1_1_2_4: {{ rhel9cis_rule_1_1_2_4 }}
-# 1.1.3 Configure /var
-rhel9cis_rule_1_1_3_1: {{ rhel9cis_rule_1_1_3_1 }}
-rhel9cis_rule_1_1_3_2: {{ rhel9cis_rule_1_1_3_2 }}
-rhel9cis_rule_1_1_3_3: {{ rhel9cis_rule_1_1_3_3 }}
-# 1.1.4 Configure /var/tmp
-rhel9cis_rule_1_1_4_1: {{ rhel9cis_rule_1_1_4_1 }}
-rhel9cis_rule_1_1_4_2: {{ rhel9cis_rule_1_1_4_2 }}
-rhel9cis_rule_1_1_4_3: {{ rhel9cis_rule_1_1_4_3 }}
-rhel9cis_rule_1_1_4_4: {{ rhel9cis_rule_1_1_4_4 }}
-# 1.1.5 Configure /var/log
-rhel9cis_rule_1_1_5_1: {{ rhel9cis_rule_1_1_5_1 }}
-rhel9cis_rule_1_1_5_2: {{ rhel9cis_rule_1_1_5_2 }}
-rhel9cis_rule_1_1_5_3: {{ rhel9cis_rule_1_1_5_3 }}
-rhel9cis_rule_1_1_5_4: {{ rhel9cis_rule_1_1_5_4 }}
-# 1.1.6 Configure /var/log/audit
-rhel9cis_rule_1_1_6_1: {{ rhel9cis_rule_1_1_6_1 }}
-rhel9cis_rule_1_1_6_2: {{ rhel9cis_rule_1_1_6_2 }}
-rhel9cis_rule_1_1_6_3: {{ rhel9cis_rule_1_1_6_3 }}
-rhel9cis_rule_1_1_6_4: {{ rhel9cis_rule_1_1_6_4 }}
-# 1.1.7 Configure /home
-rhel9cis_rule_1_1_7_1: {{ rhel9cis_rule_1_1_7_1 }}
-rhel9cis_rule_1_1_7_2: {{ rhel9cis_rule_1_1_7_2 }}
-rhel9cis_rule_1_1_7_3: {{ rhel9cis_rule_1_1_7_3 }}
-# 1.1.8 Configure /dev/shm
-rhel9cis_rule_1_1_8_1: {{ rhel9cis_rule_1_1_8_1 }}
-rhel9cis_rule_1_1_8_2: {{ rhel9cis_rule_1_1_8_2 }}
-rhel9cis_rule_1_1_8_3: {{ rhel9cis_rule_1_1_8_3 }}
-rhel9cis_rule_1_1_8_4: {{ rhel9cis_rule_1_1_8_4 }}
-# 1.9 usb-storage
-rhel9cis_rule_1_1_9: {{ rhel9cis_rule_1_1_9 }}
-# 1.2 Configure Software Updates
-rhel9cis_rule_1_2_1: {{ rhel9cis_rule_1_2_1 }}
-rhel9cis_rule_1_2_2: {{ rhel9cis_rule_1_2_2 }}
-rhel9cis_rule_1_2_3: {{ rhel9cis_rule_1_2_3 }}
-rhel9cis_rule_1_2_4: {{ rhel9cis_rule_1_2_4 }}
-# 1.3 Filesystem Integrity Checking
-rhel9cis_rule_1_3_1: {{ rhel9cis_rule_1_3_1 }}
-rhel9cis_rule_1_3_2: {{ rhel9cis_rule_1_3_2 }}
-rhel9cis_rule_1_3_3: {{ rhel9cis_rule_1_3_3 }}
-# 1.4 Secure Boot Settings
+rhel9cis_rule_1_1_1_3: {{ rhel9cis_rule_1_1_1_3 }}
+rhel9cis_rule_1_1_1_4: {{ rhel9cis_rule_1_1_1_4 }}
+rhel9cis_rule_1_1_1_5: {{ rhel9cis_rule_1_1_1_5 }}
+rhel9cis_rule_1_1_1_6: {{ rhel9cis_rule_1_1_1_6 }}
+rhel9cis_rule_1_1_1_7: {{ rhel9cis_rule_1_1_1_7 }}
+rhel9cis_rule_1_1_1_8: {{ rhel9cis_rule_1_1_1_8 }}
+rhel9cis_rule_1_1_1_9: {{ rhel9cis_rule_1_1_1_9 }}
+# Filesystems
+# /tmp
+rhel9cis_rule_1_1_2_1_1: {{ rhel9cis_rule_1_1_2_1_1 }}
+rhel9cis_rule_1_1_2_1_2: {{ rhel9cis_rule_1_1_2_1_2 }}
+rhel9cis_rule_1_1_2_1_3: {{ rhel9cis_rule_1_1_2_1_3 }}
+rhel9cis_rule_1_1_2_1_4: {{ rhel9cis_rule_1_1_2_1_4 }}
+# /dev/shm
+rhel9cis_rule_1_1_2_2_1: {{ rhel9cis_rule_1_1_2_2_1 }}
+rhel9cis_rule_1_1_2_2_2: {{ rhel9cis_rule_1_1_2_2_2 }}
+rhel9cis_rule_1_1_2_2_3: {{ rhel9cis_rule_1_1_2_2_3 }}
+rhel9cis_rule_1_1_2_2_4: {{ rhel9cis_rule_1_1_2_2_4 }}
+# /home
+rhel9cis_rule_1_1_2_3_1: {{ rhel9cis_rule_1_1_2_3_1 }}
+rhel9cis_rule_1_1_2_3_2: {{ rhel9cis_rule_1_1_2_3_2 }}
+rhel9cis_rule_1_1_2_3_3: {{ rhel9cis_rule_1_1_2_3_3 }}
+# /var
+rhel9cis_rule_1_1_2_4_1: {{ rhel9cis_rule_1_1_2_4_1 }}
+rhel9cis_rule_1_1_2_4_2: {{ rhel9cis_rule_1_1_2_4_2 }}
+rhel9cis_rule_1_1_2_4_3: {{ rhel9cis_rule_1_1_2_4_3 }}
+# /var/tmp
+rhel9cis_rule_1_1_2_5_1: {{ rhel9cis_rule_1_1_2_5_1 }}
+rhel9cis_rule_1_1_2_5_2: {{ rhel9cis_rule_1_1_2_5_2 }}
+rhel9cis_rule_1_1_2_5_3: {{ rhel9cis_rule_1_1_2_5_3 }}
+rhel9cis_rule_1_1_2_5_4: {{ rhel9cis_rule_1_1_2_5_4 }}
+# /var/log
+rhel9cis_rule_1_1_2_6_1: {{ rhel9cis_rule_1_1_2_6_1 }}
+rhel9cis_rule_1_1_2_6_2: {{ rhel9cis_rule_1_1_2_6_2 }}
+rhel9cis_rule_1_1_2_6_3: {{ rhel9cis_rule_1_1_2_6_3 }}
+rhel9cis_rule_1_1_2_6_4: {{ rhel9cis_rule_1_1_2_6_4 }}
+# /var/log/audit
+rhel9cis_rule_1_1_2_7_1: {{ rhel9cis_rule_1_1_2_7_1 }}
+rhel9cis_rule_1_1_2_7_2: {{ rhel9cis_rule_1_1_2_7_2 }}
+rhel9cis_rule_1_1_2_7_3: {{ rhel9cis_rule_1_1_2_7_3 }}
+rhel9cis_rule_1_1_2_7_4: {{ rhel9cis_rule_1_1_2_7_4 }}
+
+# Package Mgmt
+# Config Pkg Repos
+rhel9cis_rule_1_2_1_1: {{ rhel9cis_rule_1_2_1_1 }}
+rhel9cis_rule_1_2_1_2: {{ rhel9cis_rule_1_2_1_2 }}
+rhel9cis_rule_1_2_1_3: {{ rhel9cis_rule_1_2_1_3 }}
+rhel9cis_rule_1_2_1_4: {{ rhel9cis_rule_1_2_1_4 }}
+# Package updates
+rhel9cis_rule_1_2_2_1: {{ rhel9cis_rule_1_2_2_1 }}
+
+# Selinux
+rhel9cis_rule_1_3_1_1: {{ rhel9cis_rule_1_3_1_1 }}
+rhel9cis_rule_1_3_1_2: {{ rhel9cis_rule_1_3_1_2 }}
+rhel9cis_rule_1_3_1_3: {{ rhel9cis_rule_1_3_1_3 }}
+rhel9cis_rule_1_3_1_4: {{ rhel9cis_rule_1_3_1_4 }}
+rhel9cis_rule_1_3_1_5: {{ rhel9cis_rule_1_3_1_5 }}
+rhel9cis_rule_1_3_1_6: {{ rhel9cis_rule_1_3_1_6 }}
+rhel9cis_rule_1_3_1_7: {{ rhel9cis_rule_1_3_1_7 }}
+rhel9cis_rule_1_3_1_8: {{ rhel9cis_rule_1_3_1_8 }}
+
+# Bootloader
 rhel9cis_rule_1_4_1: {{ rhel9cis_rule_1_4_1 }}
 rhel9cis_rule_1_4_2: {{ rhel9cis_rule_1_4_2 }}
-# 1.5 Additional Process Hardening
+
+# Additional Process Hardening
 rhel9cis_rule_1_5_1: {{ rhel9cis_rule_1_5_1 }}
 rhel9cis_rule_1_5_2: {{ rhel9cis_rule_1_5_2 }}
 rhel9cis_rule_1_5_3: {{ rhel9cis_rule_1_5_3 }}
-# 1.6 Mandatory Access Control
-rhel9cis_rule_1_6_1_1: {{ rhel9cis_rule_1_6_1_1 }}
-rhel9cis_rule_1_6_1_2: {{ rhel9cis_rule_1_6_1_2 }}
-rhel9cis_rule_1_6_1_3: {{ rhel9cis_rule_1_6_1_3 }}
-rhel9cis_rule_1_6_1_4: {{ rhel9cis_rule_1_6_1_4 }}
-rhel9cis_rule_1_6_1_5: {{ rhel9cis_rule_1_6_1_5 }}
-rhel9cis_rule_1_6_1_6: {{ rhel9cis_rule_1_6_1_6 }}
-rhel9cis_rule_1_6_1_7: {{ rhel9cis_rule_1_6_1_7 }}
-rhel9cis_rule_1_6_1_8: {{ rhel9cis_rule_1_6_1_8 }}
-# 1.7 Command Line Warning Banners
+rhel9cis_rule_1_5_4: {{ rhel9cis_rule_1_5_4 }}
+
+# Config system wide Crypto
+rhel9cis_rule_1_6_1: {{ rhel9cis_rule_1_6_1 }}
+rhel9cis_rule_1_6_2: {{ rhel9cis_rule_1_6_2 }}
+rhel9cis_rule_1_6_3: {{ rhel9cis_rule_1_6_3 }}
+rhel9cis_rule_1_6_4: {{ rhel9cis_rule_1_6_4 }}
+rhel9cis_rule_1_6_5: {{ rhel9cis_rule_1_6_5 }}
+rhel9cis_rule_1_6_6: {{ rhel9cis_rule_1_6_6 }}
+rhel9cis_rule_1_6_7: {{ rhel9cis_rule_1_6_7 }}
+
+# Command line warning banners
 rhel9cis_rule_1_7_1: {{ rhel9cis_rule_1_7_1 }}
 rhel9cis_rule_1_7_2: {{ rhel9cis_rule_1_7_2 }}
 rhel9cis_rule_1_7_3: {{ rhel9cis_rule_1_7_3 }}
 rhel9cis_rule_1_7_4: {{ rhel9cis_rule_1_7_4 }}
 rhel9cis_rule_1_7_5: {{ rhel9cis_rule_1_7_5 }}
 rhel9cis_rule_1_7_6: {{ rhel9cis_rule_1_7_6 }}
-# 1.8 Gnome Display Manager
+
+# Gnome Display Manager
 rhel9cis_rule_1_8_1: {{ rhel9cis_rule_1_8_1 }}
 rhel9cis_rule_1_8_2: {{ rhel9cis_rule_1_8_2 }}
 rhel9cis_rule_1_8_3: {{ rhel9cis_rule_1_8_3 }}
@@ -121,52 +150,68 @@ rhel9cis_rule_1_8_7: {{ rhel9cis_rule_1_8_7 }}
 rhel9cis_rule_1_8_8: {{ rhel9cis_rule_1_8_8 }}
 rhel9cis_rule_1_8_9: {{ rhel9cis_rule_1_8_9 }}
 rhel9cis_rule_1_8_10: {{ rhel9cis_rule_1_8_10 }}
-# 1.9 Ensure updates, patches, and additional security software are installed
-rhel9cis_rule_1_9: {{ rhel9cis_rule_1_9 }}
-# Ensure system-wide crypto policy is not legacy
-rhel9cis_rule_1_10: {{ rhel9cis_rule_1_10 }}
 
-# section 2
-# Services
-# 2.1 Time Synchronization
+# Section 2 rules are controling Services (Special Purpose Services, and service clients)
+## Configure Server Services
 rhel9cis_rule_2_1_1: {{ rhel9cis_rule_2_1_1 }}
 rhel9cis_rule_2_1_2: {{ rhel9cis_rule_2_1_2 }}
-# 2.2 Special Purpose Services
+rhel9cis_rule_2_1_3: {{ rhel9cis_rule_2_1_3 }}
+rhel9cis_rule_2_1_4: {{ rhel9cis_rule_2_1_4 }}
+rhel9cis_rule_2_1_5: {{ rhel9cis_rule_2_1_5 }}
+rhel9cis_rule_2_1_6: {{ rhel9cis_rule_2_1_6 }}
+rhel9cis_rule_2_1_7: {{ rhel9cis_rule_2_1_7 }}
+rhel9cis_rule_2_1_8: {{ rhel9cis_rule_2_1_8 }}
+rhel9cis_rule_2_1_9: {{ rhel9cis_rule_2_1_9 }}
+rhel9cis_rule_2_1_10: {{ rhel9cis_rule_2_1_10 }}
+rhel9cis_rule_2_1_11: {{ rhel9cis_rule_2_1_11 }}
+rhel9cis_rule_2_1_12: {{ rhel9cis_rule_2_1_12 }}
+rhel9cis_rule_2_1_13: {{ rhel9cis_rule_2_1_13 }}
+rhel9cis_rule_2_1_14: {{ rhel9cis_rule_2_1_14 }}
+rhel9cis_rule_2_1_15: {{ rhel9cis_rule_2_1_15 }}
+rhel9cis_rule_2_1_16: {{ rhel9cis_rule_2_1_16 }}
+rhel9cis_rule_2_1_17: {{ rhel9cis_rule_2_1_17 }}
+rhel9cis_rule_2_1_18: {{ rhel9cis_rule_2_1_18 }}
+rhel9cis_rule_2_1_19: {{ rhel9cis_rule_2_1_19 }}
+rhel9cis_rule_2_1_20: {{ rhel9cis_rule_2_1_20 }}
+rhel9cis_rule_2_1_21: {{ rhel9cis_rule_2_1_21 }}
+rhel9cis_rule_2_1_22: {{ rhel9cis_rule_2_1_22 }}
+
+## Configure Client Services
 rhel9cis_rule_2_2_1: {{ rhel9cis_rule_2_2_1 }}
 rhel9cis_rule_2_2_2: {{ rhel9cis_rule_2_2_2 }}
 rhel9cis_rule_2_2_3: {{ rhel9cis_rule_2_2_3 }}
 rhel9cis_rule_2_2_4: {{ rhel9cis_rule_2_2_4 }}
 rhel9cis_rule_2_2_5: {{ rhel9cis_rule_2_2_5 }}
-rhel9cis_rule_2_2_6: {{ rhel9cis_rule_2_2_6 }}
-rhel9cis_rule_2_2_7: {{ rhel9cis_rule_2_2_7 }}
-rhel9cis_rule_2_2_8: {{ rhel9cis_rule_2_2_8 }}
-rhel9cis_rule_2_2_9: {{ rhel9cis_rule_2_2_9 }}
-rhel9cis_rule_2_2_10: {{ rhel9cis_rule_2_2_10 }}
-rhel9cis_rule_2_2_11: {{ rhel9cis_rule_2_2_11 }}
-rhel9cis_rule_2_2_12: {{ rhel9cis_rule_2_2_12 }}
-rhel9cis_rule_2_2_13: {{ rhel9cis_rule_2_2_13 }}
-rhel9cis_rule_2_2_14: {{ rhel9cis_rule_2_2_14 }}
-rhel9cis_rule_2_2_15: {{ rhel9cis_rule_2_2_15 }}
-rhel9cis_rule_2_2_16: {{ rhel9cis_rule_2_2_16 }}
-rhel9cis_rule_2_2_17: {{ rhel9cis_rule_2_2_17 }}
-rhel9cis_rule_2_2_18: {{ rhel9cis_rule_2_2_18 }}
-# 2.3 service clients
+
+## Configure Time Synchronization
 rhel9cis_rule_2_3_1: {{ rhel9cis_rule_2_3_1 }}
 rhel9cis_rule_2_3_2: {{ rhel9cis_rule_2_3_2 }}
 rhel9cis_rule_2_3_3: {{ rhel9cis_rule_2_3_3 }}
-rhel9cis_rule_2_3_4: {{ rhel9cis_rule_2_3_4 }}
 
-rhel9cis_rule_2_4: true
+## Job Schedulers
+### cron
+rhel9cis_rule_2_4_1_1: {{ rhel9cis_rule_2_4_1_1 }}
+rhel9cis_rule_2_4_1_2: {{ rhel9cis_rule_2_4_1_2 }}
+rhel9cis_rule_2_4_1_3: {{ rhel9cis_rule_2_4_1_3 }}
+rhel9cis_rule_2_4_1_4: {{ rhel9cis_rule_2_4_1_4 }}
+rhel9cis_rule_2_4_1_5: {{ rhel9cis_rule_2_4_1_5 }}
+rhel9cis_rule_2_4_1_6: {{ rhel9cis_rule_2_4_1_6 }}
+rhel9cis_rule_2_4_1_7: {{ rhel9cis_rule_2_4_1_7 }}
+rhel9cis_rule_2_4_1_8: {{ rhel9cis_rule_2_4_1_8 }}
+### at
+rhel9cis_rule_2_4_2_1: {{ rhel9cis_rule_2_4_2_1 }}
 
-# Section 3 rules
-# 3.1 Disable unused network protocols and devices
+# Section 3 Network
+## Network Devices
 rhel9cis_rule_3_1_1: {{ rhel9cis_rule_3_1_1 }}
 rhel9cis_rule_3_1_2: {{ rhel9cis_rule_3_1_2 }}
 rhel9cis_rule_3_1_3: {{ rhel9cis_rule_3_1_3 }}
-# 3.2 Network Parameters (Host Only)
+## Network Kernel Modules
 rhel9cis_rule_3_2_1: {{ rhel9cis_rule_3_2_1 }}
 rhel9cis_rule_3_2_2: {{ rhel9cis_rule_3_2_2 }}
-# 3.3 Network Parameters (Host and Router)
+rhel9cis_rule_3_2_3: {{ rhel9cis_rule_3_2_3 }}
+rhel9cis_rule_3_2_4: {{ rhel9cis_rule_3_2_4 }}
+# Network Kernel Parameters
 rhel9cis_rule_3_3_1: {{ rhel9cis_rule_3_3_1 }}
 rhel9cis_rule_3_3_2: {{ rhel9cis_rule_3_3_2 }}
 rhel9cis_rule_3_3_3: {{ rhel9cis_rule_3_3_3 }}
@@ -176,94 +221,24 @@ rhel9cis_rule_3_3_6: {{ rhel9cis_rule_3_3_6 }}
 rhel9cis_rule_3_3_7: {{ rhel9cis_rule_3_3_7 }}
 rhel9cis_rule_3_3_8: {{ rhel9cis_rule_3_3_8 }}
 rhel9cis_rule_3_3_9: {{ rhel9cis_rule_3_3_9 }}
-# 3.4.1 Configure firewalld
-rhel9cis_rule_3_4_1_1: {{ rhel9cis_rule_3_4_1_1 }}
-rhel9cis_rule_3_4_1_2: {{ rhel9cis_rule_3_4_1_2 }}
+rhel9cis_rule_3_3_10: {{ rhel9cis_rule_3_3_10 }}
+rhel9cis_rule_3_3_11: {{ rhel9cis_rule_3_3_11 }}
 
-# 3.4.1 Configure nftables
-rhel9cis_rule_3_4_2_1: {{ rhel9cis_rule_3_4_2_1 }}
-rhel9cis_rule_3_4_2_2: {{ rhel9cis_rule_3_4_2_2 }}
-rhel9cis_rule_3_4_2_3: {{ rhel9cis_rule_3_4_2_3 }}
-rhel9cis_rule_3_4_2_4: {{ rhel9cis_rule_3_4_2_4 }}
-rhel9cis_rule_3_4_2_5: {{ rhel9cis_rule_3_4_2_5 }}
-rhel9cis_rule_3_4_2_6: {{ rhel9cis_rule_3_4_2_6 }}
-rhel9cis_rule_3_4_2_7: {{ rhel9cis_rule_3_4_2_7 }}
+# Section 4 Firewalls
+## Firewall utility
+rhel9cis_rule_4_1_1: {{ rhel9cis_rule_4_1_1 }}
+rhel9cis_rule_4_1_2: {{ rhel9cis_rule_4_1_2 }}
+## Configure firewalld
+rhel9cis_rule_4_2_1: {{ rhel9cis_rule_4_2_1 }}
+rhel9cis_rule_4_2_2: {{ rhel9cis_rule_4_2_2 }}
+# Configure nftables
+rhel9cis_rule_4_3_1: {{ rhel9cis_rule_4_3_1 }}
+rhel9cis_rule_4_3_2: {{ rhel9cis_rule_4_3_2 }}
+rhel9cis_rule_4_3_3: {{ rhel9cis_rule_4_3_3 }}
+rhel9cis_rule_4_3_4: {{ rhel9cis_rule_4_3_4 }}
 
-#  Section 4 rules
-# 4.1 Configure System Accounting
-rhel9cis_rule_4_1_1_1: {{ rhel9cis_rule_4_1_1_1 }}
-rhel9cis_rule_4_1_1_2: {{ rhel9cis_rule_4_1_1_2 }}
-rhel9cis_rule_4_1_1_3: {{ rhel9cis_rule_4_1_1_3 }}
-rhel9cis_rule_4_1_1_4: {{ rhel9cis_rule_4_1_1_4 }}
-
-# 4.1.2 Configure Data retention
-rhel9cis_rule_4_1_2_1: {{ rhel9cis_rule_4_1_2_1 }}
-rhel9cis_rule_4_1_2_2: {{ rhel9cis_rule_4_1_2_2 }}
-rhel9cis_rule_4_1_2_3: {{ rhel9cis_rule_4_1_2_3 }}
-
-# 4.1.3 Configure auditd rules
-rhel9cis_rule_4_1_3_1: {{ rhel9cis_rule_4_1_3_1 }}
-rhel9cis_rule_4_1_3_2: {{ rhel9cis_rule_4_1_3_2 }}
-rhel9cis_rule_4_1_3_3: {{ rhel9cis_rule_4_1_3_3 }}
-rhel9cis_rule_4_1_3_4: {{ rhel9cis_rule_4_1_3_4 }}
-rhel9cis_rule_4_1_3_5: {{ rhel9cis_rule_4_1_3_5 }}
-rhel9cis_rule_4_1_3_6: {{ rhel9cis_rule_4_1_3_6 }}
-rhel9cis_rule_4_1_3_7: {{ rhel9cis_rule_4_1_3_7 }}
-rhel9cis_rule_4_1_3_8: {{ rhel9cis_rule_4_1_3_8 }}
-rhel9cis_rule_4_1_3_9: {{ rhel9cis_rule_4_1_3_9 }}
-rhel9cis_rule_4_1_3_10: {{ rhel9cis_rule_4_1_3_10 }}
-rhel9cis_rule_4_1_3_11: {{ rhel9cis_rule_4_1_3_11 }}
-rhel9cis_rule_4_1_3_12: {{ rhel9cis_rule_4_1_3_12 }}
-rhel9cis_rule_4_1_3_13: {{ rhel9cis_rule_4_1_3_13 }}
-rhel9cis_rule_4_1_3_14: {{ rhel9cis_rule_4_1_3_14 }}
-rhel9cis_rule_4_1_3_15: {{ rhel9cis_rule_4_1_3_15 }}
-rhel9cis_rule_4_1_3_16: {{ rhel9cis_rule_4_1_3_16 }}
-rhel9cis_rule_4_1_3_17: {{ rhel9cis_rule_4_1_3_17 }}
-rhel9cis_rule_4_1_3_18: {{ rhel9cis_rule_4_1_3_18 }}
-rhel9cis_rule_4_1_3_19: {{ rhel9cis_rule_4_1_3_19 }}
-rhel9cis_rule_4_1_3_20: {{ rhel9cis_rule_4_1_3_20 }}
-rhel9cis_rule_4_1_3_21: {{ rhel9cis_rule_4_1_3_21 }}
-
-# 4.1.4 Configure auditd file Access
-rhel9cis_rule_4_1_4_1: {{ rhel9cis_rule_4_1_4_1 }}
-rhel9cis_rule_4_1_4_2: {{ rhel9cis_rule_4_1_4_2 }}
-rhel9cis_rule_4_1_4_3: {{ rhel9cis_rule_4_1_4_3 }}
-rhel9cis_rule_4_1_4_4: {{ rhel9cis_rule_4_1_4_4 }}
-rhel9cis_rule_4_1_4_5: {{ rhel9cis_rule_4_1_4_5 }}
-rhel9cis_rule_4_1_4_6: {{ rhel9cis_rule_4_1_4_6 }}
-rhel9cis_rule_4_1_4_7: {{ rhel9cis_rule_4_1_4_7 }}
-rhel9cis_rule_4_1_4_8: {{ rhel9cis_rule_4_1_4_8 }}
-rhel9cis_rule_4_1_4_9: {{ rhel9cis_rule_4_1_4_9 }}
-rhel9cis_rule_4_1_4_10: {{ rhel9cis_rule_4_1_4_10 }}
-
-# 4.2.1 Configure rsyslog
-rhel9cis_rule_4_2_1_1: {{ rhel9cis_rule_4_2_1_1 }}
-rhel9cis_rule_4_2_1_2: {{ rhel9cis_rule_4_2_1_2 }}
-rhel9cis_rule_4_2_1_3: {{ rhel9cis_rule_4_2_1_3 }}
-rhel9cis_rule_4_2_1_4: {{ rhel9cis_rule_4_2_1_4 }}
-rhel9cis_rule_4_2_1_5: {{ rhel9cis_rule_4_2_1_5 }}
-rhel9cis_rule_4_2_1_6: {{ rhel9cis_rule_4_2_1_6 }}
-rhel9cis_rule_4_2_1_7: {{ rhel9cis_rule_4_2_1_7 }}
-
-# 4.2.2 Configure journald
-rhel9cis_rule_4_2_2_1_1: {{ rhel9cis_rule_4_2_2_1_1 }}
-rhel9cis_rule_4_2_2_1_2: {{ rhel9cis_rule_4_2_2_1_2 }}
-rhel9cis_rule_4_2_2_1_3: {{ rhel9cis_rule_4_2_2_1_3 }}
-rhel9cis_rule_4_2_2_1_4: {{ rhel9cis_rule_4_2_2_1_4 }}
-rhel9cis_rule_4_2_2_2: {{ rhel9cis_rule_4_2_2_2 }}
-rhel9cis_rule_4_2_2_3: {{ rhel9cis_rule_4_2_2_3 }}
-rhel9cis_rule_4_2_2_4: {{ rhel9cis_rule_4_2_2_4 }}
-rhel9cis_rule_4_2_2_5: {{ rhel9cis_rule_4_2_2_5 }}
-rhel9cis_rule_4_2_2_6: {{ rhel9cis_rule_4_2_2_6 }}
-rhel9cis_rule_4_2_2_7: {{ rhel9cis_rule_4_2_2_7 }}
-rhel9cis_rule_4_2_3: {{ rhel9cis_rule_4_2_3 }}
-
-# 4.3 Logrotate
-rhel9cis_rule_4_3: {{ rhel9cis_rule_4_3 }}
-
-# Section 5
-#  Authentication and Authorization
-# 5.1 Configure time-based job schedulers
+## Section 5
+## 5.1. Configure SSH Server
 rhel9cis_rule_5_1_1: {{ rhel9cis_rule_5_1_1 }}
 rhel9cis_rule_5_1_2: {{ rhel9cis_rule_5_1_2 }}
 rhel9cis_rule_5_1_3: {{ rhel9cis_rule_5_1_3 }}
@@ -273,8 +248,20 @@ rhel9cis_rule_5_1_6: {{ rhel9cis_rule_5_1_6 }}
 rhel9cis_rule_5_1_7: {{ rhel9cis_rule_5_1_7 }}
 rhel9cis_rule_5_1_8: {{ rhel9cis_rule_5_1_8 }}
 rhel9cis_rule_5_1_9: {{ rhel9cis_rule_5_1_9 }}
-
-# 5.2 Configure SSH Server
+rhel9cis_rule_5_1_10: {{ rhel9cis_rule_5_1_10 }}
+rhel9cis_rule_5_1_11: {{ rhel9cis_rule_5_1_11 }}
+rhel9cis_rule_5_1_12: {{ rhel9cis_rule_5_1_12 }}
+rhel9cis_rule_5_1_13: {{ rhel9cis_rule_5_1_13 }}
+rhel9cis_rule_5_1_14: {{ rhel9cis_rule_5_1_14 }}
+rhel9cis_rule_5_1_15: {{ rhel9cis_rule_5_1_15 }}
+rhel9cis_rule_5_1_16: {{ rhel9cis_rule_5_1_16 }}
+rhel9cis_rule_5_1_17: {{ rhel9cis_rule_5_1_17 }}
+rhel9cis_rule_5_1_18: {{ rhel9cis_rule_5_1_18 }}
+rhel9cis_rule_5_1_19: {{ rhel9cis_rule_5_1_19 }}
+rhel9cis_rule_5_1_20: {{ rhel9cis_rule_5_1_20 }}
+rhel9cis_rule_5_1_21: {{ rhel9cis_rule_5_1_21 }}
+rhel9cis_rule_5_1_22: {{ rhel9cis_rule_5_1_22 }}
+## 5.2 Configure Privilege Escalation
 rhel9cis_rule_5_2_1: {{ rhel9cis_rule_5_2_1 }}
 rhel9cis_rule_5_2_2: {{ rhel9cis_rule_5_2_2 }}
 rhel9cis_rule_5_2_3: {{ rhel9cis_rule_5_2_3 }}
@@ -282,223 +269,496 @@ rhel9cis_rule_5_2_4: {{ rhel9cis_rule_5_2_4 }}
 rhel9cis_rule_5_2_5: {{ rhel9cis_rule_5_2_5 }}
 rhel9cis_rule_5_2_6: {{ rhel9cis_rule_5_2_6 }}
 rhel9cis_rule_5_2_7: {{ rhel9cis_rule_5_2_7 }}
-rhel9cis_rule_5_2_8: {{ rhel9cis_rule_5_2_8 }}
-rhel9cis_rule_5_2_9: {{ rhel9cis_rule_5_2_9 }}
-rhel9cis_rule_5_2_10: {{ rhel9cis_rule_5_2_10 }}
-rhel9cis_rule_5_2_11: {{ rhel9cis_rule_5_2_11 }}
-rhel9cis_rule_5_2_12: {{ rhel9cis_rule_5_2_12 }}
-rhel9cis_rule_5_2_13: {{ rhel9cis_rule_5_2_13 }}
-rhel9cis_rule_5_2_14: {{ rhel9cis_rule_5_2_14 }}
-rhel9cis_rule_5_2_15: {{ rhel9cis_rule_5_2_15 }}
-rhel9cis_rule_5_2_16: {{ rhel9cis_rule_5_2_16 }}
-rhel9cis_rule_5_2_17: {{ rhel9cis_rule_5_2_17 }}
-rhel9cis_rule_5_2_18: {{ rhel9cis_rule_5_2_18 }}
-rhel9cis_rule_5_2_19: {{ rhel9cis_rule_5_2_19 }}
-rhel9cis_rule_5_2_20: {{ rhel9cis_rule_5_2_20 }}
-# 5.3 Configure privilege escalation
-rhel9cis_rule_5_3_1: {{ rhel9cis_rule_5_3_1 }}
-rhel9cis_rule_5_3_2: {{ rhel9cis_rule_5_3_2 }}
-rhel9cis_rule_5_3_3: {{ rhel9cis_rule_5_3_3 }}
-rhel9cis_rule_5_3_4: {{ rhel9cis_rule_5_3_4 }}
-rhel9cis_rule_5_3_5: {{ rhel9cis_rule_5_3_5 }}
-rhel9cis_rule_5_3_6: {{ rhel9cis_rule_5_3_6 }}
-rhel9cis_rule_5_3_7: {{ rhel9cis_rule_5_3_7 }}
+# 5.3.1.x Configure PAM software packages
+rhel9cis_rule_5_3_1_1: {{ rhel9cis_rule_5_3_1_1 }}
+rhel9cis_rule_5_3_1_2: {{ rhel9cis_rule_5_3_1_2 }}
+rhel9cis_rule_5_3_1_3: {{ rhel9cis_rule_5_3_1_3 }}
+# 5.3.2 Configure authselect
+rhel9cis_rule_5_3_2_1: {{ rhel9cis_rule_5_3_2_1 }}
+rhel9cis_rule_5_3_2_2: {{ rhel9cis_rule_5_3_2_2 }}
+rhel9cis_rule_5_3_2_3: {{ rhel9cis_rule_5_3_2_3 }}
+rhel9cis_rule_5_3_2_4: {{ rhel9cis_rule_5_3_2_4 }}
+rhel9cis_rule_5_3_2_5: {{ rhel9cis_rule_5_3_2_5 }}
+# 5.3.3.1 Configure pam_faillock module
+rhel9cis_rule_5_3_3_1_1: {{ rhel9cis_rule_5_3_3_1_1 }}
+rhel9cis_rule_5_3_3_1_2: {{ rhel9cis_rule_5_3_3_1_2 }}
+rhel9cis_rule_5_3_3_1_3: {{ rhel9cis_rule_5_3_3_1_3 }}
+# 5.3.3.2 Configure pam_pwquality module
+rhel9cis_rule_5_3_3_2_1: {{ rhel9cis_rule_5_3_3_2_1 }}
+rhel9cis_rule_5_3_3_2_2: {{ rhel9cis_rule_5_3_3_2_2 }}
+rhel9cis_rule_5_3_3_2_3: {{ rhel9cis_rule_5_3_3_2_3 }}
+rhel9cis_rule_5_3_3_2_4: {{ rhel9cis_rule_5_3_3_2_4 }}
+rhel9cis_rule_5_3_3_2_5: {{ rhel9cis_rule_5_3_3_2_5 }}
+rhel9cis_rule_5_3_3_2_6: {{ rhel9cis_rule_5_3_3_2_6 }}
+rhel9cis_rule_5_3_3_2_7: {{ rhel9cis_rule_5_3_3_2_7 }}
+rhel9cis_rule_5_3_3_2_8: {{ rhel9cis_rule_5_3_3_2_8 }}
+# 5.3.3.3 Configure pam_pwhistory module
+# This are added as part of 5.3.2.4 using jinja2 template
+rhel9cis_rule_5_3_3_3_1: {{ rhel9cis_rule_5_3_3_3_1 }}
+rhel9cis_rule_5_3_3_3_2: {{ rhel9cis_rule_5_3_3_3_2 }}
+rhel9cis_rule_5_3_3_3_3: {{ rhel9cis_rule_5_3_3_3_3 }}
+# 5.3.3.4 Configure pam_unix module
+rhel9cis_rule_5_3_3_4_1: {{ rhel9cis_rule_5_3_3_4_1 }}
+rhel9cis_rule_5_3_3_4_2: {{ rhel9cis_rule_5_3_3_4_2 }}
+rhel9cis_rule_5_3_3_4_3: {{ rhel9cis_rule_5_3_3_4_3 }}
+rhel9cis_rule_5_3_3_4_4: {{ rhel9cis_rule_5_3_3_4_4 }}
+# 5.4 User Accounts and Environment
+# 5.4.1 Configure shadow password suite parameters
+rhel9cis_rule_5_4_1_1: {{ rhel9cis_rule_5_4_1_1 }}
+rhel9cis_rule_5_4_1_2: {{ rhel9cis_rule_5_4_1_2 }}
+rhel9cis_rule_5_4_1_3: {{ rhel9cis_rule_5_4_1_3 }}
+rhel9cis_rule_5_4_1_4: {{ rhel9cis_rule_5_4_1_4 }}
+rhel9cis_rule_5_4_1_5: {{ rhel9cis_rule_5_4_1_5 }}
+rhel9cis_rule_5_4_1_6: {{ rhel9cis_rule_5_4_1_6 }}
+# 5.4.2 Configure root and system accounts and environment
+rhel9cis_rule_5_4_2_1: {{ rhel9cis_rule_5_4_2_1 }}
+rhel9cis_rule_5_4_2_2: {{ rhel9cis_rule_5_4_2_2 }}
+rhel9cis_rule_5_4_2_3: {{ rhel9cis_rule_5_4_2_3 }}
+rhel9cis_rule_5_4_2_4: {{ rhel9cis_rule_5_4_2_4 }}
+rhel9cis_rule_5_4_2_5: {{ rhel9cis_rule_5_4_2_5 }}
+rhel9cis_rule_5_4_2_6: {{ rhel9cis_rule_5_4_2_6 }}
+rhel9cis_rule_5_4_2_7: {{ rhel9cis_rule_5_4_2_7 }}
+rhel9cis_rule_5_4_2_8: {{ rhel9cis_rule_5_4_2_8 }}
+# 5.4.2 Configure user default environment
+rhel9cis_rule_5_4_3_1: {{ rhel9cis_rule_5_4_3_1 }}
+rhel9cis_rule_5_4_3_2: {{ rhel9cis_rule_5_4_3_2 }}
+rhel9cis_rule_5_4_3_3: {{ rhel9cis_rule_5_4_3_3 }}
 
-# 5.4 Configure authselect
-
-rhel9cis_rule_5_4_1: {{ rhel9cis_rule_5_4_1 }}
-rhel9cis_rule_5_4_2: {{ rhel9cis_rule_5_4_2 }}
-
-# 5.5 Configure PAM
-rhel9cis_rule_5_5_1: {{ rhel9cis_rule_5_5_1 }}
-rhel9cis_rule_5_5_2: {{ rhel9cis_rule_5_5_2 }}
-rhel9cis_rule_5_5_3: {{ rhel9cis_rule_5_5_3 }}
-rhel9cis_rule_5_5_4: {{ rhel9cis_rule_5_5_4 }}
-
-# 5.6 User Accounts and Environment
-# 5.6.1 Set Shadow Password Suite Parameters
-rhel9cis_rule_5_6_1_1: {{ rhel9cis_rule_5_6_1_1 }}
-rhel9cis_rule_5_6_1_2: {{ rhel9cis_rule_5_6_1_2 }}
-rhel9cis_rule_5_6_1_3: {{ rhel9cis_rule_5_6_1_3 }}
-rhel9cis_rule_5_6_1_4: {{ rhel9cis_rule_5_6_1_4 }}
-rhel9cis_rule_5_6_1_5: {{ rhel9cis_rule_5_6_1_5 }}
-rhel9cis_rule_5_6_2: {{ rhel9cis_rule_5_6_2 }}
-rhel9cis_rule_5_6_3: {{ rhel9cis_rule_5_6_3 }}
-rhel9cis_rule_5_6_4: {{ rhel9cis_rule_5_6_4 }}
-rhel9cis_rule_5_6_5: {{ rhel9cis_rule_5_6_5 }}
-rhel9cis_rule_5_6_6: {{ rhel9cis_rule_5_6_6 }}
-
-# Section 6
-# 6 System Maintenance
-# 6.1 System File Permissions
+# Section 6 Logging and Auditing
+## 6.1 Configure Integrity Checking
 rhel9cis_rule_6_1_1: {{ rhel9cis_rule_6_1_1 }}
 rhel9cis_rule_6_1_2: {{ rhel9cis_rule_6_1_2 }}
 rhel9cis_rule_6_1_3: {{ rhel9cis_rule_6_1_3 }}
-rhel9cis_rule_6_1_4: {{ rhel9cis_rule_6_1_4 }}
-rhel9cis_rule_6_1_5: {{ rhel9cis_rule_6_1_5 }}
-rhel9cis_rule_6_1_6: {{ rhel9cis_rule_6_1_6 }}
-rhel9cis_rule_6_1_7: {{ rhel9cis_rule_6_1_7 }}
-rhel9cis_rule_6_1_8: {{ rhel9cis_rule_6_1_8 }}
-rhel9cis_rule_6_1_9: {{ rhel9cis_rule_6_1_9 }}
-rhel9cis_rule_6_1_10: {{ rhel9cis_rule_6_1_10 }}
-rhel9cis_rule_6_1_11: {{ rhel9cis_rule_6_1_11 }}
-rhel9cis_rule_6_1_12: {{ rhel9cis_rule_6_1_12 }}
-rhel9cis_rule_6_1_13: {{ rhel9cis_rule_6_1_13 }}
-rhel9cis_rule_6_1_14: {{ rhel9cis_rule_6_1_14 }}
-rhel9cis_rule_6_1_15: {{ rhel9cis_rule_6_1_15 }}
+## 6.2.1 Configure systemd-journald service
+rhel9cis_rule_6_2_1_1: {{ rhel9cis_rule_6_2_1_1 }}
+rhel9cis_rule_6_2_1_2: {{ rhel9cis_rule_6_2_1_2 }}
+rhel9cis_rule_6_2_1_3: {{ rhel9cis_rule_6_2_1_3 }}
+rhel9cis_rule_6_2_1_4: {{ rhel9cis_rule_6_2_1_4 }}
+## 6.2.2.x Configure journald
+rhel9cis_rule_6_2_2_1_1: {{ rhel9cis_rule_6_2_2_1_1 }}
+rhel9cis_rule_6_2_2_1_2: {{ rhel9cis_rule_6_2_2_1_2 }}
+rhel9cis_rule_6_2_2_1_3: {{ rhel9cis_rule_6_2_2_1_3 }}
+rhel9cis_rule_6_2_2_1_4: {{ rhel9cis_rule_6_2_2_1_4 }}
+rhel9cis_rule_6_2_2_2: {{ rhel9cis_rule_6_2_2_2 }}
+rhel9cis_rule_6_2_2_3: {{ rhel9cis_rule_6_2_2_3 }}
+rhel9cis_rule_6_2_2_4: {{ rhel9cis_rule_6_2_2_4 }}
+## 6.2.3 Configure rsyslog
+rhel9cis_rule_6_2_3_1: {{ rhel9cis_rule_6_2_3_1 }}
+rhel9cis_rule_6_2_3_2: {{ rhel9cis_rule_6_2_3_2 }}
+rhel9cis_rule_6_2_3_3: {{ rhel9cis_rule_6_2_3_3 }}
+rhel9cis_rule_6_2_3_4: {{ rhel9cis_rule_6_2_3_4 }}
+rhel9cis_rule_6_2_3_5: {{ rhel9cis_rule_6_2_3_5 }}
+rhel9cis_rule_6_2_3_6: {{ rhel9cis_rule_6_2_3_6 }}
+rhel9cis_rule_6_2_3_7: {{ rhel9cis_rule_6_2_3_7 }}
+rhel9cis_rule_6_2_3_8: {{ rhel9cis_rule_6_2_3_8 }}
+## 6.2.4 Configure Logfiles
+rhel9cis_rule_6_2_4_1: {{ rhel9cis_rule_6_2_4_1 }}
+## 6.3 Configure Auditing
+## 6.3.1 Configure auditd Service
+rhel9cis_rule_6_3_1_1: {{ rhel9cis_rule_6_3_1_1 }}
+rhel9cis_rule_6_3_1_2: {{ rhel9cis_rule_6_3_1_2 }}
+rhel9cis_rule_6_3_1_3: {{ rhel9cis_rule_6_3_1_3 }}
+rhel9cis_rule_6_3_1_4: {{ rhel9cis_rule_6_3_1_4 }}
+## 6.3.2 Configure Data Retention
+rhel9cis_rule_6_3_2_1: {{ rhel9cis_rule_6_3_2_1 }}
+rhel9cis_rule_6_3_2_2: {{ rhel9cis_rule_6_3_2_2 }}
+rhel9cis_rule_6_3_2_3: {{ rhel9cis_rule_6_3_2_3 }}
+rhel9cis_rule_6_3_2_4: {{ rhel9cis_rule_6_3_2_4 }}
+## 6.3.3 Configure auditd Rules
+rhel9cis_rule_6_3_3_1: {{ rhel9cis_rule_6_3_3_1 }}
+rhel9cis_rule_6_3_3_2: {{ rhel9cis_rule_6_3_3_2 }}
+rhel9cis_rule_6_3_3_3: {{ rhel9cis_rule_6_3_3_3 }}
+rhel9cis_rule_6_3_3_4: {{ rhel9cis_rule_6_3_3_4 }}
+rhel9cis_rule_6_3_3_5: {{ rhel9cis_rule_6_3_3_5 }}
+rhel9cis_rule_6_3_3_6: {{ rhel9cis_rule_6_3_3_6 }}
+rhel9cis_rule_6_3_3_7: {{ rhel9cis_rule_6_3_3_7 }}
+rhel9cis_rule_6_3_3_8: {{ rhel9cis_rule_6_3_3_8 }}
+rhel9cis_rule_6_3_3_9: {{ rhel9cis_rule_6_3_3_9 }}
+rhel9cis_rule_6_3_3_10: {{ rhel9cis_rule_6_3_3_10 }}
+rhel9cis_rule_6_3_3_11: {{ rhel9cis_rule_6_3_3_11 }}
+rhel9cis_rule_6_3_3_12: {{ rhel9cis_rule_6_3_3_12 }}
+rhel9cis_rule_6_3_3_13: {{ rhel9cis_rule_6_3_3_13 }}
+rhel9cis_rule_6_3_3_14: {{ rhel9cis_rule_6_3_3_14 }}
+rhel9cis_rule_6_3_3_15: {{ rhel9cis_rule_6_3_3_15 }}
+rhel9cis_rule_6_3_3_16: {{ rhel9cis_rule_6_3_3_16 }}
+rhel9cis_rule_6_3_3_17: {{ rhel9cis_rule_6_3_3_17 }}
+rhel9cis_rule_6_3_3_18: {{ rhel9cis_rule_6_3_3_18 }}
+rhel9cis_rule_6_3_3_19: {{ rhel9cis_rule_6_3_3_19 }}
+rhel9cis_rule_6_3_3_20: {{ rhel9cis_rule_6_3_3_20 }}
+rhel9cis_rule_6_3_3_21: {{ rhel9cis_rule_6_3_3_21 }}
+## 6.3.4 Configure auditd File Access
+rhel9cis_rule_6_3_4_1: {{ rhel9cis_rule_6_3_4_1 }}
+rhel9cis_rule_6_3_4_2: {{ rhel9cis_rule_6_3_4_2 }}
+rhel9cis_rule_6_3_4_3: {{ rhel9cis_rule_6_3_4_3 }}
+rhel9cis_rule_6_3_4_4: {{ rhel9cis_rule_6_3_4_4 }}
+rhel9cis_rule_6_3_4_5: {{ rhel9cis_rule_6_3_4_5 }}
+rhel9cis_rule_6_3_4_6: {{ rhel9cis_rule_6_3_4_6 }}
+rhel9cis_rule_6_3_4_7: {{ rhel9cis_rule_6_3_4_7 }}
+rhel9cis_rule_6_3_4_8: {{ rhel9cis_rule_6_3_4_8 }}
+rhel9cis_rule_6_3_4_9: {{ rhel9cis_rule_6_3_4_9 }}
+rhel9cis_rule_6_3_4_10: {{ rhel9cis_rule_6_3_4_10 }}
 
-# 6.2 User and Group Settings
-rhel9cis_rule_6_2_1: {{ rhel9cis_rule_6_2_1 }}
-rhel9cis_rule_6_2_2: {{ rhel9cis_rule_6_2_2 }}
-rhel9cis_rule_6_2_3: {{ rhel9cis_rule_6_2_3 }}
-rhel9cis_rule_6_2_4: {{ rhel9cis_rule_6_2_4 }}
-rhel9cis_rule_6_2_5: {{ rhel9cis_rule_6_2_5 }}
-rhel9cis_rule_6_2_6: {{ rhel9cis_rule_6_2_6 }}
-rhel9cis_rule_6_2_7: {{ rhel9cis_rule_6_2_7 }}
-rhel9cis_rule_6_2_8: {{ rhel9cis_rule_6_2_8 }}
-rhel9cis_rule_6_2_9: {{ rhel9cis_rule_6_2_9 }}
-rhel9cis_rule_6_2_10: {{ rhel9cis_rule_6_2_10 }}
-rhel9cis_rule_6_2_11: {{ rhel9cis_rule_6_2_11 }}
-rhel9cis_rule_6_2_12: {{ rhel9cis_rule_6_2_12 }}
-rhel9cis_rule_6_2_13: {{ rhel9cis_rule_6_2_13 }}
-rhel9cis_rule_6_2_14: {{ rhel9cis_rule_6_2_14 }}
-rhel9cis_rule_6_2_15: {{ rhel9cis_rule_6_2_15 }}
-rhel9cis_rule_6_2_16: {{ rhel9cis_rule_6_2_16 }}
+# Section 7 System Maintenance
+## 7.1 System File Permissions
+rhel9cis_rule_7_1_1: {{ rhel9cis_rule_7_1_1 }}
+rhel9cis_rule_7_1_2: {{ rhel9cis_rule_7_1_2 }}
+rhel9cis_rule_7_1_3: {{ rhel9cis_rule_7_1_3 }}
+rhel9cis_rule_7_1_4: {{ rhel9cis_rule_7_1_4 }}
+rhel9cis_rule_7_1_5: {{ rhel9cis_rule_7_1_5 }}
+rhel9cis_rule_7_1_6: {{ rhel9cis_rule_7_1_6 }}
+rhel9cis_rule_7_1_7: {{ rhel9cis_rule_7_1_7 }}
+rhel9cis_rule_7_1_8: {{ rhel9cis_rule_7_1_8 }}
+rhel9cis_rule_7_1_9: {{ rhel9cis_rule_7_1_9 }}
+rhel9cis_rule_7_1_10: {{ rhel9cis_rule_7_1_10 }}
+rhel9cis_rule_7_1_11: {{ rhel9cis_rule_7_1_11 }}
+rhel9cis_rule_7_1_12: {{ rhel9cis_rule_7_1_12 }}
+rhel9cis_rule_7_1_13: {{ rhel9cis_rule_7_1_13 }}
+## 7.2 Local User and Group Settings
+rhel9cis_rule_7_2_1: {{ rhel9cis_rule_7_2_1 }}
+rhel9cis_rule_7_2_2: {{ rhel9cis_rule_7_2_2 }}
+rhel9cis_rule_7_2_3: {{ rhel9cis_rule_7_2_3 }}
+rhel9cis_rule_7_2_4: {{ rhel9cis_rule_7_2_4 }}
+rhel9cis_rule_7_2_5: {{ rhel9cis_rule_7_2_5 }}
+rhel9cis_rule_7_2_6: {{ rhel9cis_rule_7_2_6 }}
+rhel9cis_rule_7_2_7: {{ rhel9cis_rule_7_2_7 }}
+rhel9cis_rule_7_2_8: {{ rhel9cis_rule_7_2_8 }}
+rhel9cis_rule_7_2_9: {{ rhel9cis_rule_7_2_9 }}
 
-############
+## Section 1 vars
 
-# Section 1
+## Control 1.4.1
+# This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
+rhel9cis_set_boot_pass: {{ rhel9cis_set_boot_pass }}
 
-# AIDE
-rhel9cis_config_aide: {{ rhel9cis_config_aide }}
-
-# Whether or not to run tasks related to auditing/patching the desktop environment
-rhel9cis_gui: {{ rhel9cis_gui }}
-
-# Warning Banner Content (issue, issue.net, motd)
+## Controls:
+# - 1.7.1 - Ensure message of the day is configured properly
+# - 1.7.2 - Ensure local login warning banner is configured properly
+# - 1.7.3 - Ensure remote login warning banner is configured properly
+# This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
 rhel9cis_warning_banner: {{ rhel9cis_warning_banner }}
 # End Banner
 
-# aide setup via - cron, timer
-rhel9_aide_scan: cron
+## Control 1.8.x - Settings for GDM
+## 1.8 GDM graphical interface
+rhel9cis_gui: {{ rhel9cis_gui }}
 
-# 1.8 Gnome Desktop
+# This variable specifies the GNOME configuration database file to which configurations are written.
+# (See "https://help.gnome.org/admin/system-admin-guide/stable/dconf-keyfiles.html.en")
+# The default database is 'local'.
 rhel9cis_dconf_db_name: {{ rhel9cis_dconf_db_name }}
-rhel9cis_screensaver_idle_delay: {{ rhel9cis_screensaver_idle_delay }}  # Set max value for idle-delay in seconds (between 1 and 900)
-rhel9cis_screensaver_lock_delay: {{ rhel9cis_screensaver_lock_delay }}  # Set max value for lock-delay in seconds (between 0 and 5)
 
-# Section 2
-## 2.2 Special Purposes
-# Set to 'true' if X Windows is needed in your environment
-rhel9cis_xwindows_required: false
-### Service configuration booleans set true to keep service
+
+## Section 2. Services
+
+# Service configuration
+# Options are
+# Service
+# - false - removes package
+# - true - leaves package installed
+# Mask
+# - false - leaves service in current status
+# - true - sets service name to masked
+#
+# Setting both Service and Mask to false will remove the package if exists
+rhel9cis_autofs_services: {{ rhel9cis_autofs_services }}
+rhel9cis_autofs_mask: {{ rhel9cis_autofs_mask }}
 rhel9cis_avahi_server: {{ rhel9cis_avahi_server }}
-rhel9cis_cups_server: {{ rhel9cis_cups_server }}
+rhel9cis_avahi_mask: {{ rhel9cis_avahi_mask }}
 rhel9cis_dhcp_server: {{ rhel9cis_dhcp_server }}
+rhel9cis_dhcp_mask: {{ rhel9cis_dhcp_mask }}
 rhel9cis_dns_server: {{ rhel9cis_dns_server }}
+rhel9cis_dns_mask: {{ rhel9cis_dns_mask }}
 rhel9cis_dnsmasq_server: {{ rhel9cis_dnsmasq_server }}
-rhel9cis_vsftpd_server: {{ rhel9cis_vsftpd_server }}
-rhel9cis_tftp_server: {{ rhel9cis_tftp_server }}
-rhel9cis_httpd_server: {{ rhel9cis_httpd_server }}
-rhel9cis_nginx_server: {{ rhel9cis_nginx_server }}
-rhel9cis_dovecot_server: {{ rhel9cis_dovecot_server }}
-rhel9cis_imap_server: {{ rhel9cis_imap_server }}
+rhel9cis_dnsmasq_mask: {{ rhel9cis_dnsmasq_mask }}
 rhel9cis_samba_server: {{ rhel9cis_samba_server }}
-rhel9cis_squid_server: {{ rhel9cis_squid_server }}
+rhel9cis_samba_mask: {{ rhel9cis_samba_mask }}
+rhel9cis_ftp_server: {{ rhel9cis_ftp_server }}
+rhel9cis_ftp_mask: {{ rhel9cis_ftp_mask }}
+rhel9cis_message_server: {{ rhel9cis_message_server }}  # This is for messaging dovecot and cyrus-imap
+rhel9cis_message_mask: {{ rhel9cis_message_mask }}
+rhel9cis_nfs_server: {{ rhel9cis_nfs_server }}
+rhel9cis_nfs_mask: {{ rhel9cis_nfs_mask }}
+rhel9cis_nis_server: {{ rhel9cis_nis_server }}  # set to mask if nis client required
+rhel9cis_nis_mask: {{ rhel9cis_nis_mask }}
+rhel9cis_print_server: {{ rhel9cis_print_server }}  # replaces cups
+rhel9cis_print_mask: {{ rhel9cis_print_mask }}
+rhel9cis_rpc_server: {{ rhel9cis_rpc_server }}
+rhel9cis_rpc_mask: {{ rhel9cis_rpc_mask }}
+rhel9cis_rsync_server: {{ rhel9cis_rsync_server }}
+rhel9cis_rsync_mask: {{ rhel9cis_rsync_mask }}
 rhel9cis_snmp_server: {{ rhel9cis_snmp_server }}
+rhel9cis_snmp_mask: {{ rhel9cis_snmp_mask }}
 rhel9cis_telnet_server: {{ rhel9cis_telnet_server }}
+rhel9cis_telnet_mask: {{ rhel9cis_telnet_mask }}
+rhel9cis_tftp_server: {{ rhel9cis_tftp_server }}
+rhel9cis_tftp_mask: {{ rhel9cis_tftp_mask }}
+rhel9cis_squid_server: {{ rhel9cis_squid_server }}
+rhel9cis_squid_mask: {{ rhel9cis_squid_mask }}
+rhel9cis_httpd_server: {{ rhel9cis_httpd_server }}
+rhel9cis_httpd_mask: {{ rhel9cis_httpd_mask }}
+rhel9cis_nginx_server: {{ rhel9cis_nginx_server }}
+rhel9cis_nginx_mask: {{ rhel9cis_nginx_mask }}
+rhel9cis_xinetd_server: {{ rhel9cis_xinetd_server }}
+rhel9cis_xinetd_mask: {{ rhel9cis_xinetd_mask }}
+rhel9cis_xwindow_server: {{ rhel9cis_xwindow_server }}  # will remove mask not an option
 rhel9cis_is_mail_server: {{ rhel9cis_is_mail_server }}
 
-# Note the options
-# Packages are used for client services and Server- only remove if you dont use the client service
-#
-rhel9cis_use_nfs_server: {{ rhel9cis_use_nfs_server }}
-rhel9cis_use_nfs_service: {{ rhel9cis_use_nfs_service }}
-rhel9cis_use_rpc_server: {{ rhel9cis_use_rpc_server }}
-rhel9cis_use_rpc_service: {{ rhel9cis_use_rpc_service }}
-rhel9cis_use_rsync_server: {{ rhel9cis_use_rsync_server }}
-rhel9cis_use_rsync_service: {{ rhel9cis_use_rsync_service }}
+## Section 2.3 Service clients
 
-#### 2.3 Service clients
-rhel9cis_telnet_required: {{ rhel9cis_telnet_required }}
-rhel9cis_openldap_clients_required: {{ rhel9cis_openldap_clients_required }}
-rhel9cis_tftp_client: {{ rhel9cis_tftp_client }}
 rhel9cis_ftp_client: {{ rhel9cis_ftp_client }}
+rhel9cis_openldap_clients_required: {{ rhel9cis_openldap_clients_required }}
+rhel9cis_ypbind_required: {{ rhel9cis_ypbind_required }}  # Same package as NIS server
+rhel9cis_telnet_required: {{ rhel9cis_telnet_required }}
+rhel9cis_tftp_client: {{ rhel9cis_tftp_client }}
 
-# Section 3
+## Section 3 vars
+## Sysctl
+# Service configuration
+# Options are
+# Service
+# - false - removes package
+# - true - leaves package installed
+# Mask
+# - false - leaves service in current status
+# - true - sets service name to masked
+#
+# Setting both Service and Mask to false will remove the package if exists
+#
+rhel9cis_bluetooth_service: {{ rhel9cis_bluetooth_service }}
+rhel9cis_bluetooth_mask: {{ rhel9cis_bluetooth_mask }}
 
-## IPv6 required
+## 3.1 IPv6 requirement toggle
+# This variable governs whether ipv6 is enabled or disabled.
 rhel9cis_ipv6_required: {{ rhel9cis_ipv6_required }}
 
-## 3.2 System network parameters (host only OR host and router)
+# 3.3 System network parameters (host only OR host and router)
+# This variable governs whether specific CIS rules
+# concerned with acceptance and routing of packages are skipped.
 rhel9cis_is_router: {{ rhel9cis_is_router }}
 
-## Section 3.4
-### Firewall
+# Section 4 vars
+### Firewall Service to install and configure - Options are:
+# 1) either 'firewalld'
+# 2) or 'nftables'
+#### Some control allow for services to be removed or masked
+#### The options are under each heading
+#### absent = remove the package
+#### masked = leave package if installed and mask the service
 rhel9cis_firewall: {{ rhel9cis_firewall }}
-##### firewalld
-rhel9cis_default_zone: {{ rhel9cis_default_zone }}
 
-#### nftables
+## Section5 vars
 
-rhel9cis_nft_tables_autonewtable: {{ rhel9cis_nft_tables_autonewtable }}
-rhel9cis_nft_tables_tablename: {{ rhel9cis_nft_tables_tablename }}
-rhel9cis_nft_tables_autochaincreate: {{ rhel9cis_nft_tables_autochaincreate }}
+## Section 5.1 - SSH
 
-# Section 4
+## Controls:
+## - 5.1.7  - Ensure SSH access is limited
+# This variable, if specified, configures a list of USER name patterns, separated by spaces, to allow SSH
+# access for users whose user name matches one of the patterns. This is done
+# by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
+# If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
+rhel9cis_sshd_allowusers: "{% if ansible_facts.user_id != 'root' %}{{ ansible_facts.user_id }}{% elif ansible_env.SUDO_USER is defined %}{{ ansible_env.SUDO_USER }}{% endif %}"
 
-## Set if host is a logserver
-rhel9cis_remote_log_server: {{ rhel9cis_remote_log_server }}
+# (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
+# for users whose primary group or supplementary group list matches one of the patterns. This is done
+# by setting the value of `AllowGroups` option in `/etc/ssh/sshd_config` file.
+rhel9cis_sshd_allowgroups: {{ rhel9cis_sshd_allowgroups }}
 
-# Remote logserver settings
-rhel9cis_remote_log_host: {{ rhel9cis_remote_log_host }}
-rhel9cis_remote_log_port: {{ rhel9cis_remote_log_port }}
-rhel9cis_remote_log_protocol: {{ rhel9cis_remote_log_protocol }}
-rhel9cis_remote_log_retrycount: {{ rhel9cis_remote_log_retrycount }}
-rhel9cis_remote_log_queuesize: {{ rhel9cis_remote_log_queuesize }}
+# This variable, if specified, configures a list of USER name patterns, separated by spaces, to prevent SSH access
+# for users whose user name matches one of the patterns. This is done
+# by setting the value of `DenyUsers` option in `/etc/ssh/sshd_config` file.
+# If an USER@HOST format will be used, the specified user will be restricted only on that particular host.
+rhel9cis_sshd_denyusers: {{ rhel9cis_sshd_denyusers }}
 
-## syslog
+# This variable, if specified, configures a list of GROUP name patterns, separated by spaces,
+# to prevent SSH access for users whose primary group or supplementary group list matches one of the patterns. This is done
+# by setting the value of `DenyGroups` option in `/etc/ssh/sshd_config` file.
+rhel9cis_sshd_denygroups: {{ rhel9cis_sshd_denygroups }}
+
+## Control 5.2.x - Ensure sudo log file exists
+# By default, sudo logs through syslog(3). However, to specify a custom log file, the
+# 'logfile' parameter will be used, setting it with current variable's value.
+# This variable defines the path and file name of the sudo log file.
+rhel9cis_sudolog_location: {{ rhel9cis_sudolog_location }}
+
+## Control 5.2.4
+# This will leave NOPASSWD intact for these users
+rhel9cis_sudoers_exclude_nopasswd_list:
+  - ec2-user
+  - vagrant
+
+## Control 5.2 - Ensure access to the 'su' command is restricted
+# This variable determines the name of the group of users that are allowed to use the su command.
+# CIS requires that such a group be CREATED(named according to site policy) and be kept EMPTY.
+rhel9cis_sugroup: {{ rhel9cis_sugroup }}
+
+# Control 5.3.3.2
+# Choose if using minclass or credits options
+# Options are: minclass or credits
+# ensure only one is selected
+rhel9cis_passwd_complex_option: {{ rhel9cis_passwd_complex_option }}
+
+## Section 5.4.1.x: Shadow Password Suite Parameters
+  ## Control 5.4.1.1 - Ensure password expiration is 365 days or less
+  # This variable governs after how many days a password expires.
+  # CIS requires a value of 365 or less.
+rhel9cis_pass_max_days: 365
+  ## Control 5.4.1.2 - Ensure minimum days between password changes is 7 or more
+  # This variable specifies the minimum number of days allowed between changing
+  # passwords. CIS requires a value of at least 1.
+rhel9cis_pass_min_days: 7
+  ## Control 5.4.1.3 - Ensure password expiration warning days is 7 or more
+  # This variable governs, how many days before a password expires, the user will be warned.
+  # CIS requires a value of at least 7.
+rhel9cis_pass_warn_age: 7
+
+## PAM AND Authselect
+
+# This variable configures the name of the custom profile to be created and selected.
+# To be changed from default - cis_example_profile
+rhel9cis_authselect_custom_profile_name: {{ rhel9cis_authselect_custom_profile_name }}
+
+### Controls:
+# - 5.6.2 -  Ensure system accounts are secured
+# - 6.2.10 - Ensure local interactive user home directories exist
+# - 6.2.11 - Ensure local interactive users own their home directories
+# UID settings for interactive users
+# These are discovered via logins.def if set true
+rhel9cis_discover_int_uid: {{ rhel9cis_discover_int_uid }}
+# This variable sets the minimum number from which to search for UID
+# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
+# been set to `true`.
+min_int_uid: 1000
+### Controls:
+# - Ensure local interactive user home directories exist
+# - Ensure local interactive users own their home directories
+# This variable sets the maximum number at which the search stops for UID
+# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
+# been set to `true`.
+max_int_uid: 65533
+
+## Section6 vars
+
+## Control 6.1.2 AIDE schedule
+# how aide sceduler runs can be one of cron or timer
+rhel9cis_aide_scan: {{ rhel9cis_aide_scan }}
+
+# These are the crontab settings for periodical checking of the filesystem's integrity using AIDE.
+# The sub-settings of this variable provide the parameters required to configure
+# the cron job on the target system.
+# Cron is a time-based job scheduling program in Unix OS, which allows tasks to be scheduled
+# and executed automatically at a certain point in time.
+rhel9cis_aide_cron:
+  # This variable represents the user account under which the cron job for AIDE will run.
+  cron_user: root
+  # This variable represents the path to the AIDE crontab file.
+  cron_file: /etc/cron.d/aide_cron
+  # This variable represents the actual command or script that the cron job
+  # will execute for running AIDE.
+  aide_job: '/usr/sbin/aide --check'
+  # These variables define the schedule for the cron job
+  # This variable governs the minute of the time of day when the AIDE cronjob is run.
+  # It must be in the range `0-59`.
+  aide_minute: 0
+  # This variable governs the hour of the time of day when the AIDE cronjob is run.
+  # It must be in the range `0-23`.
+  aide_hour: 5
+  # This variable governs the day of the month when the AIDE cronjob is run.
+  # `*` signifies that the job is run on all days; furthermore, specific days
+  # can be given in the range `1-31`; several days can be concatenated with a comma.
+  # The specified day(s) can must be in the range  `1-31`.
+  aide_day: '*'
+  # This variable governs months when the AIDE cronjob is run.
+  # `*` signifies that the job is run in every month; furthermore, specific months
+  # can be given in the range `1-12`; several months can be concatenated with commas.
+  # The specified month(s) can must be in the range  `1-12`.
+  aide_month: '*'
+  # This variable governs the weekdays, when the AIDE cronjob is run.
+  # `*` signifies that the job is run on all weekdays; furthermore, specific weekdays
+  # can be given in the range `0-7` (both `0` and `7` represent Sunday); several weekdays
+  # can be concatenated with commas.
+  aide_weekday: '*'
+#
+## Preferred method of logging
+## Whether rsyslog or journald preferred method for local logging
+## Control 6.2.3 | Configure rsyslog
+## Control 6.2.1 | Configure journald
+# This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
+# or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
+# practices are written wholly independent of each other.
 rhel9cis_syslog: {{ rhel9cis_syslog }}
 
-# Section 5
-# This will allow use of drop in files when CIS adopts them.
-rhel9_cis_sshd_config_file: {{ rhel9cis_sshd_config_file }}
+## Control 6.2.2.x & 6.2.3.x - Ensure rsyslog is not configured to receive logs from a remote client
+# This variable expresses whether the system is used as a log server or not. If set to:
+#  - 'false', current system will act as a log CLIENT, thus it should NOT receive data from other hosts.
+#  - 'true', current system will act as a log SERVER, enabling centralised log management(by protecting log integrity
+# from local attacks on remote clients)
+rhel9cis_system_is_log_server: {{ rhel9cis_system_is_log_server }}
 
-## 5.2.4 Note the following to understand precedence and layout
-rhel9cis_sshd_limited: false
-rhel9cis_sshd_access:
-  - AllowUser
-  - AllowGroup
-  - DenyUser
-  - DenyGroup
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable governs if 'rsyslog' service should be automatically configured to forward messages to a
+# remote log server. If set to 'false', the configuration of the 'omfwd' plugin, used to provide forwarding
+# over UDP or TCP, will not be performed.
+rhel9cis_remote_log_server: {{ rhel9cis_remote_log_server }}
 
-## 5.3.2 & 5.4.2 Enable automation to select custom profile options, using the settings above
-rhel9cis_authselect_custom_profile_select: {{ rhel9cis_authselect_custom_profile_select }}
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the value of the 'target' parameter to be configured when enabling
+# forwarding syslog messages to a remote log server, thus configuring the actual FQDN/IP address of the
+# destination server. For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: {{ rhel9cis_remote_log_server }}').
+rhel9cis_remote_log_host: {{ rhel9cis_remote_log_host }}
 
-## 5.3.2 Authselect select false if using AD or RHEL ID mgmt
-rhel9cis_authselect:
-  custom_profile_name: {{ rhel9cis_authselect['custom_profile_name'] }}
-  default_file_to_copy: {{ rhel9cis_authselect['default_file_to_copy'] }}
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the value of the 'port' parameter to be configured when enabling
+# forwarding syslog messages to a remote log server. The default value for this destination port is 514.
+# For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: {{ rhel9cis_remote_log_server }}').
+rhel9cis_remote_log_port: {{ rhel9cis_remote_log_port }}
 
-## 5.4.1 Enable automation to create custom profile settings, using the setings above
-rhel9cis_authselect_custom_profile_create: {{ rhel9cis_authselect_custom_profile_create }}
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the value("TCP"/"UDP") of the 'protocol' parameter to be configured when enabling
+# forwarding syslog messages to a remote log server. The default value for the 'omfwd' plug-in is UDP.
+# For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: {{ rhel9cis_remote_log_server }}').
+rhel9cis_remote_log_protocol: {{ rhel9cis_remote_log_protocol }}
 
-# 5.5.1
-## PAM
-rhel9cis_pam_password:
-  minlen: {{ rhel9cis_pam_password['minlen'] }}
-  minclass: {{ rhel9cis_pam_password['minclass'] }}
-rhel9cis_pam_passwd_retry: "3"
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable governs how often an action is retried(value is passed to 'action.resumeRetryCount' parameter) before
+# it is considered to have failed(that roughly translates to discarded messages). The default value is 0, but
+# when set to "-1"(eternal), this setting would prevent rsyslog from dropping messages when retrying to connect
+# if server is not responding. For this value to be reflected in the configuration, the variable which enables the
+# automatic configuration of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: {{ rhel9cis_remote_log_server }}').
+rhel9cis_remote_log_retrycount: {{ rhel9cis_remote_log_retrycount }}
 
-## 5.5.3 choose one of below
-rhel9cis_pwhistory_so: "14"
-rhel9cis_passwd_remember: "5"
+## Control 6.2.3.6 - Ensure rsyslog is configured to send logs to a remote log host
+# This variable configures the maximum number of messages that can be hold(value is passed to 'queue.size' parameter).
+# For this value to be reflected in the configuration, the variable which enables the automatic configuration
+# of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: {{ rhel9cis_remote_log_server }}').
+rhel9cis_remote_log_queuesize: {{ rhel9cis_remote_log_queuesize }}
 
-## 5.6.x login.defs password settings
-rhel9cis_pass:
-  max_days: {{ rhel9cis_pass['max_days'] }}
-  min_days: {{ rhel9cis_pass['min_days'] }}
-  warn_age: {{ rhel9cis_pass['warn_age'] }}
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# 'rhel9cis_journal_upload_url' is the ip address to upload the journal entries to
+#  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
+#  number may be specified after a colon (":"), otherwise 19532 will be used by default.
+rhel9cis_journal_upload_url: {{ rhel9cis_journal_upload_url }}
 
-## 5.3.7 set sugroup if differs from wheel
-rhel9cis_sugroup: {{ rhel9cis_sugroup }}
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to the private key file used by the remote journal
+# server to authenticate itself to the client. This key is used alongside the server's
+# public certificate to establish secure communication.
+rhel9cis_journal_upload_serverkeyfile: {{ rhel9cis_journal_upload_serverkeyfile }}
+
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to the public certificate file of the remote journal
+# server. This certificate is used to verify the authenticity of the remote server.
+rhel9cis_journal_servercertificatefile: {{ rhel9cis_journal_servercertificatefile }}
+
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to a file containing one or more public certificates
+# of certificate authorities (CAs) that the client trusts. These trusted certificates are used
+# to validate the authenticity of the remote server's certificate.
+rhel9cis_journal_trustedcertificatefile: {{ rhel9cis_journal_trustedcertificatefile }}
+
+# Section 7 Vars
+
+# 7.1.12 Ensure no files or directories without an owner and a group exist
+rhel9cis_exclude_unowned_search_path: \( ! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path "/var/*/private/*" \)

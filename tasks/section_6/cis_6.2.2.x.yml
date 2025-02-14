@@ -1,0 +1,80 @@
+---
+
+- name: "6.2.2.2 | PATCH | Ensure journald ForwardToSyslog is disabled"
+  when: rhel9cis_rule_6_2_2_2
+  tags:
+    - level1-server
+    - level2-workstation
+    - patch
+    - journald
+    - rule_6.2.2.2
+    - NIST800-53R5_AU-2
+    - NIST800-53R5_AU-6
+    - NIST800-53R5_AU-7
+    - NIST800-53R5_AU-12
+  notify: Restart journald
+  block:
+    - name: "6.2.2.2 | PATCH | Ensure journald ForwardToSyslog is disabled | Add file"
+      ansible.builtin.template:
+        src: etc/systemd/journald.conf.d/forwardtosyslog.conf.j2
+        dest: /etc/systemd/journald.conf.d/forwardtosyslog.conf
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
+
+    - name: "6.2.2.2 | PATCH | Ensure journald ForwardToSyslog is disabled | comment out current entries"
+      ansible.builtin.replace:
+        path: /etc/systemd/journald.conf
+        regexp: ^(\s*ForwardToSyslog)
+        replace: '#\1'
+
+- name: "6.2.2.3 | PATCH | Ensure journald Compress is configured"
+  when: rhel9cis_rule_6_2_2_3
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - journald
+    - rule_6.2.2.3
+    - NIST800-53R5_AU-4
+  notify: Restart journald
+  block:
+    - name: "6.2.2.3 | PATCH | Ensure journald Compress is configured | Add file"
+      ansible.builtin.template:
+        src: etc/systemd/journald.conf.d/storage.conf.j2  # Added to the same file as 6.2.1.1.4
+        dest: /etc/systemd/journald.conf.d/storage.conf
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
+
+    - name: "6.2.2.3 | PATCH | Ensure journald Compress is configured | comment out current entries"
+      ansible.builtin.replace:
+        path: /etc/systemd/journald.conf
+        regexp: ^(?i)(\s*compress=)
+        replace: '#\1'
+
+- name: "6.2.2.4 | PATCH | Ensure journald Storage is configured"
+  when: rhel9cis_rule_6_2_2_4
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - journald
+    - rule_6.2.2.4
+    - NIST800-53R5_AU-3
+    - NIST800-53R5_AU-12
+  notify: Restart journald
+  block:
+    - name: "6.2.2.4 | PATCH | Ensure journald Storage is configured | Add file"
+      ansible.builtin.template:
+        src: etc/systemd/journald.conf.d/storage.conf.j2
+        dest: /etc/systemd/journald.conf.d/storage.conf
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
+
+    - name: "6.2.2.4 | PATCH | Ensure journald Storage is configured | comment out current entries"
+      ansible.builtin.replace:
+        path: /etc/systemd/journald.conf
+        regexp: ^(?i)(\s*storage=)
+        replace: '#\1'

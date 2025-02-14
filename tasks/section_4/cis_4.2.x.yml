@@ -1,0 +1,43 @@
+---
+
+- name: "4.2.1 | AUDIT | Ensure firewalld drops unnecessary services and ports"
+  when: rhel9cis_rule_4_2_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - manual
+    - audit
+    - rule_4.2.1
+    - NIST800-55_CA-9
+  block:
+    - name: "4.2.1 | AUDIT | Ensure firewalld drops unnecessary services and ports | Get list of services and ports"
+      ansible.builtin.shell: "firewall-cmd --get-active-zones | awk '!/:/ {print $1}' | while read ZN; do firewall-cmd --list-all --zone=$ZN; done"
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_services_and_ports
+
+    - name: "4.2.1 | AUDIT | Ensure firewalld drops unnecessary services and ports | Show services and ports"
+      ansible.builtin.debug:
+        msg:
+          - "The items below are the services and ports that are accepted, please correct as needed"
+          - "{{ discovered_services_and_ports.stdout_lines }}"
+
+- name: "4.2.2 | PATCH | Ensure firewalld loopback traffic is configured | firewalld"
+  when: rhel9cis_rule_4_2_2
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - nftables
+    - rule_4.2.2
+    - NIST800-55_CA-9
+  ansible.posix.firewalld:
+    rich_rule: "{{ item }}"
+    zone: "{{ rhel9cis_default_zone }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop:
+    - rule family="ipv4" source address="127.0.0.1" destination not address="127.0.0.1" drop
+    - rule family="ipv6" source address="::1" destination not address="::1" drop

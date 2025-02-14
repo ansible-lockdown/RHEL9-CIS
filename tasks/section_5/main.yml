@@ -2,38 +2,48 @@
 
 # Access, Authentication, and Authorization
 
-- name: "SECTION | 5.1 | Configure time-based job schedulers"
-  ansible.builtin.import_tasks:
-      file: cis_5.1.x.yml
-
-- name: "SECTION | 5.2 | Configure SSH Server"
-  ansible.builtin.import_tasks:
-      file: cis_5.2.x.yml
+- name: "SECTION | 5.1 | Configure SSH Server"
   when:
-      - "'openssh-server' in ansible_facts.packages"
-
-- name: "SECTION | 5.3 | Configure privilege escalation"
+    - "'openssh-server' in ansible_facts.packages"
   ansible.builtin.import_tasks:
-      file: cis_5.3.x.yml
+    file: cis_5.1.x.yml
 
-- name: "SECTION | 5.4 | Configure authselect"
+- name: "SECTION | 5.2 | Configure privilege escalation"
   ansible.builtin.import_tasks:
-      file: cis_5.4.x.yml
+    file: cis_5.2.x.yml
 
-- name: "SECTION | 5.5 | Configure PAM | not authselect"
+- name: "SECTION | 5.3.1.x | Configure PAM software packages"
   ansible.builtin.import_tasks:
-      file: cis_5.5.x.yml
-  when: not rhel9cis_authselect_custom_profile_select
+    file: cis_5.3.1.x.yml
 
-- name: "SECTION | 5.5 | Configure PAM | authselect"
+- name: "SECTION | 5.3.2.x | Configure authselect"
   ansible.builtin.import_tasks:
-      file: cis_5.5.x_authselect.yml
-  when: rhel9cis_authselect_custom_profile_select
+    file: cis_5.3.2.x.yml
 
-- name: "SECTION | 5.6.1.x | Shadow Password Suite Parameters"
+- name: "SECTION | 5.3.3.1.x | Configure pam_faillock module"
   ansible.builtin.import_tasks:
-      file: cis_5.6.1.x.yml
+    file: cis_5.3.3.1.x.yml
 
-- name: "SECTION | 5.6.x | Misc. User Account Settings"
+- name: "SECTION | 5.3.3.2.x | Configure pam_pwquality module"
   ansible.builtin.import_tasks:
-      file: cis_5.6.x.yml
+    file: cis_5.3.3.2.x.yml
+
+- name: "SECTION | 5.3.3.3.x | Configure pam_pwhistory module"
+  ansible.builtin.import_tasks:
+    file: cis_5.3.3.3.x.yml
+
+- name: "SECTION | 5.3.3.4.x | Configure pam_unix module"
+  ansible.builtin.import_tasks:
+    file: cis_5.3.3.4.x.yml
+
+- name: "SECTION | 5.4.1.x | Configure shadow password suite parameters"
+  ansible.builtin.import_tasks:
+    file: cis_5.4.1.x.yml
+
+- name: "SECTION | 5.4.2.x | Configure root and system accounts and environment"
+  ansible.builtin.import_tasks:
+    file: cis_5.4.2.x.yml
+
+- name: "SECTION | 5.4.3.x | Configure user default environment"
+  ansible.builtin.import_tasks:
+    file: cis_5.4.3.x.yml

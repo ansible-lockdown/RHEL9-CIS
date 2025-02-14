@@ -3,17 +3,62 @@
 
 min_ansible_version: 2.10.1
 rhel9cis_allowed_crypto_policies:
-    - 'DEFAULT'
-    - 'FUTURE'
-    - 'FIPS'
+  - 'DEFAULT'
+  - 'FUTURE'
+  - 'FIPS'
 
 rhel9cis_allowed_crypto_policies_modules:
-    - 'OSPP'
-    - 'AD-SUPPORT'
-    - 'AD-SUPPORT-LEGACY'
+  - 'OSPP'
+  - 'AD-SUPPORT'
+  - 'AD-SUPPORT-LEGACY'
+  - 'NO-SHA1'
+  - 'NO-SSHCBC'
+  - 'NO-SSHETM'
+  - 'NO-SSHWEAKCIPHER'
+  - 'NO-SSHWEAKMAC'
+  - 'NO-WEAKMAC'
 
 # Used to control warning summary
 warn_control_list: ""
 warn_count: 0
 
 gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
+
+## Controls 6.3.3.x - Audit template
+# This variable is set to true by tasks 6.3.3.1 to 6.3.3.20. As a result, the
+# audit settings are overwritten with the role's template. In order to exclude
+# specific rules, you must set the variable of form `ubtu24cis_rule_6_3_3_x` above
+# to `false`.
+update_audit_template: false
+
+# Defaults
+## Usage on containerized images
+# The role discovers dynamically (in tasks/main.yml) whether it
+# is executed on a container image and sets the variable
+# system_is_container the true. Otherwise, the default value
+# 'false' is left unchanged.
+system_is_container: false
+# The filename of the existing yml file in role's  'vars/' sub-directory
+# to be used for managing the role-behavior when a container was detected:
+# (de)activating rules or for other tasks(e.g. disabling Selinux or a specific
+# firewall-type).
+container_vars_file: is_container.yml
+# rhel9cis is left off the front of this var for consistency in testing pipeline
+# system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
+system_is_ec2: false
+
+# Aide Packages
+
+aide_packages:
+  - aide
+# Aide initiate command for new DB creation
+aide_initiate_command: /usr/sbin/aide --init
+
+# Audit vars
+audit_bins:
+  - /sbin/auditctl
+  - /sbin/aureport
+  - /sbin/ausearch
+  - /sbin/autrace
+  - /sbin/auditd
+  - /sbin/augenrules

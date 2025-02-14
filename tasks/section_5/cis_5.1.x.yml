@@ -1,163 +1,526 @@
 ---
 
-- name: "5.1.1 | PATCH | Ensure cron daemon is enabled"
-  ansible.builtin.service:
-      name: crond
-      enabled: true
-  when:
-      - rhel9cis_rule_5_1_1
+- name: "5.1.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config are configured"
+  when: rhel9cis_rule_5_1_1
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - cron
-      - rule_5.1.1
-
-- name: "5.1.2 | PATCH | Ensure permissions on /etc/crontab are configured"
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - permissions
+    - rule_5.1.1
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
   ansible.builtin.file:
-      path: /etc/crontab
-      owner: root
-      group: root
-      mode: '0600'
-  when:
-      - rhel9cis_rule_5_1_2
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - cron
-      - rule_5.1.2
+    path: "/etc/ssh/sshd_config"
+    owner: root
+    group: root
+    mode: 'go-rwx'
 
-- name: "5.1.3 | PATCH | Ensure permissions on /etc/cron.hourly are configured"
-  ansible.builtin.file:
-      path: /etc/cron.hourly
-      state: directory
-      owner: root
-      group: root
-      mode: '0700'
-  when:
-      - rhel9cis_rule_5_1_3
+- name: "5.1.2 | PATCH | Ensure permissions on SSH private host key files are configured"
+  when: rhel9cis_rule_5_1_2
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - cron
-      - rule_5.1.3
-
-- name: "5.1.4 | PATCH | Ensure permissions on /etc/cron.daily are configured"
-  ansible.builtin.file:
-      path: /etc/cron.daily
-      state: directory
-      owner: root
-      group: root
-      mode: '0700'
-  when:
-      - rhel9cis_rule_5_1_4
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - cron
-      - rule_5.1.4
-
-- name: "5.1.5 | PATCH | Ensure permissions on /etc/cron.weekly are configured"
-  ansible.builtin.file:
-      path: /etc/cron.weekly
-      state: directory
-      owner: root
-      group: root
-      mode: '0700'
-  when:
-      - rhel9cis_rule_5_1_5
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - rule_5.1.5
-
-- name: "5.1.6 | PATCH | Ensure permissions on /etc/cron.monthly are configured"
-  ansible.builtin.file:
-      path: /etc/cron.monthly
-      state: directory
-      owner: root
-      group: root
-      mode: '0700'
-  when:
-      - rhel9cis_rule_5_1_6
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - rule_5.1.6
-
-- name: "5.1.7 | PATCH | Ensure permissions on /etc/cron.d are configured"
-  ansible.builtin.file:
-      path: /etc/cron.d
-      state: directory
-      owner: root
-      group: root
-      mode: '0700'
-  when:
-      - rhel9cis_rule_5_1_7
-  tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - cron
-      - rule_5.1.7
-
-- name: "5.1.8 | PATCH | Ensure cron is restricted to authorized users"
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - permissions
+    - rule_5.1.2
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
   block:
-      - name: "5.1.8 | PATCH | Ensure cron is restricted to authorized users | Remove cron.deny"
-        ansible.builtin.file:
-            path: /etc/cron.deny
-            state: absent
+    - name: "5.1.2 | AUDIT | Ensure permissions on SSH private host key files are configured | Find the SSH private host keys"
+      ansible.builtin.find:
+        paths: /etc/ssh
+        patterns: 'ssh_host_*_key'
+        recurse: true
+        file_type: any
+      register: discovered_ssh_private_host_key
 
-      - name: "5.1.8 | PATCH | Ensure cron is restricted to authorized users | Check if cron.allow exists"
-        ansible.builtin.stat:
-            path: "/etc/cron.allow"
-        register: rhel9cis_5_1_8_cron_allow_state
+    - name: "5.1.2 | PATCH | Ensure permissions on SSH private host key files are configured | Set permissions on SSH private host keys"
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        owner: root
+        group: root
+        mode: 'u-x,go-rwx'
+      loop: "{{ discovered_ssh_private_host_key.files }}"
+      loop_control:
+        label: "{{ item.path }}"
 
-      - name: "5.1.8 | PATCH | Ensure cron is restricted to authorized users | Ensure cron.allow is restricted to authorized users"
-        ansible.builtin.file:
-            path: /etc/cron.allow
-            state: '{{ "file" if  rhel9cis_5_1_8_cron_allow_state.stat.exists else "touch" }}'
-            owner: root
-            group: root
-            mode: '0600'
-  when:
-      - rhel9cis_rule_5_1_8
+- name: "5.1.3 | PATCH | Ensure permissions on SSH public host key files are configured"
+  when: rhel9cis_rule_5_1_3
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - cron
-      - rule_5.1.8
-
-- name: "5.1.9 | PATCH | Ensure at is restricted to authorized users"
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.3
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
   block:
-      - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | Remove at.deny"
-        ansible.builtin.file:
-            path: /etc/at.deny
-            state: absent
+    - name: "5.1.3 | AUDIT | Ensure permissions on SSH public host key files are configured | Find the SSH public host keys"
+      ansible.builtin.find:
+        paths: /etc/ssh
+        patterns: 'ssh_host_*_key.pub'
+        recurse: true
+        file_type: any
+      register: discovered_ssh_public_host_key
 
-      - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | Check if at.allow exists"
-        ansible.builtin.stat:
-            path: "/etc/at.allow"
-        register: rhel9cis_5_1_9_at_allow_state
+    - name: "5.1.3 | PATCH | Ensure permissions on SSH public host key files are configured | Set permissions on SSH public host keys"
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        owner: root
+        group: root
+        mode: 'u-x,go-wx'
+      loop: "{{ discovered_ssh_public_host_key.files }}"
+      loop_control:
+        label: "{{ item.path }}"
 
-      - name: "5.1.9 | PATCH | Ensure at is restricted to authorized users | Ensure at.allow is restricted to authorized users"
-        ansible.builtin.file:
-            path: /etc/at.allow
-            state: '{{ "file" if  rhel9cis_5_1_9_at_allow_state.stat.exists else "touch" }}'
-            owner: root
-            group: root
-            mode: '0600'
+- name: "5.1.4 | PATCH | Ensure sshd Ciphers are configured"
   when:
-      - rhel9cis_rule_5_1_9
+    - rhel9cis_rule_5_1_4
+    - "'NO-SSHWEAKCIPHERS' not in rhel9cis_crypto_policy_module"
   tags:
-      - level1-server
-      - level1-workstation
-      - patch
-      - cron
-      - rule_5.1.9
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - crypto
+    - rule_5.1.4
+    - NIST800-53R5_SC-8
+  block:
+    - name: "5.1.4 | PATCH | Ensure sshd Ciphers are configured | Add submodule exclusion"
+      ansible.builtin.template:
+        src: etc/crypto-policies/policies/modules/NO-SSHWEAKCIPHERS.pmod.j2
+        dest: /etc/crypto-policies/policies/modules/NO-SSHWEAKCIPHERS.pmod
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
+      notify:
+        - Update Crypto Policy
+        - Set Crypto Policy
+
+    - name: "5.1.4 | PATCH | Ensure sshd Ciphers are configured | submodule to crypto policy modules"
+      ansible.builtin.set_fact:
+        rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':NO-SSHWEAKCIPHERS' }}"
+
+- name: "5.1.5 | PATCH | Ensure sshd KexAlgorithms is configured"
+  when:
+    - rhel9cis_rule_5_1_5
+    - "'NO-SHA1' not in rhel9cis_crypto_policy_module"
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - crypto
+    - rule_5.1.5
+    - NIST800-53R5_SC-6
+  block:
+    - name: "5.1.5 | PATCH | Ensure sshd KexAlgorithms is configured | Add submodule exclusion"
+      ansible.builtin.template:
+        src: etc/crypto-policies/policies/modules/NO-SHA1.pmod.j2
+        dest: /etc/crypto-policies/policies/modules/NO-SHA1.pmod
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
+      notify:
+        - Update Crypto Policy
+        - Set Crypto Policy
+
+    - name: "5.1.5 | PATCH | Ensure sshd KexAlgorithms is configured | submodule to crypto policy modules"
+      ansible.builtin.set_fact:
+        rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':NO-SHA1' }}"
+
+- name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured"
+  when:
+    - rhel9cis_rule_5_1_6
+    - "'NO-SSHWEAKMACS' not in rhel9cis_crypto_policy_module"
+  tags:
+    - level1-server
+    - level1-workstation
+    - automated
+    - patch
+    - crypto
+    - rule_5.1.6
+    - NIST800-53R5_SC-6
+  block:
+    - name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured | Add submodule exclusion"
+      ansible.builtin.template:
+        src: etc/crypto-policies/policies/modules/NO-SSHWEAKMACS.pmod.j2
+        dest: /etc/crypto-policies/policies/modules/NO-SSHWEAKMACS.pmod
+        owner: root
+        group: root
+        mode: 'g-wx,o-rwx'
+      notify:
+        - Update Crypto Policy
+        - Set Crypto Policy
+
+    - name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured | submodule to crypto policy modules"
+      ansible.builtin.set_fact:
+        rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHWEAKMACS' }}"
+
+- name: "5.1.7 | PATCH | Ensure sshd access is configured"
+  when: rhel9cis_rule_5_1_7
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.7
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
+  block:
+    - name: "5.1.7 | PATCH | Ensure sshd access is configured | Add line to sshd_config for allowusers"
+      when: "rhel9cis_sshd_allowusers | length > 0"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9cis_sshd_config_file }}"
+        regexp: "^AllowUsers"
+        line: "AllowUsers {{ rhel9cis_sshd_allowusers }}"
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+    - name: "5.1.7 | PATCH | Ensure sshd access is configured | Add line to sshd_config for allowgroups"
+      when: "rhel9cis_sshd_allowgroups | length > 0"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9cis_sshd_config_file }}"
+        regexp: "^AllowGroups"
+        line: "AllowGroups {{ rhel9cis_sshd_allowgroups }}"
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+    - name: "5.1.7 | PATCH | Ensure sshd access is configured | Add line to sshd_config for denyusers"
+      when: "rhel9cis_sshd_denyusers | length > 0"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9cis_sshd_config_file }}"
+        regexp: "^DenyUsers"
+        line: "DenyUsers {{ rhel9cis_sshd_denyusers }}"
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+    - name: "5.1.7 | PATCH | Ensure sshd access is configured | Add line to sshd_config for denygroups"
+      when: "rhel9cis_sshd_denygroups | length > 0"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9cis_sshd_config_file }}"
+        regexp: "^DenyGroups"
+        line: "DenyGroups {{ rhel9cis_sshd_denygroups }}"
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+- name: "5.1.8 | PATCH | Ensure sshd Banner is configured"
+  when: rhel9cis_rule_5_1_8
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.8
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: '^Banner'
+    line: 'Banner /etc/issue.net'
+
+- name: "5.1.9 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured"
+  when: rhel9cis_rule_5_1_9
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.9
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  block:
+    - name: "5.1.9 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured | Add line in sshd_config for ClientAliveInterval"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9cis_sshd_config_file }}"
+        regexp: '^ClientAliveInterval'
+        line: "ClientAliveInterval {{ rhel9cis_sshd_clientaliveinterval }}"
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+    - name: "5.1.9 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured | Ensure SSH ClientAliveCountMax set to <= 3"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9cis_sshd_config_file }}"
+        regexp: '^ClientAliveCountMax'
+        line: "ClientAliveCountMax {{ rhel9cis_sshd_clientalivecountmax }}"
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+- name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled"
+  when: rhel9cis_rule_5_1_10
+  tags:
+    - level2-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.10
+    - NIST800-53R5_CM-7
+  block:
+    - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled | config file"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9cis_sshd_config_file }}"
+        regexp: ^(#|)\s*DisableForwarding
+        line: 'DisableForwarding yes'
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+    - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled | override"
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config.d/50-redhat.conf
+        regexp: ^(?i)(#|)\s*X11Forwarding
+        line: 'X11Forwarding {{ rhel9cis_sshd_x11forwarding }}'
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+- name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled"
+  when: rhel9cis_rule_5_1_11
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - sshs
+    - rule_5.1.11
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  block:
+    - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled | redhat file"
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config.d/50-redhat.conf
+        regexp: ^(?i)(#|)\s*GSSAPIAuthentication
+        line: GSSAPIAuthentication no
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+    - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled | ssh config"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9cis_sshd_config_file }}"
+        regexp: ^(?i)(#|)\s*GSSAPIAuthentication
+        line: GSSAPIAuthentication no
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+- name: "5.1.12 | PATCH | Ensure sshd HostbasedAuthentication is disabled"
+  when: rhel9cis_rule_5_1_12
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.12
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: ^(?i)(#|)\s*HostbasedAuthentication
+    line: 'HostbasedAuthentication no'
+    validate: sshd -t -f %s
+  notify: Restart sshd
+
+- name: "5.1.13 | PATCH | Ensure sshd IgnoreRhosts is enabled"
+  when: rhel9cis_rule_5_1_13
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.13
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: ^(?i)(#|)\s*IgnoreRhosts
+    line: 'IgnoreRhosts yes'
+    validate: sshd -t -f %s
+  notify: Restart sshd
+
+- name: "5.1.14 | PATCH | Ensure sshd LoginGraceTime is set to one minute or less"
+  when: rhel9cis_rule_5_1_14
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.14
+    - NIST800-53R5_CM-6
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: ^(?i)(#|)\s*LoginGraceTime
+    line: "LoginGraceTime {{ rhel9cis_sshd_logingracetime }}"
+    validate: sshd -t -f %s
+  notify: Restart sshd
+
+- name: "5.1.15 | PATCH | Ensure sshd LogLevel is appropriate"
+  when: rhel9cis_rule_5_1_15
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - sshs
+    - rule_5.1.15
+    - NIST800-53R5_AU-3
+    - NIST800-53R5_AU-12
+    - NIST800-53R5_SI-5
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: ^(?i)(#|)\s*LogLevel
+    line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
+    validate: sshd -t -f %s
+  notify: Restart sshd
+
+- name: "5.1.16 | PATCH | Ensure sshd MaxAuthTries is set to 4 or less"
+  when: rhel9cis_rule_5_1_16
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.16
+    - NIST800-53R5_AU-3
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: '^(#)?MaxAuthTries \d'
+    line: 'MaxAuthTries {{ rhel9cis_ssh_maxauthtries }}'
+    validate: sshd -t -f %s
+  notify: Restart sshd
+
+- name: "5.1.17 | PATCH | Ensure sshd MaxStartups is configured"
+  when: rhel9cis_rule_5_1_17
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.17
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: ^(?i)(#|)\s*MaxStartups
+    line: 'MaxStartups {{ rhel9cis_ssh_maxstartups }}'
+    validate: sshd -t -f %s
+  notify: Restart sshd
+
+- name: "5.1.18 | PATCH | Ensure SSH MaxSessions is set to 10 or less"
+  when: rhel9cis_rule_5_1_18
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.18
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: ^(?i)(#|)\s*MaxSessions
+    line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
+    validate: sshd -t -f %s
+  notify: Restart sshd
+
+- name: "5.1.19 | PATCH | Ensure sshd PermitEmptyPasswords is disabled"
+  when: rhel9cis_rule_5_1_19
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.19
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: ^(?i)(#|)\s*PermitEmptyPasswords
+    line: 'PermitEmptyPasswords no'
+    validate: sshd -t -f %s
+  notify: Restart sshd
+
+- name: "5.1.20 | PATCH | Ensure sshd PermitRootLogin is disabled"
+  when: rhel9cis_rule_5_1_20
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.20
+    - NIST800-53R5_AC-6
+  block:
+    - name: "5.1.20 | PATCH | Ensure sshd PermitRootLogin is disabled | config file"
+      ansible.builtin.lineinfile:
+        path: "{{ rhel9cis_sshd_config_file }}"
+        regexp: ^(?i)(#|)\s*PermitRootLogin
+        line: 'PermitRootLogin no'
+        validate: sshd -t -f %s
+      notify: Restart sshd
+
+    - name: "5.1.20 | PATCH | Ensure sshd PermitRootLogin is disabled | override file"
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d/01-permitrootlogin.conf
+        state: absent
+      notify: Restart sshd
+
+- name: "5.1.21 | PATCH | Ensure sshd PermitUserEnvironment is disabled"
+  when: rhel9cis_rule_5_1_21
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.21
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: ^(?i)(#|)\s*PermitUserEnvironment
+    line: 'PermitUserEnvironment no'
+    validate: sshd -t -f %s
+  notify: Restart sshd
+
+- name: "5.1.22 | PATCH | Ensure SSH PAM is enabled"
+  when: rhel9cis_rule_5_1_22
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - ssh
+    - rule_5.1.22
+    - NIST800-53R5_CM-1
+    - NIST800-53R5_CM-2
+    - NIST800-53R5_CM-6
+    - NIST800-53R5_CM-7
+    - NIST800-53R5_IA-5
+  ansible.builtin.lineinfile:
+    path: "{{ rhel9cis_sshd_config_file }}"
+    regexp: ^(?i)(#|)\s*UsePAM
+    line: 'UsePAM yes'
+    validate: sshd -t -f %s
+  notify: Restart sshd

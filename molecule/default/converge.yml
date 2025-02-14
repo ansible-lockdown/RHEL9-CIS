@@ -9,7 +9,7 @@
       ansible_user: root
       system_is_container: true
       rhel9cis_selinux_disable: true
-      rhel9cis_rule_5_3_4: false
+      rhel9cis_rule_5_2_4: false
       rhel9cis_rule_1_1_10: false
       rhel9cis_firewall: "none"
       rhel9cis_rule_4_1_1_1: false

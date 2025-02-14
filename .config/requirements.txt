@@ -1,4 +1,0 @@
-passlib
-lxml
-xmltodict
-yamllint

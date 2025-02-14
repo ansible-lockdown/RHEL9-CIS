@@ -1,0 +1,11 @@
+# CIS Configurations
+# 5.3.3.2.3 Ensure password complexity is configured
+{% if rhel9cis_passwd_complex_option == 'minclass' %}  # pragma: allowlist secret
+minclass = {{ rhel9cis_passwd_minclass }}
+{% endif %}
+{% if rhel9cis_passwd_complex_option == 'credits' %}  # pragma: allowlist secret
+dcredit = {{rhel9cis_passwd_dcredit }}
+ucredit = {{ rhel9cis_passwd_ucredit }}
+ocredit = {{ rhel9cis_passwd_ocredit }}
+lcredit = {{ rhel9cis_passwd_lcredit }}
+{% endif %}

@@ -1,21 +1,13 @@
 ---
 
-- name: "SECTION | 3.1.x | Disable unused network protocols and devices"
+- name: "SECTION | 3.1.x | Configure Network Devices"
   ansible.builtin.import_tasks:
-      file: cis_3.1.x.yml
+    file: cis_3.1.x.yml
 
-- name: "SECTION | 3.2.x | Network Parameters (Host Only)"
+- name: "SECTION | 3.2.x | Configure Network Kernel Modules"
   ansible.builtin.import_tasks:
-      file: cis_3.2.x.yml
+    file: cis_3.2.x.yml
 
-- name: "SECTION | 3.3.x | Network Parameters (host and Router)"
+- name: "SECTION | 3.3.x | Configure Network Kernel Parameters"
   ansible.builtin.import_tasks:
-      file: cis_3.3.x.yml
-
-- name: "SECTION | 3.4.1.x | Firewall configuration"
-  ansible.builtin.import_tasks:
-      file: cis_3.4.1.x.yml
-
-- name: "SECTION | 3.4.2.x | Configure firewall"
-  ansible.builtin.import_tasks:
-      file: cis_3.4.2.x.yml
+    file: cis_3.3.x.yml

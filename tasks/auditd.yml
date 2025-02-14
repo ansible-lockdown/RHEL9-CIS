@@ -1,47 +1,60 @@
 ---
 
-- name: POST | AUDITD | Apply auditd template will for section 4.1.3 - only required rules will be added | stat file
-  ansible.builtin.stat:
-      path: /etc/audit/rules.d/99_auditd.rules
-  register: rhel9cis_auditd_file
+# Since auditd rules are dependent on syscalls and syscall tables are architecture specific,
+# we need to update the auditd rules depending on the architecture of the system.
+# This task passed the syscalls table to the auditd template and updates the auditd rules
 
-- name: POST | AUDITD | Apply auditd template will for section 4.1.3 - only required rules will be added | setup file
+- name: "POST | AUDITD | Set supported_syscalls variable"
+  ansible.builtin.shell: ausyscall --dump |  awk  '{print $2}'
+  changed_when: false
+  failed_when: discovered_auditd_syscalls.rc not in [ 0, 1 ]
+  register: discovered_auditd_syscalls
+
+- name: POST | AUDITD | Apply auditd template will for section 6.3.3 - only required rules will be added | stat file
+  ansible.builtin.stat:
+    path: /etc/audit/rules.d/99_auditd.rules
+  register: discovered_auditd_rules_file
+
+- name: POST | Apply auditd template for section 6.3.3.x
+  when: update_audit_template
+  vars:
+    supported_syscalls: "{{ discovered_auditd_syscalls.stdout_lines }}"
   ansible.builtin.template:
-      src: audit/99_auditd.rules.j2
-      dest: /etc/audit/rules.d/99_auditd.rules
-      owner: root
-      group: root
-      mode: '0640'
-  diff: "{{ rhel9cis_auditd_file.stat.exists }}"  # Only run diff if not a new file
-  register: rhel9cis_auditd_template_updated
+    src: audit/99_auditd.rules.j2
+    dest: /etc/audit/rules.d/99_auditd.rules
+    owner: root
+    group: root
+    mode: 'u-x,go-wx'
+  diff: "{{ discovered_auditd_rules_file.stat.exists }}"  # Only run diff if not a new file
+  register: discovered_auditd_rules_template_updated
   notify:
-      - Auditd immutable check
-      - Audit immutable fact
-      - Restart auditd
+    - Auditd immutable check
+    - Audit immutable fact
+    - Restart auditd
 
 - name: POST | AUDITD | Add Warning count for changes to template file | Warn Count  # noqa no-handler
-  ansible.builtin.import_tasks:
-      file: warning_facts.yml
-  vars:
-      warn_control_id: 'Auditd template updated, validate as expected'
   when:
-      - rhel9cis_auditd_template_updated.changed
-      - rhel9cis_auditd_file.stat.exists
+    - discovered_auditd_rules_template_updated.changed
+    - discovered_auditd_rules_file.stat.exists
+  ansible.builtin.import_tasks:
+    file: warning_facts.yml
+  vars:
+    warn_control_id: 'Auditd template updated, validate as expected'
 
 - name: POST | AUDITD | Apply auditd template will for section 4.1.3 - only required rules will be added | stat file
   ansible.builtin.stat:
-      path: /etc/audit/rules.d/98_auditd_exceptions.rules
-  register: rhel9cis_auditd_exception_file
+    path: /etc/audit/rules.d/98_auditd_exceptions.rules
+  register: discovered_auditd_exception_file
 
 - name: POST | Set up auditd user logging exceptions | setup file
-  ansible.builtin.template:
-      src: audit/98_auditd_exception.rules.j2
-      dest: /etc/audit/rules.d/98_auditd_exceptions.rules
-      owner: root
-      group: root
-      mode: '0640'
-  diff: "{{ rhel9cis_auditd_exception_file.stat.exists }}"
-  notify: Restart auditd
   when:
-      - rhel9cis_allow_auditd_uid_user_exclusions
-      - rhel9cis_auditd_uid_exclude | length > 0
+    - rhel9cis_allow_auditd_uid_user_exclusions
+    - rhel9cis_auditd_uid_exclude | length > 0
+  ansible.builtin.template:
+    src: audit/98_auditd_exception.rules.j2
+    dest: /etc/audit/rules.d/98_auditd_exceptions.rules
+    owner: root
+    group: root
+    mode: '0640'
+  diff: "{{ discovered_auditd_exception_file.stat.exists }}"
+  notify: Restart auditd
