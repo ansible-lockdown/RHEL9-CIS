@@ -1100,14 +1100,68 @@ rhel9cis_aide_cron:
 #
 ## Preferred method of logging
 ## Whether rsyslog or journald preferred method for local logging
-## Control 6.2.3 | Configure rsyslog
-## Control 6.2.1 | Configure journald
-# This variable governs which logging service should be used, choosing between 'rsyslog'(CIS recommendation)
-# or 'journald'(only one is implemented) will trigger the execution of the associated subsection, as the-best
+## Controls 6.2.1.x | Configure systemd-journald service
+## Controls 6.2.2.x | Configured journald
+## Controls 6.2.3.x | Configure rsyslog
+
+# This variable governs which logging service should be used, choosing between 'rsyslog'
+# or 'journald'(CIS recommendation) will trigger the execution of the associated subsection, as the-best
 # practices are written wholly independent of each other.
 rhel9cis_syslog: journald
 
-## Control 6.2.2.x & 6.2.3.x - Ensure rsyslog is not configured to receive logs from a remote client
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# Current variable configures the max amount of disk space the logs will use(thus, journal files
+# will not grow without bounds)
+# The variables below related to journald, please set these to your site specific values
+# These variable specifies how much disk space the journal may use up at most
+# Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
+# See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
+rhel9cis_journald_systemmaxuse: 10M
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# Current variable configures the amount of disk space to keep free for other uses.
+rhel9cis_journald_systemkeepfree: 100G
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# This variable configures how much disk space the journal may use up at most.
+# Similar with 'rhel9cis_journald_systemmaxuse', but related to runtime space.
+rhel9cis_journald_runtimemaxuse: 10M
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# This variable configures the actual amount of disk space to keep free
+# Similar with 'rhel9cis_journald_systemkeepfree', but related to runtime space.
+rhel9cis_journald_runtimekeepfree: 100G
+## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
+# Current variable governs the settings for log retention(how long the log files will be kept).
+# Thus, it specifies the maximum time to store entries in a single journal
+# file before rotating to the next one. Set to 0 to turn off this feature.
+# The given values is interpreted as seconds, unless suffixed with the units
+# `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
+# Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
+# ATTENTION: Uncomment the keyword below when values are set!
+rhel9cis_journald_maxfilesec: 1month
+
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# 'rhel9cis_journal_upload_url' is the ip address to upload the journal entries to
+#  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
+#  number may be specified after a colon (":"), otherwise 19532 will be used by default.
+rhel9cis_journal_upload_url: 192.168.50.42
+## The paths below have the default paths/files, but allow user to create custom paths/filenames
+
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to the private key file used by the remote journal
+# server to authenticate itself to the client. This key is used alongside the server's
+# public certificate to establish secure communication.
+rhel9cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to the public certificate file of the remote journal
+# server. This certificate is used to verify the authenticity of the remote server.
+rhel9cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
+## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
+# This variable specifies the path to a file containing one or more public certificates
+# of certificate authorities (CAs) that the client trusts. These trusted certificates are used
+# to validate the authenticity of the remote server's certificate.
+rhel9cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
+# ATTENTION: Uncomment the keyword below when values are set!
+
+# Control 6.2.3.x - Ensure rsyslog is not configured to receive logs from a remote client
 # This variable expresses whether the system is used as a log server or not. If set to:
 #  - 'false', current system will act as a log CLIENT, thus it should NOT receive data from other hosts.
 #  - 'true', current system will act as a log SERVER, enabling centralised log management(by protecting log integrity
@@ -1155,57 +1209,25 @@ rhel9cis_remote_log_retrycount: 100
 # of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
 rhel9cis_remote_log_queuesize: 1000
 
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
-# 'rhel9cis_journal_upload_url' is the ip address to upload the journal entries to
-#  URL value may specify either just the hostname or both the protocol and hostname. 'https' is the default. The port
-#  number may be specified after a colon (":"), otherwise 19532 will be used by default.
-rhel9cis_journal_upload_url: 192.168.50.42
-## The paths below have the default paths/files, but allow user to create custom paths/filenames
-
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
-# This variable specifies the path to the private key file used by the remote journal
-# server to authenticate itself to the client. This key is used alongside the server's
-# public certificate to establish secure communication.
-rhel9cis_journal_upload_serverkeyfile: "/etc/ssl/private/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
-# This variable specifies the path to the public certificate file of the remote journal
-# server. This certificate is used to verify the authenticity of the remote server.
-rhel9cis_journal_servercertificatefile: "/etc/ssl/certs/journal-upload.pem"
-## Control 6.2.2.1.2 - Ensure systemd-journal-remote is configured
-# This variable specifies the path to a file containing one or more public certificates
-# of certificate authorities (CAs) that the client trusts. These trusted certificates are used
-# to validate the authenticity of the remote server's certificate.
-rhel9cis_journal_trustedcertificatefile: "/etc/ssl/ca/trusted.pem"
-# ATTENTION: Uncomment the keyword below when values are set!
-
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
-# Current variable configures the max amount of disk space the logs will use(thus, journal files
-# will not grow without bounds)
-# The variables below related to journald, please set these to your site specific values
-# These variable specifies how much disk space the journal may use up at most
-# Specify values in bytes or use K, M, G, T, P, E as units for the specified sizes.
-# See https://www.freedesktop.org/software/systemd/man/journald.conf.html for more information.
-rhel9cis_journald_systemmaxuse: 10M
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
-# Current variable configures the amount of disk space to keep free for other uses.
-rhel9cis_journald_systemkeepfree: 100G
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
-# This variable configures how much disk space the journal may use up at most.
-# Similar with 'rhel9cis_journald_systemmaxuse', but related to runtime space.
-rhel9cis_journald_runtimemaxuse: 10M
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
-# This variable configures the actual amount of disk space to keep free
-# Similar with 'rhel9cis_journald_systemkeepfree', but related to runtime space.
-rhel9cis_journald_runtimekeepfree: 100G
-## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
-# Current variable governs the settings for log retention(how long the log files will be kept).
-# Thus, it specifies the maximum time to store entries in a single journal
-# file before rotating to the next one. Set to 0 to turn off this feature.
-# The given values is interpreted as seconds, unless suffixed with the units
-# `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
-# Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
-# ATTENTION: Uncomment the keyword below when values are set!
-rhel9cis_journald_maxfilesec: 1month
+## Control 6.2.3.8 rsyslog rotate
+# This variable configures whether to set your own rsyslog logrotate setting alternate to logrotate default settings
+# Please refer to logrotate options to match your site requirements
+# This sets when to rotate
+rhel9cis_rsyslog_logrotate_rotated_when: weekly
+# This sets how many rotations of the file to keep
+rhel9cis_rsyslog_logrotate_rotatation_keep: 4
+# This defines whether to set various options or not
+# these are taken from logrotate options
+# Setting
+# true will carry out the setting.
+# false will either set no/not or not add the option
+rhel9cis_rsyslog_logrotate_compress: true
+rhel9cis_rsyslog_logrotate_missingok: true
+rhel9cis_rsyslog_logrotate_notifempty: true
+rhel9cis_rsyslog_logrotate_create: true
+# Extra options that can be added according to rsyslog documentation
+# Uncomment and add the required options e.g. mode owner group
+# rhel9cis_rsyslog_logrotate_create_opts:
 
 ##  Control 6.3.2.1 - Ensure audit_backlog_limit is sufficient
 # This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
@@ -1303,3 +1325,8 @@ rhel9cis_suid_sgid_adjust: false
 ## Control 7.1.11 - Ensure no world writable files exist
 # Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable.
 rhel9cis_no_world_write_adjust: true
+
+## Control 7.2.9
+# This allows ansible to alter the dot files as per rule if found
+# When set to true this will align with benchmark - can impact a running system if not tested sufficiently
+rhel9cis_dotperm_ansiblemanaged: false

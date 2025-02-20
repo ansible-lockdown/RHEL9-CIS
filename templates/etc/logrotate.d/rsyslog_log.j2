@@ -1,0 +1,26 @@
+/var/log/rsyslog/*.log {
+    {{ rhel9cis_rsyslog_logrotate_rotated_when }}
+    rotate {{ rhel9cis_rsyslog_logrotate_rotatation_keep }}
+{% if rhel9cis_rsyslog_logrotate_compress %}
+    compress
+{% else %}
+    nocompress
+{% endif %}
+{% if rhel9cis_rsyslog_logrotate_missingok %}
+    missingok
+{% else %}
+    nomissingok
+{% endif %}
+{% if rhel9cis_rsyslog_logrotate_notifempty %}
+    notifempty
+{% else %}
+    ifempty
+{% endif %}
+{% if rhel9cis_rsyslog_logrotate_create %}
+    create{% if rhel9cis_rsyslog_logrotate_create_opts is defined %} {{ rhel9cis_rsyslog_logrotate_create_opts }}{% endif %}
+{% endif %}
+
+    postrotate
+        /usr/bin/systemctl reload rsyslog.service >/dev/null || true
+    endscript
+}
