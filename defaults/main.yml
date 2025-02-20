@@ -1211,7 +1211,7 @@ rhel9cis_remote_log_queuesize: 1000
 
 ## Control 6.2.3.8 rsyslog rotate
 # This variable configures whether to set your own rsyslog logrotate setting alternate to logrotate default settings
-#Please refer to logrotate options to match your site requirements
+# Please refer to logrotate options to match your site requirements
 # This sets when to rotate
 rhel9cis_rsyslog_logrotate_rotated_when: weekly
 # This sets how many rotations of the file to keep
@@ -1227,7 +1227,7 @@ rhel9cis_rsyslog_logrotate_notifempty: true
 rhel9cis_rsyslog_logrotate_create: true
 # Extra options that can be added according to rsyslog documentation
 # Uncomment and add the required options e.g. mode owner group
-#rhel9cis_rsyslog_logrotate_create_opts:
+# rhel9cis_rsyslog_logrotate_create_opts:
 
 ##  Control 6.3.2.1 - Ensure audit_backlog_limit is sufficient
 # This variable represents the audit backlog limit, i.e., the maximum number of audit records that the
@@ -1325,7 +1325,6 @@ rhel9cis_suid_sgid_adjust: false
 ## Control 7.1.11 - Ensure no world writable files exist
 # Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable.
 rhel9cis_no_world_write_adjust: true
-
 
 ## Control 7.2.9
 # This allows ansible to alter the dot files as per rule if found
