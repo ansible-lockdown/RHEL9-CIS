@@ -1303,3 +1303,9 @@ rhel9cis_suid_sgid_adjust: false
 ## Control 7.1.11 - Ensure no world writable files exist
 # Allow ansible to adjust world-writable files. False will just display world-writable files, True will remove world-writable.
 rhel9cis_no_world_write_adjust: true
+
+
+## Control 7.2.9
+# This allows ansible to alter the dot files as per rule if found
+# When set to true this will align with benchmark - can impact a running system if not tested sufficiently
+rhel9cis_dotperm_ansiblemanaged: false
