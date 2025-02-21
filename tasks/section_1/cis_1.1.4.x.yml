@@ -28,7 +28,7 @@
           "1.1.4.2 | PATCH | Ensure noexec option set on /var/tmp partition"
           "1.1.4.3 | PATCH | Ensure nosuid option set on /var/tmp partition"
           "1.1.4.4 | PATCH | Ensure nodev option set on /var/tmp partition"
-  ansible.builtin.mount:
+  ansible.posix.mount:
       name: /var/tmp
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"

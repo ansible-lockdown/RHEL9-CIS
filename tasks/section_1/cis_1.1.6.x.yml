@@ -27,7 +27,7 @@
           "1.1.6.2 | PATCH | Ensure noexec option set on /var/log/audit partition"
           "1.1.6.3 | PATCH | Ensure nodev option set on /var/log/audit partition"
           "1.1.6.4 | PATCH | Ensure nosuid option set on /var/log/audit partition"
-  ansible.builtin.mount:
+  ansible.posix.mount:
       name: /var/log/audit
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
