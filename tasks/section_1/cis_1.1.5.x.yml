@@ -27,7 +27,7 @@
           "1.1.5.2 | PATCH | Ensure nodev option set on /var/log partition"
           "1.1.5.3 | PATCH | Ensure noexec option set on /var/log partition"
           "1.1.5.4 | PATCH | Ensure nosuid option set on /var/log partition"
-  ansible.builtin.mount:
+  ansible.posix.mount:
       name: /var/log
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"

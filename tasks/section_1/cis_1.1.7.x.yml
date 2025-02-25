@@ -26,7 +26,7 @@
 - name: |
     "1.1.7.2 | PATCH | Ensure nodev option set on /home partition
      1.1.7.3 | PATCH | Ensure nosuid option set on /home partition"
-  ansible.builtin.mount:
+  ansible.posix.mount:
       name: /home
       src: "{{ item.device }}"
       fstype: "{{ item.fstype }}"
