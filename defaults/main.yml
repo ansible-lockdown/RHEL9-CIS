@@ -923,7 +923,7 @@ rhel9cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf
 # Options are: minclass or credits
 # ensure only one is selected
 rhel9cis_passwd_complex_option: minclass  # pragma: allowlist secret
-rhel9cis_passwd_minclass: 3
+rhel9cis_passwd_minclass: 4
 # rhel9cis_passwd_complex: credits
 rhel9cis_passwd_dcredit: -1
 rhel9cis_passwd_ucredit: -2
