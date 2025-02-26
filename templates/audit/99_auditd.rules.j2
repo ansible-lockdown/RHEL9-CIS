@@ -23,6 +23,7 @@
 -w {{ rhel9cis_sudolog_location }} -p wa -k sudo_log_file
 {% endif %}
 {% if rhel9cis_rule_6_3_3_4 %}
+{% set syscalls = ["adjtimex","settimeofday"]  %}
 {% set arch_syscalls = [] %}
 {% for syscall in syscalls  %}
 {% if syscall in supported_syscalls %}
@@ -31,6 +32,14 @@
 {% endfor %}
 -a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -k time-change
 -a always,exit -F arch=b32 -S {{ arch_syscalls|join(',') }} -k time-change
+{% set syscalls = ["clock_settime"] %}
+{% set arch_syscalls = [] %}
+{% for syscall in syscalls  %}
+{% if syscall in supported_syscalls %}
+{{ arch_syscalls.append(syscall) }}
+-a always,exit -F arch=b64 -S {{ arch_syscalls|join(',') }} -F a0=0x0 -k time-change
+{% endif %}
+{% endfor %}
 -w /etc/localtime -p wa -k time-change
 {% endif %}
 {% if rhel9cis_rule_6_3_3_5 %}
