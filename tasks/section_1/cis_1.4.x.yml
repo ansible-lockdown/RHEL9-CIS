@@ -50,7 +50,7 @@
         efi_mount_options: ['umask=0077','fmask=0077','uid=0','gid=0']
       block:
         - name: "1.4.2 | AUDIT | Ensure permissions on bootloader config are configured | efi based system | capture current state"
-          ansible.builtin.shell: grep "^[^#;]" /etc/fstab | grep '/boot/efi' | cut -d ' ' -f4
+          ansible.builtin.shell: grep "^[^#;]" /etc/fstab | grep '/boot/efi' | awk -F" " '{print $4}'
           changed_when: false
           register: discovered_efi_fstab
 
@@ -67,10 +67,3 @@
             line: \1{{ discovered_efi_fstab.stdout + efi_mount_opts_addition }}\2
             backrefs: true
           notify: Remount /boot/efi
-
-        - debug:
-            msg:
-            - "{{ discovered_efi_fstab.stdout }}"
-            - "{{ efi_mount_opts_addition }}"
-
-        - pause:
