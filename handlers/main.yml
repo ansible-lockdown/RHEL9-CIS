@@ -144,6 +144,15 @@
     state: remounted
   listen: "Remount /var/log/audit"
 
+- name: "Remounting /boot/efi"
+  vars:
+    mount_point: '/boot/efi'
+  ansible.posix.mount:
+    path: "{{ mount_point }}"
+    state: remounted
+  notify: Change_requires_reboot
+  listen: "Remount /boot/efi"
+
 - name: Reload sysctl
   ansible.builtin.command: sysctl --system
   changed_when: true
