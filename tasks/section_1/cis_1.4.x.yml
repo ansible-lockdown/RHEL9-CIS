@@ -47,7 +47,7 @@
     - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system"
       when: not rhel9cis_legacy_boot
       vars:
-        efi_mount_options: ['umask=0077','fmask=0077','uid=0','gid=0']
+        efi_mount_options: ['umask=0077', 'fmask=0077', 'uid=0', 'gid=0']
       block:
         - name: "1.4.2 | AUDIT | Ensure permissions on bootloader config are configured | efi based system | capture current state"
           ansible.builtin.shell: grep "^[^#;]" /etc/fstab | grep '/boot/efi' | awk -F" " '{print $4}'
