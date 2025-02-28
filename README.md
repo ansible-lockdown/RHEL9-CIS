@@ -27,6 +27,7 @@
 ![Issues Open](https://img.shields.io/github/issues-raw/ansible-lockdown/RHEL9-CIS?label=Open%20Issues)
 ![Issues Closed](https://img.shields.io/github/issues-closed-raw/ansible-lockdown/RHEL9-CIS?label=Closed%20Issues&&color=success)
 ![Pull Requests](https://img.shields.io/github/issues-pr/ansible-lockdown/RHEL9-CIS?label=Pull%20Requests)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 ![License](https://img.shields.io/github/license/ansible-lockdown/RHEL9-CIS?label=License)
 

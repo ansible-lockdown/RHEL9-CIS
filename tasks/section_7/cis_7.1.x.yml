@@ -169,6 +169,8 @@
     owner: root
     group: root
     mode: 'u-x,go-wx'
+  failed_when: discovered_file_exists.state not in '[ file, absent ]'
+  register: discovered_file_exists
 
 - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured"
   when:
