@@ -256,8 +256,8 @@
 
     - name: "6.2.3.8 | PATCH | Ensure logrotate is configured | set rsyslog conf"
       ansible.builtin.template:
-        src: etc/logrotate.d/rsyslog.conf.j2
-        dest: /etc/logrotate.d/rsyslog.conf
+        src: etc/logrotate.d/rsyslog_log.j2
+        dest: /etc/logrotate.d/rsyslog_log
         owner: root
         group: root
         mode: 'g-wx,o-rwx'

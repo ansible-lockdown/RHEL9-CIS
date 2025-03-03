@@ -116,16 +116,10 @@
         fail_msg: "You still have the default name for your authselect profile"
 
     - name: "Check authselect profile is selected | Check current profile"
-      ansible.builtin.shell: authselect current | head -1 | awk '{print $NF}'
+      ansible.builtin.shell: authselect list
       changed_when: false
       failed_when: prelim_authselect_current_profile.rc not in [ 0, 1 ]
       register: prelim_authselect_current_profile
-
-    - name: "Check authselect profile is selected | Ensure profile name is set"
-      ansible.builtin.assert:
-        that: prelim_authselect_current_profile is defined
-        success_msg: "Authselect is running and profile is selected"
-        fail_msg: Authselect updates have been selected there are issues with profile selection"
 
 - name: "Ensure root password is set"
   when: rhel9cis_rule_5_4_2_4

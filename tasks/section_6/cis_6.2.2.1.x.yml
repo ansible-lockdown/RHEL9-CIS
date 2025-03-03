@@ -17,7 +17,7 @@
     name: systemd-journal-remote
     state: present
 
-- name: "6.2.2.1.2 | PATCH | Ensure systemd-journal-remote authentication is configured"
+- name: "6.2.2.1.2 | PATCH | Ensure systemd-journal-upload authentication is configured"
   when:
     - rhel9cis_rule_6_2_2_1_2
     - not rhel9cis_system_is_log_server
@@ -40,7 +40,7 @@
     - { regexp: 'ServerCertificateFile=', line: 'ServerCertificateFile={{ rhel9cis_journal_servercertificatefile }}'}
     - { regexp: 'TrustedCertificateFile=', line: 'TrustedCertificateFile={{ rhel9cis_journal_trustedcertificatefile }}'}
 
-- name: "6.2.2.1.3 | PATCH | Ensure systemd-journal-remote is enabled and active"
+- name: "6.2.2.1.3 | PATCH | Ensure systemd-journal-upload is enabled and active"
   when:
     - not rhel9cis_system_is_log_server
     - rhel9cis_rule_6_2_2_1_3

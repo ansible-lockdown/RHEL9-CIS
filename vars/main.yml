@@ -22,11 +22,16 @@ rhel9cis_allowed_crypto_policies_modules:
 warn_control_list: ""
 warn_count: 0
 
+# Default empty values for 1.4.2
+efi_mount_opts_addition: ''
+
 gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
 
-## Control 6.3.3.x - Audit template
-# This variable governs if the auditd logic should be executed(if value is true).
-# NOTE: The current default value is likely to be overriden(via 'set_fact') by other further tasks(in sub-section 'Auditd rules').
+## Controls 6.3.3.x - Audit template
+# This variable is set to true by tasks 6.3.3.1 to 6.3.3.20. As a result, the
+# audit settings are overwritten with the role's template. In order to exclude
+# specific rules, you must set the variable of form `ubtu24cis_rule_6_3_3_x` above
+# to `false`.
 update_audit_template: false
 
 # Defaults

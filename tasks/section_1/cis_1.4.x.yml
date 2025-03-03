@@ -29,7 +29,8 @@
     - rule_1.4.2
     - NIST800-53R5_AC-3
   block:
-    - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
+    - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | bios based system"
+      when: rhel9cis_legacy_boot
       ansible.builtin.file:
         path: "/boot/grub2/{{ item.path }}"
         owner: root
@@ -39,6 +40,31 @@
         modification_time: preserve
         access_time: preserve
       loop:
-        - { path: 'grub.cfg', mode: '0700' }
-        - { path: 'grubenv', mode: 'go-rwx' }
-        - { path: 'user.cfg', mode: 'go-rwx' }
+        - { path: 'grub.cfg', mode: 'u-x,go-rwx' }
+        - { path: 'grubenv', mode: 'u-x,go-rwx' }
+        - { path: 'user.cfg', mode: 'u-x,go-rwx' }
+
+    - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system"
+      when: not rhel9cis_legacy_boot
+      vars:
+        efi_mount_options: ['umask=0077', 'fmask=0077', 'uid=0', 'gid=0']
+      block:
+        - name: "1.4.2 | AUDIT | Ensure permissions on bootloader config are configured | efi based system | capture current state"
+          ansible.builtin.shell: grep "^[^#;]" /etc/fstab | grep '/boot/efi' | awk -F" " '{print $4}'
+          changed_when: false
+          register: discovered_efi_fstab
+
+        - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system | Build Options"
+          when: item not in discovered_efi_fstab.stdout
+          ansible.builtin.set_fact:
+            efi_mount_opts_addition: "{{ efi_mount_opts_addition + ',' + item  }}"
+          loop: "{{ efi_mount_options }}"
+
+        - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system | Add mount options"
+          when: efi_mount_opts_addition | length > 0
+          ansible.builtin.lineinfile:
+            path: /etc/fstab
+            regexp: (.*/boot/efi\s*\w*\s*){{ discovered_efi_fstab.stdout }}(.*)
+            line: \1{{ discovered_efi_fstab.stdout + efi_mount_opts_addition }}\2
+            backrefs: true
+          notify: Remount /boot/efi
