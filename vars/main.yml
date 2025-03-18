@@ -22,6 +22,9 @@ rhel9cis_allowed_crypto_policies_modules:
 warn_control_list: ""
 warn_count: 0
 
+# Default empty values for 1.4.2
+efi_mount_opts_addition: ''
+
 gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
 
 ## Controls 6.3.3.x - Audit template
