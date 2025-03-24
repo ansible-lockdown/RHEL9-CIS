@@ -41,7 +41,7 @@ repos:
   - id: detect-secrets
 
 - repo: https://github.com/gitleaks/gitleaks
-  rev: v8.24.0
+  rev: v8.24.2
   hooks:
   - id: gitleaks
 
@@ -65,7 +65,7 @@ repos:
     # - ansible-core>=2.10.1
 
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.35.1  # or higher tag
+  rev: v1.37.0  # or higher tag
   hooks:
   - id: yamllint
     name: Check YAML Lint
