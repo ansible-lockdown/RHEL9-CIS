@@ -236,7 +236,7 @@
     name: systemd-journal-upload
     state: restarted
 
-- name: Systemd daemon reload
+- name: Systemd_daemon_reload
   ansible.builtin.systemd:
     daemon-reload: true
 
