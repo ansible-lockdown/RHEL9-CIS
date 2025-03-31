@@ -177,6 +177,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: "^AllowUsers"
         line: "AllowUsers {{ rhel9cis_sshd_allowusers }}"
+        insertbefore: "^Match"
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -186,6 +188,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: "^AllowGroups"
         line: "AllowGroups {{ rhel9cis_sshd_allowgroups }}"
+        insertbefore: "^Match"
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -195,6 +199,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: "^DenyUsers"
         line: "DenyUsers {{ rhel9cis_sshd_denyusers }}"
+        insertbefore: "^Match"
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -204,6 +210,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: "^DenyGroups"
         line: "DenyGroups {{ rhel9cis_sshd_denygroups }}"
+        insertbefore: "^Match"
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -224,6 +232,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: '^Banner'
     line: 'Banner /etc/issue.net'
+    insertbefore: "^Match"
+    firstmatch: true
 
 - name: "5.1.9 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured"
   when: rhel9cis_rule_5_1_9
@@ -244,6 +254,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: '^ClientAliveInterval'
         line: "ClientAliveInterval {{ rhel9cis_sshd_clientaliveinterval }}"
+        insertbefore: "^Match"
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -252,6 +264,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: '^ClientAliveCountMax'
         line: "ClientAliveCountMax {{ rhel9cis_sshd_clientalivecountmax }}"
+        insertbefore: "^Match"
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -270,6 +284,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: ^(#|)\s*DisableForwarding
         line: 'DisableForwarding yes'
+        insertbefore: "^Match"
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -308,6 +324,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: ^(?i)(#|)\s*GSSAPIAuthentication
         line: GSSAPIAuthentication no
+        insertbefore: "^Match"
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -328,6 +346,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*HostbasedAuthentication
     line: 'HostbasedAuthentication no'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -348,6 +368,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*IgnoreRhosts
     line: 'IgnoreRhosts yes'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -364,6 +386,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*LoginGraceTime
     line: "LoginGraceTime {{ rhel9cis_sshd_logingracetime }}"
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -382,6 +406,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*LogLevel
     line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -398,6 +424,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: '^(#)?MaxAuthTries \d'
     line: 'MaxAuthTries {{ rhel9cis_ssh_maxauthtries }}'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -418,6 +446,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*MaxStartups
     line: 'MaxStartups {{ rhel9cis_ssh_maxstartups }}'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -438,6 +468,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*MaxSessions
     line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -458,6 +490,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*PermitEmptyPasswords
     line: 'PermitEmptyPasswords no'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -476,6 +510,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: ^(?i)(#|)\s*PermitRootLogin
         line: 'PermitRootLogin no'
+        insertbefore: "^Match"
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -502,6 +538,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*PermitUserEnvironment
     line: 'PermitUserEnvironment no'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -522,5 +560,7 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: ^(?i)(#|)\s*UsePAM
     line: 'UsePAM yes'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
