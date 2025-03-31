@@ -25,7 +25,7 @@
       when:
         - not rhel9cis_autofs_services
         - rhel9cis_autofs_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: autofs
         enabled: false
@@ -57,7 +57,7 @@
       when:
         - not rhel9cis_avahi_server
         - rhel9cis_avahi_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
         enabled: false
@@ -90,7 +90,7 @@
       when:
         - not rhel9cis_dhcp_server
         - rhel9cis_dhcp_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
         enabled: false
@@ -123,7 +123,7 @@
       when:
         - not rhel9cis_dns_server
         - rhel9cis_dns_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: named.service
         enabled: false
@@ -153,7 +153,7 @@
       when:
         - not rhel9cis_dnsmasq_server
         - rhel9cis_dnsmasq_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: dnsmasq.service
         enabled: false
@@ -184,7 +184,7 @@
       when:
         - not rhel9cis_samba_server
         - rhel9cis_samba_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: smb.service
         enabled: false
@@ -215,7 +215,7 @@
       when:
         - not rhel9cis_ftp_server
         - rhel9cis_ftp_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: vsftpd.service
         enabled: false
@@ -249,7 +249,7 @@
       when:
         - not rhel9cis_message_server
         - rhel9cis_message_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
         enabled: false
@@ -285,7 +285,7 @@
       when:
         - not rhel9cis_nfs_server
         - rhel9cis_nfs_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: nfs-server.service
         enabled: false
@@ -302,7 +302,7 @@
     - nis
     - NIST800-53R5_CM-7
     - rule_2.1.10
-  notify: Systemd_daemon_reload
+  notify: Systemd daemon reload
   block:
     - name: "2.1.10 | PATCH | Ensure nis server services are not in use | Remove package"
       when:
@@ -344,7 +344,7 @@
       when:
         - not rhel9cis_print_server
         - rhel9cis_print_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
         enabled: false
@@ -378,7 +378,7 @@
       when:
         - not rhel9cis_rpc_server
         - rhel9cis_rpc_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
         enabled: false
@@ -412,7 +412,7 @@
       when:
         - not rhel9cis_rsync_server
         - rhel9cis_rsync_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
         enabled: false
@@ -445,7 +445,7 @@
       when:
         - not rhel9cis_snmp_server
         - rhel9cis_snmp_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: snmpd.service
         enabled: false
@@ -476,7 +476,7 @@
       when:
         - not rhel9cis_telnet_server
         - rhel9cis_telnet_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: telnet.socket
         enabled: false
@@ -506,7 +506,7 @@
       when:
         - not rhel9cis_tftp_server
         - rhel9cis_tftp_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
         enabled: false
@@ -540,7 +540,7 @@
       when:
         - not rhel9cis_squid_server
         - rhel9cis_squid_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: squid.service
         enabled: false
@@ -580,7 +580,7 @@
       when:
         - not rhel9cis_httpd_server
         - rhel9cis_httpd_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: httpd.service
         enabled: false
@@ -591,7 +591,7 @@
       when:
         - not rhel9cis_nginx_server
         - rhel9cis_nginx_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: ngnix.service
         enabled: false
@@ -621,7 +621,7 @@
       when:
         - not rhel9cis_xinetd_server
         - rhel9cis_xinetd_mask
-      notify: Systemd_daemon_reload
+      notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: xinetd.service
         enabled: false
