@@ -657,7 +657,7 @@
     - postfix
     - NIST800-53R5_CM-7
     - rule_2.1.21
-  notify: Restart_postfix
+  notify: Restart postfix
   ansible.builtin.lineinfile:
     path: /etc/postfix/main.cf
     regexp: "^(#)?inet_interfaces"
