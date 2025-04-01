@@ -116,16 +116,10 @@
         fail_msg: "You still have the default name for your authselect profile"
 
     - name: "Check authselect profile is selected | Check current profile"
-      ansible.builtin.shell: authselect current | head -1 | awk '{print $NF}'
+      ansible.builtin.command: authselect list
       changed_when: false
       failed_when: prelim_authselect_current_profile.rc not in [ 0, 1 ]
       register: prelim_authselect_current_profile
-
-    - name: "Check authselect profile is selected | Ensure profile name is set"
-      ansible.builtin.assert:
-        that: prelim_authselect_current_profile is defined
-        success_msg: "Authselect is running and profile is selected"
-        fail_msg: Authselect updates have been selected there are issues with profile selection"
 
 - name: "Ensure root password is set"
   when: rhel9cis_rule_5_4_2_4
@@ -217,6 +211,36 @@
   when: run_audit
   ansible.builtin.import_tasks:
     file: post_remediation_audit.yml
+
+- name: Add ansible file showing Benchmark and levels applied
+  when: create_benchmark_facts
+  tags:
+    - always
+    - benchmark
+  block:
+    - name: Create ansible facts directory
+      ansible.builtin.file:
+        path: "{{ ansible_facts_path }}"
+        state: directory
+        owner: root
+        group: root
+        mode: 'u=rwx,go=rx'
+
+    - name: Create ansible facts file
+      ansible.builtin.template:
+        src: etc/ansible/compliance_facts.j2
+        dest: "{{ ansible_facts_path }}/compliance_facts.fact"
+        owner: root
+        group: root
+        mode: "u-x,go-wx"
+
+- name: Fetch audit files
+  when:
+    - fetch_audit_output
+    - run_audit
+  tags: always
+  ansible.builtin.import_tasks:
+    file: fetch_audit_output.yml
 
 - name: "Show Audit Summary"
   when: run_audit

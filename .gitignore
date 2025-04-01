@@ -46,3 +46,6 @@ benchparse/
 
 # GitHub Action/Workflow files
 .github/
+
+# Precommit exclusions
+.ansible/
