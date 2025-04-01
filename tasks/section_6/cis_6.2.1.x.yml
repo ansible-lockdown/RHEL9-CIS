@@ -113,4 +113,3 @@
         state: stopped
         enabled: false
       register: discovered_rsyslog_service
-
