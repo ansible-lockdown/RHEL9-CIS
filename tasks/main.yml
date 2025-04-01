@@ -116,7 +116,7 @@
         fail_msg: "You still have the default name for your authselect profile"
 
     - name: "Check authselect profile is selected | Check current profile"
-      ansible.builtin.shell: authselect list
+      ansible.builtin.command: authselect list
       changed_when: false
       failed_when: prelim_authselect_current_profile.rc not in [ 0, 1 ]
       register: prelim_authselect_current_profile
