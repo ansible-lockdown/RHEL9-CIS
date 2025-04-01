@@ -2,7 +2,7 @@
 # Added as part of ansible-lockdown CIS baseline
 # provided by Mindpoint Group - A Tyto Athene Company
 
-[benchmark_details]
+[lockdown_details]
 # Benchmark release
 Benchmark_release = CIS-{{ benchmark_version }}
 Benchmark_run_date = {{ '%Y-%m-%d - %H:%M:%S' | ansible.builtin.strftime }}
@@ -26,7 +26,7 @@ Level_2_workstation_tag_run = true
 {% endif %}
 {% endif %}
 
-[benchmark_audit_details]
+[lockdown_audit_details]
 {% if run_audit %}
 # Audit run
 audit_file_local_location = {{ audit_log_dir }}
