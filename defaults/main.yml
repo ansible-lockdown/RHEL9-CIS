@@ -33,6 +33,9 @@ rhel9cis_section7: true
 rhel9cis_level_1: true
 rhel9cis_level_2: true
 
+# Create managed not custom local_facts files
+create_benchmark_facts: true
+ansible_facts_path: /etc/ansible/facts.d
 ## Section 1.6 - Mandatory Access Control
 # This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
 # 'rhel9cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
@@ -106,6 +109,20 @@ audit_conf_dest: "/opt"
 
 # Where the audit logs are stored
 audit_log_dir: '/opt'
+
+## Ability to collect and take audit files moving to a centralised location
+# This enables the collection of the files from the host
+fetch_audit_output: false
+
+# Method of getting,uploading the summary files
+## Ensure access and permissions are avaiable for these to occur.
+## options are
+# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
+# copy - copies file to a location available to the managed node
+audit_output_collection_method: fetch
+
+# Location to put the audit files
+audit_output_destination: /opt/audit_summaries/
 
 ### Goss Settings ##
 ####### END ########

@@ -96,15 +96,20 @@
     - rule_6.2.1.4
   block:
     - name: "6.2.1.4 | PATCH | Ensure only one logging system is in use | when rsyslog"
-      when: rhel9cis_syslog == "rsyslog"
+      when:
+        - rhel9cis_syslog == "rsyslog"
+        - "'systemd-journald' in ansible_facts.packages"
       ansible.builtin.systemd:
         name: systemd-journald
         state: stopped
         enabled: false
 
     - name: "6.2.1.4 | PATCH | Ensure only one logging system is in use | when journald"
-      when: rhel9cis_syslog == "journald"
+      when:
+        - rhel9cis_syslog == "journald"
+        - "'rsyslog' in ansible_facts.packages"
       ansible.builtin.systemd:
         name: rsyslog
         state: stopped
         enabled: false
+      register: discovered_rsyslog_service
