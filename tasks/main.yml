@@ -214,7 +214,7 @@
     file: post_remediation_audit.yml
 
 - name: Add ansible file showing Benchmark and levels applied
-  when: Create_benchmark_facts
+  when: create_benchmark_facts
   tags:
   - always
   - benchmark

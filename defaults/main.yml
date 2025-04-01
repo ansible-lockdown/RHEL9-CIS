@@ -34,7 +34,7 @@ rhel9cis_level_1: true
 rhel9cis_level_2: true
 
 # Create managed not custom local_facts files
-Create_benchmark_facts: true
+create_benchmark_facts: true
 ansible_facts_path: /etc/ansible/facts.d
 ## Section 1.6 - Mandatory Access Control
 # This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
