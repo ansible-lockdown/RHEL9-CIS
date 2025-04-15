@@ -23,7 +23,7 @@
         - rhel9cis_disruption_high
       ansible.builtin.replace:
         path: "/etc/pam.d/{{ item }}-auth"
-        regexp: ^(\s*auth\s+(requisite|required|sufficient)\s+pam_faillock\.so)(.*)\s+deny\s*=\s*\S+(.*$)
+        regexp: ^(\s*auth\s+(?:requisite|required|sufficient)\s+pam_faillock\.so)(.*)\s+deny\s*=\s*\S+(.*$)
         replace: \1 \2\3
       loop:
         - password
