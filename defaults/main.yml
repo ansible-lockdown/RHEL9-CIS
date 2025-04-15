@@ -1,7 +1,8 @@
 ---
+
 # defaults file for rhel9-cis
 # WARNING:
-# These values may be overriden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
+# These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 
 # Run the OS validation check
@@ -36,6 +37,7 @@ rhel9cis_level_2: true
 # Create managed not custom local_facts files
 create_benchmark_facts: true
 ansible_facts_path: /etc/ansible/facts.d
+
 ## Section 1.6 - Mandatory Access Control
 # This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
 # 'rhel9cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
@@ -85,7 +87,7 @@ audit_capture_files_dir: /some/location to copy to on control node
 
 # How to retrieve audit binary
 # Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already dowmloaded
+# you will need to access to either github or the file already downloaded
 get_audit_binary_method: download
 
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
