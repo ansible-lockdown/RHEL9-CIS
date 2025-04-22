@@ -34,7 +34,7 @@ rhel9cis_selinux_disable: {{ rhel9cis_selinux_disable }}
 # UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
 rhel9cis_legacy_boot: {{ rhel9cis_legacy_boot }}
 
-## Benchmark name used by audting control role
+## Benchmark name used by auditing control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
 benchmark_version: 'v2.0.0'
@@ -151,7 +151,7 @@ rhel9cis_rule_1_8_8: {{ rhel9cis_rule_1_8_8 }}
 rhel9cis_rule_1_8_9: {{ rhel9cis_rule_1_8_9 }}
 rhel9cis_rule_1_8_10: {{ rhel9cis_rule_1_8_10 }}
 
-# Section 2 rules are controling Services (Special Purpose Services, and service clients)
+# Section 2 rules are controlling Services (Special Purpose Services, and service clients)
 ## Configure Server Services
 rhel9cis_rule_2_1_1: {{ rhel9cis_rule_2_1_1 }}
 rhel9cis_rule_2_1_2: {{ rhel9cis_rule_2_1_2 }}
@@ -625,21 +625,21 @@ rhel9cis_authselect_custom_profile_name: {{ rhel9cis_authselect_custom_profile_n
 # These are discovered via logins.def if set true
 rhel9cis_discover_int_uid: {{ rhel9cis_discover_int_uid }}
 # This variable sets the minimum number from which to search for UID
-# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
+# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
 # been set to `true`.
 min_int_uid: 1000
 ### Controls:
 # - Ensure local interactive user home directories exist
 # - Ensure local interactive users own their home directories
 # This variable sets the maximum number at which the search stops for UID
-# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
+# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
 # been set to `true`.
 max_int_uid: 65533
 
 ## Section6 vars
 
 ## Control 6.1.2 AIDE schedule
-# how aide sceduler runs can be one of cron or timer
+# how aide scheduler runs can be one of cron or timer
 rhel9cis_aide_scan: {{ rhel9cis_aide_scan }}
 
 # These are the crontab settings for periodical checking of the filesystem's integrity using AIDE.

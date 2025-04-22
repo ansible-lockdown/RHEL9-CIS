@@ -1046,14 +1046,14 @@ rhel9cis_bash_umask: '0027'  # 0027 or more restrictive
 # These are discovered via logins.def if set true
 rhel9cis_discover_int_uid: true
 # This variable sets the minimum number from which to search for UID
-# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
+# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
 # been set to `true`.
 min_int_uid: 1000
 ### Controls:
 # - Ensure local interactive user home directories exist
 # - Ensure local interactive users own their home directories
 # This variable sets the maximum number at which the search stops for UID
-# Note that the value will be dynamically overwritten if variable `dicover_int_uid` has
+# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
 # been set to `true`.
 max_int_uid: 65533
 
