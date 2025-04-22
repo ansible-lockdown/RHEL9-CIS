@@ -12,7 +12,7 @@ os_check: true
 # Disruption is high
 ## Run tests that are considered higher risk and could have a system impact if not properly tested
 ## Default false
-## Will be fine if clean new unconfigured build
+## Will be fine if clean new un-configured build
 rhel9cis_disruption_high: false
 
 ## Switching on/off specific baseline sections
@@ -46,7 +46,7 @@ rhel9cis_selinux_disable: false
 # UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
 rhel9cis_legacy_boot: false
 
-## Benchmark name used by audting control role
+## Benchmark name used by auditing control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
 benchmark_version: 'v2.0.0'
@@ -112,12 +112,12 @@ audit_conf_dest: "/opt"
 # Where the audit logs are stored
 audit_log_dir: '/opt'
 
-## Ability to collect and take audit files moving to a centralised location
+## Ability to collect and take audit files moving to a centralized location
 # This enables the collection of the files from the host
 fetch_audit_output: false
 
 # Method of getting,uploading the summary files
-## Ensure access and permissions are avaiable for these to occur.
+## Ensure access and permissions are available for these to occur.
 ## options are
 # fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
 # copy - copies file to a location available to the managed node
@@ -514,7 +514,7 @@ rhel9cis_rule_7_2_9: true
 
 ## Section 1 vars
 
-## Ability to enabe debug on mounts to assist in troubleshooting
+## Ability to enable debug on mounts to assist in troubleshooting
 # Mount point changes are set based upon facts created in Prelim
 # these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.
 rhel9cis_debug_mount_data: false
@@ -722,7 +722,7 @@ rhel9cis_bluetooth_mask: false
 rhel9cis_ipv6_required: true
 
 ## 3.1.2 wireless network requirements
-# if wireless adapetr found allow network manager to be installed
+# if wireless adapter found allow network manager to be installed
 rhel9cis_install_network_manager: false
 # 3.3 System network parameters (host only OR host and router)
 # This variable governs whether specific CIS rules
@@ -730,15 +730,15 @@ rhel9cis_install_network_manager: false
 rhel9cis_is_router: false
 
 # This variable governs if the task which updates sysctl(including sysctl reload) is executed.
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 rhel9cis_sysctl_update: false
 # This variable governs if the task which flushes the IPv4 routing table is executed(forcing subsequent connections to
 # use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 rhel9cis_flush_ipv4_route: false
 # This variable governs if the task which flushes the IPv6 routing table is executed(forcing subsequent connections to
 # use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 rhel9cis_flush_ipv6_route: false
 
 # Section 4 vars
@@ -890,13 +890,13 @@ rhel9cis_authselect_pkg_update: false  # NOTE the risks if system is using SSSD 
 
 # To create a new profile (best for greenfield fresh sites not configured)
 # This allows creation of a custom profile using an existing one to build from
-# will only create if profiel does not already exist
+# will only create if profile does not already exist
 ## options true or false
 rhel9cis_authselect_custom_profile_create: true
 ## Controls:
 #  - 5.3.2.1 - Ensure custom authselect profile is used
 # Settings in place now will fail, they are placeholders from the control example. Due to the way many multiple
-# options and ways to configure this control needs to be enabled and settings adjusted to minimise risk.
+# options and ways to configure this control needs to be enabled and settings adjusted to minimize risk.
 
 # This variable configures the name of the custom profile to be created and selected.
 # To be changed from default - cis_example_profile
@@ -1046,14 +1046,14 @@ rhel9cis_bash_umask: '0027'  # 0027 or more restrictive
 # These are discovered via logins.def if set true
 rhel9cis_discover_int_uid: true
 # This variable sets the minimum number from which to search for UID
-# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
+# Note that the value will be dynamically overwritten if variable `rhel9cis_discover_int_uid` has
 # been set to `true`.
 min_int_uid: 1000
 ### Controls:
 # - Ensure local interactive user home directories exist
 # - Ensure local interactive users own their home directories
 # This variable sets the maximum number at which the search stops for UID
-# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
+# Note that the value will be dynamically overwritten if variable `rhel9cis_discover_int_uid` has
 # been set to `true`.
 max_int_uid: 65533
 
