@@ -1048,14 +1048,14 @@ rhel9cis_discover_int_uid: true
 # This variable sets the minimum number from which to search for UID
 # Note that the value will be dynamically overwritten if variable `rhel9cis_discover_int_uid` has
 # been set to `true`.
-min_int_uid: 1000
+prelim_min_int_uid: 1000
 ### Controls:
 # - Ensure local interactive user home directories exist
 # - Ensure local interactive users own their home directories
 # This variable sets the maximum number at which the search stops for UID
 # Note that the value will be dynamically overwritten if variable `rhel9cis_discover_int_uid` has
 # been set to `true`.
-max_int_uid: 65533
+prelim_max_int_uid: 65533
 
 ## Section6 vars
 ## Control 6.1.x - allow aide to be configured
