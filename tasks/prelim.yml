@@ -320,24 +320,27 @@
     patterns: '*.conf,*.rules'
   register: prelim_auditd_conf_files
 
-- name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
+- name: "PRELIM | AUDIT | Discover Interactive UID_MIN and UID_MAX from /etc/login.defs"
   when: rhel9cis_discover_int_uid
   tags: always
   block:
-    - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
-      ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+    - name: "PRELIM | AUDIT | Capture UID_MIN from /etc/login.defs"
+      ansible.builtin.command: awk '/^UID_MIN/ {print $2}' /etc/login.defs
       changed_when: false
+      failed_when: false
       register: prelim_uid_min_id
 
-    - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
-      ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+    - name: "PRELIM | AUDIT | Capture UID_MAX from /etc/login.defs"
+      ansible.builtin.command: awk '/^UID_MAX/ {print $2}' /etc/login.defs
       changed_when: false
+      failed_when: false
       register: prelim_uid_max_id
 
-    - name: "PRELIM | AUDIT | Set Fact for interactive uid/gid"
-      ansible.builtin.set_fact:
-        prelim_min_int_uid: "{{ prelim_uid_min_id.stdout }}"
-        prelim_max_int_uid: "{{ prelim_uid_max_id.stdout }}"
+- name: "PRELIM | AUDIT | Set facts for interactive UID/GID ranges"
+  tags: always
+  ansible.builtin.set_fact:
+    prelim_min_int_uid: "{{ prelim_uid_min_id.stdout | default(min_int_uid) }}"
+    prelim_max_int_uid: "{{ prelim_uid_max_id.stdout | default(max_int_uid) }}"
 
 - name: "PRELIM | AUDIT | Gather the package facts after prelim"
   tags:
