@@ -588,7 +588,7 @@ rhel9cis_crypto_policy_module: ''
 # - 1.7.2 - Ensure local login warning banner is configured properly
 # - 1.7.3 - Ensure remote login warning banner is configured properly
 # This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
-rhel9cis_warning_banner: Authorized uses only. All activity may be monitored and reported.
+rhel9cis_warning_banner: Authorized users only. All activity may be monitored and reported.
 # End Banner
 
 ## Control 1.8.x - Settings for GDM
