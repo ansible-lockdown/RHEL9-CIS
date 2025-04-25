@@ -1,5 +1,9 @@
 # Changes to rhel9CIS
 
+## 2.0.0 - Based on CIS v2.0.0
+
+- #320 - thanks to @kodebach
+
 ## 1.1.6 - Based on CIS v1.0.0
 
 - #190 - thanks to @ipruteanu-sie
