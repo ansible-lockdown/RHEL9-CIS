@@ -2,7 +2,8 @@
 
 ## 2.0.0 - Based on CIS v2.0.0
 
-- #320 - thanks to @kodebach
+- #322 - thanks to @mindrb
+- #320 - thanks to @anup-ad
 
 ## 1.1.6 - Based on CIS v1.0.0
 
