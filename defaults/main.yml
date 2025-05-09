@@ -1,4 +1,5 @@
 ---
+
 # defaults file for rhel9-cis
 # WARNING:
 # These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
