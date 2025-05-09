@@ -1,7 +1,7 @@
 ---
 # defaults file for rhel9-cis
 # WARNING:
-# These values may be overriden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
+# These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
 
 # Run the OS validation check
@@ -44,7 +44,7 @@ rhel9cis_selinux_disable: false
 # UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
 rhel9cis_legacy_boot: false
 
-## Benchmark name used by audting control role
+## Benchmark name used by auditing control role
 # The audit variable found at the base
 ## metadata for Audit benchmark
 benchmark_version: 'v2.0.0'
@@ -85,7 +85,7 @@ audit_capture_files_dir: /some/location to copy to on control node
 
 # How to retrieve audit binary
 # Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already dowmloaded
+# you will need to access to either github or the file already downloaded
 get_audit_binary_method: download
 
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
@@ -100,7 +100,7 @@ audit_content: git
 # If using either archive, copy, get_url:
 ## Note will work with .tar files - zip will require extra configuration
 ### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/UBUNTU22-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
+### https://github.com/ansible-lockdown/RHEL9-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
 audit_conf_source: "some path or url to copy from"
 
 # Destination for the audit content to be placed on managed node
@@ -237,7 +237,7 @@ rhel9cis_rule_1_8_8: true
 rhel9cis_rule_1_8_9: true
 rhel9cis_rule_1_8_10: true
 
-# Section 2 rules are controling Services (Special Purpose Services, and service clients)
+# Section 2 rules are controlling Services (Special Purpose Services, and service clients)
 ## Configure Server Services
 rhel9cis_rule_2_1_1: true
 rhel9cis_rule_2_1_2: true
@@ -720,7 +720,7 @@ rhel9cis_bluetooth_mask: false
 rhel9cis_ipv6_required: true
 
 ## 3.1.2 wireless network requirements
-# if wireless adapetr found allow network manager to be installed
+# if wireless adapter found allow network manager to be installed
 rhel9cis_install_network_manager: false
 # 3.3 System network parameters (host only OR host and router)
 # This variable governs whether specific CIS rules
@@ -728,15 +728,15 @@ rhel9cis_install_network_manager: false
 rhel9cis_is_router: false
 
 # This variable governs if the task which updates sysctl(including sysctl reload) is executed.
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 rhel9cis_sysctl_update: false
 # This variable governs if the task which flushes the IPv4 routing table is executed(forcing subsequent connections to
 # use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 rhel9cis_flush_ipv4_route: false
 # This variable governs if the task which flushes the IPv6 routing table is executed(forcing subsequent connections to
 # use the new configuration).
-# NOTE: The current default value is likely to be overriden by other further tasks(via 'set_fact').
+# NOTE: The current default value is likely to be overridden by other further tasks(via 'set_fact').
 rhel9cis_flush_ipv6_route: false
 
 # Section 4 vars
@@ -888,13 +888,13 @@ rhel9cis_authselect_pkg_update: false  # NOTE the risks if system is using SSSD 
 
 # To create a new profile (best for greenfield fresh sites not configured)
 # This allows creation of a custom profile using an existing one to build from
-# will only create if profiel does not already exist
+# will only create if profile does not already exist
 ## options true or false
 rhel9cis_authselect_custom_profile_create: true
 ## Controls:
 #  - 5.3.2.1 - Ensure custom authselect profile is used
 # Settings in place now will fail, they are placeholders from the control example. Due to the way many multiple
-# options and ways to configure this control needs to be enabled and settings adjusted to minimise risk.
+# options and ways to configure this control needs to be enabled and settings adjusted to minimize risk.
 
 # This variable configures the name of the custom profile to be created and selected.
 # To be changed from default - cis_example_profile
