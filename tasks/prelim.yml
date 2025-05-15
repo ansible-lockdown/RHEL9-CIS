@@ -200,7 +200,7 @@
   tags:
     - always
   block:
-    - name: "PRELIM | AUDIT | Discover is wirelss adapter on system"
+    - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false

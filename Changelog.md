@@ -1,5 +1,10 @@
 # Changes to rhel9CIS
 
+## 2.0.0 - Based on CIS v2.0.0
+
+- May 2025 QA Fixes
+ - Typo fixes and Banner verbiage
+
 ## 1.1.6 - Based on CIS v1.0.0
 
 - #190 - thanks to @ipruteanu-sie
@@ -14,7 +19,7 @@
   - updated controls 6.2.10-6.2.14
 - audit
   - steps moved to prelim
-  - update to coipy and archive logic and variables
+  - update to copy and archive logic and variables
 - removed vars not used
 - updated quotes used in mode tasks
 - pre-commit update
@@ -48,7 +53,7 @@
 - lint updates
 - .secrets updated
 - file mode quoted
-- updated 5.6.5 thansk to feedback from S!ghs on discord community
+- updated 5.6.5 thanks to feedback from S!ghs on discord community
 
 ## 1.1.1 - Based on CIS v1.0.0
 
@@ -80,7 +85,7 @@
 ## 1.0.10
 
 - [#72](https://github.com/ansible-lockdown/RHEL9-CIS/issues/72)
-  - Only run check when paybook user not a superuser
+  - Only run check when playbook user not a superuser
 - fix for 5.5.3 thanks to @nrg-fv
 
 ## 1.0.9
@@ -152,7 +157,7 @@ Jan-2023 release
 
 - updated ansible minimum to 2.10
 - Lint file updates and improvements
-- auditd now shows diff ater initial template added
+- auditd now shows diff after initial template added
 - many control rewritten
 - Many controls moved ID references
 - Audit updates aligned
@@ -217,11 +222,11 @@ Jan-2023 release
 - not all controls work with rhel8 releases any longer
   - selinux disabled 1.6.1.4
   - logrotate - 4.3.x
-- updated to rhel8cis v2.0 benchamrk requirements
+- updated to rhel8cis v2.0 benchmark requirements
 - removed iptables firewall controls (not valid on rhel9)
-- added more to logrotate 4.3.x - sure to logrotate now a seperate package
+- added more to logrotate 4.3.x - sure to logrotate now a separate package
 - grub path now standard to /boot/grub2/grub.cfg
-- 1.6.1.4 from rh8 removed as selinux.cfg doesnt disable selinux any longer
+- 1.6.1.4 from rh8 removed as selinux.cfg doesn't disable selinux any longer
 - workflow update
 - removed doc update
 
