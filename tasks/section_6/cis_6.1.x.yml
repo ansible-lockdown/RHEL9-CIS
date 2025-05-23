@@ -58,6 +58,10 @@
             dest: /var/lib/aide/aide.db.gz
             remote_src: true
             mode: 'ug-wx,o-rwx'
+          register: aide_db_cp
+          failed_when:
+            - not ansible_check_mode
+            - aide_db_cp.failed
 
 - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked"
   when:
@@ -120,3 +124,7 @@
       /usr/sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
       /usr/sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
     validate: aide -D --config %s
+  register: aide_file_integrity_check
+  failed_when:
+    - not ansible_check_mode
+    - aide_file_integrity_check.failed
