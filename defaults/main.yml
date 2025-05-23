@@ -724,6 +724,7 @@ rhel9cis_ipv6_required: true
 ## 3.1.2 wireless network requirements
 # if wireless adapter found allow network manager to be installed
 rhel9cis_install_network_manager: false
+rhel9cis_network_manager_package_name: NetworkManager
 # 3.3 System network parameters (host only OR host and router)
 # This variable governs whether specific CIS rules
 # concerned with acceptance and routing of packages are skipped.

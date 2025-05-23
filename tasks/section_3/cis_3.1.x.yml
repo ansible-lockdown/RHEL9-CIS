@@ -39,7 +39,7 @@
     warn_control_id: '3.1.2'
   block:
     - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Check for network-manager tool"
-      when: "'network-manager' in ansible_facts.packages"
+      when: "rhel9cis_network_manager_package_name in ansible_facts.packages"
       ansible.builtin.command: nmcli radio wifi
       changed_when: false
       failed_when: false
@@ -48,19 +48,19 @@
 
     - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Disable wireless if network-manager installed"
       when:
-        - "'network-manager' in ansible_facts.packages"
+        - "rhel9cis_network_manager_package_name in ansible_facts.packages"
         - "'enabled' in discovered_wifi_status.stdout"
       ansible.builtin.command: nmcli radio all off
       changed_when: discovered_nmcli_radio_off.rc == 0
       register: discovered_nmcli_radio_off
 
     - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Warn about wireless if network-manager not installed"
-      when: "'network-manager' not in ansible_facts.packages"
+      when: "rhel9cis_network_manager_package_name not in ansible_facts.packages"
       ansible.builtin.debug:
         msg: "Warning!! You need to disable wireless interfaces manually since network-manager is not installed"
 
     - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled | Set warning count"
-      when: "'network-manager' not in ansible_facts.packages"
+      when: "rhel9cis_network_manager_package_name not in ansible_facts.packages"
       ansible.builtin.import_tasks:
         file: warning_facts.yml
 
