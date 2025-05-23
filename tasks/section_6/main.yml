@@ -20,7 +20,9 @@
     file: cis_6.2.2.x.yml
 
 - name: "SECTION | 6.2.3 | Configure rsyslog"
-  when: rhel9cis_syslog == 'rsyslog'
+  when:
+    - rhel9cis_syslog == 'rsyslog'
+    - rhel9cis_rsyslog_ansiblemanaged
   ansible.builtin.import_tasks:
     file: cis_6.2.3.x.yml
 
