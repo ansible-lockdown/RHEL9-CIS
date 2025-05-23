@@ -35,7 +35,7 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   loop:
-    - { regexp: 'URL=', line: 'URL={{ rhel9cis_remote_log_server }}'}
+    - { regexp: 'URL=', line: 'URL={{ rhel9cis_journal_upload_url }}'}
     - { regexp: 'ServerKeyFile=', line: 'ServerKeyFile={{ rhel9cis_journal_upload_serverkeyfile }}'}
     - { regexp: 'ServerCertificateFile=', line: 'ServerCertificateFile={{ rhel9cis_journal_servercertificatefile }}'}
     - { regexp: 'TrustedCertificateFile=', line: 'TrustedCertificateFile={{ rhel9cis_journal_trustedcertificatefile }}'}
