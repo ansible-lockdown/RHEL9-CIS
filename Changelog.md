@@ -2,6 +2,7 @@
 
 ## 2.0.0 - Based on CIS v2.0.0
 
+- #325 - thanks to @mindrb
 - May 2025 QA Fixes
  - Typo fixes and Banner verbiage
 
