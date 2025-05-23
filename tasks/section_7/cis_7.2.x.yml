@@ -256,7 +256,7 @@
         etype: group
         permissions: rx
         state: present
-      loop: "{{ prelim_interactive_users_home.stdout_lines }}"
+      loop: "{{ prelim_interactive_users | map(attribute='home') | list }}"
 
     - name: "7.2.8 | PATCH | Ensure local interactive user home directories are configured | Set other ACL"
       when: not system_is_container
@@ -266,7 +266,7 @@
         etype: other
         permissions: 0
         state: present
-      loop: "{{ prelim_interactive_users_home.stdout_lines }}"
+      loop: "{{ prelim_interactive_users | map(attribute='home') | list }}"
 
 - name: "7.2.9 | PATCH | Ensure local interactive user dot files access is configured"
   when:
@@ -315,6 +315,6 @@
       ansible.builtin.file:
         path: '{{ item }}'
         mode: 'go-w'
-        owner: "{{ rhel9cis_passwd | selectattr('dir', 'in', prelim_interactive_users_home.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='uid') | last }}"
-        group: "{{ rhel9cis_passwd | selectattr('dir', 'in', prelim_interactive_users_home.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='gid') | last }}"
+        owner: "{{ rhel9cis_passwd | selectattr('dir', 'in', prelim_interactive_users_raw.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='uid') | last }}"
+        group: "{{ rhel9cis_passwd | selectattr('dir', 'in', prelim_interactive_users_raw.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='gid') | last }}"
       with_items: "{{ discovered_homedir_hidden_files.stdout_lines }}"
