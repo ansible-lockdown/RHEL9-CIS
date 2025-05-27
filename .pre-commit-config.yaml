@@ -46,7 +46,7 @@ repos:
   - id: gitleaks
 
 - repo: https://github.com/ansible-community/ansible-lint
-  rev: v25.4.0
+  rev: v25.5.0
   hooks:
   - id: ansible-lint
     name: Ansible-lint
