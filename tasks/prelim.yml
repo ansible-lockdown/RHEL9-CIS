@@ -31,8 +31,16 @@
 - name: "PRELIM | AUDIT | Interactive Users (reformat)"
   tags: always
   ansible.builtin.set_fact:
-    prelim_interactive_usernames: "{{ prelim_interactive_users | default([]) + [dict([('username', item.split(':')[0]), ('uid', item.split(':')[1]), ('home', item.split(':')[2])])] }}"
+    prelim_interactive_users: "{{ prelim_interactive_users | default([]) + [dict([('username', item.split(':')[0]), ('uid', item.split(':')[1]), ('home', item.split(':')[2])])] }}"
   loop: "{{ prelim_interactive_users_raw.stdout_lines }}"
+
+- name: "PRELIM | AUDIT | Interactive User accounts home directories"
+  tags: always
+  ansible.builtin.shell: >
+    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $6 }'
+  changed_when: false
+  check_mode: false
+  register: prelim_interactive_users_home
 
 - name: "PRELIM | AUDIT | Interactive UIDs"
   tags: always
@@ -203,7 +211,7 @@
   tags:
     - always
   block:
-    - name: "PRELIM | AUDIT | Discover is wirelss adapter on system"
+    - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false
@@ -245,6 +253,14 @@
     group: root
     mode: 'go-rwx'
     state: touch
+
+- name: "PRELIM | PATCH | sshd_config.d/50-redhat.conf exists"
+  when:
+    - rhel9cis_rule_5_1_10 or
+      rhel9cis_rule_5_1_11
+  ansible.builtin.stat:
+    path: /etc/ssh/sshd_config.d/50-redhat.conf
+  register: discovered_sshd_50_redhat_file
 
 - name: "PRELIM | AUDIT | Capture pam security related files"
   tags: always

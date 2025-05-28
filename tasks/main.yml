@@ -17,7 +17,9 @@
     success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
 
 - name: "Setup rules if container"
-  when: ansible_connection == 'docker' or ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+  when:
+    - ansible_connection == 'docker' or
+      ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - container_discovery
     - always
