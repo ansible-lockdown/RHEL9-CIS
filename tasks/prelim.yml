@@ -31,7 +31,7 @@
 - name: "PRELIM | AUDIT | Interactive Users (reformat)"
   tags: always
   ansible.builtin.set_fact:
-    prelim_interactive_usernames: "{{ prelim_interactive_users | default([]) + [dict([('username', item.split(':')[0]), ('uid', item.split(':')[1]), ('home', item.split(':')[2])])] }}"
+    prelim_interactive_users: "{{ prelim_interactive_users | default([]) + [dict([('username', item.split(':')[0]), ('uid', item.split(':')[1]), ('home', item.split(':')[2])])] }}"
   loop: "{{ prelim_interactive_users_raw.stdout_lines }}"
 
 - name: "PRELIM | AUDIT | Interactive UIDs"

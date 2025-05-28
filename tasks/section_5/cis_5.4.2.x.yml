@@ -195,7 +195,7 @@
 - name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell"
   when:
     - rhel9cis_rule_5_4_2_7
-    - "item.id not in prelim_interactive_usernames | map(attribute='username')"
+    - "item.id not in prelim_interactive_users | map(attribute='username')"
     - item.id not in rhel9cis_system_users_shell
     - "'root' not in item.id"
     - rhel9cis_disruption_high
@@ -220,7 +220,7 @@
   when:
     - rhel9cis_rule_5_4_2_8
     - rhel9cis_disruption_high
-    - "item.id not in prelim_interactive_usernames | map(attribute='username')"
+    - "item.id not in prelim_interactive_users | map(attribute='username')"
     - "'root' not in item.id"
   tags:
     - level1-server
