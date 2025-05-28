@@ -212,7 +212,7 @@
   ansible.builtin.user:
     name: "{{ item.id }}"
     shell: /usr/sbin/nologin
-  loop: "{{ rhel9cis_passwd }}"
+  loop: "{{ prelim_captured_passwd_data }}"
   loop_control:
     label: "{{ item.id }}"
 
@@ -235,6 +235,6 @@
   ansible.builtin.user:
     name: "{{ item.id }}"
     password_lock: true
-  loop: "{{ rhel9cis_passwd }}"
+  loop: "{{ prelim_captured_passwd_data }}"
   loop_control:
     label: "{{ item.id }}"
