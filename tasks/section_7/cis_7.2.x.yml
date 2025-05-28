@@ -243,7 +243,7 @@
         state: directory
         owner: "{{ item.id }}"
         group: "{{ item.gid }}"
-      loop: "{{ rhel9cis_passwd | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', prelim_max_int_uid | int) | list }}"
+      loop: "{{ prelim_captured_passwd_data | selectattr('uid', '>=', prelim_min_int_uid | int) | selectattr('uid', '<=', prelim_max_int_uid | int) | list }}"
       loop_control:
         label: "{{ item.id }}"
 
@@ -315,6 +315,6 @@
       ansible.builtin.file:
         path: '{{ item }}'
         mode: 'go-w'
-        owner: "{{ rhel9cis_passwd | selectattr('dir', 'in', prelim_interactive_users_raw.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='uid') | last }}"
-        group: "{{ rhel9cis_passwd | selectattr('dir', 'in', prelim_interactive_users_raw.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='gid') | last }}"
+        owner: "{{ prelim_captured_passwd_data | selectattr('dir', 'in', prelim_interactive_users_raw.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='uid') | last }}"
+        group: "{{ prelim_captured_passwd_data | selectattr('dir', 'in', prelim_interactive_users_raw.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='gid') | last }}"
       with_items: "{{ discovered_homedir_hidden_files.stdout_lines }}"
