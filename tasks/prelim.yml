@@ -254,6 +254,14 @@
     mode: 'go-rwx'
     state: touch
 
+- name: "PRELIM | PATCH | sshd_config.d/50-redhat.conf exists"
+  when:
+    - rhel9cis_rule_5_1_10 or
+      rhel9cis_rule_5_1_11
+  ansible.builtin.stat:
+    path: /etc/ssh/sshd_config.d/50-redhat.conf
+  register: discovered_sshd_50_redhat_file
+
 - name: "PRELIM | AUDIT | Capture pam security related files"
   tags: always
   ansible.builtin.find:
