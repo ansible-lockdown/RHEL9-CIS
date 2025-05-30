@@ -186,7 +186,7 @@
     - name: "7.2.6 | WARNING | Ensure no duplicate user names exist | Print warning about users with duplicate User Names"
       when: discovered_username_check.stdout | length > 0
       ansible.builtin.debug:
-        msg: "Warning!! The following user names are duplicates: {{ discovered_user_username_check.stdout_lines }}"
+        msg: "Warning!! The following user names are duplicates: {{ discovered_username_check.stdout_lines }}"
 
     - name: "7.2.6 | WARNING | Ensure no duplicate user names exist | Set warning count"
       when: discovered_username_check.stdout | length > 0
