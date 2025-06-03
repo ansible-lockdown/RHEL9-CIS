@@ -60,6 +60,9 @@ skip_reboot: true
 # default value will change to true but wont reboot if not enabled but will error
 change_requires_reboot: false
 
+# list of dicts of interactive users, filled in during prelim.yml
+prelim_interactive_users: []
+
 ###
 ### Settings for associated Audit role using Goss
 ###
