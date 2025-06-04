@@ -560,10 +560,8 @@ rhel9cis_selinux_pol: targeted
 rhel9cis_selinux_enforce: enforcing
 
 ## Control 1.4.1
-# This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value
-# must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
-# this format: 'grub.pbkdf2.sha512.<Rounds>.<Salt>.<Checksum>'
-rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
+# This variable will store the GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value must be changed.
+rhel9cis_bootloader_password: password  # pragma: allowlist secret
 
 ## Control 1.4.1
 # This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
