@@ -563,6 +563,9 @@ rhel9cis_selinux_enforce: enforcing
 # This variable will store the GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value must be changed.
 rhel9cis_bootloader_password: password  # pragma: allowlist secret
 
+# Set this value to anything secure to have predictable hashes, which will prevent unnecessary changes
+rhel9cis_bootloader_salt: ''
+
 ## Control 1.4.1
 # This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
 rhel9cis_set_boot_pass: true
