@@ -132,7 +132,7 @@
     - rule_5.4.2.4
   block:
     - name: "Ensure root password is set"
-      ansible.builtin.shell: passwd -S root | egrep -e "(Password set, SHA512 crypt|Password locked)"
+      ansible.builtin.shell: passwd -S root | grep -E "(Password set, SHA512 crypt|Password locked)"
       changed_when: false
       register: prelim_root_passwd_set
 
