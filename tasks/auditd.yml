@@ -7,6 +7,7 @@
 - name: "POST | AUDITD | Set supported_syscalls variable"
   ansible.builtin.shell: ausyscall --dump |  awk  '{print $2}'
   changed_when: false
+  check_mode: false
   failed_when: discovered_auditd_syscalls.rc not in [ 0, 1 ]
   register: discovered_auditd_syscalls
 
