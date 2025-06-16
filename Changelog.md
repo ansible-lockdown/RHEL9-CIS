@@ -6,6 +6,7 @@
 - Improved testing for 50-redhat.conf for ssh
 - 5.1.x regexp improvements
 - Improved root password check
+- egrep command changed to grep -E
 
 ## 2.0.0 - Based on CIS v2.0.0
 
