@@ -276,7 +276,7 @@
       notify: Restart sshd
 
     - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled | override"
-      when: discovered_sshd_50_redhat_file.stat.exists
+      when: prelim_sshd_50_redhat_file.stat.exists
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config.d/50-redhat.conf
         regexp: (?i)^(#|)\s*X11Forwarding
@@ -299,7 +299,7 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled | redhat file"
-      when: discovered_sshd_50_redhat_file.stat.exists
+      when: prelim_sshd_50_redhat_file.stat.exists
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config.d/50-redhat.conf
         regexp: (?i)^(#|)\s*GSSAPIAuthentication
