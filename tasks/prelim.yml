@@ -191,8 +191,7 @@
 
 - name: "PRELIM | PATCH | Install dconf if gui installed"
   when: rhel9cis_gui
-  tags:
-    - always
+  tags: always
   ansible.builtin.package:
     name: dconf
     state: present
@@ -201,8 +200,7 @@
   when:
     - rhel9cis_rule_3_1_2
     - not system_is_container
-  tags:
-    - always
+  tags: always
   block:
     - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
