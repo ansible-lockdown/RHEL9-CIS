@@ -260,7 +260,7 @@
       rhel9cis_rule_5_1_11
   ansible.builtin.stat:
     path: /etc/ssh/sshd_config.d/50-redhat.conf
-  register: discovered_sshd_50_redhat_file
+  register: prelim_sshd_50_redhat_file
 
 - name: "PRELIM | AUDIT | Capture pam security related files"
   tags: always
