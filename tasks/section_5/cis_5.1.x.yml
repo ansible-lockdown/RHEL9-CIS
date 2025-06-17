@@ -276,10 +276,10 @@
       notify: Restart sshd
 
     - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled | override"
-      when: discovered_sshd_50_redhat_file.stat.exists
+      when: prelim_sshd_50_redhat_file.stat.exists
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config.d/50-redhat.conf
-        regexp: ^(?i)(#|)\s*X11Forwarding
+        regexp: (?i)^(#|)\s*X11Forwarding
         line: 'X11Forwarding {{ rhel9cis_sshd_x11forwarding }}'
         validate: sshd -t -f %s
       notify: Restart sshd
@@ -299,10 +299,10 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled | redhat file"
-      when: discovered_sshd_50_redhat_file.stat.exists
+      when: prelim_sshd_50_redhat_file.stat.exists
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config.d/50-redhat.conf
-        regexp: ^(?i)(#|)\s*GSSAPIAuthentication
+        regexp: (?i)^(#|)\s*GSSAPIAuthentication
         line: GSSAPIAuthentication no
         validate: sshd -t -f %s
       notify: Restart sshd
@@ -310,7 +310,7 @@
     - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled | ssh config"
       ansible.builtin.lineinfile:
         path: "{{ rhel9cis_sshd_config_file }}"
-        regexp: ^(?i)(#|)\s*GSSAPIAuthentication
+        regexp: (?i)^(#|)\s*GSSAPIAuthentication
         line: GSSAPIAuthentication no
         validate: sshd -t -f %s
       notify: Restart sshd
@@ -330,7 +330,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*HostbasedAuthentication
+    regexp: (?i)^(#|)\s*HostbasedAuthentication
     line: 'HostbasedAuthentication no'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -350,7 +350,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*IgnoreRhosts
+    regexp: (?i)^(#|)\s*IgnoreRhosts
     line: 'IgnoreRhosts yes'
     insertbefore: "^Match"
     firstmatch: true
@@ -368,7 +368,7 @@
     - NIST800-53R5_CM-6
   ansible.builtin.lineinfile:
     path: "{{ rhel9cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*LoginGraceTime
+    regexp: (?i)^(#|)\s*LoginGraceTime
     line: "LoginGraceTime {{ rhel9cis_sshd_logingracetime }}"
     insertbefore: "^Match"
     firstmatch: true
@@ -388,7 +388,7 @@
     - NIST800-53R5_SI-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*LogLevel
+    regexp: (?i)^(#|)\s*LogLevel
     line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
     insertbefore: "^Match"
     firstmatch: true
@@ -426,7 +426,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*MaxStartups
+    regexp: (?i)^(#|)\s*MaxStartups
     line: 'MaxStartups {{ rhel9cis_ssh_maxstartups }}'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -446,7 +446,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*MaxSessions
+    regexp: (?i)^(#|)\s*MaxSessions
     line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -466,7 +466,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*PermitEmptyPasswords
+    regexp: (?i)^(#|)\s*PermitEmptyPasswords
     line: 'PermitEmptyPasswords no'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -484,7 +484,7 @@
     - name: "5.1.20 | PATCH | Ensure sshd PermitRootLogin is disabled | config file"
       ansible.builtin.lineinfile:
         path: "{{ rhel9cis_sshd_config_file }}"
-        regexp: ^(?i)(#|)\s*PermitRootLogin
+        regexp: (?i)^(#|)\s*PermitRootLogin
         line: 'PermitRootLogin no'
         validate: sshd -t -f %s
       notify: Restart sshd
@@ -510,7 +510,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*PermitUserEnvironment
+    regexp: (?i)^(#|)\s*PermitUserEnvironment
     line: 'PermitUserEnvironment no'
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -530,7 +530,7 @@
     - NIST800-53R5_IA-5
   ansible.builtin.lineinfile:
     path: "{{ rhel9cis_sshd_config_file }}"
-    regexp: ^(?i)(#|)\s*UsePAM
+    regexp: (?i)^(#|)\s*UsePAM
     line: 'UsePAM yes'
     validate: sshd -t -f %s
   notify: Restart sshd
