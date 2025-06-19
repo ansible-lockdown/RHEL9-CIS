@@ -1,6 +1,11 @@
 # Changes to rhel9CIS
 
 
+## Based on CIS v2.0.0
+
+Update to audit_only to allow fetching results
+resolved false warning for fetch audit
+
 ## 2.0.1 - Based on CIS v2.0.0
 
 - Thanks to @polski-g several issues and improvements added
