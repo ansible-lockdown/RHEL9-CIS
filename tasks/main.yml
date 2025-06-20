@@ -61,7 +61,7 @@
     - crypto
     - NIST800-53R5_SC-6
   ansible.builtin.assert:
-    that: rhel9cis_crypto_policy_module in rhel9cis_allowed_crypto_policies_modules
+    that: rhel9cis_additional_crypto_policy_module in rhel9cis_allowed_crypto_policies_modules
     fail_msg: "Crypto policy module is not a permitted version"
     success_msg: "Crypto policy module is a permitted version"
 
@@ -132,9 +132,8 @@
     - rule_5.4.2.4
   block:
     - name: "Ensure root password is set"
-      ansible.builtin.shell: passwd -S root | grep -E "(Password set, SHA512 crypt|Password locked)"
+      ansible.builtin.shell: passwd -S root | egrep -e "(Password set, SHA512 crypt|Password locked)"
       changed_when: false
-      failed_when: prelim_root_passwd_set.rc not in [ 0, 1 ]
       register: prelim_root_passwd_set
 
     - name: "Ensure root password is set"
