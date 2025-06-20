@@ -580,8 +580,8 @@ rhel9cis_crypto_policy: 'DEFAULT'
 ## Control 1.6
 # This variable contains the value of the crypto policy module(combinations of policies and
 # sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
-# using 'rhel9cis_allowed_crypto_policies_modules' variable.
-rhel9cis_crypto_policy_module: ''
+# using those listed in the 'rhel9cis_allowed_crypto_policies_modules' variable.
+rhel9cis_additional_crypto_policy_module: ''
 
 ## Controls:
 # - 1.7.1 - Ensure message of the day is configured properly

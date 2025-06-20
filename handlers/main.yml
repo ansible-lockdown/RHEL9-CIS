@@ -186,7 +186,7 @@
 
 - name: Update Crypto Policy
   ansible.builtin.set_fact:
-    rhel9cis_full_crypto_policy: "{{ rhel9cis_crypto_policy }}{% if rhel9cis_crypto_policy_module | length > 0 %}{{ rhel9cis_crypto_policy_module }}{% endif %}"
+    rhel9cis_full_crypto_policy: "{{ rhel9cis_crypto_policy }}{{ rhel9cis_crypto_policy_module }}:{{ rhel9cis_additional_crypto_policy_module }}"
   notify: Set Crypto Policy
 
 - name: Set Crypto Policy
