@@ -12,7 +12,7 @@ os_check: true
 # Disruption is high
 ## Run tests that are considered higher risk and could have a system impact if not properly tested
 ## Default false
-## Will be fine if clean new un configured build
+## Will be fine if clean new un-configured build
 rhel9cis_disruption_high: false
 
 ## Switching on/off specific baseline sections
@@ -37,6 +37,7 @@ rhel9cis_level_2: true
 # Create managed not custom local_facts files
 create_benchmark_facts: true
 ansible_facts_path: /etc/ansible/facts.d
+
 ## Section 1.6 - Mandatory Access Control
 # This variable governs whether SELinux is disabled or not. If SELinux is NOT DISABLED by setting
 # 'rhel9cis_selinux_disable' to 'true', the 1.6 subsection will be executed.
@@ -111,7 +112,7 @@ audit_conf_dest: "/opt"
 # Where the audit logs are stored
 audit_log_dir: '/opt'
 
-## Ability to collect and take audit files moving to a centralised location
+## Ability to collect and take audit files moving to a centralized location
 # This enables the collection of the files from the host
 fetch_audit_output: false
 
@@ -238,7 +239,7 @@ rhel9cis_rule_1_8_8: true
 rhel9cis_rule_1_8_9: true
 rhel9cis_rule_1_8_10: true
 
-# Section 2 rules are controlling Services (Special Purpose Services, and service clients)
+# Section 2 rules are controling Services (Special Purpose Services, and service clients)
 ## Configure Server Services
 rhel9cis_rule_2_1_1: true
 rhel9cis_rule_2_1_2: true
@@ -579,8 +580,8 @@ rhel9cis_crypto_policy: 'DEFAULT'
 ## Control 1.6
 # This variable contains the value of the crypto policy module(combinations of policies and
 # sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
-# using 'rhel9cis_allowed_crypto_policies_modules' variable.
-rhel9cis_crypto_policy_module: ''
+# using those listed in the 'rhel9cis_allowed_crypto_policies_modules' variable.
+rhel9cis_additional_crypto_policy_module: ''
 
 ## Controls:
 # - 1.7.1 - Ensure message of the day is configured properly
@@ -816,7 +817,7 @@ rhel9cis_sshd_clientalivecountmax: 3
 rhel9cis_sshd_clientaliveinterval: 15
 
 ## Control 5.1.12 - disable forwarding
-# By Default this will also disable x11 forwarding
+# By Default this will also disablex11 forwarding
 # set 'yes' if x11 is required this can be changed to run in /etc/ssh/ssh_config.d/50-redhat.conf
 rhel9cis_sshd_x11forwarding: 'no'
 
@@ -1046,14 +1047,14 @@ rhel9cis_bash_umask: '0027'  # 0027 or more restrictive
 # These are discovered via logins.def if set true
 rhel9cis_discover_int_uid: true
 # This variable sets the minimum number from which to search for UID
-# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
+# Note that the value will be dynamically overwritten if variable `rhel9cis_discover_int_uid` has
 # been set to `true`.
 min_int_uid: 1000
 ### Controls:
 # - Ensure local interactive user home directories exist
 # - Ensure local interactive users own their home directories
 # This variable sets the maximum number at which the search stops for UID
-# Note that the value will be dynamically overwritten if variable `discover_int_uid` has
+# Note that the value will be dynamically overwritten if variable `rhel9cis_discover_int_uid` has
 # been set to `true`.
 max_int_uid: 65533
 
