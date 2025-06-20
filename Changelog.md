@@ -6,6 +6,14 @@ Update to audit_only to allow fetching results
 resolved false warning for fetch audit
 fix root user check
 
+## 2.0.1 - Based on CIS v2.0.0
+
+- Thanks to @polski-g several issues and improvements added
+- Improved testing for 50-redhat.conf for ssh
+- 5.1.x regexp improvements
+- Improved root password check
+- egrep command changed to grep -E
+
 ## 2.0.0 - Based on CIS v2.0.0
 
 - #322, #325 - thanks to @mindrb
