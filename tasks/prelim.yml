@@ -136,8 +136,7 @@
   register: prelim_systemd_coredump
 
 - name: "PRELIM | PATCH | Setup crypto-policy"
-  when:
-    - rhel9cis_rule_1_6_1
+  when: rhel9cis_rule_1_6_1
   tags:
     - level1-server
     - level1-workstation
@@ -185,17 +184,14 @@
         grub2_path: /etc/grub2-efi.cfg
 
 - name: "PRELIM | AUDIT | Discover Gnome Desktop Environment"
-  tags:
-    - always
+  tags: always
   ansible.builtin.stat:
     path: /usr/share/gnome/gnome-version.xml
   register: prelim_gnome_present
 
 - name: "PRELIM | PATCH | Install dconf if gui installed"
-  when:
-    - rhel9cis_gui
-  tags:
-    - always
+  when: rhel9cis_gui
+  tags: always
   ansible.builtin.package:
     name: dconf
     state: present
@@ -204,8 +200,7 @@
   when:
     - rhel9cis_rule_3_1_2
     - not system_is_container
-  tags:
-    - always
+  tags: always
   block:
     - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
@@ -251,9 +246,7 @@
     state: touch
 
 - name: "PRELIM | PATCH | sshd_config.d/50-redhat.conf exists"
-  when:
-    - rhel9cis_rule_5_1_10 or
-      rhel9cis_rule_5_1_11
+  when: rhel9cis_rule_5_1_10 or rhel9cis_rule_5_1_11
   ansible.builtin.stat:
     path: /etc/ssh/sshd_config.d/50-redhat.conf
   register: prelim_sshd_50_redhat_file
@@ -281,8 +274,7 @@
 - name: "PRELIM | PATCH | Create journald config directory"
   when:
     - rhel9cis_syslog == 'journald'
-    - rhel9cis_rule_6_2_1_3 or
-      rhel9cis_rule_6_2_1_4
+    - rhel9cis_rule_6_2_1_3 or rhel9cis_rule_6_2_1_4
   tags: always
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d

@@ -17,9 +17,7 @@
     success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
 
 - name: "Setup rules if container"
-  when:
-    - ansible_connection == 'docker' or
-      ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+  when: ansible_connection == 'docker' or ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - container_discovery
     - always
@@ -101,8 +99,7 @@
 
         - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"  # noqa name[template]
           ansible.builtin.assert:
-            that:
-              - not prelim_ansible_user_password_set.stdout.startswith("!")
+            that: not prelim_ansible_user_password_set.stdout.startswith("!")
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
             success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
 
@@ -132,7 +129,7 @@
     - rule_5.4.2.4
   block:
     - name: "Ensure root password is set"
-      ansible.builtin.shell: passwd -S root | egrep -e "(Password set, SHA512 crypt|Password locked)"
+      ansible.builtin.shell: passwd -S root | grep -E "(Password set, SHA512 crypt|Password locked)"
       changed_when: false
       register: prelim_root_passwd_set
 
