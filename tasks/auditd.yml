@@ -25,7 +25,7 @@
     dest: /etc/audit/rules.d/99_auditd.rules
     owner: root
     group: root
-    mode: 'u-x,go-wx'
+    mode: 'u-x,g-wx,o-rwx'
   diff: "{{ discovered_auditd_rules_file.stat.exists }}"  # Only run diff if not a new file
   register: discovered_auditd_rules_template_updated
   notify:
