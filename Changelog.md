@@ -1,11 +1,13 @@
 # Changes to rhel9CIS
 
-## Based on CIS v2.0.0
+## 2.0.1 - Based on CIS v2.0.0
 
-Update to audit_only to allow fetching results
-resolved false warning for fetch audit
-fix root user check
-Improved documentation and variable compilation for crypto policies
+- Update to audit_only to allow fetching results
+- resolved false warning for fetch audit
+- fix root user check
+- Improved documentation and variable compilation for crypto policies
+- Addresses #318 - Thank you @kodebach & @bgro
+  - Improved logic for 5.2.4 to exclude rhel9cis_sudoers_exclude_nopasswd_list in pre-check task/main.yml
 
 ## 2.0.1 - Based on CIS v2.0.0
 
