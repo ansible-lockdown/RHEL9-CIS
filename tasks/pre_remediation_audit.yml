@@ -1,4 +1,5 @@
 ---
+
 - name: Pre Audit Setup | Setup the LE audit
   when: setup_audit
   tags: setup_audit
@@ -46,7 +47,7 @@
     remote_src: "{{ (audit_conf_source is contains('http')) | ternary(true, false) }}"
     extra_opts: "{{ (audit_conf_source is contains('github')) | ternary('--strip-components=1', []) }}"
 
-- name: Pre Audit Setup | Check Goss is available
+- name: Pre Audit Setup | Check goss is available
   when: run_audit
   block:
     - name: Pre Audit Setup | Check for goss file

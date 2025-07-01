@@ -150,7 +150,7 @@
   ansible.posix.mount:
     path: "{{ mount_point }}"
     state: remounted
-  notify: Change_requires_reboot
+  notify: Set reboot required
   listen: "Remount /boot/efi"
 
 - name: Reload sysctl
@@ -186,7 +186,7 @@
 
 - name: Update Crypto Policy
   ansible.builtin.set_fact:
-    rhel9cis_full_crypto_policy: "{{ rhel9cis_crypto_policy }}{% if rhel9cis_crypto_policy_module | length > 0 %}{{ rhel9cis_crypto_policy_module }}{% endif %}"
+    rhel9cis_full_crypto_policy: "{{ rhel9cis_crypto_policy }}{{ rhel9cis_crypto_policy_module }}{% if rhel9cis_additional_crypto_policy_module | length > 0 %}:{{ rhel9cis_additional_crypto_policy_module }}{% endif %}"
   notify: Set Crypto Policy
 
 - name: Set Crypto Policy
@@ -194,7 +194,7 @@
   ansible.builtin.command: update-crypto-policies --set "{{ rhel9cis_full_crypto_policy }}"
   changed_when: true
   notify:
-    - Change_requires_reboot
+    - Set reboot required
     - Restart sshd
 
 - name: Restart firewalld
@@ -255,7 +255,7 @@
   when: discovered_auditd_immutable_check.stdout == '1'
   ansible.builtin.debug:
     msg: "Reboot required for auditd to apply new rules as immutable set"
-  notify: Change_requires_reboot
+  notify: Set reboot required
 
 - name: Stop auditd process
   ansible.builtin.command: systemctl kill auditd
@@ -268,6 +268,6 @@
     state: started
   listen: Restart auditd
 
-- name: Change_requires_reboot
+- name: Set reboot required
   ansible.builtin.set_fact:
     change_requires_reboot: true

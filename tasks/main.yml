@@ -59,7 +59,7 @@
     - crypto
     - NIST800-53R5_SC-6
   ansible.builtin.assert:
-    that: rhel9cis_crypto_policy_module in rhel9cis_allowed_crypto_policies_modules
+    that: rhel9cis_additional_crypto_policy_module in rhel9cis_allowed_crypto_policies_modules
     fail_msg: "Crypto policy module is not a permitted version"
     success_msg: "Crypto policy module is a permitted version"
 
@@ -99,10 +99,9 @@
 
         - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"  # noqa name[template]
           ansible.builtin.assert:
-            that:
-              - not prelim_ansible_user_password_set.stdout.startswith("!")
+            that: (not prelim_ansible_user_password_set.stdout.startswith("!")) or (ansible_env.SUDO_USER in rhel9cis_sudoers_exclude_nopasswd_list)
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
-            success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} user"
+            success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} is not locked or included in the exception list for rule 5.2.4"
 
 - name: "Check authselect profile is selected"
   when: rhel9cis_allow_authselect_updates
@@ -130,7 +129,7 @@
     - rule_5.4.2.4
   block:
     - name: "Ensure root password is set"
-      ansible.builtin.shell: passwd -S root | egrep -e "(Password set, SHA512 crypt|Password locked)"
+      ansible.builtin.shell: passwd -S root | grep -E "(Password set, SHA512 crypt|Password locked)"
       changed_when: false
       register: prelim_root_passwd_set
 

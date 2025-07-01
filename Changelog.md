@@ -1,5 +1,23 @@
 # Changes to rhel9CIS
 
+## 2.0.2 - Based on CIS v2.0.0
+
+- Update to audit_only to allow fetching results
+- resolved false warning for fetch audit
+- fix root user check
+- Improved documentation and variable compilation for crypto policies
+- Addresses #318 - Thank you @kodebach & @bgro
+  - Improved logic for 5.2.4 to exclude rhel9cis_sudoers_exclude_nopasswd_list in pre-check tasks/main.yml
+- rule_6.3.3.5 updated for missing checks
+
+## 2.0.1 - Based on CIS v2.0.0
+
+- Thanks to @polski-g several issues and improvements added
+- Improved testing for 50-redhat.conf for ssh
+- 5.1.x regexp improvements
+- Improved root password check
+- egrep command changed to grep -E
+
 ## 2.0.0 - Based on CIS v2.0.0
 
 - #325 - thanks to @mindrb

@@ -4,9 +4,7 @@
 # List users in order to look files inside each home directory
 
 - name: "PRELIM | Include audit specific variables"
-  when:
-    - run_audit or audit_only
-    - setup_audit
+  when: run_audit or audit_only or setup_audit
   tags:
     - setup_audit
     - run_audit
@@ -14,9 +12,7 @@
     file: audit.yml
 
 - name: "PRELIM | Include pre-remediation audit tasks"
-  when:
-    - run_audit or audit_only
-    - setup_audit
+  when: run_audit or audit_only or setup_audit
   tags: run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
@@ -31,8 +27,16 @@
 - name: "PRELIM | AUDIT | Interactive Users (reformat)"
   tags: always
   ansible.builtin.set_fact:
-    prelim_interactive_usernames: "{{ prelim_interactive_users | default([]) + [dict([('username', item.split(':')[0]), ('uid', item.split(':')[1]), ('home', item.split(':')[2])])] }}"
+    prelim_interactive_users: "{{ prelim_interactive_users | default([]) + [dict([('username', item.split(':')[0]), ('uid', item.split(':')[1]), ('home', item.split(':')[2])])] }}"
   loop: "{{ prelim_interactive_users_raw.stdout_lines }}"
+
+- name: "PRELIM | AUDIT | Interactive User accounts home directories"
+  tags: always
+  ansible.builtin.shell: >
+    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $6 }'
+  changed_when: false
+  check_mode: false
+  register: prelim_interactive_users_home
 
 - name: "PRELIM | AUDIT | Interactive UIDs"
   tags: always
@@ -132,8 +136,7 @@
   register: prelim_systemd_coredump
 
 - name: "PRELIM | PATCH | Setup crypto-policy"
-  when:
-    - rhel9cis_rule_1_6_1
+  when: rhel9cis_rule_1_6_1
   tags:
     - level1-server
     - level1-workstation
@@ -181,17 +184,14 @@
         grub2_path: /etc/grub2-efi.cfg
 
 - name: "PRELIM | AUDIT | Discover Gnome Desktop Environment"
-  tags:
-    - always
+  tags: always
   ansible.builtin.stat:
     path: /usr/share/gnome/gnome-version.xml
   register: prelim_gnome_present
 
 - name: "PRELIM | PATCH | Install dconf if gui installed"
-  when:
-    - rhel9cis_gui
-  tags:
-    - always
+  when: rhel9cis_gui
+  tags: always
   ansible.builtin.package:
     name: dconf
     state: present
@@ -200,10 +200,9 @@
   when:
     - rhel9cis_rule_3_1_2
     - not system_is_container
-  tags:
-    - always
+  tags: always
   block:
-    - name: "PRELIM | AUDIT | Discover is wirelss adapter on system"
+    - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false
@@ -246,6 +245,12 @@
     mode: 'go-rwx'
     state: touch
 
+- name: "PRELIM | PATCH | sshd_config.d/50-redhat.conf exists"
+  when: rhel9cis_rule_5_1_10 or rhel9cis_rule_5_1_11
+  ansible.builtin.stat:
+    path: /etc/ssh/sshd_config.d/50-redhat.conf
+  register: prelim_sshd_50_redhat_file
+
 - name: "PRELIM | AUDIT | Capture pam security related files"
   tags: always
   ansible.builtin.find:
@@ -269,8 +274,7 @@
 - name: "PRELIM | PATCH | Create journald config directory"
   when:
     - rhel9cis_syslog == 'journald'
-    - rhel9cis_rule_6_2_1_3 or
-      rhel9cis_rule_6_2_1_4
+    - rhel9cis_rule_6_2_1_3 or rhel9cis_rule_6_2_1_4
   tags: always
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d
