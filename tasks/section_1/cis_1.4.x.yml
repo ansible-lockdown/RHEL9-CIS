@@ -57,7 +57,7 @@
         - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system | Build Options"
           when: item not in discovered_efi_fstab.stdout
           ansible.builtin.set_fact:
-            efi_mount_opts_addition: "{{ efi_mount_opts_addition + ',' + item  }}"
+            efi_mount_opts_addition: "{{ efi_mount_opts_addition + ',' + item }}"
           loop: "{{ efi_mount_options }}"
 
         - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system | Add mount options"

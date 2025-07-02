@@ -4,9 +4,7 @@
 # List users in order to look files inside each home directory
 
 - name: "PRELIM | Include audit specific variables"
-  when:
-    - run_audit or audit_only
-    - setup_audit
+  when: run_audit or audit_only or setup_audit
   tags:
     - setup_audit
     - run_audit
@@ -14,24 +12,30 @@
     file: audit.yml
 
 - name: "PRELIM | Include pre-remediation audit tasks"
-  when:
-    - run_audit or audit_only
-    - setup_audit
+  when: run_audit or audit_only or setup_audit
   tags: run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
 - name: "PRELIM | AUDIT | Interactive Users"
   tags: always
   ansible.builtin.shell: >
-    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1 }'
+    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1":"$3":"$6 }'
   changed_when: false
-  register: prelim_interactive_usernames
+  check_mode: false
+  register: prelim_interactive_users_raw
+
+- name: "PRELIM | AUDIT | Interactive Users (reformat)"
+  tags: always
+  ansible.builtin.set_fact:
+    prelim_interactive_users: "{{ prelim_interactive_users | default([]) + [dict([('username', item.split(':')[0]), ('uid', item.split(':')[1]), ('home', item.split(':')[2])])] }}"
+  loop: "{{ prelim_interactive_users_raw.stdout_lines }}"
 
 - name: "PRELIM | AUDIT | Interactive User accounts home directories"
   tags: always
   ansible.builtin.shell: >
-    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $6 }'
+    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $6 }'
   changed_when: false
+  check_mode: false
   register: prelim_interactive_users_home
 
 - name: "PRELIM | AUDIT | Interactive UIDs"
@@ -39,6 +43,7 @@
   ansible.builtin.shell: >
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
   changed_when: false
+  check_mode: false
   register: prelim_interactive_uids
 
 - name: "PRELIM | AUDIT | Capture /etc/password variables"
@@ -64,6 +69,7 @@
       ansible.builtin.shell: |
         mount | awk '{print $1, $3, $5, $6}'
       changed_when: false
+      check_mode: false
       register: prelim_mount_output
 
     - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - build fact  # This is inherited and used in mountpoints tasks
@@ -100,6 +106,7 @@
       ansible.builtin.command: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
+      check_mode: false
       register: prelim_check_gpg_imported
 
     - name: "PRELIM | AUDIT | Import gpg keys | Check Package"  # noqa command-instead-of-module
@@ -200,7 +207,7 @@
   tags:
     - always
   block:
-    - name: "PRELIM | AUDIT | Discover is wirelss adapter on system"
+    - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false
@@ -242,6 +249,14 @@
     group: root
     mode: 'go-rwx'
     state: touch
+
+- name: "PRELIM | PATCH | sshd_config.d/50-redhat.conf exists"
+  when:
+    - rhel9cis_rule_5_1_10 or
+      rhel9cis_rule_5_1_11
+  ansible.builtin.stat:
+    path: /etc/ssh/sshd_config.d/50-redhat.conf
+  register: prelim_sshd_50_redhat_file
 
 - name: "PRELIM | AUDIT | Capture pam security related files"
   tags: always
@@ -298,6 +313,7 @@
   tags: always
   ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
   changed_when: false
+  check_mode: false
   register: prelim_auditd_logfile
 
 - name: "PRELIM | AUDIT | Audit conf and rules files | list files"
@@ -320,24 +336,29 @@
     patterns: '*.conf,*.rules'
   register: prelim_auditd_conf_files
 
-- name: "PRELIM | AUDIT | Discover Interactive UID MIN and MIN from logins.def"
+- name: "PRELIM | AUDIT | Discover Interactive UID_MIN and UID_MAX from /etc/login.defs"
   when: rhel9cis_discover_int_uid
   tags: always
   block:
-    - name: "PRELIM | AUDIT | Capture UID_MIN information from logins.def"
-      ansible.builtin.shell: grep -w "^UID_MIN" /etc/login.defs | awk '{print $NF}'
+    - name: "PRELIM | AUDIT | Capture UID_MIN from /etc/login.defs"
+      ansible.builtin.command: awk '/^UID_MIN/ {print $2}' /etc/login.defs
       changed_when: false
+      failed_when: false
+      check_mode: false
       register: prelim_uid_min_id
 
-    - name: "PRELIM | AUDIT | Capture UID_MAX information from logins.def"
-      ansible.builtin.shell: grep -w "^UID_MAX" /etc/login.defs | awk '{print $NF}'
+    - name: "PRELIM | AUDIT | Capture UID_MAX from /etc/login.defs"
+      ansible.builtin.command: awk '/^UID_MAX/ {print $2}' /etc/login.defs
       changed_when: false
+      failed_when: false
+      check_mode: false
       register: prelim_uid_max_id
 
-    - name: "PRELIM | AUDIT | Set Fact for interactive uid/gid"
-      ansible.builtin.set_fact:
-        prelim_min_int_uid: "{{ prelim_uid_min_id.stdout }}"
-        prelim_max_int_uid: "{{ prelim_uid_max_id.stdout }}"
+- name: "PRELIM | AUDIT | Set facts for interactive UID/GID ranges"
+  tags: always
+  ansible.builtin.set_fact:
+    prelim_min_int_uid: "{{ prelim_uid_min_id.stdout | default(min_int_uid) }}"
+    prelim_max_int_uid: "{{ prelim_uid_max_id.stdout | default(max_int_uid) }}"
 
 - name: "PRELIM | AUDIT | Gather the package facts after prelim"
   tags:

@@ -7,10 +7,16 @@ rhel9cis_allowed_crypto_policies:
   - 'FUTURE'
   - 'FIPS'
 
+# Following is left blank for ability to build string
+rhel9cis_crypto_policy_module: ''
+
+# Do not adjust these are recognized as part of the CIS benchmark and used during testing
 rhel9cis_allowed_crypto_policies_modules:
+  # Recognized by CIS as possible extra options
   - 'OSPP'
   - 'AD-SUPPORT'
   - 'AD-SUPPORT-LEGACY'
+  # The following are already included in 1.6.x controls
   - 'NO-SHA1'
   - 'NO-SSHCBC'
   - 'NO-SSHETM'
@@ -21,6 +27,9 @@ rhel9cis_allowed_crypto_policies_modules:
 # Used to control warning summary
 warn_control_list: ""
 warn_count: 0
+
+# list of dicts of interactive users, filled in during prelim.yml
+prelim_interactive_users: []
 
 # Default empty values for 1.4.2
 efi_mount_opts_addition: ''
