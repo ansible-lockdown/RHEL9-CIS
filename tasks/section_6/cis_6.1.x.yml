@@ -123,7 +123,6 @@
       /usr/sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
       /usr/sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
       /usr/sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
-    validate: aide -D --config %s
   register: aide_file_integrity_check
   failed_when:
     - not ansible_check_mode
