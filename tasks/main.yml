@@ -101,7 +101,7 @@
           ansible.builtin.assert:
             that: (not prelim_ansible_user_password_set.stdout.startswith("!")) or (ansible_env.SUDO_USER in rhel9cis_sudoers_exclude_nopasswd_list)
             fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
-            success_msg: "The local account is not locked for {{ ansible_env.SUDO_USER }} is not locked or included in the exception list for rule 5.2.4"
+            success_msg: "The local account {{ ansible_env.SUDO_USER }} is not locked or included in the exception list for rule 5.2.4"
 
 - name: "Check authselect profile is selected"
   when: rhel9cis_allow_authselect_updates
@@ -131,6 +131,7 @@
     - name: "Ensure root password is set"
       ansible.builtin.shell: passwd -S root | grep -E "(Password set, SHA512 crypt|Password locked)"
       changed_when: false
+      failed_when: prelim_root_passwd_set.rc not in [ 0, 1 ]
       register: prelim_root_passwd_set
 
     - name: "Ensure root password is set"
