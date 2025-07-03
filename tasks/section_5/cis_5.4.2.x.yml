@@ -135,6 +135,22 @@
       ansible.builtin.set_fact:
         root_paths: "{{ discovered_root_paths.stdout }}"
 
+    - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Check for presence of non-dirs"
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      loop: "{{ discovered_root_paths_split.stdout_lines }}"
+      register: paths_stat
+
+    - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Create dirs for some paths that are not dirs"
+      ansible.builtin.file:
+        path: "{{ item.item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: 'go-w'
+      loop: "{{ paths_stat.results }}"
+      when: not item.stat.exists
+
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Check for empty dirs"
       when: discovered_root_paths is defined
       ansible.builtin.shell: 'echo {{ root_paths }} | grep -q "::" && echo "roots path contains a empty directory (::)"'
