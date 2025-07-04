@@ -1232,7 +1232,7 @@ rhel9cis_aide_cron:
 # This variable governs which logging service should be used, choosing between 'rsyslog'
 # or 'journald'(CIS recommendation) will trigger the execution of the associated subsection, as the-best
 # practices are written wholly independent of each other.
-rhel9cis_syslog: journald
+rhel9cis_syslog: rsyslog
 
 ## Control 6.2.1.3 - Ensure journald log rotation is configured per site policy
 # Current variable configures the max amount of disk space the logs will use(thus, journal files
