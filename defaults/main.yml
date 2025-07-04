@@ -604,7 +604,6 @@ rhel9cis_crypto_policy_module: ''
 # using those listed in the 'rhel9cis_allowed_crypto_policies_modules' variable.
 rhel9cis_additional_crypto_policy_module: ''
 
-
 ## Controls:
 # - 1.7.1 - Ensure message of the day is configured properly
 # - 1.7.2 - Ensure local login warning banner is configured properly
@@ -976,7 +975,6 @@ rhel9cis_authselect_pkg_update: false  # NOTE the risks if system is using SSSD 
 
 ## Controls 5.3.x
 
-
 # This variable configures the name of the custom profile to be created and selected.
 # To be changed from default - cis_example_profile. This setting needs to be adjusted
 # in order to minimise risk.
@@ -1110,7 +1108,7 @@ rhel9cis_force_user_mindays: false
 # This variable governs, how many days before a password expires, the user will be warned.
 # CIS requires a value of at least 7.
 rhel9cis_pass_warn_age: 7
-#The following variable allows the forcing of number of days before warning users of password expiry
+# The following variable allows the forcing of number of days before warning users of password expiry
 # This can break current connecting user access
 rhel9cis_force_user_warnage: false
 
