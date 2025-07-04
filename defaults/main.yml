@@ -1,5 +1,4 @@
 ---
-
 # defaults file for rhel9-cis
 # WARNING:
 # These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
@@ -13,7 +12,7 @@ os_check: true
 ## Run tests that are considered higher risk and could have a system impact if not properly tested
 ## Default false
 ## Will be fine if clean new un-configured build
-rhel9cis_disruption_high: false
+rhel9cis_disruption_high: true
 
 ## Switching on/off specific baseline sections
 # These variables govern whether the tasks of a particular section are to be executed when running the role.
@@ -68,10 +67,17 @@ change_requires_reboot: false
 ### Goss is required on the remote host ###
 ### vars/auditd.yml for other settings  ###
 
-# Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
+## Audit setup
+# Audits are carried out using Goss. This variable
+# determines whether execution of the role prepares for auditing
+# by installing the required binary.
 setup_audit: false
 
-# enable audits to run - this runs the audit and get the latest content
+## Enable audits to run - this runs the audit and get the latest content
+# This variable governs whether the audit using the
+# separately maintained audit role using Goss
+# is carried out.
+# This runs the audit and gets the latest content
 run_audit: false
 # Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
 audit_run_heavy_tests: true
@@ -95,8 +101,16 @@ get_audit_binary_method: download
 ## e.g copy from ansible control node to remote host
 audit_bin_copy_location: /some/accessible/path
 
-# how to get audit files onto host options
+## How to retrieve the audit role
+# The role for auditing is maintained separately.
+# This variable specifies the method of how to get the audit role
 # options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
+# onto the system. The options are as follows:
+# - 'git': clone audit content from GitHub REPOSITORY, set up via `audit_file_git` var, and
+#          VERSION(e.g. branch, tag name), set up via `audit_git_version` var.
+# - 'copy': copy from path as specified in variable `audit_conf_copy`.
+# - 'archive': same as 'copy', only that the specified filepath needs to be unpacked.
+# - 'get_url': Download from url as specified in variable `audit_files_url`
 audit_content: git
 
 # If using either archive, copy, get_url:
@@ -311,7 +325,7 @@ rhel9cis_rule_3_3_11: true
 # Firewall utility
 rhel9cis_rule_4_1_1: true
 rhel9cis_rule_4_1_2: true
-## Configure firewalld
+# Configure firewalld
 rhel9cis_rule_4_2_1: true
 rhel9cis_rule_4_2_2: true
 # Configure nftables
