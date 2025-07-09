@@ -92,9 +92,12 @@ fetch_audit_files: false
 audit_capture_files_dir: /some/location to copy to on control node
 #############################
 
-# How to retrieve audit binary
-# Options are copy or download - detailed settings at the bottom of this file
-# you will need to access to either github or the file already downloaded
+## How to retrieve audit binary(Goss)
+# Options are 'copy' or 'download' - detailed settings at the bottom of this file
+# - if 'copy':
+#    - the filepath mentioned via the below 'audit_bin_copy_location' var will be used to access already downloaded Goss
+# - if 'download':
+#    - the GitHub Goss-releases URL will be used for a fresh-download, via 'audit_bin_url' and 'audit_pkg_arch_name' vars
 get_audit_binary_method: download
 
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
