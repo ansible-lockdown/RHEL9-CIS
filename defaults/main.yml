@@ -1416,7 +1416,7 @@ rhel9cis_auditd_disk_full_action: halt
 # when an error is detected on the partition that holds the audit log files.
 rhel9cis_auditd_disk_error_action: syslog
 
-# Control 6.3.2.4 - Ensure system warns when audit logs are low on space
+## Control 6.3.2.4 - Ensure system warns when audit logs are low on space
 # This variable tells the system what action to take when the system has detected
 # that it is starting to get low on disk space.
 # The options for setting this variable are as follows:
