@@ -35,6 +35,7 @@ rhel9cis_level_2: true
 
 # Create managed not custom local_facts files
 create_benchmark_facts: true
+# The path where the ansible facts file is created if audit facts are not present
 ansible_facts_path: /etc/ansible/facts.d
 
 ## Section 1.6 - Mandatory Access Control
@@ -776,7 +777,7 @@ rhel9cis_ftp_client: false
 rhel9cis_openldap_clients_required: false
 ## Control - 2.2.3 - Ensure nis client is not installed
 # Set this variable to `true` to keep package `nis`(`ypbind`); otherwise, the package is uninstalled.
-rhel9cis_ypbind_required: false  # Same package as NIS server
+rhel9cis_ypbind_required: false
 ## Control - 2.2.4 - Ensure telnet client is not installed
 # Set this variable to `true` to keep package `telnet`; otherwise, the package is uninstalled.
 rhel9cis_telnet_required: false
@@ -827,7 +828,7 @@ rhel9cis_flush_ipv6_route: false
 # 1) either 'firewalld'
 # 2) or 'nftables'
 #### Some control allow for services to be removed or masked
-#### The options are under each heading
+#### The options are under each heading:
 #### absent = remove the package
 #### masked = leave package if installed and mask the service
 rhel9cis_firewall: firewalld
@@ -1223,7 +1224,6 @@ rhel9cis_aide_cron:
   aide_weekday: '*'
 
 ## Preferred method of logging
-## Whether rsyslog or journald preferred method for local logging
 ## Controls 6.2.1.x | Configure systemd-journald service
 ## Controls 6.2.2.x | Configured journald
 ## Controls 6.2.3.x | Configure rsyslog
@@ -1327,7 +1327,7 @@ rhel9cis_remote_log_retrycount: 100
 # of rsyslog forwarding must be enabled('rhel9cis_remote_log_server: true').
 rhel9cis_remote_log_queuesize: 1000
 
-# Control 6.2.3.7 - Ensure rsyslog is not configured to receive logs from a remote client
+## Control 6.2.3.7 - Ensure rsyslog is not configured to receive logs from a remote client
 # This variable expresses whether the system is used as a log server or not. If set to:
 #  - 'false', current system will act as a log CLIENT, thus it should NOT receive data from other hosts.
 #  - 'true', current system will act as a log SERVER, enabling centralised log management(by protecting log integrity
@@ -1447,7 +1447,7 @@ rhel9cis_auditd_admin_space_left_action: halt
 # for auditd should be used by the role.
 rhel9cis_auditd_extra_conf_usage: false
 
-# 6.3.3.x allow exceptions for UID in auditd config
+## Controls 6.3.3.x allow exceptions for UID in auditd config
 ## Advanced option found in auditd post
 # This variable governs if defining user exceptions for auditd logging is acceptable.
 rhel9cis_allow_auditd_uid_user_exclusions: false
@@ -1504,7 +1504,7 @@ min_int_uid: 1000
 max_int_uid: 65533
 
 ## Control 7.2.9 - Ensure local interactive user dot files access is configured
-# This variable is a toggle foe enabling/disabling the automated modification of
+# This variable is a toggle for enabling/disabling the automated modification of
 # permissions on dot files.
 # Possible values are `true` and `false`
 # This setting can impact a running system if not tested sufficiently
