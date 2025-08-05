@@ -47,7 +47,7 @@
     remote_src: "{{ (audit_conf_source is contains('http')) | ternary(true, false) }}"
     extra_opts: "{{ (audit_conf_source is contains('github')) | ternary('--strip-components=1', []) }}"
 
-- name: Pre Audit Setup | Check goss is available
+- name: Pre Audit Setup | Check Goss is available
   when: run_audit
   block:
     - name: Pre Audit Setup | Check for goss file
@@ -71,7 +71,7 @@
     mode: 'go-rwx'
 
 - name: Pre Audit | Run pre_remediation audit {{ benchmark }}  # noqa name[template]
-  ansible.builtin.command: "{{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -o {{ pre_audit_outfile }} -g \"{{ group_names }}\""  # noqa yaml[line-length]
+  ansible.builtin.shell: "umask 0022 && {{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -o {{ pre_audit_outfile }} -g \"{{ group_names }}\""  # noqa yaml[line-length]
   changed_when: true
   environment:
     AUDIT_BIN: "{{ audit_bin }}"
