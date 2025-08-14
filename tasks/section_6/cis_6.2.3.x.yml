@@ -131,7 +131,7 @@
           *.=warning;*.=err                                        -/var/log/warn
           *.crit                                                   /var/log/warn
           *.*;mail.none;news.none                                  /var/log/messages
-        insertafter: '#### RULES ####'
+        insertbefore: '# ### sample forwarding rule ###'
       notify: Restart rsyslog
 
     - name: "6.2.3.5 | PATCH | Ensure logging is configured | Local log settings"
