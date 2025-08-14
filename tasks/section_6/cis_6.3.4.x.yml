@@ -27,9 +27,9 @@
     - level2-workstation
     - patch
     - auditd
-    - rule_6.3.4.1
     - rule_6.3.4.2
     - rule_6.3.4.3
+    - rule_6.3.4.4
     - NIST800-53R5_AU-3
   ansible.builtin.file:
     path: "{{ prelim_auditd_logfile.stdout }}"
