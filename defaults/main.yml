@@ -592,6 +592,8 @@ rhel9cis_warning_banner: Authorized users only. All activity may be monitored an
 # End Banner
 
 ## Control 1.8.x - Settings for GDM
+# do not run Control 1.8.x if using a display manager different than gdm
+rhel9cis_display_manager: "gdm"
 ## 1.8 GDM graphical interface
 rhel9cis_gui: "{{ prelim_gnome_present.stat.exists | default(false) }}"
 # This variable specifies the GNOME configuration database file to which configurations are written.
