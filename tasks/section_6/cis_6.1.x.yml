@@ -91,13 +91,13 @@
 
     - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
       when: rhel9cis_aide_scan == "timer"
-      ansible.builtin.systemd_service:
+      ansible.builtin.systemd:
         name: aidecheck.service
         enabled: true
 
     - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked | aide service"
       when: rhel9cis_aide_scan == "timer"
-      ansible.builtin.systemd_service:
+      ansible.builtin.systemd:
         name: aidecheck.timer
         state: started
         enabled: true
