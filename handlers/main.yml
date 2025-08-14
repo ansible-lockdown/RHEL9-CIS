@@ -263,7 +263,7 @@
   listen: Restart auditd
 
 - name: Start auditd process
-  ansible.builtin.systemd_service:
+  ansible.builtin.systemd:
     name: auditd
     state: started
   listen: Restart auditd
