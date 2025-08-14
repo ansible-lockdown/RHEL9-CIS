@@ -8,6 +8,9 @@
 - Thanks to @bgro and @Kodebach
   - Public PR 371
   - updated to user sudo check 5.2.4
+- Thanks to @DianaMariaDDM
+  - Public PR 367
+  - updated several typos
 - Thanks to @polski-g
   - Public PR 364
   - gdm section 1.8 improvements
