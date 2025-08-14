@@ -14,6 +14,12 @@
 - Thanks to @chrispipo
   - Public PR 350
   - change insert before for rsyslog setting
+- Thanks to @thesmilinglord
+  - public issue 377
+  - change 1.3 from include task to import for tagging
+- Thanks to @Fredouye
+  - public issue 372
+  - allow password with different locale
 
 ## 2.0.2 - Based on CIS v2.0.0
 
