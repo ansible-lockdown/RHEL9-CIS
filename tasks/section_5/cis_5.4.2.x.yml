@@ -139,7 +139,7 @@
       ansible.builtin.stat:
         path: "{{ item }}"
       loop: "{{ discovered_root_paths_split.stdout_lines }}"
-      register: paths_stat
+      register: discovered_root_paths_stat
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Create dirs for some paths that are not dirs"
       ansible.builtin.file:
@@ -148,7 +148,7 @@
         owner: root
         group: root
         mode: 'go-w'
-      loop: "{{ paths_stat.results }}"
+      loop: "{{ discovered_root_paths_stat.results }}"
       when: not item.stat.exists
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Check for empty dirs"
