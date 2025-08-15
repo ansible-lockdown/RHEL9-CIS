@@ -1,5 +1,12 @@
 # Changes to rhel9CIS
 
+## 2.0.3 - Based on CIS v2.0.0
+
+- addressed issue 371 thanks to @bgro and kodebach
+- addressed issue 350 thanks to @chrispipo
+- addressed issue 364 thanks to @polski-g
+- pre-commit update
+
 ## 2.0.2 - Based on CIS v2.0.0
 
 - Update to audit_only to allow fetching results
