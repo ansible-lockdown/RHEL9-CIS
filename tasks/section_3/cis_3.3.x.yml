@@ -240,12 +240,12 @@
     - rule_3.3.9
     - NIST800-53R5_AU-3
   block:
-    - name: "3.3.4 | PATCH | Ensure suspicious packets are logged | Set Fact"
+    - name: "3.3.9 | PATCH | Ensure suspicious packets are logged | Set Fact"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv4_route: true
 
-    - name: "3.3.4 | PATCH | Ensure suspicious packets are logged"
+    - name: "3.3.9 | PATCH | Ensure suspicious packets are logged"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 

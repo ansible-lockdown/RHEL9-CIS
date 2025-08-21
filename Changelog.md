@@ -1,5 +1,29 @@
 # Changes to rhel9CIS
 
+## 2.0.3 - Based on CIS v2.0.0
+
+- Thanks to @numericillustration
+  - Public PR 380
+  - systemd_service rolled back to systemd for < ansible 2.14
+- Thanks to @bgro and @Kodebach
+  - Public PR 371
+  - updated to user sudo check 5.2.4
+- Thanks to @DianaMariaDDM
+  - Public PR 367
+  - updated several typos
+- Thanks to @polski-g
+  - Public PR 364
+  - gdm section 1.8 improvements
+- Thanks to @chrispipo
+  - Public PR 350
+  - change insert before for rsyslog setting
+- Thanks to @thesmilinglord
+  - public issue 377
+  - change 1.3 from include task to import for tagging
+- Thanks to @Fredouye
+  - public issue 372
+  - allow password with different locale
+
 ## 2.0.2 - Based on CIS v2.0.0
 
 - Update to audit_only to allow fetching results
