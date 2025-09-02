@@ -21,12 +21,14 @@
   tags:
     - level1-server
     - level1-workstation
+    - sshd
     - automated
     - patch
     - rule_1.6.2
     - NIST800-53R5_SC-8
     - NIST800-53R5_IA-5
-    - NIST800-53R5_AC-17- NIST800-53R5_SC-6
+    - NIST800-53R5_AC-17
+    - NIST800-53R5_SC-6
   ansible.builtin.lineinfile:
     path: /etc/sysconfig/sshd
     regexp: ^CRYPTO_POLICY\s*=
@@ -76,7 +78,6 @@
     - rule_1.6.4
     - NIST800-53R5_SC-6
   block:
-
     - name: "1.6.4 | PATCH | Ensure system wide crypto policy disables macs less than 128 bits | Add submodule exclusion"
       ansible.builtin.template:
         src: etc/crypto-policies/policies/modules/NO-WEAKMAC.pmod.j2
