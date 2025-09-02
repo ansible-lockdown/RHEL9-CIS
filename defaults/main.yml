@@ -18,11 +18,17 @@ rhel9cis_disruption_high: true
 # These variables govern whether the tasks of a particular section are to be executed when running the role.
 # E.g: If you want to execute the tasks of Section 1 you should set the "_section1" variable to true.
 # If you do not want the tasks from that section to get executed you simply set the variable to "false".
+# Some sections support sub-section modularization. The super-section and sub-section must both be true 
+# for the sub-section to execute.
 rhel9cis_section1: true
 rhel9cis_section2: true
 rhel9cis_section3: true
 rhel9cis_section4: true
 rhel9cis_section5: true
+rhel9cis_section5_1: true
+rhel9cis_section5_2: true
+rhel9cis_section5_3: true
+rhel9cis_section5_4: true
 rhel9cis_section6: true
 rhel9cis_section7: true
 
