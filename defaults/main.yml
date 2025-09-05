@@ -595,6 +595,7 @@ rhel9cis_set_boot_pass: true
 #  -'FIPS': A level that conforms to the FIPS140-2 requirements
 rhel9cis_crypto_policy: 'DEFAULT'
 ## Controls 1.6.x and Controls 5.1.x
+rhel9cis_crypto_policy_ansible_managed: true
 # This variable contains the value of the crypto policy module(combinations of policies and
 # sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
 # using 'rhel9cis_allowed_crypto_policies_modules' variable, which currently are:
