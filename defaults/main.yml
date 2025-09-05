@@ -618,7 +618,7 @@ rhel9cis_warning_banner: Authorized users only. All activity may be monitored an
 
 ## Control 1.8.x - Settings for GDM
 # do not run Control 1.8.x if using a display manager different than gdm
-rhel10cis_display_manager: "gdm"
+rhel9cis_display_manager: "gdm"
 # This variable governs whether rules dealing with GUI specific packages(and/or their settings) should
 # be executed either to:
 # - secure GDM, if GUI is needed('rhel9cis_gui: true')

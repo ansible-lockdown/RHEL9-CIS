@@ -1,6 +1,7 @@
 # Changes to rhel9CIS
 
 ## 2.0.3 - Based on CIS v2.0.0
+- addressed issue #384 thank you @polski-g
 - update command to shell module on tasks
 - addressed issue 371 thanks to @bgro and kodebach
 - addressed issue 350 thanks to @chrispipo
