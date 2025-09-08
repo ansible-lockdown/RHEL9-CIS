@@ -3,7 +3,7 @@
 - name: "1.6.1 | AUDIT | Ensure system-wide crypto policy is not legacy"
   when:
     - rhel9cis_rule_1_6_1
-    - rhel9cis_crypto_policy_ansible_managed
+    - rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -41,7 +41,7 @@
   when:
     - rhel9cis_rule_1_6_3
     - "'NO-SHA1' not in rhel9cis_crypto_policy_module"
-    - rhel9cis_crypto_policy_ansible_managed
+    - rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -72,7 +72,7 @@
   when:
     - rhel9cis_rule_1_6_4
     - "'NO-WEAKMAC' not in rhel9cis_crypto_policy_module"
-    - rhel9cis_crypto_policy_ansible_managed
+    - rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -103,7 +103,7 @@
   when:
     - rhel9cis_rule_1_6_5
     - "'NO-SSHCBC' not in rhel9cis_crypto_policy_module"
-    - rhel9cis_crypto_policy_ansible_managed
+    - rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -134,7 +134,7 @@
   when:
     - rhel9cis_rule_1_6_6
     - "'NO-SSHWEAKCIPHERS' not in rhel9cis_crypto_policy_module"
-    - rhel9cis_crypto_policy_ansible_managed
+    - rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -165,7 +165,7 @@
   when:
     - rhel9cis_rule_1_6_7
     - "'NO-SSHETM' not in rhel9cis_crypto_policy_module"
-    - rhel9cis_crypto_policy_ansible_managed
+    - rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation

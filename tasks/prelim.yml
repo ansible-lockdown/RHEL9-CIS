@@ -136,7 +136,7 @@
   register: prelim_systemd_coredump
 
 - name: "PRELIM | PATCH | Setup crypto-policy"
-  when: rhel9cis_crypto_policy_ansible_managed
+  when: rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
