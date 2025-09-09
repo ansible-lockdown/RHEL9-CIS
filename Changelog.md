@@ -3,7 +3,7 @@
 ## 2.0.3 - Based on CIS v2.0.0
 - addressed issue #387, thank you @fragglexarmy
 - addressed issue #382 to improve regex logic on 5.4.2.4
-- improvment on crypto policy managed controls with var logic
+- improvement on crypto policy managed controls with var logic
 - addressed issue #384 thank you @polski-g
 - update command to shell module on tasks
 - addressed issue 371 thanks to @bgro and kodebach
