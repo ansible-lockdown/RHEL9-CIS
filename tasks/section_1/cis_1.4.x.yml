@@ -52,6 +52,7 @@
         - name: "1.4.2 | AUDIT | Ensure permissions on bootloader config are configured | efi based system | capture current state"
           ansible.builtin.shell: grep "^[^#;]" /etc/fstab | grep '/boot/efi' | awk -F" " '{print $4}'
           changed_when: false
+          check_mode: false
           register: discovered_efi_fstab
 
         - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system | Build Options"

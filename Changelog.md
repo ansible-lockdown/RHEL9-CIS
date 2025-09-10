@@ -2,6 +2,13 @@
 
 ## 2.0.3 - Based on CIS v2.0.0
 
+- Thank you @fragglexarmy
+  - addressed Public issue 387
+- Addressed Public issue 382 to improve regex logic on 5.4.2.4
+- Improvement on crypto policy managed controls with var logic
+- Thanks to @polski-g
+  - addressed issue 384
+- update command to shell module on tasks
 - Thanks to @numericillustration
   - Public PR 380
   - systemd_service rolled back to systemd for < ansible 2.14
