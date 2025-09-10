@@ -586,7 +586,9 @@ rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'  # pr
 # This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
 rhel9cis_set_boot_pass: true
 
-## Controls 1.6.x
+## Controls 1.6.x and Controls 5.1.x
+# This variable governs if current Ansible role should manage system-wide crypto policy.
+rhel9cis_crypto_policy_ansiblemanaged: true
 # This variable contains the value to be set as the system-wide crypto policy. Current rule enforces NOT USING
 # 'LEGACY' value(as it is less secure, it just ensures compatibility with legacy systems), therefore
 # possible values for this variable are, as explained by RedHat docs:
@@ -594,7 +596,6 @@ rhel9cis_set_boot_pass: true
 #  -'FUTURE': conservative security level that is believed to withstand any near-term future attacks
 #  -'FIPS': A level that conforms to the FIPS140-2 requirements
 rhel9cis_crypto_policy: 'DEFAULT'
-## Controls 1.6.x and Controls 5.1.x
 # This variable contains the value of the crypto policy module(combinations of policies and
 # sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
 # using 'rhel9cis_allowed_crypto_policies_modules' variable, which currently are:
@@ -618,7 +619,7 @@ rhel9cis_warning_banner: Authorized users only. All activity may be monitored an
 
 ## Control 1.8.x - Settings for GDM
 # do not run Control 1.8.x if using a display manager different than gdm
-rhel10cis_display_manager: "gdm"
+rhel9cis_display_manager: "gdm"
 # This variable governs whether rules dealing with GUI specific packages(and/or their settings) should
 # be executed either to:
 # - secure GDM, if GUI is needed('rhel9cis_gui: true')
