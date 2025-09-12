@@ -1,7 +1,7 @@
 ---
 
-# Preliminary tasks that should always be run
-# List users in order to look files inside each home directory
+# Preliminary tasks that should always run
+# List users in order to look up files inside each home directory
 
 - name: "PRELIM | Include audit specific variables"
   when: run_audit or audit_only or setup_audit
@@ -136,7 +136,7 @@
   register: prelim_systemd_coredump
 
 - name: "PRELIM | PATCH | Setup crypto-policy"
-  when: rhel9cis_rule_1_6_1
+  when: rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -166,6 +166,7 @@
         current_crypto_module: "{{ prelim_system_wide_crypto_policy.stdout.split(':')[1] }}"
 
 - name: "PRELIM | AUDIT | Set facts based on boot type"
+  tags: always
   block:
     - name: "PRELIM | AUDIT | Check whether machine is UEFI-based"
       ansible.builtin.stat:
@@ -353,7 +354,6 @@
     prelim_max_int_uid: "{{ prelim_uid_max_id.stdout | default(max_int_uid) }}"
 
 - name: "PRELIM | AUDIT | Gather the package facts after prelim"
-  tags:
-    - always
+  tags: always
   ansible.builtin.package_facts:
     manager: auto

@@ -24,6 +24,7 @@
       ansible.builtin.shell: "awk -F: '(/^[^:]+:[^!*]/ && ($5> {{ rhel9cis_pass_max_days }} || $5< {{ rhel9cis_pass_max_days }} || $5 == -1)){print $1}' /etc/shadow"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_max_days
 
     - name: "5.4.1.1 | PATCH | Ensure password expiration is 365 days or less | Set existing users PASS_MAX_DAYS"
@@ -64,7 +65,7 @@
         - rhel9cis_force_user_mindays
       ansible.builtin.user:
         name: "{{ item }}"
-        password_expire_max: "{{ rhel9cis_pass_min_days }}"
+        password_expire_min: "{{ rhel9cis_pass_min_days }}"
       loop: "{{ discovered_min_days.stdout_lines }}"
 
 - name: "5.4.1.3 | PATCH | Ensure password expiration warning days is configured"
