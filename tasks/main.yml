@@ -118,8 +118,8 @@
     - name: "Check authselect profile is selected | Check current profile"
       ansible.builtin.command: authselect list
       changed_when: false
-      failed_when: prelim_authselect_current_profile.rc not in [ 0, 1 ]
-      register: prelim_authselect_current_profile
+      failed_when: prelim_authselect_profile_list.rc not in [ 0, 1 ]
+      register: prelim_authselect_profile_list
 
 - name: "Ensure root password is set"
   when: rhel9cis_rule_5_4_2_4

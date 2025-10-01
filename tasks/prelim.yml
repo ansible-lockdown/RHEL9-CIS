@@ -114,6 +114,7 @@
       ansible.builtin.shell: rpm -qi redhat-release | grep Signature  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
+      check_mode: false
       register: prelim_os_gpg_package_valid
 
     - name: "PRELIM | PATCH | Force keys to be imported"  # noqa command-instead-of-module
@@ -207,6 +208,7 @@
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false
+      check_mode: false
       failed_when: discover_wireless_adapters.rc not in [ 0, 1 ]
 
     - name: "PRELIM | PATCH | Install Network-Manager | if wireless adapter present"
