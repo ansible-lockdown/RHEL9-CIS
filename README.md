@@ -121,7 +121,7 @@ The control found in defaults main also need to reflect this as this control the
 
 **Technical Dependencies:**
 
-RHEL/AlmaLinux/Rocky/Oracle 9 - Other versions are not supported.
+RHEL Family OS 9
 
 - Access to download or add the goss binary and content to the system if using auditing
 (other options are available on how to get the content to the system.)
