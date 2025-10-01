@@ -94,7 +94,7 @@
         - discovered_warn_days.stdout_lines | length > 0
         - item in prelim_interactive_users | map(attribute='username') | list
         - rhel9cis_force_user_warnage
-      ansible.builtin.command: "chage --warndays {{ rhel9cis_pass['warn_age'] }} {{ item }}"
+      ansible.builtin.command: "chage --warndays {{ rhel9cis_pass_warn_age }} {{ item }}"
       changed_when: true
       loop: "{{ discovered_warn_days.stdout_lines }}"
 
