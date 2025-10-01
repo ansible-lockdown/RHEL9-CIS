@@ -1,5 +1,13 @@
 # Changes to rhel9CIS
 
+# Based on CIS v2.0.0
+Public issues incorporated
+Workflow updates
+Pre-commit updates
+README latest versions
+Audit improvements and max-concurrent option added
+Benchmark version variable in audit template
+
 ## 2.0.3 - Based on CIS v2.0.0
 
 - Thank you @fragglexarmy
