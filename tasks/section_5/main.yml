@@ -11,7 +11,7 @@
 
 - name: "SECTION | 5.2 | Configure privilege escalation"
   when:
-    - - rhel9cis_section5_2
+    - rhel9cis_section5_2
   ansible.builtin.import_tasks:
     file: cis_5.2.x.yml
 
