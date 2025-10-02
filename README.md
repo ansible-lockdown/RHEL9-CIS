@@ -58,9 +58,9 @@
 
 ## Looking for support? 🤝
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_WINDOWS_2022_cis)
+[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_RHEL9-CIS)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_WINDOWS_2022_cis)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_RHEL9-CIS)
 
 ### Community 💬
 
@@ -95,7 +95,7 @@ Further details can be seen in the [Changelog](./ChangeLog.md)
 
 ## Matching a security Level for CIS
 
-It is possible to to only run level 1 or level 2 controls for CIS.
+It is possible to only run level 1 or level 2 controls for CIS.
 This is managed using tags:
 
 - level1-server
