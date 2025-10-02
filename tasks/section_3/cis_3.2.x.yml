@@ -25,8 +25,8 @@
     - name: "3.2.1 | PATCH | Ensure dccp kernel module is not available | blacklist"
       ansible.builtin.lineinfile:
         path: /etc/modprobe.d/blacklist.conf
-        regexp: "^(#)?blacklist cramfs(\\s|$)"
-        line: "blacklist cramfs"
+        regexp: "^(#)?blacklist dccp(\\s|$)"
+        line: "blacklist dccp"
         create: true
         mode: 'u-x,go-rwx'
 
