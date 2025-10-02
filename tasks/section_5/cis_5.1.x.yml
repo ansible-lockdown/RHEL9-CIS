@@ -41,8 +41,8 @@
       ansible.builtin.file:
         path: "{{ item.path }}"
         owner: root
-        group: root
-        mode: 'u-x,go-rwx'
+        group: "{{ 'ssh_keys' if (item.group == 'ssh_keys') else 'root' }}"
+        mode: "{{ 'u-x,g-wx,o-rwx' if (item.group == 'ssh_keys') else 'u-x,go-rwx' }}"
       loop: "{{ discovered_ssh_private_host_key.files }}"
       loop_control:
         label: "{{ item.path }}"
