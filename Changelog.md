@@ -7,6 +7,8 @@ Pre-commit updates
 README latest versions
 Audit improvements and max-concurrent option added
 Benchmark version variable in audit template
+fixed typo thanks to @fragglexarmy #393
+fixed typo thanks to @trumbaut #397
 
 ## 2.0.3 - Based on CIS v2.0.0
 
