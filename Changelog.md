@@ -6,7 +6,7 @@
 - addressed issue #393 thank you to @fragglexarmy
 - addressed issue #394 thank you to @dbeuker
 - addressed issues #390 and #391 thanks to @polski-g
-- addressed issue #398 thanks to trumbaut
+- addressed issue #398 & #399 thanks to trumbaut
 - Added max-concurrent options for audit
 - work flow updates
 - audit logic improvements
