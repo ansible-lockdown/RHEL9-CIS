@@ -87,8 +87,6 @@ audit_max_concurrent: 50
 ## Only run Audit do not remediate
 audit_only: false
 ### As part of audit_only ###
-# This will enable files to be copied back to control node in audit_only mode
-fetch_audit_files: false
 # Path to copy the files to will create dir structure in audit_only mode
 audit_capture_files_dir: /some/location to copy to on control node
 #############################
