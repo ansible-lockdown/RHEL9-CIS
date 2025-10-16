@@ -10,6 +10,7 @@
 - Added max-concurrent options for audit
 - work flow updates
 - audit logic improvements
+- auditd template 2.19 compatible
 
 ## 2.0.3 - Based on CIS v2.0.0
 - addressed issue #387, thank you @fragglexarmy
