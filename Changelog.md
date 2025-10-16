@@ -9,6 +9,7 @@ Audit improvements and max-concurrent option added
 Benchmark version variable in audit template
 fixed typo thanks to @fragglexarmy #393
 fixed typo thanks to @trumbaut #397 & #399
+updated auditd template to be 2.19 complaint
 
 ## 2.0.3 - Based on CIS v2.0.0
 
