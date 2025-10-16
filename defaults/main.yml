@@ -19,11 +19,17 @@ rhel9cis_disruption_high: false
 # These variables govern whether the tasks of a particular section are to be executed when running the role.
 # E.g: If you want to execute the tasks of Section 1 you should set the "_section1" variable to true.
 # If you do not want the tasks from that section to get executed you simply set the variable to "false".
+# Some sections support sub-section modularization. The super-section and sub-section must both be true
+# for the sub-section to execute.
 rhel9cis_section1: true
 rhel9cis_section2: true
 rhel9cis_section3: true
 rhel9cis_section4: true
 rhel9cis_section5: true
+rhel9cis_section5_1: true
+rhel9cis_section5_2: true
+rhel9cis_section5_3: true
+rhel9cis_section5_4: true
 rhel9cis_section6: true
 rhel9cis_section7: true
 
@@ -75,12 +81,12 @@ setup_audit: false
 run_audit: false
 # Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
 audit_run_heavy_tests: true
+# Ability to limit the number of concurrent processes used by goss (default 50)
+audit_max_concurrent: 50
 
 ## Only run Audit do not remediate
 audit_only: false
 ### As part of audit_only ###
-# This will enable files to be copied back to control node in audit_only mode
-fetch_audit_files: false
 # Path to copy the files to will create dir structure in audit_only mode
 audit_capture_files_dir: /some/location to copy to on control node
 #############################
@@ -569,7 +575,9 @@ rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'  # pr
 # This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
 rhel9cis_set_boot_pass: true
 
-## Control 1.6
+## Controls 1.6.x and Controls 5.1.x
+# This variable governs if current Ansible role should manage system-wide crypto policy.
+rhel9cis_crypto_policy_ansiblemanaged: true
 # This variable contains the value to be set as the system-wide crypto policy. Current rule enforces NOT USING
 # 'LEGACY' value(as it is less secure, it just ensures compatibility with legacy systems), therefore
 # possible values for this variable are, as explained by RedHat docs:

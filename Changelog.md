@@ -1,7 +1,25 @@
 # Changes to rhel9CIS
 
+# Based on CIS v2.0.0
+Public issues incorporated
+Workflow updates
+Pre-commit updates
+README latest versions
+Audit improvements and max-concurrent option added
+Benchmark version variable in audit template
+fixed typo thanks to @fragglexarmy #393
+fixed typo thanks to @trumbaut #397 & #399
+updated auditd template to be 2.19 complaint
+
 ## 2.0.3 - Based on CIS v2.0.0
 
+- Thank you @fragglexarmy
+  - addressed Public issue 387
+- Addressed Public issue 382 to improve regex logic on 5.4.2.4
+- Improvement on crypto policy managed controls with var logic
+- Thanks to @polski-g
+  - addressed issue 384
+- update command to shell module on tasks
 - Thanks to @numericillustration
   - Public PR 380
   - systemd_service rolled back to systemd for < ansible 2.14

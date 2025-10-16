@@ -1,7 +1,7 @@
 ---
 
-# Preliminary tasks that should always be run
-# List users in order to look files inside each home directory
+# Preliminary tasks that should always run
+# List users in order to look up files inside each home directory
 
 - name: "PRELIM | Include audit specific variables"
   when: run_audit or audit_only or setup_audit
@@ -114,6 +114,7 @@
       ansible.builtin.shell: rpm -qi redhat-release | grep Signature  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
+      check_mode: false
       register: prelim_os_gpg_package_valid
 
     - name: "PRELIM | PATCH | Force keys to be imported"  # noqa command-instead-of-module
@@ -136,7 +137,7 @@
   register: prelim_systemd_coredump
 
 - name: "PRELIM | PATCH | Setup crypto-policy"
-  when: rhel9cis_rule_1_6_1
+  when: rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -166,6 +167,7 @@
         current_crypto_module: "{{ prelim_system_wide_crypto_policy.stdout.split(':')[1] }}"
 
 - name: "PRELIM | AUDIT | Set facts based on boot type"
+  tags: always
   block:
     - name: "PRELIM | AUDIT | Check whether machine is UEFI-based"
       ansible.builtin.stat:
@@ -206,6 +208,7 @@
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false
+      check_mode: false
       failed_when: discover_wireless_adapters.rc not in [ 0, 1 ]
 
     - name: "PRELIM | PATCH | Install Network-Manager | if wireless adapter present"
@@ -353,7 +356,6 @@
     prelim_max_int_uid: "{{ prelim_uid_max_id.stdout | default(max_int_uid) }}"
 
 - name: "PRELIM | AUDIT | Gather the package facts after prelim"
-  tags:
-    - always
+  tags: always
   ansible.builtin.package_facts:
     manager: auto
