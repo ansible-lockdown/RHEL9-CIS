@@ -1,5 +1,28 @@
 # Changes to rhel9CIS
 
+
+## 2.0.4 - Based on CIS v2.0.0
+
+- addressed issue #393 thank you to @fragglexarmy
+- addressed issue #394 thank you to @dbeuker
+- addressed issues #390 and #391 thanks to @polski-g
+- addressed issue #398 & #399 thanks to trumbaut
+- Added max-concurrent options for audit
+- work flow updates
+- audit logic improvements
+- auditd template 2.19 compatible
+
+## 2.0.3 - Based on CIS v2.0.0
+- addressed issue #387, thank you @fragglexarmy
+- addressed issue #382 to improve regex logic on 5.4.2.4
+- improvement on crypto policy managed controls with var logic
+- addressed issue #384 thank you @polski-g
+- update command to shell module on tasks
+- addressed issue 371 thanks to @bgro and kodebach
+- addressed issue 350 thanks to @chrispipo
+- addressed issue 364 thanks to @polski-g
+- pre-commit update
+
 ## 2.0.2 - Based on CIS v2.0.0
 
 - Update to audit_only to allow fetching results

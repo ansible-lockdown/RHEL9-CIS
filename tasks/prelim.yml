@@ -114,6 +114,7 @@
       ansible.builtin.shell: rpm -qi redhat-release | grep Signature  # noqa command-instead-of-module
       changed_when: false
       failed_when: false
+      check_mode: false
       register: prelim_os_gpg_package_valid
 
     - name: "PRELIM | PATCH | Force keys to be imported"  # noqa command-instead-of-module
@@ -136,8 +137,7 @@
   register: prelim_systemd_coredump
 
 - name: "PRELIM | PATCH | Setup crypto-policy"
-  when:
-    - rhel9cis_rule_1_6_1
+  when: rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -167,6 +167,7 @@
         current_crypto_module: "{{ prelim_system_wide_crypto_policy.stdout.split(':')[1] }}"
 
 - name: "PRELIM | AUDIT | Set facts based on boot type"
+  tags: always
   block:
     - name: "PRELIM | AUDIT | Check whether machine is UEFI-based"
       ansible.builtin.stat:
@@ -185,17 +186,14 @@
         grub2_path: /etc/grub2-efi.cfg
 
 - name: "PRELIM | AUDIT | Discover Gnome Desktop Environment"
-  tags:
-    - always
+  tags: always
   ansible.builtin.stat:
     path: /usr/share/gnome/gnome-version.xml
   register: prelim_gnome_present
 
 - name: "PRELIM | PATCH | Install dconf if gui installed"
-  when:
-    - rhel9cis_gui
-  tags:
-    - always
+  when: rhel9cis_gui
+  tags: always
   ansible.builtin.package:
     name: dconf
     state: present
@@ -204,13 +202,13 @@
   when:
     - rhel9cis_rule_3_1_2
     - not system_is_container
-  tags:
-    - always
+  tags: always
   block:
     - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false
+      check_mode: false
       failed_when: discover_wireless_adapters.rc not in [ 0, 1 ]
 
     - name: "PRELIM | PATCH | Install Network-Manager | if wireless adapter present"
@@ -251,9 +249,7 @@
     state: touch
 
 - name: "PRELIM | PATCH | sshd_config.d/50-redhat.conf exists"
-  when:
-    - rhel9cis_rule_5_1_10 or
-      rhel9cis_rule_5_1_11
+  when: rhel9cis_rule_5_1_10 or rhel9cis_rule_5_1_11
   ansible.builtin.stat:
     path: /etc/ssh/sshd_config.d/50-redhat.conf
   register: prelim_sshd_50_redhat_file
@@ -361,7 +357,6 @@
     prelim_max_int_uid: "{{ prelim_uid_max_id.stdout | default(max_int_uid) }}"
 
 - name: "PRELIM | AUDIT | Gather the package facts after prelim"
-  tags:
-    - always
+  tags: always
   ansible.builtin.package_facts:
     manager: auto

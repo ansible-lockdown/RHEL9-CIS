@@ -81,7 +81,7 @@
       register: discovered_nftables_inconnectionrule
 
     - name: "4.3.2 | AUDIT | Ensure nftables established connections are configured | Gather outbound connection rules"
-      ansible.builtin.command: nft list ruleset | awk '/hook output/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state'
+      ansible.builtin.shell: nft list ruleset | awk '/hook output/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state'
       changed_when: false
       failed_when: false
       register: discovered_nftables_outconnectionrule
