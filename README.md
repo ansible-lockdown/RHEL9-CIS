@@ -56,9 +56,9 @@
 
 ## Looking for support? 🤝
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_WINDOWS_2022_cis)
+[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_RH9-CIS)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_WINDOWS_2022_cis)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_RH9-CIS)
 
 ### Community 💬
 
