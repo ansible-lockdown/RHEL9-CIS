@@ -19,7 +19,6 @@
 
 ## Lint & Pre-Commit Tools 🔧
 
-[![Pre-Commit.ci](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/RHEL9-CIS/pre-commit-ci.json)](https://results.pre-commit.ci/latest/github/ansible-lockdown/RHEL9-CIS/devel)
 ![YamlLint](https://img.shields.io/badge/yamllint-Present-brightgreen?style=flat&logo=yaml&logoColor=white)
 ![Ansible-Lint](https://img.shields.io/badge/ansible--lint-Present-brightgreen?style=flat&logo=ansible&logoColor=white)
 
@@ -49,7 +48,6 @@
 ![Private Benchmark Version](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/benchmark-version.json)
 
 [![Private Remediate Pipeline](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/remediate.json)](https://github.com/ansible-lockdown/Private-RHEL9-CIS/actions/workflows/main_pipeline_validation.yml)
-[![Private GPO Pipeline](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/gpo.json)](https://github.com/ansible-lockdown/Private-RHEL9-CIS/actions/workflows/main_pipeline_validation_gpo.yml)
 
 ![Private Pull Requests](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/prs.json)
 ![Private Closed Issues](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/issues-closed.json)
@@ -58,9 +56,9 @@
 
 ## Looking for support? 🤝
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_WINDOWS_2022_cis)
+[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_RH9-CIS)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_WINDOWS_2022_cis)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_RH9-CIS)
 
 ### Community 💬
 
