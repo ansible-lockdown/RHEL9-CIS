@@ -134,7 +134,7 @@
     - rule_5.4.2.4
   block:
     - name: "Ensure root password is set"
-      ansible.builtin.shell: LC_ALL=C passwd -S root | grep -E "(Password set|Password locked)"
+      ansible.builtin.shell: LC_ALL=C passwd -S root | grep -E "(\*LOCK\*|Password set|Password locked)"
       changed_when: false
       failed_when: prelim_root_passwd_set.rc not in [ 0, 1 ]
       register: prelim_root_passwd_set
