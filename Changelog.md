@@ -1,5 +1,11 @@
 # Changes to rhel9CIS
 
+
+# Based on CIS v2.0.0
+pre-commit udpates
+public issue #410 thanks to @kpi-nourman
+public issue #413 thanks to @bbaassssiiee
+
 # Based on CIS v2.0.0
 Public issues incorporated
 Workflow updates
