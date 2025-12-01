@@ -4,4 +4,4 @@
 
 [org/gnome/login-screen]
 banner-message-enable=true
-banner-message-text="{{ rhel9cis_warning_banner }}"
+banner-message-text="{{ rhel9cis_warning_banner | trim | replace("\n", "\\n") }}"
