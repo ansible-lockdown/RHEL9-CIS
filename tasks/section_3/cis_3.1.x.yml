@@ -26,7 +26,7 @@
       when: "'sysctl' in rhel9cis_ipv6_disable_method"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-disable_ipv6.conf"
-    
+
     - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Find IPv6 status"
       when: "'kernel' in rhel9cis_ipv6_disable_method"
       ansible.builtin.command: grubby --info=ALL
