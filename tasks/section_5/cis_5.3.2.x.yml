@@ -93,10 +93,10 @@
           loop:
             - regexp: "auth\\s+required\\s+pam_faillock.so\\s+preauth"
               after:  "auth\\s+required\\s+pam_env.so" # yamllint disable-line rule:colons
-              line:   "auth        required      pam_faillock.so preauth silent deny=3 unlock_timeout={{ rhel9cis_pam_faillock_unlock_time }}" # yamllint disable-line rule:colons
+              line:   "auth        required      pam_faillock.so preauth silent unlock_timeout={{ rhel9cis_pam_faillock_unlock_time }}" # yamllint disable-line rule:colons
             - regexp: "auth\\s+required\\s+pam_faillock.so\\s+authfail"
               before: "auth\\s+required\\s+pam_deny.so"
-              line:   "auth        required      pam_faillock.so authfail silent deny=3 unlock_timeout={{ rhel9cis_pam_faillock_unlock_time }}" # yamllint disable-line rule:colons
+              line:   "auth        required      pam_faillock.so authfail silent unlock_timeout={{ rhel9cis_pam_faillock_unlock_time }}" # yamllint disable-line rule:colons
             - regexp: "account\\s+required\\s+pam_faillock.so"
               before: "account\\s+required\\s+pam_unix.so"
               line:   "account     required      pam_faillock.so" # yamllint disable-line rule:colons
@@ -112,10 +112,10 @@
           loop:
             - regexp: "auth\\s+required\\s+pam_faillock.so\\s+preauth"
               after:  "auth\\s+required\\s+pam_env.so" # yamllint disable-line rule:colons
-              line:   "auth        required      pam_faillock.so preauth silent deny=3 unlock_timeout={{ rhel9cis_pam_faillock_unlock_time }}" # yamllint disable-line rule:colons
+              line:   "auth        required      pam_faillock.so preauth silent unlock_timeout={{ rhel9cis_pam_faillock_unlock_time }}" # yamllint disable-line rule:colons
             - regexp: "auth\\s+required\\s+pam_faillock.so\\s+authfail"
               before: "auth\\s+required\\s+pam_deny.so"
-              line:   "auth        required      pam_faillock.so authfail silent deny=3 unlock_timeout={{ rhel9cis_pam_faillock_unlock_time }}" # yamllint disable-line rule:colons
+              line:   "auth        required      pam_faillock.so authfail silent unlock_timeout={{ rhel9cis_pam_faillock_unlock_time }}" # yamllint disable-line rule:colons
             - regexp: "account\\s+required\\s+pam_faillock.so"
               before: "account\\s+required\\s+pam_unix.so"
               line:   "account     required      pam_faillock.so" # yamllint disable-line rule:colons
