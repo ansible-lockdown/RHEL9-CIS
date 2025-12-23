@@ -802,6 +802,8 @@ rhel9cis_tftp_client: false
 ## Control 3.1.1 - Ensure IPv6 status is identified
 # This variable governs whether ipv6 is enabled or disabled.
 rhel9cis_ipv6_required: true
+# rhel9cis_ipv6_disable defines the method of disabling IPv6, sysctl vs kernel
+rhel9cis_ipv6_disable_method: "sysctl"
 
 ## Control 3.1.2 - Ensure wireless interfaces are disabled
 # if wireless adapter found allow network manager to be installed
