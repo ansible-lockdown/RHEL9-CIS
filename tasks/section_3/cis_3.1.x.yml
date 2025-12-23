@@ -16,18 +16,18 @@
     - rule_3.1.1
     - NIST800-53R5_CM-7
   block:
-    - name: "3.1.1 | AUDIT | Ensure IPv6 status is identified | Set vars for sysctl template"
+    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Set vars for sysctl template"
       when: "'sysctl' in rhel9cis_ipv6_disable_method"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv6_route: true
 
-    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | disable via sysctl template"
+    - name: "3.1.1 | AUDIT | Ensure IPv6 status is identified | Message out implementation info"
       when: "'sysctl' in rhel9cis_ipv6_disable_method"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-disable_ipv6.conf"
 
-    - name: "3.1.1 | PATCH | Ensure IPv6 status is identified | Find IPv6 status"
+    - name: "3.1.1 | AUDIT | Ensure IPv6 status is identified | Find IPv6 status"
       when: "'kernel' in rhel9cis_ipv6_disable_method"
       ansible.builtin.command: grubby --info=ALL
       changed_when: false
