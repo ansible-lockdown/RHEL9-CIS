@@ -1,5 +1,8 @@
 # Changes to rhel9CIS
 
+# Based on CIS v2.0.0
+Added better sysctl logic to disable IPv6
+Added option to disable IPv6 via sysctl (original method) or via the kernel
 
 # Based on CIS v2.0.0
 pre-commit udpates
