@@ -2,6 +2,7 @@
 
 ## 2.0.4 - Based on CIS v2.0.0
 
+- addressed issue #416 thank you @georgenalen and @bbaassssiiee
 - addressed issue #393 thank you to @fragglexarmy
 - addressed issue #394 thank you to @dbeuker
 - addressed issues #390 and #391 thanks to @polski-g
