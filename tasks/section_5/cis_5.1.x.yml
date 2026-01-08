@@ -431,6 +431,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*MaxStartups
     line: 'MaxStartups {{ rhel9cis_ssh_maxstartups }}'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
