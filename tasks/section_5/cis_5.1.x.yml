@@ -411,6 +411,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: '^(#)?MaxAuthTries \d'
     line: 'MaxAuthTries {{ rhel9cis_ssh_maxauthtries }}'
+    insertbefore: "^Match"
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
