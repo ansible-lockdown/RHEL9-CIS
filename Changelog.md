@@ -1,15 +1,14 @@
-# Changes to rhel9CIS
+# Changes to RHEL9CIS
 
-# Based on CIS v2.0.0
+## 2.0.4 - Based on CIS v2.0.0
+
+addressed issue #419, thank you @aaronk1
+addressed issue #418 thank you @bbaassssiiee
 Added better sysctl logic to disable IPv6
 Added option to disable IPv6 via sysctl (original method) or via the kernel
-
-# Based on CIS v2.0.0
 pre-commit udpates
 public issue #410 thanks to @kpi-nourman
 public issue #413 thanks to @bbaassssiiee
-
-# Based on CIS v2.0.0
 Public issues incorporated
 Workflow updates
 Pre-commit updates
