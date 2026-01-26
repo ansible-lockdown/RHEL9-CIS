@@ -602,14 +602,7 @@ rhel9cis_crypto_policy_ansiblemanaged: true
 #  -'FUTURE': conservative security level that is believed to withstand any near-term future attacks
 #  -'FIPS': A level that conforms to the FIPS140-2 requirements
 rhel9cis_crypto_policy: 'DEFAULT'
-# This variable contains the value of the crypto policy module(combinations of policies and
-# sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
-# using 'rhel9cis_allowed_crypto_policies_modules' variable, which currently are:
-#    - 'OSPP'
-#    - 'AD-SUPPORT'
-#    - 'AD-SUPPORT-LEGACY'
-rhel9cis_crypto_policy_module: ''
-## Controls 1.6.x
+## Control 1.6
 # This variable contains the value of the crypto policy module(combinations of policies and
 # sub-policies) to be allowed as default setting. Allowed options are defined in 'vars/main.yml' file,
 # using those listed in the 'rhel9cis_allowed_crypto_policies_modules' variable.
@@ -802,6 +795,8 @@ rhel9cis_tftp_client: false
 ## Control 3.1.1 - Ensure IPv6 status is identified
 # This variable governs whether ipv6 is enabled or disabled.
 rhel9cis_ipv6_required: true
+# rhel9cis_ipv6_disable defines the method of disabling IPv6, sysctl vs kernel
+rhel9cis_ipv6_disable_method: "sysctl"
 
 ## Control 3.1.2 - Ensure wireless interfaces are disabled
 # if wireless adapter found allow network manager to be installed
