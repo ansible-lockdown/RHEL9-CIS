@@ -74,3 +74,5 @@ audit_bins:
   - /sbin/autrace
   - /sbin/auditd
   - /sbin/augenrules
+
+company_title: 'Mindpoint Group - A Tyto Athene Company'
