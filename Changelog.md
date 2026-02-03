@@ -6,7 +6,7 @@ addressed issue #419, thank you @aaronk1
 addressed issue #418 thank you @bbaassssiiee
 Added better sysctl logic to disable IPv6
 Added option to disable IPv6 via sysctl (original method) or via the kernel
-pre-commit udpates
+pre-commit updates
 public issue #410 thanks to @kpi-nourman
 public issue #413 thanks to @bbaassssiiee
 Public issues incorporated
@@ -18,6 +18,8 @@ Benchmark version variable in audit template
 fixed typo thanks to @fragglexarmy #393
 fixed typo thanks to @trumbaut #397 & #399
 updated auditd template to be 2.19 complaint
+PR345 thanks to thulium-drake boot password hash
+tidy up tags on tasks/main.yml
 
 ## 2.0.3 - Based on CIS v2.0.0
 
