@@ -579,8 +579,6 @@ rhel9cis_bootloader_password: 'password'  # pragma: allowlist secret
 # Set this value to anything secure to have predictable hashes, which will prevent unnecessary changes
 rhel9cis_bootloader_salt: ''
 
-rhel9_compiled_bootloader_password: "{% if rhel9cis_bootloader_salt != '' %}(rhel9cis_bootloader_password | grub_hash(salt=rhel9cis_bootloader_salt)) }}{% else %}{{ rhel9cis_bootloader_password_hash }}{% endif %}" # noqa template-instead-of-copy
-
 ## Controls 1.6.x and Controls 5.1.x
 # This variable governs if current Ansible role should manage system-wide crypto policy.
 rhel9cis_crypto_policy_ansiblemanaged: true

@@ -48,7 +48,7 @@
   tags: always
   ansible.builtin.assert:
     that: rhel9cis_bootloader_password_hash != 'grub.pbkdf2.sha512.changethispassword' or (rhel9cis_bootloader_salt != '' and rhel9cis_bootloader_password != 'password') # pragma: allowlist secret
-    msg: "This role will not be able to run single user password commands as rhel9cis_bootloader_password variable has not been set correctly"
+    msg: "This role will not be able to run single user password commands as rhel9cis_bootloader_password or rhel9cis_bootloader_password_hash variable has not been set correctly"
 
 - name: "Check crypto-policy module input"
   when:
