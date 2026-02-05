@@ -566,14 +566,18 @@ rhel9cis_selinux_pol: targeted
 rhel9cis_selinux_enforce: enforcing
 
 ## Control 1.4.1
-# This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value
-# must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
-# this format: 'grub.pbkdf2.sha512.<Rounds>.<Salt>.<Checksum>'
+# This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
+rhel9cis_set_boot_pass: false
+
+# Either set rhel9cis_bootloader_password_hash or rhel9cis_bootloader_password and rhel9cis_bootloader_salt
+# If you are not using the bootloader hash filter you can set it here if the encrypted format e.g. grub.pbkdf2.sha512.hashstring
 rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
 
-## Control 1.4.1
-# This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
-rhel9cis_set_boot_pass: true
+# This variable will store the GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value must be changed.
+rhel9cis_bootloader_password: 'password'  # pragma: allowlist secret
+
+# Set this value to anything secure to have predictable hashes, which will prevent unnecessary changes
+rhel9cis_bootloader_salt: ''
 
 ## Controls 1.6.x and Controls 5.1.x
 # This variable governs if current Ansible role should manage system-wide crypto policy.

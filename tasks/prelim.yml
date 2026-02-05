@@ -4,7 +4,9 @@
 # List users in order to look up files inside each home directory
 
 - name: "PRELIM | Include audit specific variables"
-  when: run_audit or audit_only or setup_audit
+  when:
+    - run_audit or audit_only
+    - setup_audit
   tags:
     - setup_audit
     - run_audit
@@ -12,7 +14,8 @@
     file: audit.yml
 
 - name: "PRELIM | Include pre-remediation audit tasks"
-  when: run_audit or audit_only or setup_audit
+  when:
+    - run_audit or audit_only
   tags: run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
@@ -92,6 +95,11 @@
     - rhel9cis_rule_1_2_1_1
     - ansible_facts.distribution != 'RedHat'
     - ansible_facts.distribution != 'OracleLinux'
+  tags:
+    - level1-server
+    - level1-workstation
+    - rule_1.2.1.1
+    - gpg
   ansible.builtin.package:
     name: "{{ gpg_key_package }}"
     state: latest

@@ -24,6 +24,8 @@ rhel9cis_allowed_crypto_policies_modules:
   - 'NO-SSHWEAKMAC'
   - 'NO-WEAKMAC'
 
+rhel9_compiled_bootloader_password: "{% if rhel9cis_bootloader_salt != '' %}(rhel9cis_bootloader_password | grub_hash(salt=rhel9cis_bootloader_salt)) }}{% else %}{{ rhel9cis_bootloader_password_hash }}{% endif %}" # noqa template-instead-of-copy
+
 # Used to control warning summary
 warn_control_list: ""
 warn_count: 0
@@ -74,3 +76,5 @@ audit_bins:
   - /sbin/autrace
   - /sbin/auditd
   - /sbin/augenrules
+
+company_title: 'Mindpoint Group - A Tyto Athene Company'
