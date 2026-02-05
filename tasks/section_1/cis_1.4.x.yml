@@ -13,7 +13,7 @@
     - NIST800-53R5_AC-3
   ansible.builtin.copy:
     dest: /boot/grub2/user.cfg
-    content: "GRUB2_PASSWORD={{ rhel9cis_bootloader_password_hash | default(rhel9cis_bootloader_password | grub_hash(salt=rhel9cis_bootloader_salt)) }}" # noqa template-instead-of-copy
+    content: "GRUB2_PASSWORD={{ rhel9_compiled_bootloader_password }}" # noqa template-instead-of-copy
     owner: root
     group: root
     mode: 'go-rwx'
