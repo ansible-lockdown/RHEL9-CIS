@@ -221,6 +221,7 @@
 
     - name: "PRELIM | PATCH | Install Network-Manager | if wireless adapter present"
       when:
+        - rhel9cis_install_network_manager
         - discover_wireless_adapters.rc == 0
         - "'NetworkManager' not in ansible_facts.packages"
       ansible.builtin.package:

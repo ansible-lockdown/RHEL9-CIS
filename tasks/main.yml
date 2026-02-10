@@ -97,7 +97,7 @@
               or
                 (ansible_env.SUDO_USER in rhel9cis_sudoers_exclude_nopasswd_list)
               )
-            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set or or the user is not included in the exception list for rule 5.2.4 - It can break access"
+            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set or the user is not included in the exception list for rule 5.2.4 - It can break access"
             success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user or the user is included in the exception list for rule 5.2.4"
 
         - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"  # noqa name[template]

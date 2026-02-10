@@ -41,7 +41,7 @@ gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
 ## Controls 6.3.3.x - Audit template
 # This variable is set to true by tasks 6.3.3.1 to 6.3.3.20. As a result, the
 # audit settings are overwritten with the role's template. In order to exclude
-# specific rules, you must set the variable of form `ubtu24cis_rule_6_3_3_x` above
+# specific rules, you must set the variable of form `rhel9cis_rule_6_3_3_x` above
 # to `false`.
 update_audit_template: false
 
@@ -52,7 +52,7 @@ update_audit_template: false
 # system_is_container the true. Otherwise, the default value
 # 'false' is left unchanged.
 system_is_container: false
-# The filename of the existing yml file in role's  'vars/' sub-directory
+# The filename of the existing yml file in role's 'vars/' sub-directory
 # to be used for managing the role-behavior when a container was detected:
 # (de)activating rules or for other tasks(e.g. disabling Selinux or a specific
 # firewall-type).
