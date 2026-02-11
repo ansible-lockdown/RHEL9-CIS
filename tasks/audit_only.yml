@@ -7,30 +7,6 @@
   ansible.builtin.import_tasks:
     file: fetch_audit_output.yml
 
-- name: Audit_only | Capture audit files to control node
-  when:
-    - audit_only
-    - audit_capture_files_dir is defined
-    - audit_capture_files_dir | length > 0
-  block:
-    - name: Audit_only | Ensure capture directory exists
-      ansible.builtin.file:
-        path: "{{ audit_capture_files_dir }}/{{ inventory_hostname }}"
-        state: directory
-        mode: 'u=rwx,go=rx'
-      become: false
-      delegate_to: localhost
-
-    - name: Audit_only | Copy audit files to capture directory
-      ansible.builtin.fetch:
-        src: "{{ item }}"
-        dest: "{{ audit_capture_files_dir }}/{{ inventory_hostname }}/"
-        flat: true
-      failed_when: false
-      loop:
-        - "{{ pre_audit_outfile }}"
-        - "{{ post_audit_outfile }}"
-
 - name: Audit_only | Show Audit Summary
   when: audit_only
   ansible.builtin.debug:
