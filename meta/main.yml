@@ -1,11 +1,11 @@
 ---
 galaxy_info:
-  author: "MindPoint Group"
+  author: "Ansible-Lockdown"
   description: "Apply the RHEL 9 CIS"
-  company: "MindPoint Group"
+  company: "MindPoint Group - A Tyto Athene Company"
   license: MIT
   role_name: rhel9_cis
-  namespace: mindpointgroup
+  namespace: ansible-lockdown
   min_ansible_version: 2.10.1
   platforms:
     - name: EL
