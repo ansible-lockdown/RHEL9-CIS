@@ -11,7 +11,6 @@
       rhel9cis_selinux_disable: true
       role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
       rhel9cis_rule_5_3_4: false
-      rhel9cis_rule_1_1_10: false
       rhel9cis_rsyslog_ansiblemanaged: false
       rhel9cis_rule_3_4_1_3: false
       rhel9cis_rule_3_4_1_4: false

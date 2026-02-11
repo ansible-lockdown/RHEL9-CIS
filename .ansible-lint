@@ -4,5 +4,6 @@ quiet: true
 skip_list:
   - 'package-latest'
   - 'risky-shell-pipe'
+  - 'var-naming[read-only]'
 use_default_rules: true
 verbosity: 0

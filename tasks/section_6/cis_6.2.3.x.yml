@@ -195,7 +195,7 @@
   register: discovered_rsyslog_remote_host
   notify: Restart rsyslog
 
-- name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote client"
+- name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to receive logs from a remote client"
   when: rhel9cis_rule_6_2_3_7
   tags:
     - level1-server
@@ -208,7 +208,7 @@
     - NIST800-53R5_AU-12
     - NIST800-53R5_CM-6
   block:
-    - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote client. | When not log host"
+    - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to receive logs from a remote client. | When not log host"
       when: not rhel9cis_system_is_log_server
       ansible.builtin.replace:
         path: /etc/rsyslog.conf
@@ -221,7 +221,7 @@
         - '^(module\(load="imtcp"\))'
         - '^(input\(type="imtcp")'
 
-    - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote clients. | When log host"
+    - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to receive logs from a remote clients. | When log host"
       when: rhel9cis_system_is_log_server
       ansible.builtin.replace:
         path: /etc/rsyslog.conf
