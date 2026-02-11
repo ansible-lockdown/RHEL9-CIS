@@ -3,6 +3,7 @@
 ## 2.0.5 - Based on CIS v2.0.0
 
 - QA Fixes
+- .j2 Branding Update
 - Added rhel9cis_uses_root variable definition for 5.4.2.5 root PATH integrity task
 - fixed spelling and grammar across defaults/main.yml, Changelog.md, README.md, tasks/main.yml, and vars/main.yml
 - Fixed incorrect product reference in vars/main.yml comment (ubtu24cis -> rhel9cis)
