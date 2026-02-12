@@ -77,9 +77,11 @@ tidy up tags on tasks/main.yml
   - public issue 372
   - allow password with different locale
 
-
 ## 2.0.4 - Based on CIS v2.0.0
 
+- addressed issue #419, thank you @aaronk1
+- addressed issue #418 thank you @bbaassssiiee
+- addressed issue #416 thank you @georgenalen and @bbaassssiiee
 - addressed issue #393 thank you to @fragglexarmy
 - addressed issue #394 thank you to @dbeuker
 - addressed issues #390 and #391 thanks to @polski-g
@@ -88,6 +90,9 @@ tidy up tags on tasks/main.yml
 - work flow updates
 - audit logic improvements
 - auditd template 2.19 compatible
+- pre-commit updates
+- #410 thanks to @kpi-nourman
+- #413 thanks to @bbaassssiiee
 
 ## 2.0.3 - Based on CIS v2.0.0
 - addressed issue #387, thank you @fragglexarmy
