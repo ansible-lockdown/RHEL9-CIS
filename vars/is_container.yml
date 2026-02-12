@@ -2,7 +2,7 @@
 
 # File to skip controls if container
 # Based on standard image no changes
-# it expected all pkgs required for the container are alreday installed
+# it expected all pkgs required for the container are already installed
 
 ## controls
 
@@ -57,7 +57,6 @@ rhel9cis_rule_1_1_6: false
 rhel9cis_rule_1_1_7: false
 rhel9cis_rule_1_1_8: false
 rhel9cis_rule_1_1_9: false
-rhel9cis_rule_1_1_10: false
 # /var/log
 rhel9cis_rule_1_1_11: false
 # /var/log/audit

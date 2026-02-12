@@ -1,7 +1,7 @@
 ---
 
 - name: Apply ansible-lockdown hardening
-  hosts: all
+  hosts: "{{ hosts | default('all') }}"
   become: true
   roles:
     - role: "{{ playbook_dir }}"

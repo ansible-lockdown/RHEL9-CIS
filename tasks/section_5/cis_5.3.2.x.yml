@@ -14,7 +14,7 @@
     - rule_5.3.2.1
   block:
     - name: "5.3.2.1 | PATCH | Ensure active authselect profile includes pam modules | Create custom profiles"
-      when: rhel9cis_authselect_custom_profile_name not in prelim_authselect_current_profile.stdout
+      when: rhel9cis_authselect_custom_profile_name not in prelim_authselect_profile_list.stdout
       ansible.builtin.command: "/usr/bin/authselect create-profile {{ rhel9cis_authselect_custom_profile_name }} -b {{ rhel9cis_authselect_default_profile_to_copy }}"
       changed_when: false
       args:

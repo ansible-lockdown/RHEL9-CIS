@@ -1,10 +1,12 @@
 ---
 
-# Preliminary tasks that should always be run
-# List users in order to look files inside each home directory
+# Preliminary tasks that should always run
+# List users in order to look up files inside each home directory
 
 - name: "PRELIM | Include audit specific variables"
-  when: run_audit or audit_only or setup_audit
+  when:
+    - run_audit or audit_only
+    - setup_audit
   tags:
     - setup_audit
     - run_audit
@@ -12,7 +14,8 @@
     file: audit.yml
 
 - name: "PRELIM | Include pre-remediation audit tasks"
-  when: run_audit or audit_only or setup_audit
+  when:
+    - run_audit or audit_only
   tags: run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
@@ -92,6 +95,11 @@
     - rhel9cis_rule_1_2_1_1
     - ansible_facts.distribution != 'RedHat'
     - ansible_facts.distribution != 'OracleLinux'
+  tags:
+    - level1-server
+    - level1-workstation
+    - rule_1.2.1.1
+    - gpg
   ansible.builtin.package:
     name: "{{ gpg_key_package }}"
     state: latest
@@ -206,14 +214,15 @@
   block:
     - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
-      register: discover_wireless_adapters
+      register: prelim_wireless_adapters
       changed_when: false
       check_mode: false
-      failed_when: discover_wireless_adapters.rc not in [ 0, 1 ]
+      failed_when: prelim_wireless_adapters.rc not in [ 0, 1 ]
 
     - name: "PRELIM | PATCH | Install Network-Manager | if wireless adapter present"
       when:
-        - discover_wireless_adapters.rc == 0
+        - rhel9cis_install_network_manager
+        - prelim_wireless_adapters.rc == 0
         - "'NetworkManager' not in ansible_facts.packages"
       ansible.builtin.package:
         name: NetworkManager
@@ -277,8 +286,7 @@
 - name: "PRELIM | PATCH | Create journald config directory"
   when:
     - rhel9cis_syslog == 'journald'
-    - rhel9cis_rule_6_2_1_3 or
-      rhel9cis_rule_6_2_1_4
+    - rhel9cis_rule_6_2_1_3 or rhel9cis_rule_6_2_1_4
   tags: always
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d

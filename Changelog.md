@@ -1,4 +1,81 @@
-# Changes to rhel9CIS
+# Changes to RHEL9CIS
+
+## 2.0.5 - Based on CIS v2.0.0
+
+- QA Fixes
+- .j2 Branding Update
+- Added rhel9cis_uses_root variable definition for 5.4.2.5 root PATH integrity task
+- fixed spelling and grammar across defaults/main.yml, Changelog.md, README.md, tasks/main.yml, and vars/main.yml
+- Fixed incorrect product reference in vars/main.yml comment (ubtu24cis -> rhel9cis)
+- Fixed broken Changelog link in README.md (case mismatch)
+- Added var-naming[read-only] to ansible-lint skip list for molecule files
+- Bootloader password logic updated with salt and hash options
+- Added passlib dependency documentation for bootloader password hash
+- Updated company title
+- Tidied up comments and variables for bootloader password
+- Removed scheduled tasks
+- Fixed typo thanks to Eugene @Frequentis
+- Unused variable audit: wired up all unused variables, removed legacy references
+- Updated chrony template to use rhel9cis_chrony_server_makestep, rtcsync, and minsources variables instead of hardcoded values
+- Wired up rhel9cis_authselect_custom_profile_create toggle in authselect profile creation task
+- Fixed task 5.3.3.2.7/5.3.3.2.8 mislabeling: separated password quality enforce and root enforce into correct tasks
+- Wired up audit_capture_files_dir in audit_only workflow for file capture to control node
+- Clarified rhel9cis_root_unlock_time documentation for commented-out alternative usage
+- Removed legacy rhel9cis_rule_1_1_10 from molecule converge files and is_container.yml
+- Fixed wrong variable name rhel9cis_unowned_group to rhel9cis_ungrouped_group in tasks/section_7/cis_7.1.x.yml
+- Added rhel9cis_install_network_manager toggle to 3.1.2 wireless interfaces task
+
+## 2.0.4 - Based on CIS v2.0.0
+
+addressed issue #419, thank you @aaronk1
+addressed issue #418 thank you @bbaassssiiee
+Added better sysctl logic to disable IPv6
+Added option to disable IPv6 via sysctl (original method) or via the kernel
+pre-commit updates
+public issue #410 thanks to @kpi-nourman
+public issue #413 thanks to @bbaassssiiee
+Public issues incorporated
+Workflow updates
+Pre-commit updates
+README latest versions
+Audit improvements and max-concurrent option added
+Benchmark version variable in audit template
+fixed typo thanks to @fragglexarmy #393
+fixed typo thanks to @trumbaut #397 & #399
+updated auditd template to be 2.19 compliant
+PR345 thanks to thulium-drake boot password hash - if used needs passlib module
+tidy up tags on tasks/main.yml
+
+## 2.0.3 - Based on CIS v2.0.0
+
+- Thank you @fragglexarmy
+  - addressed Public issue 387
+- Addressed Public issue 382 to improve regex logic on 5.4.2.4
+- Improvement on crypto policy managed controls with var logic
+- Thanks to @polski-g
+  - addressed issue 384
+- update command to shell module on tasks
+- Thanks to @numericillustration
+  - Public PR 380
+  - systemd_service rolled back to systemd for < ansible 2.14
+- Thanks to @bgro and @Kodebach
+  - Public PR 371
+  - updated to user sudo check 5.2.4
+- Thanks to @DianaMariaDDM
+  - Public PR 367
+  - updated several typos
+- Thanks to @polski-g
+  - Public PR 364
+  - gdm section 1.8 improvements
+- Thanks to @chrispipo
+  - Public PR 350
+  - change insert before for rsyslog setting
+- Thanks to @thesmilinglord
+  - public issue 377
+  - change 1.3 from include task to import for tagging
+- Thanks to @Fredouye
+  - public issue 372
+  - allow password with different locale
 
 ## 2.0.4 - Based on CIS v2.0.0
 
@@ -64,7 +141,7 @@
   - updated controls 6.2.10-6.2.14
 - audit
   - steps moved to prelim
-  - update to coipy and archive logic and variables
+  - update to copy and archive logic and variables
 - removed vars not used
 - updated quotes used in mode tasks
 - pre-commit update
@@ -98,7 +175,7 @@
 - lint updates
 - .secrets updated
 - file mode quoted
-- updated 5.6.5 thansk to feedback from S!ghs on discord community
+- updated 5.6.5 thanks to feedback from S!ghs on discord community
 
 ## 1.1.1 - Based on CIS v1.0.0
 
@@ -130,7 +207,7 @@
 ## 1.0.10
 
 - [#72](https://github.com/ansible-lockdown/RHEL9-CIS/issues/72)
-  - Only run check when paybook user not a superuser
+  - Only run check when playbook user not a superuser
 - fix for 5.5.3 thanks to @nrg-fv
 
 ## 1.0.9
@@ -202,7 +279,7 @@ Jan-2023 release
 
 - updated ansible minimum to 2.10
 - Lint file updates and improvements
-- auditd now shows diff ater initial template added
+- auditd now shows diff after initial template added
 - many control rewritten
 - Many controls moved ID references
 - Audit updates aligned
@@ -227,7 +304,7 @@ Jan-2023 release
 - #209 5.6.5 rewrite umask settings
 - #220 tidy up and align variables
 - #226 Thanks to Thulium-Drake
-  -Extended the auditd config required value for auditd space left percentage (not part of CIS Benchmark but required fopr auditd to run correctly in some cases)
+  -Extended the auditd config required value for auditd space left percentage (not part of CIS Benchmark but required for auditd to run correctly in some cases)
 
 - #227 thanks to OscarElits
   - chrony files now RH expected locations
@@ -267,9 +344,9 @@ Jan-2023 release
 - not all controls work with rhel8 releases any longer
   - selinux disabled 1.6.1.4
   - logrotate - 4.3.x
-- updated to rhel8cis v2.0 benchamrk requirements
+- updated to rhel8cis v2.0 benchmark requirements
 - removed iptables firewall controls (not valid on rhel9)
-- added more to logrotate 4.3.x - sure to logrotate now a seperate package
+- added more to logrotate 4.3.x - sure to logrotate now a separate package
 - grub path now standard to /boot/grub2/grub.cfg
 - 1.6.1.4 from rh8 removed as selinux.cfg doesnt disable selinux any longer
 - workflow update
@@ -288,7 +365,7 @@ args:
 ```
 
 - update boolean values to true/false
-- 3.4.2 improved checks for p[ackage presence
+- 3.4.2 improved checks for package presence
 - changed to assert for OS/release and ansible version
 
 ## Initial

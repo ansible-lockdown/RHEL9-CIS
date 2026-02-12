@@ -38,12 +38,13 @@
       when:
         - "'kernel' in rhel9cis_ipv6_disable_method"
         - "'ipv6.disable=1' not in discovered_rhel9cis_3_1_1_ipv6_status.stdout"
-      ansible.builtin.shell: grubby --update-kernel=ALL --args="ipv6.disable=1"
+      ansible.builtin.command: grubby --update-kernel=ALL --args="ipv6.disable=1"
+      changed_when: discovered_rhel9cis_3_1_1_ipv6_status.rc == 0
 
 - name: "3.1.2 | PATCH | Ensure wireless interfaces are disabled"
   when:
     - rhel9cis_rule_3_1_2
-    - discover_wireless_adapters.rc == 0
+    - prelim_wireless_adapters.rc == 0
   tags:
     - level1-server
     - patch
