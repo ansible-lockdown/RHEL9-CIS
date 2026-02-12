@@ -28,8 +28,7 @@
 
 - name: POST | reboot system if changes require it and not skipped
   when: change_requires_reboot
-  tags:
-    - always
+  tags: always
   vars:
     warn_control_id: Reboot_required
   block:

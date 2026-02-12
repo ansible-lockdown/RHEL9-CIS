@@ -179,7 +179,7 @@
             - item.stat.exists
             - item.stat.isdir
             - item.stat.pw_name != 'root' or item.stat.gr_name != 'root' or item.stat.woth or item.stat.wgrp
-            - (item != 'root') and (not rhel9cis_uses_root)
+            - (item != 'root') and (not rhel9cis_uses_root )
           ansible.builtin.file:
             path: "{{ item.stat.path }}"
             state: directory
