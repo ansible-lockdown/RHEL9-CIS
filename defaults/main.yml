@@ -810,10 +810,6 @@ rhel9cis_ipv6_required: true
 # rhel9cis_ipv6_disable defines the method of disabling IPv6, sysctl vs kernel
 rhel9cis_ipv6_disable_method: "sysctl"
 
-# 3.1.1 Disable IPv6
-# rhel9cis_ipv6_disable defines the method of disabling IPv6, sysctl vs kernel
-rhel9cis_ipv6_disable_method: "sysctl"
-
 ## Control 3.1.2 - Ensure wireless interfaces are disabled
 # if wireless adapter found allow network manager to be installed
 rhel9cis_install_network_manager: false
