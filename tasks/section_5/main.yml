@@ -10,14 +10,12 @@
     file: cis_5.1.x.yml
 
 - name: "SECTION | 5.2 | Configure privilege escalation"
-  when:
-    - rhel9cis_section5_2
+  when: rhel9cis_section5_2
   ansible.builtin.import_tasks:
     file: cis_5.2.x.yml
 
 - name: "SECTION | 5.3"
-  when:
-    - rhel9cis_section5_3
+  when: rhel9cis_section5_3
   block:
     - name: "SECTION | 5.3.1.x | Configure PAM software packages"
       ansible.builtin.import_tasks:
@@ -44,8 +42,7 @@
         file: cis_5.3.3.4.x.yml
 
 - name: "SECTION | 5.4"
-  when:
-    - rhel9cis_section5_4
+  when: rhel9cis_section5_4
   block:
     - name: "SECTION | 5.4.1.x | Configure shadow password suite parameters"
       ansible.builtin.import_tasks:

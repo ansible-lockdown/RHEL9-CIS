@@ -1,5 +1,6 @@
 ---
-# defaults file for rhel9-cis
+
+# defaults file for RHEL9-CIS
 # WARNING:
 # These values may be overridden by other vars-setting options(e.g. like the below 'container_vars_file'), as explained here:
 # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
@@ -63,7 +64,7 @@ benchmark: RHEL9-CIS
 # System will reboot if false, can give better audit results
 skip_reboot: true
 
-# default value will change to true but wont reboot if not enabled but will error
+# default value will change to true but won't reboot if not enabled but will error
 change_requires_reboot: false
 
 ###
@@ -93,17 +94,11 @@ audit_max_concurrent: 50
 
 ## Only run Audit do not remediate
 audit_only: false
-### As part of audit_only ###
-# Path to copy the files to will create dir structure in audit_only mode
-audit_capture_files_dir: /some/location to copy to on control node
 #############################
 
-## How to retrieve audit binary(Goss)
-# Options are 'copy' or 'download' - detailed settings at the bottom of this file
-# - if 'copy':
-#    - the filepath mentioned via the below 'audit_bin_copy_location' var will be used to access already downloaded Goss
-# - if 'download':
-#    - the GitHub Goss-releases URL will be used for a fresh-download, via 'audit_bin_url' and 'audit_pkg_arch_name' vars
+# How to retrieve audit binary
+# Options are copy or download - detailed settings at the bottom of this file
+# you will need access to either github or the file already downloaded
 get_audit_binary_method: download
 
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
@@ -257,9 +252,8 @@ rhel9cis_rule_1_8_8: true
 rhel9cis_rule_1_8_9: true
 rhel9cis_rule_1_8_10: true
 
-## Section 2 Fixes
 # Section 2 rules are controlling Services (Special Purpose Services, and service clients)
-# Configure Server Services
+## Configure Server Services
 rhel9cis_rule_2_1_1: true
 rhel9cis_rule_2_1_2: true
 rhel9cis_rule_2_1_3: true
@@ -400,7 +394,6 @@ rhel9cis_rule_5_3_3_2_4: true
 rhel9cis_rule_5_3_3_2_5: true
 rhel9cis_rule_5_3_3_2_6: true
 rhel9cis_rule_5_3_3_2_7: true
-rhel9cis_rule_5_3_3_2_8: true
 # 5.3.3.3 Configure pam_pwhistory module
 # These are added as part of 5.3.2.4 using jinja2 template
 rhel9cis_rule_5_3_3_3_1: true
@@ -539,7 +532,7 @@ rhel9cis_rule_7_2_9: true
 
 ## Ability to enable debug on mounts to assist in troubleshooting
 # Mount point changes are set based upon facts created in Prelim
-# these then build the variable and options that is passed to the handler to set the mount point for the controls in section1.
+# these then build the variable and options that are passed to the handler to set the mount point for the controls in section1.
 rhel9cis_debug_mount_data: false
 
 ## Control 1.1.2
@@ -583,14 +576,33 @@ rhel9cis_selinux_pol: targeted
 rhel9cis_selinux_enforce: enforcing
 
 ## Control 1.4.1
-# This variable will store the hashed GRUB bootloader password to be stored in '/boot/grub2/user.cfg' file. The default value
-# must be changed to a value that may be generated with this command 'grub2-mkpasswd-pbkdf2' and must comply with
-# this format: 'grub.pbkdf2.sha512.<Rounds>.<Salt>.<Checksum>'
+# This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
+rhel9cis_set_boot_pass: false
+
+################### bootloader password ############################################################
+#
+# Two options for setting the bootloader password
+#
+# Option 1: Set the bootloader password and salt – requires the passlib Python module
+# to be available on the Ansible controller.
+# Set this value to something secure to have predictable hashes,
+# which will prevent unnecessary changes.
+
+rhel9cis_bootloader_salt: ''
+
+# This variable stores the GRUB bootloader password to be written
+# to the '/boot/grub2/user.cfg' file. The default value must be changed.
+
+rhel9cis_bootloader_password: 'password'  # pragma: allowlist secret
+
+# Option 2: Set the bootloader password hash – if the salt value is empty,
+# the password will be set using the variable below.
+# If you are not using the bootloader hash filter, you can set it here
+# in encrypted format, e.g. grub.pbkdf2.sha512.hashstring
+
 rhel9cis_bootloader_password_hash: 'grub.pbkdf2.sha512.changethispassword'  # pragma: allowlist secret
 
-## Control 1.4.1
-# This variable governs whether a bootloader password should be set in '/boot/grub2/user.cfg' file.
-rhel9cis_set_boot_pass: true
+######################################################################################################
 
 ## Controls 1.6.x and Controls 5.1.x
 # This variable governs if current Ansible role should manage system-wide crypto policy.
@@ -612,7 +624,7 @@ rhel9cis_additional_crypto_policy_module: ''
 # - 1.7.1 - Ensure message of the day is configured properly
 # - 1.7.2 - Ensure local login warning banner is configured properly
 # - 1.7.3 - Ensure remote login warning banner is configured properly
-# This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
+# This variable stores the content for the Warning Banner(relevant for issue, issue.net, motd).
 rhel9cis_warning_banner: Authorized users only. All activity may be monitored and reported.
 # End Banner
 
@@ -902,8 +914,8 @@ rhel9cis_sshd_clientalivecountmax: 3
 # keep the connection alive and prevent it being terminated due to inactivity.
 rhel9cis_sshd_clientaliveinterval: 15
 
-## Control 5.1.10 - Ensure sshd DisableForwarding is enabled
-# By Default this will also disablex11 forwarding
+## Control 5.1.12 - disable forwarding
+# By Default this will also disable X11 forwarding
 # set 'yes' if x11 is required this can be changed to run in /etc/ssh/ssh_config.d/50-redhat.conf
 # This variable's value is used in the `/etc/ssh/ssh_config.d/50-redhat.conf` file to
 # disable X11Forwarding. If X11 is required, set this variable's value to `yes`!
@@ -947,14 +959,7 @@ rhel9cis_ssh_maxsessions: 4
 # This variable defines the path and file name of the sudo log file.
 rhel9cis_sudolog_location: "/var/log/sudo.log"
 
-## Control 5.2.4 - Ensure users must provide password for escalation
-# The following variable specifies a list of users that should not be required to provide a password
-# for escalation. Feel free to edit it according to your needs.
-rhel9cis_sudoers_exclude_nopasswd_list:
-  - ec2-user
-  - vagrant
-
-## Control 5.2.6 - Ensure sudo authentication timeout is configured correctly
+## Control 5.2.x - Ensure sudo authentication timeout is configured correctly
 # This variable sets the duration (in minutes) during which a user's authentication credentials
 # are cached after successfully authenticating using "sudo". This allows the user to execute
 # multiple commands with elevated privileges without needing to re-enter their password for each
@@ -994,18 +999,37 @@ rhel9cis_authselect_default_profile_to_copy: "sssd --symlink-meta"
 ## Control 5.3.3.1.1 -
 # This variable sets the amount of tries a password can be entered, before a user is locked.
 rhel9cis_pam_faillock_deny: 5
-## Control 5.3.3.2, 5.3.2.2
+
+# - 5.3.3.1.2
 # This variable sets the amount of time a user will be unlocked after the max amount of
 # password failures.
 rhel9cis_pam_faillock_unlock_time: 900
 
-## Control 5.3.3.1.3 - Ensure password failed attempts lockout includes root account
-# This variable is used in the task that ensures that even the root account
-# is included in the password failed attempts lockout measure.
-# The following variable is used in the 'regexp' field. This field is used to find the
-# line in the file. If the line matches the regular expression, it will be replaced
-# with the line parameter's value.
+#####################################################################################################################
+# 5.3.3.1.3 | Ensure pam_faillock is configured - root account lockout behavior
+#
+# Controls how root is handled when the failed login threshold is reached.
+#################### Two mutually exclusive options #################################################################
+#
+#   -> even_deny_root          : Lock root just like any other account
+#   -> root_unlock_time = <n>  : Lock root but auto-unlock after <n> seconds
+#
+# Note: The default value is set to 'even_deny_root' to align with the CIS Benchmark recommendation of locking root
+# identically to regular users when the failed login threshold is reached. If you prefer to have root auto-unlock
+# after a specified time, set 'rhel9cis_pamroot_lock_option' to "root_unlock_time = {{ rhel9cis_root_unlock_time }}"
+# and adjust 'rhel9cis_root_unlock_time' as needed.
+#
+# Set ONE of the following:
+#
+# Option 1: root is locked identically to regular users when the failed login threshold is reached
 rhel9cis_pamroot_lock_option: even_deny_root
+
+# Option 2: root is locked but auto-unlocks after the specified seconds.
+# Seconds before root is automatically unlocked (only used when rhel9cis_pamroot_lock_option includes root_unlock_time)
+rhel9cis_root_unlock_time: 60
+# rhel9cis_pamroot_lock_option: "root_unlock_time = {{ rhel9cis_root_unlock_time }}"
+#
+########################################################################################################################
 
 ## Control 5.3.3.2.1 - Ensure password number of changed characters is configured
 # This variable holds the path to the configuration file that will be created (or overwritten if already existing)
@@ -1079,14 +1103,9 @@ rhel9cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.con
 # When set to '0', dictionary checks are disabled. CIS states that it shall always be set to '1'.
 rhel9cis_passwd_dictcheck_value: 1
 
-# This variable is used in one of the config files to ensure password quality checking is enforced
+# 5.3.3.2.7 - Ensure password quality is enforced for the root user
+rhel9cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality_enforce.conf  # pragma: allowlist secret
 rhel9cis_passwd_quality_enforce_value: 1
-
-## Control 5.3.3.2.7 - Ensure password quality is enforced for the root user
-# This variable holds the path to the configuration file that will be created (or overwritten if already existing)
-# in order to implement the 'Ensure password quality is enforced for the root user' control.
-rhel9cis_passwd_quality_enforce_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
-# The following variable enforces that the root user must adhere to the same password quality policies as other users.
 rhel9cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
 
 ## Control 5.3.3.3.1 - Ensure password history remember is configured
@@ -1126,21 +1145,21 @@ rhel9cis_inactivelock:
   # CIS requires a value of 30 days or less.
   lock_days: 30
 
-## Control 5.4.1.6 - Ensure all users last password change date is in the past
+## Control 5.4.1.x - Ensure all users last password change date is in the past
 # Allow ansible to expire password for account with a last changed date in the future. Setting it
 # to 'false' will just display users in violation, while 'true' will expire those users passwords.
 rhel9cis_futurepwchgdate_autofix: true
 
-## Control 5.4.2.6 - Ensure root user umask is configured
-# The following variable specifies the "umask" to configure for the root user.
-# The user file-creation mode mask ( umask ) is used to determine the file
-# permission for newly created directories and files. In Linux, the default
-# permissions for any newly created directory is 0777 ( rwxrwxrwx ), and for
-# any newly created file it is 0666 ( rw-rw-rw- ). The umask modifies the default
-# Linux permissions by restricting (masking) these permissions. The umask is not
-# simply subtracted, but is processed bitwise. Bits set in the umask are cleared
-# in the resulting file mode. CIS recommends setting 'umask' to '0027' or more
-# restrictive.
+# 5.4.2.x
+
+## 5.4.2.5 Root user used
+# Root by default is not used unless setup by user
+# The role will only run certain commands if set to true
+# This allows the ability to skip tasks that may cause an issue
+# With the understanding root has full access
+rhel9cis_uses_root: false
+
+## 5.4.2.6 - Ensure root home directory permissions are 750 or more restrictive
 rhel9cis_root_umask: '0027'  # 0027 or more restrictive
 
 ## Control 5.4.2.7 - Ensure system accounts are secured | Set nologin
@@ -1157,7 +1176,7 @@ rhel9cis_shell_session_timeout: 900
 # This variable specifies the path of the timeout setting file.
 # (TMOUT setting can be set in multiple files, but only one is required for the
 # rule to pass. Options are:
-# - a file in `/etc/profile.d/` ending in `.s`,
+# - a file in `/etc/profile.d/` ending in `.sh`,
 # - `/etc/profile`, or
 # - `/etc/bash.bashrc`.
 rhel9cis_shell_session_file: /etc/profile.d/tmout.sh
@@ -1185,9 +1204,8 @@ rhel9cis_aide_db_file_age: 1w
 # If AIDE is already setup this variable forces a new database
 # file to be created.
 rhel9cis_aide_db_recreate: false
-# This variable is used to check if there is already an existing database file
-# created by AIDE on the target system. If it is not present, the role will generate
-# a database file with the same name as the value of this variable.
+
+# allows changing the db file; note the config needs to be adjusted too
 rhel9cis_aide_db_file: /var/lib/aide/aide.db.gz
 
 ## Control 6.1.2 - Ensure filesystem integrity is regularly checked
@@ -1217,12 +1235,12 @@ rhel9cis_aide_cron:
   # This variable governs the day of the month when the AIDE cronjob is run.
   # `*` signifies that the job is run on all days; furthermore, specific days
   # can be given in the range `1-31`; several days can be concatenated with a comma.
-  # The specified day(s) can must be in the range  `1-31`.
+  # The specified day(s) must be in the range `1-31`.
   aide_day: '*'
   # This variable governs months when the AIDE cronjob is run.
   # `*` signifies that the job is run in every month; furthermore, specific months
   # can be given in the range `1-12`; several months can be concatenated with commas.
-  # The specified month(s) can must be in the range  `1-12`.
+  # The specified month(s) must be in the range `1-12`.
   aide_month: '*'
   # This variable governs the weekdays, when the AIDE cronjob is run.
   # `*` signifies that the job is run on all weekdays; furthermore, specific weekdays
@@ -1262,7 +1280,7 @@ rhel9cis_journald_runtimekeepfree: 100G
 # Current variable governs the settings for log retention(how long the log files will be kept).
 # Thus, it specifies the maximum time to store entries in a single journal
 # file before rotating to the next one. Set to 0 to turn off this feature.
-# The given values is interpreted as seconds, unless suffixed with the units
+# The given value is interpreted as seconds, unless suffixed with the units
 # `year`, `month`, `week`, `day`, `h` or `m` to override the default time unit of seconds.
 # Values are Xm, Xh, Xday, Xweek, Xmonth, Xyear, for example 2week is two weeks
 # ATTENTION: Uncomment the keyword below when values are set!

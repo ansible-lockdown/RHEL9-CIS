@@ -58,7 +58,7 @@
     - level1-server
     - level1-workstation
     - patch
-    - permissionss
+    - permissions
     - rule_7.1.4
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
@@ -254,7 +254,7 @@
       ansible.builtin.file:
         path: "{{ item }}"
         owner: "{{ rhel9cis_unowned_owner }}"
-        group: "{{ rhel9cis_unowned_group }}"
+        group: "{{ rhel9cis_ungrouped_group }}"
       with_items:
         - "{{ discovered_unowned_files_flatten }}"
 

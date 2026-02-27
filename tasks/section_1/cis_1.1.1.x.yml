@@ -27,8 +27,7 @@
         mode: 'go-rwx'
 
     - name: "1.1.1.1 | PATCH | Ensure cramfs kernel module is not available | Disable cramfs"
-      when:
-        - not system_is_container
+      when: not system_is_container
       community.general.modprobe:
         name: cramfs
         state: absent

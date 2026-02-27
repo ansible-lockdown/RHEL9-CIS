@@ -19,7 +19,6 @@
 
 ## Lint & Pre-Commit Tools 🔧
 
-[![Pre-Commit.ci](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/RHEL9-CIS/pre-commit-ci.json)](https://results.pre-commit.ci/latest/github/ansible-lockdown/RHEL9-CIS/devel)
 ![YamlLint](https://img.shields.io/badge/yamllint-Present-brightgreen?style=flat&logo=yaml&logoColor=white)
 ![Ansible-Lint](https://img.shields.io/badge/ansible--lint-Present-brightgreen?style=flat&logo=ansible&logoColor=white)
 
@@ -49,7 +48,6 @@
 ![Private Benchmark Version](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/benchmark-version.json)
 
 [![Private Remediate Pipeline](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/remediate.json)](https://github.com/ansible-lockdown/Private-RHEL9-CIS/actions/workflows/main_pipeline_validation.yml)
-[![Private GPO Pipeline](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/gpo.json)](https://github.com/ansible-lockdown/Private-RHEL9-CIS/actions/workflows/main_pipeline_validation_gpo.yml)
 
 ![Private Pull Requests](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/prs.json)
 ![Private Closed Issues](https://img.shields.io/endpoint?url=https://ansible-lockdown.github.io/github_linux_IaC/badges/Private-RHEL9-CIS/issues-closed.json)
@@ -58,9 +56,9 @@
 
 ## Looking for support? 🤝
 
-[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_RHEL9-CIS)
+[Lockdown Enterprise](https://www.lockdownenterprise.com#GH_AL_RH9-CIS)
 
-[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_RHEL9-CIS)
+[Ansible support](https://www.mindpointgroup.com/cybersecurity-products/ansible-counselor#GH_AL_RH9-CIS)
 
 ### Community 💬
 
@@ -86,10 +84,10 @@ This role **will make changes to the system** which may have unintended conseque
 
 ## Coming From A Previous Release ⏪
 
-CIS release always contains changes, it is highly recommended to review the new references and available variables. This have changed significantly since ansible-lockdown initial release.
+CIS release always contains changes, it is highly recommended to review the new references and available variables. These have changed significantly since ansible-lockdown initial release.
 This is now compatible with python3 if it is found to be the default interpreter. This does come with pre-requisites which it configures the system accordingly.
 
-Further details can be seen in the [Changelog](./ChangeLog.md)
+Further details can be seen in the [Changelog](./Changelog.md)
 
 ---
 
@@ -103,7 +101,7 @@ This is managed using tags:
 - level2-server
 - level2-workstation
 
-The control found in defaults main also need to reflect this as this control the testing that takes place if you are using the audit component.
+The controls found in defaults/main.yml also need to reflect this, as they control the testing that takes place if you are using the audit component.
 
 ---
 ## Requirements ✅
@@ -129,6 +127,9 @@ RHEL Family OS 9
 - Ansible 2.12+
 - python-def
 - libselinux-python
+
+If you are using the option to create your own bootloader hash the ansible controller
+-  passlib
 
 ---
 

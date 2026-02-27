@@ -340,7 +340,7 @@
         - system
       notify: Authselect update
 
-- name: "5.3.3.2.7 | PATCH | Ensure password quality is enforced for the root user"
+- name: "5.3.3.2.7 | PATCH | Ensure password quality checking is enforced"
   when: rhel9cis_rule_5_3_3_2_7
   tags:
     - level1-server
@@ -350,8 +350,8 @@
     - NIST800-53R5_IA-5
     - pam
   ansible.builtin.template:
-    src: "{{ rhel9cis_passwd_quality_enforce_root_file }}.j2"
-    dest: "/{{ rhel9cis_passwd_quality_enforce_root_file }}"
+    src: "{{ rhel9cis_passwd_quality_enforce_file }}.j2"
+    dest: "/{{ rhel9cis_passwd_quality_enforce_file }}"
     owner: root
     group: root
     mode: 'o-rwx'

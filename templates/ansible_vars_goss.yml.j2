@@ -1,7 +1,7 @@
 ---
 
 
-# Enable logrunning potential resource intensive tests
+# Enable long running potential resource intensive tests
 run_heavy_tests: {{ audit_run_heavy_tests }}
 
 # Extend default command timeout for longer running tests
@@ -206,7 +206,6 @@ rhel9cis_rule_2_4_2_1: {{ rhel9cis_rule_2_4_2_1 }}
 rhel9cis_rule_3_1_1: {{ rhel9cis_rule_3_1_1 }}
 rhel9cis_rule_3_1_2: {{ rhel9cis_rule_3_1_2 }}
 rhel9cis_rule_3_1_3: {{ rhel9cis_rule_3_1_3 }}
-rhel9cis_ipv6_disable_method: {{ rhel9cis_ipv6_disable_method }}
 
 ## Network Kernel Modules
 rhel9cis_rule_3_2_1: {{ rhel9cis_rule_3_2_1 }}
@@ -293,7 +292,6 @@ rhel9cis_rule_5_3_3_2_4: {{ rhel9cis_rule_5_3_3_2_4 }}
 rhel9cis_rule_5_3_3_2_5: {{ rhel9cis_rule_5_3_3_2_5 }}
 rhel9cis_rule_5_3_3_2_6: {{ rhel9cis_rule_5_3_3_2_6 }}
 rhel9cis_rule_5_3_3_2_7: {{ rhel9cis_rule_5_3_3_2_7 }}
-rhel9cis_rule_5_3_3_2_8: {{ rhel9cis_rule_5_3_3_2_8 }}
 # 5.3.3.3 Configure pam_pwhistory module
 # This are added as part of 5.3.2.4 using jinja2 template
 rhel9cis_rule_5_3_3_3_1: {{ rhel9cis_rule_5_3_3_3_1 }}
@@ -532,6 +530,8 @@ rhel9cis_bluetooth_mask: {{ rhel9cis_bluetooth_mask }}
 ## 3.1 IPv6 requirement toggle
 # This variable governs whether ipv6 is enabled or disabled.
 rhel9cis_ipv6_required: {{ rhel9cis_ipv6_required }}
+# rhel9cis_ipv6_disable defines the method of disabling IPv6, sysctl vs kernel
+rhel9cis_ipv6_disable_method: {{ rhel9cis_ipv6_disable_method }}
 
 # 3.3 System network parameters (host only OR host and router)
 # This variable governs whether specific CIS rules
