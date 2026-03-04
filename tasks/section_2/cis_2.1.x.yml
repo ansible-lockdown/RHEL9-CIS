@@ -270,7 +270,6 @@
         state: "{{ ('cyrus-imapd' in ansible_facts.packages) | ternary('stopped', omit) }}"
         masked: true
 
-
 - name: "2.1.9 | PATCH | Ensure network file system services are not in use"
   when: rhel9cis_rule_2_1_9
   tags:
