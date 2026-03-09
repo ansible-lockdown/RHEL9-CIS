@@ -1104,7 +1104,7 @@ rhel9cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.con
 rhel9cis_passwd_dictcheck_value: 1
 
 # 5.3.3.2.7 - Ensure password quality is enforced for the root user
-rhel9cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality_enforce.conf  # pragma: allowlist secret
+rhel9cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
 rhel9cis_passwd_quality_enforce_value: 1
 rhel9cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
 
