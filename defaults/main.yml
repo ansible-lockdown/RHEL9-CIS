@@ -959,6 +959,13 @@ rhel9cis_ssh_maxsessions: 4
 # This variable defines the path and file name of the sudo log file.
 rhel9cis_sudolog_location: "/var/log/sudo.log"
 
+## Control 5.2.4 - Ensure users must provide password for escalation
+# The following variable specifies a list of users that should not be required to provide a password
+# for escalation. Feel free to edit it according to your needs.
+rhel9cis_sudoers_exclude_nopasswd_list:
+  - ec2-user
+  - vagrant
+
 ## Control 5.2.x - Ensure sudo authentication timeout is configured correctly
 # This variable sets the duration (in minutes) during which a user's authentication credentials
 # are cached after successfully authenticating using "sudo". This allows the user to execute
