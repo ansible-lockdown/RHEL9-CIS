@@ -340,7 +340,7 @@
         - system
       notify: Authselect update
 
-- name: "5.3.3.2.7 | PATCH | Ensure password quality checking is enforced"
+- name: "5.3.3.2.7 | PATCH | Ensure password quality is enforced for the root user"
   when: rhel9cis_rule_5_3_3_2_7
   tags:
     - level1-server
