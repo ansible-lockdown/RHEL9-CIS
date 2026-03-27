@@ -32,6 +32,8 @@
         - rhel9cis_firewall == 'nftables'
       ansible.builtin.systemd:
         name: "{{ item }}"
+        enabled: "{{ ('firewalld' in ansible_facts.packages) | ternary(false, omit) }}"
+        state: "{{ ('firewalld' in ansible_facts.packages) | ternary('stopped', omit) }}"
         masked: true
       loop:
         - firewalld
@@ -42,6 +44,8 @@
         - rhel9cis_firewall == 'firewalld'
       ansible.builtin.systemd:
         name: "{{ item }}"
+        enabled: "{{ ('nftables' in ansible_facts.packages) | ternary(false, omit) }}"
+        state: "{{ ('nftables' in ansible_facts.packages) | ternary('stopped', omit) }}"
         masked: true
       loop:
         - nftables
