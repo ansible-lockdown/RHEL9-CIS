@@ -11,15 +11,27 @@
     - patch
     - rule_1.4.1
     - NIST800-53R5_AC-3
-  ansible.builtin.copy:
-    dest: /boot/grub2/user.cfg
-    content: "GRUB2_PASSWORD={{ rhel9_compiled_bootloader_password }}" # noqa template-instead-of-copy
-    owner: root
-    group: root
-    mode: 'go-rwx'
-  notify: Grub2cfg
+  block:
+    - name: "1.4.1 | PATCH | Ensure bootloader password is set | Set fact if using salt (no python passlib required)"
+      when: rhel9cis_bootloader_salt | length == 0
+      ansible.builtin.set_fact:
+        rhel9cis_compiled_bootloader_password: "{{ rhel9cis_bootloader_password_hash }}"
 
-- name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured"
+    - name: "1.4.1 | PATCH | Ensure bootloader password is set | Set fact if using salt (python passlib required)"
+      when: rhel9cis_bootloader_salt | length > 0
+      ansible.builtin.set_fact:
+        rhel9cis_compiled_bootloader_password: "{{ (rhel9cis_bootloader_password | grub_hash(salt=rhel9cis_bootloader_salt)) }}" # noqa template-instead-of-copy
+
+    - name: "1.4.1 | PATCH | Ensure bootloader password is set"
+      ansible.builtin.copy:
+        dest: /boot/grub2/user.cfg
+        content: "GRUB2_PASSWORD={{ rhel9_compiled_bootloader_password }}" # noqa template-instead-of-copy
+        owner: root
+        group: root
+        mode: 'go-rwx'
+      notify: Grub2cfg
+
+- name: "1.4.2 | PATCH | Ensure access to bootloader config is configured"
   when: rhel9cis_rule_1_4_2
   tags:
     - level1-server
@@ -29,7 +41,7 @@
     - rule_1.4.2
     - NIST800-53R5_AC-3
   block:
-    - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | bios based system"
+    - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | bios based system"
       when: rhel9cis_legacy_boot
       ansible.builtin.file:
         path: "/boot/grub2/{{ item.path }}"
@@ -44,7 +56,7 @@
         - { path: 'grubenv', mode: 'u-x,go-rwx' }
         - { path: 'user.cfg', mode: 'u-x,go-rwx' }
 
-    - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system"
+    - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | efi based system"
       when: not rhel9cis_legacy_boot
       vars:
         efi_mount_options: ['umask=0077', 'fmask=0077', 'uid=0', 'gid=0']
@@ -55,13 +67,13 @@
           check_mode: false
           register: discovered_efi_fstab
 
-        - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system | Build Options"
+        - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | efi based system | Build Options"
           when: item not in discovered_efi_fstab.stdout
           ansible.builtin.set_fact:
             efi_mount_opts_addition: "{{ efi_mount_opts_addition + ',' + item }}"
           loop: "{{ efi_mount_options }}"
 
-        - name: "1.4.2 | PATCH | Ensure permissions on bootloader config are configured | efi based system | Add mount options"
+        - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | efi based system | Add mount options"
           when: efi_mount_opts_addition | length > 0
           ansible.builtin.lineinfile:
             path: /etc/fstab
