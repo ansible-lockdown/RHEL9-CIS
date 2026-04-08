@@ -93,8 +93,8 @@
       notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
-        enabled: "{{ (item in ansible_facts.packages) | ternary(false, omit) }}"
-        state: "{{ (item in ansible_facts.packages) | ternary('stopped', omit) }}"
+        enabled: "{{ ('dhcp-server' in ansible_facts.packages) | ternary(false, omit) }}"
+        state: "{{ ('dhcp-server' in ansible_facts.packages) | ternary('stopped', omit) }}"
         masked: true
       loop:
         - dhcpd.service
@@ -252,8 +252,8 @@
       notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
-        enabled: "{{ (item in ansible_facts.packages) | ternary(false, omit) }}"
-        state: "{{ (item in ansible_facts.packages) | ternary('stopped', omit) }}"
+        enabled: "{{ ('dovecot' in ansible_facts.packages) | ternary(false, omit) }}"
+        state: "{{ ('dovecot' in ansible_facts.packages) | ternary('stopped', omit) }}"
         masked: true
       loop:
         - "dovecot.socket"
@@ -347,8 +347,8 @@
       notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
-        enabled: "{{ (item in ansible_facts.packages) | ternary(false, omit) }}"
-        state: "{{ (item in ansible_facts.packages) | ternary('stopped', omit) }}"
+        enabled: "{{ ('cups' in ansible_facts.packages) | ternary(false, omit) }}"
+        state: "{{ ('cups' in ansible_facts.packages) | ternary('stopped', omit) }}"
         masked: true
       loop:
         - "cups.socket"
@@ -381,8 +381,8 @@
       notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
-        enabled: "{{ (item in ansible_facts.packages) | ternary(false, omit) }}"
-        state: "{{ (item in ansible_facts.packages) | ternary('stopped', omit) }}"
+        enabled: "{{ ('rpcbind' in ansible_facts.packages) | ternary(false, omit) }}"
+        state: "{{ ('rpcbind' in ansible_facts.packages) | ternary('stopped', omit) }}"
         masked: true
       loop:
         - rpcbind.service
@@ -415,8 +415,8 @@
       notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
-        enabled: "{{ (item in ansible_facts.packages) | ternary(false, omit) }}"
-        state: "{{ (item in ansible_facts.packages) | ternary('stopped', omit) }}"
+        enabled: "{{ ('rsync-daemon' in ansible_facts.packages) | ternary(false, omit) }}"
+        state: "{{ ('rsync-daemon' in ansible_facts.packages) | ternary('stopped', omit) }}"
         masked: true
       loop:
         - 'rsyncd.socket'
@@ -509,8 +509,8 @@
       notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: "{{ item }}"
-        enabled: "{{ (item in ansible_facts.packages) | ternary(false, omit) }}"
-        state: "{{ (item in ansible_facts.packages) | ternary('stopped', omit) }}"
+        enabled: "{{ ('tftp-server' in ansible_facts.packages) | ternary(false, omit) }}"
+        state: "{{ ('tftp-server' in ansible_facts.packages) | ternary('stopped', omit) }}"
         masked: true
       loop:
         - 'tftp.socket'
