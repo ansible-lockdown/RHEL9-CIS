@@ -15,13 +15,13 @@
       failed_when: discovered_pwhistory_remember.rc not in [0, 1]
       register: discovered_pwhistory_remember
 
-    - name: "5.3.3.3.1 | PATCH | Ensure password number of changed characters is configured | Ensure remember is set pwhistory file"
+    - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured | Ensure remember is set pwhistory file"
       ansible.builtin.lineinfile:
         path: "/etc/security/pwhistory.conf"
         regexp: remember\s*=\s*\d*
         line: remember = {{ rhel9cis_pamd_pwhistory_remember }}
 
-    - name: "5.3.3.3.1 | PATCH | Ensure password number of changed characters is configured | Remove remember from pam files NOT AuthSelect"
+    - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured | Remove remember from pam files NOT AuthSelect"
       when:
         - not rhel9cis_allow_authselect_updates
         - rhel9cis_disruption_high
@@ -33,7 +33,7 @@
         - password
         - system
 
-    - name: "5.3.3.3.1 | PATCH | Ensure password number of changed characters is configured | Remove remember from pam files AuthSelect"
+    - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured | Remove remember from pam files AuthSelect"
       when:
         - rhel9cis_allow_authselect_updates
         - rhel9cis_disruption_high

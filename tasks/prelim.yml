@@ -295,6 +295,13 @@
     state: directory
     mode: 'u+x,g-w,o-rwx'
 
+- name: "PRELIM | AUDIT | Discover if auditd is immutable"
+  tags: always
+  ansible.builtin.command: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
+  changed_when: false
+  failed_when: prelim_auditd_immutable_check.rc not in [ 0, 1, 2 ]
+  register: prelim_auditd_immutable_check
+
 - name: "PRELIM | PATCH | Configure System Accounting (auditd)"
   when:
     - '"auditd" not in ansible_facts.packages'

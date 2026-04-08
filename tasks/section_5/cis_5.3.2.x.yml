@@ -65,7 +65,7 @@
           failed_when: discovered_authselect_current_faillock.rc not in [ 0, 1 ]
           register: discovered_authselect_current_faillock
 
-        - name: "5.3.2.2 | PATCH | Ensure pam_faillock module is enabled | Add feature if missing authselect"  # noqa syntax-check[specific]"
+        - name: '5.3.2.2 | PATCH | Ensure pam_faillock module is enabled | Add feature if missing authselect"  # noqa syntax-check[specific]'
           when:
             - rhel9cis_allow_authselect_updates
             - discovered_authselect_current_faillock.rc != 0

@@ -67,7 +67,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.3.3.6 | PATCH | Ensure use of privileged commands is collected"
+- name: "6.3.3.6 | PATCH | Ensure use of privileged commands are collected"
   when: rhel9cis_rule_6_3_3_6
   tags:
     - level2-server
@@ -77,14 +77,14 @@
     - rule_6.3.3.6
     - NIST800-53R5_AU-3
   block:
-    - name: "6.3.3.6 | PATCH | Ensure use of privileged commands is collected"
+    - name: "6.3.3.6 | PATCH | Ensure use of privileged commands are collected"
       ansible.builtin.shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm /6000 2>/dev/null; done
       changed_when: false
       failed_when: false
       check_mode: false
       register: discovered_priv_procs
 
-    - name: "6.3.3.6 | PATCH | Ensure use of privileged commands is collected"
+    - name: "6.3.3.6 | PATCH | Ensure use of privileged commands are collected"
       ansible.builtin.set_fact:
         update_audit_template: true
       notify: update auditd
@@ -197,11 +197,11 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.3.3.15 | PATCH | Ensure successful and unsuccessful attempts to use the chcon command are recorded"
+- name: "6.3.3.15 | PATCH | Ensure successful and unsuccessful attempts to use the chcon command are collected"
   when: rhel9cis_rule_6_3_3_15
   tags:
     - level2-server
-    - level2- workstation
+    - level2-workstation
     - patch
     - auditd
     - rule_6.3.3.15
@@ -212,7 +212,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.3.3.16 | PATCH | Ensure successful and unsuccessful attempts to use the setfacl command are recorded"
+- name: "6.3.3.16 | PATCH | Ensure successful and unsuccessful attempts to use the setfacl command are collected"
   when: rhel9cis_rule_6_3_3_16
   tags:
     - level2-server
@@ -227,7 +227,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.3.3.17 | PATCH | Ensure successful and unsuccessful attempts to use the chacl command are recorded"
+- name: "6.3.3.17 | PATCH | Ensure successful and unsuccessful attempts to use the chacl command are collected"
   when: rhel9cis_rule_6_3_3_17
   tags:
     - level2-server
@@ -242,7 +242,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.3.3.18 | PATCH | Ensure successful and unsuccessful attempts to use the usermod command are recorded"
+- name: "6.3.3.18 | PATCH | Ensure successful and unsuccessful attempts to use the usermod command are collected"
   when: rhel9cis_rule_6_3_3_18
   tags:
     - level2-server
@@ -257,7 +257,7 @@
     update_audit_template: true
 
 # All changes selected are managed by the POST audit and handlers to update
-- name: "6.3.3.19 | PATCH | Ensure kernel module loading and unloading and modification is collected"
+- name: "6.3.3.19 | PATCH | Ensure kernel module loading unloading and modification is collected"
   when: rhel9cis_rule_6_3_3_19
   tags:
     - level2-server
@@ -295,9 +295,9 @@
     - auditd
     - rule_6.3.3.21
     - NIST800-53R5_AU-3
-  ansible.builtin.debug:
-    msg:
-      - "Please run augenrules --load if you suspect there is a configuration that is not active"
+  ansible.builtin.command: augenrules --check
+  changed_when: false
+  register: discovered_augenrules_check
 
 - name: Auditd | 6.3.3.x | Auditd controls updated
   when: update_audit_template

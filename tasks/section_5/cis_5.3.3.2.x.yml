@@ -67,7 +67,7 @@
     - NIST800-53R5_IA-5
     - pam
   block:
-    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Remove minlen from conf files except expected file"
+    - name: "5.3.3.2.2 | PATCH | Ensure password length is configured | Remove minlen from conf files except expected file"
       when:
         - item != rhel9cis_passwd_minlen_file
         - rhel9cis_disruption_high
@@ -81,7 +81,7 @@
         - /etc/pam.d/password-auth
         - "{{ prelim_pam_pwquality_confs.files | default([]) }}"
 
-    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Ensure minlen file exists"
+    - name: "5.3.3.2.2 | PATCH | Ensure password length is configured | Ensure minlen file exists"
       ansible.builtin.template:
         src: "{{ rhel9cis_passwd_minlen_file }}.j2"
         dest: "/{{ rhel9cis_passwd_minlen_file }}"
@@ -89,7 +89,7 @@
         group: root
         mode: 'go-rwx'
 
-    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Remove minlen from pam files NOT AuthSelect"
+    - name: "5.3.3.2.2 | PATCH | Ensure password length is configured | Remove minlen from pam files NOT AuthSelect"
       when:
         - not rhel9cis_allow_authselect_updates
         - rhel9cis_disruption_high
@@ -101,7 +101,7 @@
         - password
         - system
 
-    - name: "5.3.3.2.2 | PATCH | Ensure minimum password length is configured | Remove minlen from pam files AuthSelect"
+    - name: "5.3.3.2.2 | PATCH | Ensure password length is configured | Remove minlen from pam files AuthSelect"
       when:
         - rhel9cis_allow_authselect_updates
         - rhel9cis_disruption_high
@@ -226,7 +226,7 @@
         - system
       notify: Authselect update
 
-- name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is is configured"
+- name: "5.3.3.2.5 | PATCH | Ensure password maximum sequential characters is configured"
   when: rhel9cis_rule_5_3_3_2_5
   tags:
     - level1-server

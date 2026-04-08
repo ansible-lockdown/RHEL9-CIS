@@ -1,6 +1,6 @@
 ---
 
-- name: "6.3.1.1 | PATCH | Ensure auditd is installed"
+- name: "6.3.1.1 | PATCH | Ensure auditd packages are installed"
   when: rhel9cis_rule_6_3_1_1
   tags:
     - level2-server
@@ -13,13 +13,13 @@
     - NIST800-53R5_AU-12
     - NIST800-53R5_SI-5
   block:
-    - name: "6.3.1.1 | PATCH | Ensure auditd is installed | Install auditd packages"
+    - name: "6.3.1.1 | PATCH | Ensure auditd packages are installed | Install auditd packages"
       when: '"auditd" not in ansible_facts.packages'
       ansible.builtin.package:
         name: audit
         state: present
 
-    - name: "6.3.1.1 | PATCH | Ensure auditd is installed | Install auditd-lib packages"
+    - name: "6.3.1.1 | PATCH | Ensure auditd packages are installed | Install auditd-lib packages"
       when: '"auditd-lib" not in ansible_facts.packages'
       ansible.builtin.package:
         name: audit-libs

@@ -64,7 +64,7 @@
     name: telnet
     state: absent
 
-- name: "2.2.5 | PATCH | Ensure TFTP client is not installed"
+- name: "2.2.5 | PATCH | Ensure tftp client is not installed"
   when:
     - not rhel9cis_tftp_client
     - rhel9cis_rule_2_2_5
