@@ -72,8 +72,8 @@
     - NIST800-53R5_AU-12
   ansible.builtin.systemd:
     name: "{{ item }}"
-    state: "{{ ('systemd-journal-remote' in ansible_facts.packages) | ternary('stopped', omit) }}"
-    enabled: "{{ ('systemd-journal-remote' in ansible_facts.packages) | ternary(false, omit) }}"
+    state: "{{ ('systemd-journal-upload' in ansible_facts.packages) | ternary('stopped', omit) }}"
+    enabled: "{{ ('systemd-journal-upload' in ansible_facts.packages) | ternary(false, omit) }}"
     masked: true
   loop:
     - systemd-journal-remote.socket
