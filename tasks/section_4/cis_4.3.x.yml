@@ -7,7 +7,11 @@
     - rhel9cis_rule_4_3_2
     - rhel9cis_rule_4_3_3
     - rhel9cis_rule_4_3_4
-  tags: always
+  tags:
+    - rule_4.3.1
+    - rule_4.3.2
+    - rule_4.3.3
+    - rule_4.3.4
   ansible.builtin.command: "nft add table inet {{ rhel9cis_nft_tables_tablename }}"
   changed_when: true
 
@@ -210,7 +214,7 @@
       ansible.builtin.command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input iif lo accept
       changed_when: true
 
-    - name: "4.3.4 | PATCH | Ensure nftables loopback traffic is configured | Set ip sddr rule | nftables"
+    - name: "4.3.4 | PATCH | Ensure nftables loopback traffic is configured | Set ip saddr rule | nftables"
       when: '"ip saddr 127.0.0.0/8 counter packets 0 bytes 0 drop" not in discovered_nftables_ipsaddr.stdout'
       ansible.builtin.command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input ip saddr 127.0.0.0/8 counter drop
       changed_when: true

@@ -39,7 +39,7 @@
       ansible.builtin.set_fact:
         authselect_update: OK
 
-- name: "5.3.1.3 | PATCH | Ensure libpwquality is installed"
+- name: "5.3.1.3 | PATCH | Ensure latest version of libpwquality is installed"
   when:
     - rhel9cis_rule_5_3_1_3
     - ansible_facts.packages['libpwquality'][0]['version'] is version('1.4.4-8', '<') or

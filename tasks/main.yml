@@ -200,15 +200,13 @@
     file: auditd.yml
 
 - name: "Run post remediation tasks"
-  tags:
-    - post_tasks
-    - always
+  tags: always
   ansible.builtin.import_tasks:
     file: post.yml
 
-- name: "Run post_remediation audit"
+- name: "Run post remediation audit"
   when: run_audit
-  tags: always
+  tags: run_audit
   ansible.builtin.import_tasks:
     file: post_remediation_audit.yml
 

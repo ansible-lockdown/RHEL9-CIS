@@ -1,6 +1,6 @@
 ---
 
-- name: "6.2.3.1 | PATCH | Ensure rsyslog installed"
+- name: "6.2.3.1 | PATCH | Ensure rsyslog is installed"
   when:
     - "'rsyslog' not in ansible_facts.packages"
     - rhel9cis_rule_6_2_3_1
@@ -17,7 +17,7 @@
     name: rsyslog
     state: present
 
-- name: "6.2.3.2 | PATCH | Ensure rsyslog Service is enabled and active"
+- name: "6.2.3.2 | PATCH | Ensure rsyslog service is enabled and active"
   when: rhel9cis_rule_6_2_3_2
   tags:
     - level1-server
@@ -68,7 +68,7 @@
     line: '$FileCreateMode 0640'
   notify: Restart rsyslog
 
-- name: "6.2.3.5 | PATCH | Ensure logging is configured"
+- name: "6.2.3.5 | PATCH | Ensure rsyslog logging is configured"
   when: rhel9cis_rule_6_2_3_5
   tags:
     - level1-server
@@ -93,7 +93,7 @@
           - "These are the current logging configurations for rsyslog, please review:"
           - "{{ discovered_configured_rsyslog.stdout_lines }}"
 
-    - name: "6.2.3.5 | PATCH | Ensure logging is configured | mail.* log setting"
+    - name: "6.2.3.5 | PATCH | Ensure rsyslog logging is configured | mail.* log setting"
       when: rhel9cis_rsyslog_ansiblemanaged
       ansible.builtin.blockinfile:
         path: /etc/rsyslog.conf
@@ -107,7 +107,7 @@
         insertafter: '# Log all the mail messages in one place.'
       notify: Restart rsyslog
 
-    - name: "6.2.3.5 | PATCH | Ensure logging is configured | news.crit log setting"
+    - name: "6.2.3.5 | PATCH | Ensure rsyslog logging is configured | news.crit log setting"
       when: rhel9cis_rsyslog_ansiblemanaged
       ansible.builtin.blockinfile:
         path: /etc/rsyslog.conf
@@ -120,7 +120,7 @@
         insertafter: '# Save news errors of level crit and higher in a special file.'
       notify: Restart rsyslog
 
-    - name: "6.2.3.5 | PATCH | Ensure logging is configured | Misc. log setting"
+    - name: "6.2.3.5 | PATCH | Ensure rsyslog logging is configured | Misc. log setting"
       when: rhel9cis_rsyslog_ansiblemanaged
       ansible.builtin.blockinfile:
         path: /etc/rsyslog.conf
@@ -134,7 +134,7 @@
         insertbefore: '# ### sample forwarding rule ###'
       notify: Restart rsyslog
 
-    - name: "6.2.3.5 | PATCH | Ensure logging is configured | Local log settings"
+    - name: "6.2.3.5 | PATCH | Ensure rsyslog logging is configured | Local log settings"
       ansible.builtin.blockinfile:
         path: /etc/rsyslog.conf
         state: present
@@ -149,7 +149,7 @@
         insertafter: '#### RULES ####'
       notify: Restart rsyslog
 
-    - name: "6.2.3.5 | PATCH | Ensure logging is configured | Auth Settings"
+    - name: "6.2.3.5 | PATCH | Ensure rsyslog logging is configured | Auth Settings"
       ansible.builtin.blockinfile:
         path: /etc/rsyslog.conf
         state: present
@@ -160,7 +160,7 @@
         insertafter: '#### RULES ####'
       notify: Restart rsyslog
 
-    - name: "6.2.3.5 | PATCH | Ensure logging is configured | Cron Settings"
+    - name: "6.2.3.5 | PATCH | Ensure rsyslog logging is configured | Cron Settings"
       ansible.builtin.blockinfile:
         path: /etc/rsyslog.conf
         state: present
@@ -208,7 +208,7 @@
     - NIST800-53R5_AU-12
     - NIST800-53R5_CM-6
   block:
-    - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to receive logs from a remote client. | When not log host"
+    - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to receive logs from a remote client | When not log host"
       when: not rhel9cis_system_is_log_server
       ansible.builtin.replace:
         path: /etc/rsyslog.conf
@@ -221,7 +221,7 @@
         - '^(module\(load="imtcp"\))'
         - '^(input\(type="imtcp")'
 
-    - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to receive logs from a remote clients. | When log host"
+    - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to receive logs from a remote client | When log host"
       when: rhel9cis_system_is_log_server
       ansible.builtin.replace:
         path: /etc/rsyslog.conf
@@ -254,7 +254,7 @@
         state: started
         enabled: true
 
-    - name: "6.2.3.8 | PATCH | Ensure logrotate is configured | set rsyslog conf"
+    - name: "6.2.3.8 | PATCH | Ensure rsyslog logrotate is configured | set rsyslog conf"
       ansible.builtin.template:
         src: etc/logrotate.d/rsyslog_log.j2
         dest: /etc/logrotate.d/rsyslog_log

@@ -27,7 +27,7 @@
         replace: ''
       loop: "{{ discovered_pam_nullok.stdout_lines }}"
 
-    - name: "5.3.3.4.1 | PATCH | Ensure password number of changed characters is configured | Remove nullok from pam files AuthSelect"
+    - name: "5.3.3.4.1 | PATCH | Ensure pam_unix does not include nullok | Remove nullok from pam files AuthSelect"
       when: rhel9cis_allow_authselect_updates
       ansible.builtin.replace:
         path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"
@@ -65,7 +65,7 @@
         replace: ''
       loop: "{{ discovered_pam_remember.stdout_lines }}"
 
-    - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember  | Remove remember from pam files AuthSelect"
+    - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember | Remove remember from pam files AuthSelect"
       when: rhel9cis_allow_authselect_updates
       ansible.builtin.replace:
         path: "/etc/authselect/custom/{{ rhel9cis_authselect_custom_profile_name }}/{{ item }}-auth"

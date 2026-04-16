@@ -134,7 +134,7 @@
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':NO-SHA1' }}"
 
-- name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured"
+- name: "5.1.6 | PATCH | Ensure sshd MACs are configured"
   when:
     - rhel9cis_rule_5_1_6
     - "'NO-SSHWEAKMACS' not in rhel9cis_crypto_policy_module"
@@ -148,7 +148,7 @@
     - rule_5.1.6
     - NIST800-53R5_SC-6
   block:
-    - name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured | Add submodule exclusion"
+    - name: "5.1.6 | PATCH | Ensure sshd MACs are configured | Add submodule exclusion"
       ansible.builtin.template:
         src: etc/crypto-policies/policies/modules/NO-SSHWEAKMACS.pmod.j2
         dest: /etc/crypto-policies/policies/modules/NO-SSHWEAKMACS.pmod
@@ -159,7 +159,7 @@
         - Update Crypto Policy
         - Set Crypto Policy
 
-    - name: "5.1.6 | PATCH | Ensure sshd KexAlgorithms is configured | submodule to crypto policy modules"
+    - name: "5.1.6 | PATCH | Ensure sshd MACs are configured | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHWEAKMACS' }}"
 
@@ -290,7 +290,7 @@
 - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled"
   when: rhel9cis_rule_5_1_11
   tags:
-    - level1-server
+    - level2-server
     - level1-workstation
     - patch
     - sshd
@@ -360,7 +360,7 @@
     validate: sshd -t -f %s
   notify: Restart sshd
 
-- name: "5.1.14 | PATCH | Ensure sshd LoginGraceTime is set to one minute or less"
+- name: "5.1.14 | PATCH | Ensure sshd LoginGraceTime is configured"
   when: rhel9cis_rule_5_1_14
   tags:
     - level1-server
@@ -378,7 +378,7 @@
     validate: sshd -t -f %s
   notify: Restart sshd
 
-- name: "5.1.15 | PATCH | Ensure sshd LogLevel is appropriate"
+- name: "5.1.15 | PATCH | Ensure sshd LogLevel is configured"
   when: rhel9cis_rule_5_1_15
   tags:
     - level1-server
@@ -398,7 +398,7 @@
     validate: sshd -t -f %s
   notify: Restart sshd
 
-- name: "5.1.16 | PATCH | Ensure sshd MaxAuthTries is set to 4 or less"
+- name: "5.1.16 | PATCH | Ensure sshd MaxAuthTries is configured"
   when: rhel9cis_rule_5_1_16
   tags:
     - level1-server
@@ -438,7 +438,7 @@
     validate: sshd -t -f %s
   notify: Restart sshd
 
-- name: "5.1.18 | PATCH | Ensure SSH MaxSessions is set to 10 or less"
+- name: "5.1.18 | PATCH | Ensure sshd MaxSessions is configured"
   when: rhel9cis_rule_5_1_18
   tags:
     - level1-server
@@ -522,7 +522,7 @@
     validate: sshd -t -f %s
   notify: Restart sshd
 
-- name: "5.1.22 | PATCH | Ensure SSH PAM is enabled"
+- name: "5.1.22 | PATCH | Ensure sshd UsePAM is enabled"
   when: rhel9cis_rule_5_1_22
   tags:
     - level1-server

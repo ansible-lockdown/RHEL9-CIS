@@ -1,6 +1,6 @@
 ---
 
-- name: "3.3.1 | PATCH | Ensure IP forwarding is disabled"
+- name: "3.3.1 | PATCH | Ensure ip forwarding is disabled"
   when:
     - not rhel9cis_is_router
     - rhel9cis_rule_3_3_1
@@ -16,23 +16,23 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | Disable IPv4 forwarding | Set Fact"
+    - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | Disable IPv4 forwarding | Set Fact"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv4_route: true
 
-    - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | Disable IPv4 forwarding"
+    - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | Disable IPv4 forwarding"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
-    - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | IPv6"
+    - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | IPv6"
       when: rhel9cis_ipv6_required
       block:
-        - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | Disable IPv6 forwarding | Set Fact"
+        - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | Disable IPv6 forwarding | Set Fact"
           ansible.builtin.set_fact:
             rhel9cis_flush_ipv6_route: true
 
-        - name: "3.3.1 | PATCH | Ensure IP forwarding is disabled | Disable IPv6 forwarding"
+        - name: "3.3.1 | PATCH | Ensure ip forwarding is disabled | Disable IPv6 forwarding"
           ansible.builtin.debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl.conf"
 
@@ -60,7 +60,7 @@
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
-- name: "3.3.3 | PATCH | Ensure bogus ICMP responses are ignored"
+- name: "3.3.3 | PATCH | Ensure bogus icmp responses are ignored"
   when: rhel9cis_rule_3_3_3
   tags:
     - level1-server
@@ -74,16 +74,16 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.3 | PATCH | Ensure bogus ICMP responses are ignored | Set Fact"
+    - name: "3.3.3 | PATCH | Ensure bogus icmp responses are ignored | Set Fact"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv4_route: true
 
-    - name: "3.3.3 | PATCH | Ensure bogus ICMP responses are ignored"
+    - name: "3.3.3 | PATCH | Ensure bogus icmp responses are ignored"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
-- name: "3.3.4 | PATCH | Ensure broadcast ICMP requests are ignored"
+- name: "3.3.4 | PATCH | Ensure broadcast icmp requests are ignored"
   when: rhel9cis_rule_3_3_4
   tags:
     - level1-server
@@ -97,7 +97,7 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.4 | PATCH | Ensure broadcast ICMP requests are ignored | Set Fact"
+    - name: "3.3.4 | PATCH | Ensure broadcast icmp requests are ignored | Set Fact"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv4_route: true
@@ -106,7 +106,7 @@
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
-- name: "3.3.5 | PATCH | Ensure ICMP redirects are not accepted"
+- name: "3.3.5 | PATCH | Ensure icmp redirects are not accepted"
   when: rhel9cis_rule_3_3_5
   tags:
     - level1-server
@@ -120,27 +120,27 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.5 | PATCH | Ensure ICMP redirects are not accepted | Set Fact"
+    - name: "3.3.5 | PATCH | Ensure icmp redirects are not accepted | Set Fact"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv4_route: true
 
-    - name: "3.3.5 | PATCH | Ensure ICMP redirects are not accepted"
+    - name: "3.3.5 | PATCH | Ensure icmp redirects are not accepted"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
-    - name: "3.3.5 | PATCH | Ensure  ICMP redirects are not accepted | IPv6"
+    - name: "3.3.5 | PATCH | Ensure icmp redirects are not accepted | IPv6"
       when: rhel9cis_ipv6_required
       block:
-        - name: "3.3.5 | PATCH | Ensure ICMP redirects are not accepted | IPv6 | Set Fact"
+        - name: "3.3.5 | PATCH | Ensure icmp redirects are not accepted | IPv6 | Set Fact"
           ansible.builtin.set_fact:
             rhel9cis_flush_ipv6_route: true
 
-        - name: "3.3.5 | PATCH | Ensure ICMP redirects are not accepted | IPv6"
+        - name: "3.3.5 | PATCH | Ensure icmp redirects are not accepted | IPv6"
           ansible.builtin.debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl.conf"
 
-- name: "3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted"
+- name: "3.3.6 | PATCH | Ensure secure icmp redirects are not accepted"
   when: rhel9cis_rule_3_3_6
   tags:
     - level1-server
@@ -154,27 +154,27 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted | IPv4 | Set Fact"
+    - name: "3.3.6 | PATCH | Ensure secure icmp redirects are not accepted | IPv4 | Set Fact"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv4_route: true
 
-    - name: "3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted | IPv4"
+    - name: "3.3.6 | PATCH | Ensure secure icmp redirects are not accepted | IPv4"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
-    - name: "3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted | IPv6"
+    - name: "3.3.6 | PATCH | Ensure secure icmp redirects are not accepted | IPv6"
       when: rhel9cis_ipv6_required
       block:
-        - name: "3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted | IPv6 | Set Fact"
+        - name: "3.3.6 | PATCH | Ensure secure icmp redirects are not accepted | IPv6 | Set Fact"
           ansible.builtin.set_fact:
             rhel9cis_flush_ipv6_route: true
 
-        - name: "3.3.6 | PATCH | Ensure secure ICMP redirects are not accepted | IPv6"
+        - name: "3.3.6 | PATCH | Ensure secure icmp redirects are not accepted | IPv6"
           ansible.builtin.debug:
             msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl.conf"
 
-- name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
+- name: "3.3.7 | PATCH | Ensure reverse path filtering is enabled"
   when: rhel9cis_rule_3_3_7
   tags:
     - level1-server
@@ -188,12 +188,12 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled | Set Fact"
+    - name: "3.3.7 | PATCH | Ensure reverse path filtering is enabled | Set Fact"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv4_route: true
 
-    - name: "3.3.7 | PATCH | Ensure Reverse Path Filtering is enabled"
+    - name: "3.3.7 | PATCH | Ensure reverse path filtering is enabled"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
@@ -249,7 +249,7 @@
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
-- name: "3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled"
+- name: "3.3.10 | PATCH | Ensure tcp syn cookies is enabled"
   when: rhel9cis_rule_3_3_10
   tags:
     - level1-server
@@ -263,22 +263,22 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled | Set Fact"
+    - name: "3.3.10 | PATCH | Ensure tcp syn cookies is enabled | Set Fact"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv4_route: true
 
-    - name: "3.3.10 | PATCH | Ensure TCP SYN Cookies is enabled"
+    - name: "3.3.10 | PATCH | Ensure tcp syn cookies is enabled"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv4_sysctl.conf"
 
-- name: "3.3.11 | PATCH | Ensure IPv6 router advertisements are not accepted"
+- name: "3.3.11 | PATCH | Ensure ipv6 router advertisements are not accepted"
   when:
     - rhel9cis_ipv6_required
     - rhel9cis_rule_3_3_11
   tags:
-    - level2-server
-    - level2-workstation
+    - level1-server
+    - level1-workstation
     - sysctl
     - patch
     - rule_3.3.11
@@ -288,11 +288,11 @@
     - NIST800-53R5_CM-7
     - NIST800-53R5_IA-5
   block:
-    - name: "3.3.11 | PATCH | Ensure IPv6 router advertisements are not accepted | IPv6 | Set Fact"
+    - name: "3.3.11 | PATCH | Ensure ipv6 router advertisements are not accepted | IPv6 | Set Fact"
       ansible.builtin.set_fact:
         rhel9cis_sysctl_update: true
         rhel9cis_flush_ipv6_route: true
 
-    - name: "3.3.11 | PATCH | Ensure IPv6 router advertisements are not accepted | IPv6"
+    - name: "3.3.11 | PATCH | Ensure ipv6 router advertisements are not accepted | IPv6"
       ansible.builtin.debug:
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-netipv6_sysctl"

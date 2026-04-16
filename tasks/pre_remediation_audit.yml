@@ -6,7 +6,7 @@
   ansible.builtin.include_tasks:
     file: LE_audit_setup.yml
 
-- name: Pre Audit Setup | Ensure existence of {{ audit_conf_dir }}  # noqa name[template]
+- name: Pre Audit Setup | Ensure existence of {{ audit_conf_dir }} # noqa name[template]
   ansible.builtin.file:
     path: "{{ audit_conf_dir }}"
     mode: 'go-w'
@@ -71,8 +71,8 @@
     dest: "{{ audit_vars_path }}"
     mode: 'go-rwx'
 
-- name: Pre Audit | Run pre_remediation audit {{ benchmark }}  # noqa name[template]
-  ansible.builtin.shell: "umask 0022 && {{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -m {{ audit_max_concurrent }} -o {{ pre_audit_outfile }} -g \"{{ group_names }}\"" # noqa yaml[line-length]
+- name: Pre Audit | Run pre_remediation audit {{ benchmark }} # noqa name[template]
+  ansible.builtin.shell: "umask 0022 && {{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -m {{ audit_max_concurrent }} -o {{ pre_audit_outfile }} -g \"{{ group_names }}\""  # noqa yaml[line-length]
   changed_when: true
   environment:
     AUDIT_BIN: "{{ audit_bin }}"
@@ -85,12 +85,11 @@
     - name: Pre Audit | Capture audit data if json format
       ansible.builtin.shell: grep -E '\"summary-line.*Count:.*Failed' "{{ pre_audit_outfile }}" | cut -d'"' -f4
       changed_when: false
-      failed_when: pre_audit_summary.stderr | length > 0
-      register: pre_audit_summary
+      register: pre_audit_summary_json
 
     - name: Pre Audit | Set Fact for audit summary
       ansible.builtin.set_fact:
-        pre_audit_results: "{{ pre_audit_summary.stdout }}"
+        pre_audit_results: "{{ pre_audit_summary_json.stdout }}"
 
 - name: Pre Audit | Capture audit data if documentation format
   when: audit_format == "documentation"
@@ -98,12 +97,11 @@
     - name: Pre Audit | Capture audit data if documentation format
       ansible.builtin.shell: tail -2 "{{ pre_audit_outfile }}"  | tac | tr '\n' ' '
       changed_when: false
-      failed_when: pre_audit_summary.stderr | length > 0
-      register: pre_audit_summary
+      register: pre_audit_summary_documentation
 
     - name: Pre Audit | Set Fact for audit summary
       ansible.builtin.set_fact:
-        pre_audit_results: "{{ pre_audit_summary.stdout }}"
+        pre_audit_results: "{{ pre_audit_summary_documentation.stdout }}"
 
 - name: Audit_Only | Run Audit Only
   when: audit_only

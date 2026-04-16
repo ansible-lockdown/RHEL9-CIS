@@ -130,7 +130,7 @@
         - Update Crypto Policy
         - Set Crypto Policy
 
-- name: "1.6.6 | PATCH | Ensure system wide crypto policy disables chacha20-poly1305 for ssh"
+- name: "1.6.6 | PATCH | Ensure system wide crypto policy disables chacha20- poly1305 for ssh"
   when:
     - rhel9cis_rule_1_6_6
     - "'NO-SSHWEAKCIPHERS' not in rhel9cis_crypto_policy_module"
@@ -144,7 +144,7 @@
     - rule_1.6.6
     - NIST800-53R5_SC-6
   block:
-    - name: "1.6.6 | PATCH | Ensure system wide crypto policy disables chacha20-poly1305 for ssh | Add submodule exclusion"
+    - name: "1.6.6 | PATCH | Ensure system wide crypto policy disables chacha20- poly1305 for ssh | Add submodule exclusion"
       ansible.builtin.template:
         src: etc/crypto-policies/policies/modules/NO-SSHWEAKCIPHERS.pmod.j2
         dest: /etc/crypto-policies/policies/modules/NO-SSHWEAKCIPHERS.pmod
@@ -153,7 +153,7 @@
         mode: 'g-wx,o-rwx'
       register: discovered_no_sshweakciphers_template
 
-    - name: "1.6.6 | PATCH | Ensure system wide crypto policy disables chacha20-poly1305 for ssh | submodule to crypto policy modules"
+    - name: "1.6.6 | PATCH | Ensure system wide crypto policy disables chacha20- poly1305 for ssh | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHWEAKCIPHERS' }}"
       changed_when: discovered_no_sshweakciphers_template is changed  # noqa: no-handler

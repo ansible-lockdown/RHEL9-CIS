@@ -4,7 +4,7 @@
   when: rhel9cis_rule_6_2_2_2
   tags:
     - level1-server
-    - level2-workstation
+    - level1-workstation
     - patch
     - journald
     - rule_6.2.2.2
