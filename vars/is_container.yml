@@ -86,3 +86,69 @@ rhel9cis_rule_4_2_2_3: false
 
 # Users/passwords/accounts
 rhel9cis_rule_5_5_2: false
+
+# authselect
+rhel9cis_allow_authselect_updates: false
+
+# 2.4.1.x cron not installed
+rhel9cis_rule_2_4_1_2: false
+rhel9cis_rule_2_4_1_3: false
+rhel9cis_rule_2_4_1_4: false
+rhel9cis_rule_2_4_1_5: false
+rhel9cis_rule_2_4_1_6: false
+rhel9cis_rule_2_4_1_7: false
+rhel9cis_rule_2_4_1_8: false
+
+# 6.2.1.x systemd not installed
+rhel9cis_rule_6_2_1_2: false
+rhel9cis_rule_6_2_1_3: false
+
+# 6.2.2.x journald config absent
+rhel9cis_rule_6_2_2_1_1: false
+rhel9cis_rule_6_2_2_1_2: false
+rhel9cis_rule_6_2_2_1_3: false
+rhel9cis_rule_6_2_2_1_4: false
+rhel9cis_rule_6_2_2_2: false
+rhel9cis_rule_6_2_2_3: false
+rhel9cis_rule_6_2_2_4: false
+
+# 6.3.1.1 auditd package install
+rhel9cis_rule_6_3_1_1: false
+
+# 6.3.2.x audit data retention
+rhel9cis_rule_6_3_2_1: false
+rhel9cis_rule_6_3_2_2: false
+rhel9cis_rule_6_3_2_3: false
+rhel9cis_rule_6_3_2_4: false
+
+# 6.3.3.x audit rules
+rhel9cis_rule_6_3_3_1: false
+rhel9cis_rule_6_3_3_2: false
+rhel9cis_rule_6_3_3_3: false
+rhel9cis_rule_6_3_3_4: false
+rhel9cis_rule_6_3_3_5: false
+rhel9cis_rule_6_3_3_6: false
+rhel9cis_rule_6_3_3_7: false
+rhel9cis_rule_6_3_3_8: false
+rhel9cis_rule_6_3_3_9: false
+rhel9cis_rule_6_3_3_10: false
+rhel9cis_rule_6_3_3_11: false
+rhel9cis_rule_6_3_3_12: false
+rhel9cis_rule_6_3_3_13: false
+rhel9cis_rule_6_3_3_14: false
+rhel9cis_rule_6_3_3_15: false
+rhel9cis_rule_6_3_3_16: false
+rhel9cis_rule_6_3_3_17: false
+rhel9cis_rule_6_3_3_18: false
+rhel9cis_rule_6_3_3_19: false
+rhel9cis_rule_6_3_3_20: false
+rhel9cis_rule_6_3_3_21: false
+
+# 6.3.4.5-10 audit log file perms
+rhel9cis_rule_6_3_4_5: false
+rhel9cis_rule_6_3_4_6: false
+rhel9cis_rule_6_3_4_7: false
+rhel9cis_rule_6_3_4_8: false
+rhel9cis_rule_6_3_4_9: false
+rhel9cis_rule_6_3_4_10: false
+

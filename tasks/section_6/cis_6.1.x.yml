@@ -67,6 +67,7 @@
   when:
     - rhel9cis_rule_6_1_2
     - not system_is_ec2
+    - not system_is_container
   tags:
     - level1-server
     - level1-workstation

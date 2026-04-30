@@ -1,7 +1,9 @@
 ---
 
 - name: "6.2.1.1 | PATCH | Ensure journald service is enabled and active"
-  when: rhel9cis_rule_6_2_1_1
+  when:
+    - rhel9cis_rule_6_2_1_1
+    - not system_is_container
   tags:
     - level1-server
     - level1-workstation
@@ -86,7 +88,9 @@
         - '^(\s*MaxFileSec\s*=.*)'
 
 - name: "6.2.1.4 | PATCH | Ensure only one logging system is in use"
-  when: rhel9cis_rule_6_2_1_4
+  when:
+    - rhel9cis_rule_6_2_1_4
+    - not system_is_container
   tags:
     - level1-server
     - level1-workstation

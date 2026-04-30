@@ -22,6 +22,7 @@
   listen: "Remount /tmp"
 
 - name: "Remounting /tmp systemd"
+  when: not system_is_container
   vars:
     mount_point: '/tmp'
   ansible.builtin.systemd:
@@ -154,6 +155,7 @@
   listen: "Remount /boot/efi"
 
 - name: Reload sysctl
+  when: not system_is_container
   ansible.builtin.command: sysctl --system
   changed_when: true
 
@@ -177,6 +179,7 @@
     sysctl_set: true
 
 - name: Systemd restart tmp.mount
+  when: not system_is_container
   ansible.builtin.systemd:
     name: tmp.mount
     daemon_reload: true
@@ -198,49 +201,59 @@
     - Restart sshd
 
 - name: Restart firewalld
+  when: not system_is_container
   ansible.builtin.systemd:
     name: firewalld
     state: restarted
 
 - name: Restart sshd
+  when: not system_is_container
   ansible.builtin.systemd:
     name: sshd
     state: restarted
 
 - name: Restart postfix
+  when: not system_is_container
   ansible.builtin.systemd:
     name: postfix
     state: restarted
 
 - name: Reload dconf
+  when: not system_is_container
   ansible.builtin.command: dconf update
   changed_when: true
 
 - name: Grub2cfg
+  when: not system_is_container
   ansible.builtin.command: "grub2-mkconfig -o /boot/grub2/grub.cfg"
   changed_when: true
   ignore_errors: true  # noqa ignore-errors
 
 - name: Restart rsyslog
+  when: not system_is_container
   ansible.builtin.systemd:
     name: rsyslog
     state: restarted
 
 - name: Restart journald
+  when: not system_is_container
   ansible.builtin.systemd:
     name: systemd-journald
     state: restarted
 
 - name: Restart systemd_journal_upload
+  when: not system_is_container
   ansible.builtin.systemd:
     name: systemd-journal-upload
     state: restarted
 
 - name: Systemd daemon reload
+  when: not system_is_container
   ansible.builtin.systemd:
     daemon-reload: true
 
 - name: Authselect update
+  when: not system_is_container
   ansible.builtin.command: authselect apply-changes
   changed_when: true
 
@@ -260,12 +273,15 @@
   notify: Set reboot required
 
 - name: Stop auditd process
-  when: prelim_auditd_immutable_check is defined
+  when:
+    - prelim_auditd_immutable_check is defined
+    - not system_is_container
   ansible.builtin.command: systemctl kill auditd
   changed_when: true
   listen: Restart auditd
 
 - name: Start auditd process
+  when: not system_is_container
   ansible.builtin.systemd:
     name: auditd
     state: started
