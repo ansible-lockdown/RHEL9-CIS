@@ -1,7 +1,9 @@
 ---
 
 - name: "2.4.1.1 | PATCH | Ensure cron daemon is enabled and active"
-  when: rhel9cis_rule_2_4_1_1
+  when:
+    - rhel9cis_rule_2_4_1_1
+    - not system_is_container
   tags:
     - level1-server
     - level1-workstation

@@ -1,7 +1,9 @@
 ---
 
 - name: "6.3.4.1 | PATCH | Ensure the audit log file directory mode is configured"
-  when: rhel9cis_rule_6_3_4_1
+  when:
+    - rhel9cis_rule_6_3_4_1
+    - not system_is_container
   tags:
     - level2-server
     - level2-workstation
@@ -22,6 +24,7 @@
     - rhel9cis_rule_6_3_4_2 or
       rhel9cis_rule_6_3_4_3 or
       rhel9cis_rule_6_3_4_4
+    - not system_is_container
   tags:
     - level2-server
     - level2-workstation

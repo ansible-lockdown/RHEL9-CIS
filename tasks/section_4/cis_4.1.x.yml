@@ -17,7 +17,9 @@
     state: present
 
 - name: "4.1.2 | PATCH | Ensure a single firewall configuration utility is in use"
-  when: rhel9cis_rule_4_1_2
+  when:
+    - rhel9cis_rule_4_1_2
+    - not system_is_container
   tags:
     - level1-server
     - level1-workstation

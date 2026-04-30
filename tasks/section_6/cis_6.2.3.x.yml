@@ -18,7 +18,9 @@
     state: present
 
 - name: "6.2.3.2 | PATCH | Ensure rsyslog service is enabled and active"
-  when: rhel9cis_rule_6_2_3_2
+  when:
+    - rhel9cis_rule_6_2_3_2
+    - not system_is_container
   tags:
     - level1-server
     - level1-workstation
