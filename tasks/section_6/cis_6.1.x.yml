@@ -19,6 +19,33 @@
         update_cache: true
       register: discovered_aide_pkg_added
 
+    - name: "6.1.1 | PATCH | Check for /etc/aide.conf.rpmnew"
+      ansible.builtin.stat:
+        path: /etc/aide.conf.rpmnew
+      register: aide_conf_rpmnew
+
+    - name: "6.1.1 | PATCH | Update AIDE base config"
+      when: aide_conf_rpmnew['stat']['exists'] | bool
+      block:
+        - name: "6.1.1 | PATCH | Update /etc/aide.conf with new version from RPM"
+          ansible.builtin.copy:
+            src: /etc/aide.conf.rpmnew
+            remote_src: true
+            dest: /etc/aide.conf
+            owner: root
+            group: root
+            mode: '0600'
+
+        - name: '6.1.1 | PATCH | Remove /etc/aide.conf.rpmnew'
+          ansible.builtin.file:
+            path: /etc/aide.conf.rpmnew
+            state: absent
+
+        - name: '6.1.1 | PATCH | Force AIDE DB update'
+          ansible.builtin.file:
+            path: /var/lib/aide/aide.db.gz
+            state: absent
+
     - name: "6.1.1 | PATCH | Ensure AIDE is installed | Recapture packages"
       when: discovered_aide_pkg_added.skipped is not defined
       ansible.builtin.package_facts:
