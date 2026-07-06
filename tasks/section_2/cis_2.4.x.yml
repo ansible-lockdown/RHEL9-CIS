@@ -58,6 +58,8 @@
     - patch
     - cron
     - rule_2.4.1.4
+    - NIST800-53R5_AC-3
+    - NIST800-53R5_MP-2
   ansible.builtin.file:
     path: /etc/cron.daily
     state: directory
@@ -71,6 +73,7 @@
     - level1-server
     - level1-workstation
     - patch
+    - cron
     - rule_2.4.1.5
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2
@@ -87,6 +90,7 @@
     - level1-server
     - level1-workstation
     - patch
+    - cron
     - rule_2.4.1.6
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2

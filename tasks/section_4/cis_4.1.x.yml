@@ -28,7 +28,7 @@
   block:
     - name: "4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | nftables"
       when:
-        - item in ansible_facts.packages
+        - item in ansible_facts['packages']
         - rhel9cis_firewall == 'nftables'
       ansible.builtin.systemd:
         name: "{{ item }}"
@@ -38,7 +38,7 @@
 
     - name: "4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | firewalld"
       when:
-        - item in ansible_facts.packages
+        - item in ansible_facts['packages']
         - rhel9cis_firewall == 'firewalld'
       ansible.builtin.systemd:
         name: "{{ item }}"
@@ -47,11 +47,13 @@
         - nftables
 
     - name: "4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | package installed"
+      when: rhel9cis_firewall is not none
       ansible.builtin.package:
         name: "{{ rhel9cis_firewall }}"
-        state: installed
+        state: present
 
     - name: "4.1.2 | PATCH | Ensure a single firewall configuration utility is in use | {{ rhel9cis_firewall }} started and enabled"  # noqa name[template]
+      when: rhel9cis_firewall is not none
       ansible.builtin.systemd:
         name: "{{ rhel9cis_firewall }}"
         enabled: true

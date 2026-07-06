@@ -1,0 +1,51 @@
+---
+
+- name: "Configure and remount /tmp with appropriate options | not systemd tmp.mount"
+  when: not rhel9cis_tmp_svc
+  vars:
+    mount_point: '/tmp'
+  block:
+    - name: "Add filesystem options for /tmp"
+      ansible.posix.mount:
+        path: "{{ mount_point }}"
+        src: "{{ prelim_mount_point_fs_and_options[mount_point]['src'] }}"
+        state: present
+        fstype: "{{ prelim_mount_point_fs_and_options[mount_point]['fs_type'] }}"
+        opts: "{{ prelim_mount_point_fs_and_options[mount_point]['options'] | unique | join(',') }}"
+
+    - name: "Remounting /tmp"
+      ansible.posix.mount:
+        path: "{{ mount_point }}"
+        state: remounted
+      failed_when: false
+      register: discovered_remount_tmp
+
+- name: "Reloading /tmp systemd service"
+  when: rhel9cis_tmp_svc
+  vars:
+    mount_point: '/tmp'
+  ansible.builtin.systemd:
+    name: tmp.mount
+    state: reloaded
+    daemon_reload: true
+  failed_when: false
+  register: discovered_remount_tmp_systemd
+  listen: "Remount /tmp"
+
+- name: "/tmp mount busy, set reboot required fact"
+  when: discovered_remount_tmp is defined and discovered_remount_tmp.failed | default(false)) or
+        (discovered_remount_tmp_systemd is defined and discovered_remount_tmp_systemd.failed | default(false))
+  block:
+    - name: Set reboot required fact
+      ansible.builtin.set_fact:
+        change_requires_reboot: true
+
+    - name: "/tmp mount busy, reboot required to apply changes | Warning"
+      ansible.builtin.debug:
+        msg: "Warning: /tmp mount busy, reboot required to apply changes"
+
+    - name: "/tmp mount busy, reboot required to apply changes"
+      ansible.builtin.import_tasks:
+        file: warning_facts.yml
+      vars:
+        warn_control_id: "/tmp mount busy, reboot required"

@@ -1,5 +1,52 @@
 ---
 
+- name: "AIDE | AUDIT | Check for /etc/aide.conf.rpmnew as aide conf changes occur"
+  when:
+    - rhel9cis_config_aide
+    - rhel9cis_rule_6_1_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - aide
+    - patch
+    - rule_6.1.1
+    - NIST800-53R5_AU-2
+  ansible.builtin.stat:
+    path: /etc/aide.conf.rpmnew
+  register: discovered_aide_conf_rpmnew
+
+- name: "AIDE | PATCH | If rpm new exist update aide conf"
+  when:
+    - discovered_aide_conf_rpmnew['stat']['exists']
+    - rhel9cis_config_aide
+    - rhel9cis_rule_6_1_1
+  tags:
+    - level1-server
+    - level1-workstation
+    - aide
+    - patch
+    - rule_6.1.1
+    - NIST800-53R5_AU-2
+  block:
+    - name: "AIDE | PATCH | Update /etc/aide.conf with new version from RPM"
+      ansible.builtin.copy:
+        src: /etc/aide.conf.rpmnew
+        remote_src: true
+        dest: /etc/aide.conf
+        owner: root
+        group: root
+        mode: 'u-x,go-rwx'
+
+    - name: "AIDE | PATCH | Remove /etc/aide.conf.rpmnew"
+      ansible.builtin.file:
+        path: /etc/aide.conf.rpmnew
+        state: absent
+
+    - name: "AIDE | PATCH | Force AIDE DB update"
+      ansible.builtin.file:
+        path: /var/lib/aide/aide.db.gz
+        state: absent
+
 - name: "6.1.1 | PATCH | Ensure AIDE is installed"
   when:
     - rhel9cis_config_aide
@@ -58,10 +105,10 @@
             dest: /var/lib/aide/aide.db.gz
             remote_src: true
             mode: 'ug-wx,o-rwx'
-          register: aide_db_cp
           failed_when:
             - not ansible_check_mode
-            - aide_db_cp.failed
+            - discovered_aide_db_cp.failed
+          register: discovered_aide_db_cp
 
 - name: "6.1.2 | PATCH | Ensure filesystem integrity is regularly checked"
   when:
@@ -123,7 +170,7 @@
       /usr/sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
       /usr/sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
       /usr/sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
-  register: aide_file_integrity_check
   failed_when:
     - not ansible_check_mode
-    - aide_file_integrity_check.failed
+    - discovered_aide_file_integrity_check.failed
+  register: discovered_aide_file_integrity_check

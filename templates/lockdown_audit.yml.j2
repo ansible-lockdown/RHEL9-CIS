@@ -1,9 +1,6 @@
 ---
 
 
-# Enable long running potential resource intensive tests
-run_heavy_tests: {{ audit_run_heavy_tests }}
-
 # Extend default command timeout for longer running tests
 timeout_ms: {{ audit_cmd_timeout }}
 
@@ -33,6 +30,9 @@ rhel9cis_selinux_disable: {{ rhel9cis_selinux_disable }}
 # This variable is used in a preliminary task, handling grub2 paths either in case of
 # UEFI boot('/etc/grub2-efi.cfg') or in case of BIOS legacy-boot('/etc/grub2.cfg').
 rhel9cis_legacy_boot: {{ rhel9cis_legacy_boot }}
+
+#  to enable rules that may have IO impact on a system e.g. full filesystem scans or CPU heavy
+run_heavy_tests: {{ audit_run_heavy_tests }}
 
 ## Benchmark name used by auditing control role
 # The audit variable found at the base
@@ -435,7 +435,8 @@ rhel9cis_set_boot_pass: {{ rhel9cis_set_boot_pass }}
 # - 1.7.2 - Ensure local login warning banner is configured properly
 # - 1.7.3 - Ensure remote login warning banner is configured properly
 # This variable  stores the content for the Warning Banner(relevant for issue, issue.net, motd).
-rhel9cis_warning_banner: {{ rhel9cis_warning_banner }}
+rhel9cis_warning_banner: |
+{{ rhel9cis_warning_banner | indent(2, first=True) }}
 # End Banner
 
 ## Control 1.8.x - Settings for GDM
@@ -558,7 +559,7 @@ rhel9cis_firewall: {{ rhel9cis_firewall }}
 # access for users whose user name matches one of the patterns. This is done
 # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
 # If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
-rhel9cis_sshd_allowusers: "{% if ansible_facts.user_id != 'root' %}{{ ansible_facts.user_id }}{% elif ansible_env.SUDO_USER is defined %}{{ ansible_env.SUDO_USER }}{% endif %}"
+rhel9cis_sshd_allowusers: "{% if ansible_facts['user_id'] != 'root' %}{{ ansible_facts['user_id'] }}{% elif ansible_env.SUDO_USER is defined %}{{ ansible_env.SUDO_USER }}{% endif %}"
 
 # (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
 # for users whose primary group or supplementary group list matches one of the patterns. This is done
@@ -604,7 +605,7 @@ rhel9cis_passwd_complex_option: {{ rhel9cis_passwd_complex_option }}
   # This variable governs after how many days a password expires.
   # CIS requires a value of 365 or less.
 rhel9cis_pass_max_days: 365
-  ## Control 5.4.1.2 - Ensure minimum days between password changes is 7 or more
+  ## Control 5.4.1.2 - Ensure minimum days between password change can be 7 or more
   # This variable specifies the minimum number of days allowed between changing
   # passwords. CIS requires a value of at least 1.
 rhel9cis_pass_min_days: 7

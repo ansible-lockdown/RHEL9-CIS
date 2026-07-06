@@ -78,7 +78,11 @@
     - NIST800-53R5_AU-3
   block:
     - name: "6.3.3.6 | PATCH | Ensure use of privileged commands are collected"
-      ansible.builtin.shell: for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm /6000 2>/dev/null; done
+      ansible.builtin.shell: |
+        set -o pipefail
+        for i in  $(df | grep '^/dev' | awk '{ print $NF }'); do find $i -xdev -type f -perm /6000 2>/dev/null; done
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false
@@ -87,7 +91,7 @@
     - name: "6.3.3.6 | PATCH | Ensure use of privileged commands are collected"
       ansible.builtin.set_fact:
         update_audit_template: true
-      notify: update auditd
+      notify: Restart auditd
 
 # All changes selected are managed by the POST audit and handlers to update
 - name: "6.3.3.7 | PATCH | Ensure unsuccessful file access attempts are collected"

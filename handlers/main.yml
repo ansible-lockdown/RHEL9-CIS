@@ -1,33 +1,10 @@
 ---
+
 # handlers file for RHEL9-CIS
 
-- name: "Adding options for /tmp"
-  when: not rhel9cis_tmp_svc
-  vars:
-    mount_point: '/tmp'
-  ansible.posix.mount:
-    path: "{{ mount_point }}"
-    src: "{{ prelim_mount_point_fs_and_options[mount_point]['src'] }}"
-    state: present
-    fstype: "{{ prelim_mount_point_fs_and_options[mount_point]['fs_type'] }}"
-    opts: "{{ prelim_mount_point_fs_and_options[mount_point]['options'] | unique | join(',') }}"
-  listen: "Remount /tmp"
-
-- name: "Remounting /tmp"
-  vars:
-    mount_point: '/tmp'
-  ansible.posix.mount:
-    path: "{{ mount_point }}"
-    state: remounted
-  listen: "Remount /tmp"
-
-- name: "Remounting /tmp systemd"
-  vars:
-    mount_point: '/tmp'
-  ansible.builtin.systemd:
-    name: tmp.mount
-    state: restarted
-    daemon_reload: true
+- name: "Remount tmp filesystem"
+  ansible.builtin.include_tasks:
+    file: remount_tmp.yml
   listen: "Remount /tmp"
 
 - name: "Adding options for /dev/shm"

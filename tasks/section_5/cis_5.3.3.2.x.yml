@@ -294,8 +294,7 @@
     - pam
   block:
     - name: "5.3.3.2.6 | PATCH | Ensure password dictionary check is enabled | Remove dictcheck settings from conf files except expected file"
-      when:
-        - item != rhel9cis_passwd_dictcheck_file
+      when: item != rhel9cis_passwd_dictcheck_file
       ansible.builtin.lineinfile:
         path: "{{ item }}"
         regexp: 'dictcheck\s*=\s*\d+\b'

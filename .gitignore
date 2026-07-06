@@ -56,6 +56,9 @@ benchparse/
 *history.md
 *plan.md
 *qa_report*
+qa_report.md
+prompt.md
+test_inv
 
 # GitHub Action/Workflow files
 .github/

@@ -67,13 +67,19 @@
     - goss_template
     - run_audit
   ansible.builtin.template:
-    src: ansible_vars_goss.yml.j2
+    src: lockdown_audit.yml.j2
     dest: "{{ audit_vars_path }}"
     mode: 'go-rwx'
 
 - name: Pre Audit | Run pre_remediation audit {{ benchmark }} # noqa name[template]
-  ansible.builtin.shell: "umask 0022 && {{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -m {{ audit_max_concurrent }} -o {{ pre_audit_outfile }} -g \"{{ group_names }}\""  # noqa yaml[line-length]
+  ansible.builtin.shell: |
+    set -o pipefail
+    umask 0022 && {{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -m {{ audit_max_concurrent }} -o {{ pre_audit_outfile }} -g "{{ group_names }}"  # noqa yaml[line-length]
+  args:
+    executable: "{{ rhel9cis_shell_executable }}"
   changed_when: true
+  failed_when: false  # rc=1 means goss tests failed (expected pre-remediation); rc=2+ is a script error
+  register: pre_audit_run
   environment:
     AUDIT_BIN: "{{ audit_bin }}"
     AUDIT_CONTENT_LOCATION: "{{ audit_conf_dest | default('/opt') }}"
@@ -83,8 +89,13 @@
   when: audit_format == "json"
   block:
     - name: Pre Audit | Capture audit data if json format
-      ansible.builtin.shell: grep -E '\"summary-line.*Count:.*Failed' "{{ pre_audit_outfile }}" | cut -d'"' -f4
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -E '\"summary-line.*Count:.*Failed' "{{ pre_audit_outfile }}" | cut -d'"' -f4
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
+      failed_when: pre_audit_summary_json.rc not in [0, 1]
       register: pre_audit_summary_json
 
     - name: Pre Audit | Set Fact for audit summary
@@ -95,7 +106,11 @@
   when: audit_format == "documentation"
   block:
     - name: Pre Audit | Capture audit data if documentation format
-      ansible.builtin.shell: tail -2 "{{ pre_audit_outfile }}"  | tac | tr '\n' ' '
+      ansible.builtin.shell: |
+        set -o pipefail
+        tail -2 "{{ pre_audit_outfile }}"  | tac | tr '\n' ' '
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       register: pre_audit_summary_documentation
 
