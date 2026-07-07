@@ -33,7 +33,7 @@
   listen: "Remount /tmp"
 
 - name: "/tmp mount busy, set reboot required fact"
-  when: discovered_remount_tmp is defined and discovered_remount_tmp.failed | default(false)) or
+  when: discovered_remount_tmp is defined and discovered_remount_tmp.failed | default(false) or
         (discovered_remount_tmp_systemd is defined and discovered_remount_tmp_systemd.failed | default(false))
   block:
     - name: Set reboot required fact
