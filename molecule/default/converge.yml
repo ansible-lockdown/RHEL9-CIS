@@ -1,26 +1,28 @@
 ---
-# This is a playbook to test the tasks.
-- name: Converge
+
+- name: Converge - apply RHEL 9 CIS remediation
   hosts: all
-  gather_facts: true
-
+  any_errors_fatal: true
   vars:
-      role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
-      ansible_user: root
-      system_is_container: true
-      rhel9cis_selinux_disable: true
-      rhel9cis_rule_5_2_4: false
-      rhel9cis_firewall: "none"
-      rhel9cis_rule_4_1_1_1: false
-      rhel9cis_rule_4_1_1_2: false
-      rhel9cis_rule_4_1_1_3: false
-      rhel9cis_rule_4_1_1_4: false
-      rhel9cis_rule_4_2_1_2: false
-      rhel9cis_rule_4_2_1_4: false
-      rhel9cis_rule_5_1_1: false
-
+    setup_audit: true
+    run_audit: true
+    system_is_container: true
+    skip_reboot: true
+    # Molecule default - overrides role default (`false`) to exercise full code path
+    rhel9cis_disruption_high: true
+    # Required: role asserts this is not left at the default 'cis_example_profile'
+    rhel9cis_authselect_custom_profile_name: cis_molecule_profile
+    # authselect binary is non-functional in minimal containers (no PAM/sssd stack)
+    rhel9cis_allow_authselect_updates: false
+    # passwd -S pattern check unreliable in minimal containers; root password is
+    # set in pre_tasks above so PAM rules don't lock us out
+    rhel9cis_rule_5_4_2_4: false
+    fetch_audit_output: true
+    audit_output_destination: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/../../_temp_fetched_audits/"
   pre_tasks:
-  tasks:
-      - name: "Include tasks"
-        ansible.builtin.include_role:
-            name: "{{ role_name }}"
+    - name: Set root password so PAM rules don't lock us out
+      ansible.builtin.user:
+        name: root
+        password: "{{ 'changeme123!' | password_hash('sha512') }}"
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
