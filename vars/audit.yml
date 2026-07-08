@@ -43,7 +43,7 @@ audit_log_dir: '/opt'
 # - e.g. timeout for long running cmds, location of goss binary if using copy method, url for goss binary if using download method etc. ###
 
 # if get_audit_binary_method == download change accordingly
-audit_bin_url: "https://github.com/goss-org/goss/releases/download/{{ audit_bin_version.release }}/goss-linux-"
+audit_bin_url: "https://github.com/krameff/goss/releases/download/{{ audit_bin_version.release }}/goss-linux-"
 
 ### Goss Audit Benchmark file ###
 ## managed by the control audit_content
@@ -63,9 +63,9 @@ post_audit_outfile: "{{ audit_log_dir }}/{{ ansible_facts.hostname }}-{{ benchma
 
 ### Audit binary settings ###
 audit_bin_version:
-  release: v0.4.8
-  AMD64_checksum: 'sha256:85d00b7bba5f175bec95de7dfe1f71f8f25204914aad4c6f03c8457868eb6e2f'
-  ARM64_checksum: 'sha256:bca8c898bfd35b94c51455ece6193c95e2cd7b2b183ac2047b2d76291e73e47d'
+  release: v0.5.0
+  AMD64_checksum: 'sha256:1371df12806586e4c6b122a22e1dbc2b9008160099eaf2816d139cc825ffc40a'
+  ARM64_checksum: 'sha256:d34fae1b2e33bbe2f461418891c88dd636f212a0a2d4bb0601111a8dfa09efa2'
 audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json

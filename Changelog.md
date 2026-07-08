@@ -15,6 +15,7 @@
 - Thanks to @xdkreij issue #450 ability to change location for files to run e.g.1.1.1.9
 - Thanks to @thuliumdrake issue #451 newer aide changes now cause config issues fix.
 - Thanks to @ChrisW-TX issue #452 enable multiline warning banner in the template
+- Updated location that goss is taken from goss-org moved to krameff
 
 ## June 2026 — QA pass: service defaults, version, and hygiene fixes
 
