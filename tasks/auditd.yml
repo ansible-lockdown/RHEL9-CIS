@@ -4,17 +4,24 @@
 # we need to update the auditd rules depending on the architecture of the system.
 # This task passed the syscalls table to the auditd template and updates the auditd rules
 - name: "POST | AUDITD | Set supported_syscalls variable"
-  ansible.builtin.shell: ausyscall --dump |  awk  '{print $2}'
+  ansible.builtin.shell: |
+    set -o pipefail
+    ausyscall --dump |  awk  '{print $2}'
+  args:
+    executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
   failed_when: discovered_auditd_syscalls.rc not in [ 0, 1 ]
   register: discovered_auditd_syscalls
 
 - name: "POST | AUDITD | Ensure use of privileged commands is collected"
   ansible.builtin.shell: |
+    set -o pipefail
     {%- set egrep_exclude = "(asdfmnop|{{ rhel9cis_priv_command_excluded_mounts | join('|') }})" -%}
     for i in $(df | grep '^/dev' | grep -Ev '{{ egrep_exclude }}' | awk '{ print $NF }'); do
       find $i -xdev -type f -perm /6000 2>/dev/null;
     done
+  args:
+    executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
   failed_when: false
   check_mode: false
@@ -25,7 +32,7 @@
   vars:
     supported_syscalls: "{{ discovered_auditd_syscalls.stdout_lines }}"
   ansible.builtin.template:
-    src: etc/audit/rules.d/99_auditd.rules.j2
+    src: audit/99_auditd.rules.j2
     dest: /etc/audit/rules.d/99_auditd.rules
     owner: root
     group: root
@@ -38,7 +45,7 @@
 - name: POST | AUDITD | Set up auditd user logging exceptions
   when: rhel9cis_allow_auditd_uid_user_exclusions
   ansible.builtin.template:
-    src: etc/audit/rules.d/98_auditd_exception.rules.j2
+    src: audit/98_auditd_exception.rules.j2
     dest: /etc/audit/rules.d/98_auditd_exceptions.rules
     owner: root
     group: root

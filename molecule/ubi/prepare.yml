@@ -1,0 +1,67 @@
+---
+
+- name: Prepare RHEL 9 CIS molecule host (UBI 9)
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Bootstrap python, sudo, iproute, openssh via raw (idempotent - skips if already installed)
+      ansible.builtin.raw: |
+        dnf install -y python3 sudo iproute openssh-server openssh-clients procps-ng
+      changed_when: false
+
+    - name: Gather facts now that python is present
+      ansible.builtin.setup:
+
+    - name: Install RHEL 9 CIS supporting packages (UBI subset - some packages unavailable)
+      ansible.builtin.dnf:
+        name:
+          - audit
+          - aide
+          - crypto-policies
+          - crypto-policies-scripts
+          - firewalld
+          - policycoreutils
+          - policycoreutils-python-utils
+          - selinux-policy-targeted
+          - chrony
+          - rsyslog
+          - logrotate
+          - cronie
+          - acl
+          - kmod
+          - dnf-plugins-core
+          - python3-libselinux
+          - python3-policycoreutils
+          - tmux
+          - git
+        state: present
+      ignore_errors: true  # UBI repos may not include every package - capture which are missing rather than abort
+
+    - name: Create directories that minimal images lack (UBI also stubs audit/aide dirs since those packages are subscription-gated)
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - /etc/sysctl.d
+        - /etc/ssh/sshd_config.d
+        - /run/sshd
+        - /var/log/audit
+        - /etc/audit
+        - /etc/audit/rules.d
+        - /etc/aide
+        - /etc/aide/aide.conf.d
+
+    - name: Stub /etc/default/grub so GRUB-tag tasks do not fail in container
+      ansible.builtin.copy:
+        dest: /etc/default/grub
+        content: |
+          GRUB_TIMEOUT=5
+          GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
+          GRUB_DEFAULT=saved
+          GRUB_DISABLE_SUBMENU=true
+          GRUB_TERMINAL_OUTPUT="console"
+          GRUB_CMDLINE_LINUX=""
+          GRUB_DISABLE_RECOVERY="true"
+          GRUB_ENABLE_BLSCFG=true
+        mode: '0644'

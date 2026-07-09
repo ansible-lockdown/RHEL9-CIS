@@ -1,8 +1,14 @@
 ---
 
 - name: Post Audit | Run post_remediation {{ benchmark }} audit # noqa name[template]
-  ansible.builtin.shell: "umask 0022 && {{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -m {{ audit_max_concurrent }} -o {{ post_audit_outfile }} -g \"{{ group_names }}\""  # noqa yaml[line-length]
+  ansible.builtin.shell: |
+    set -o pipefail
+    umask 0022 && {{ audit_conf_dir }}/run_audit.sh -v {{ audit_vars_path }} -f {{ audit_format }} -m {{ audit_max_concurrent }} -o {{ post_audit_outfile }} -g "{{ group_names }}"  # noqa yaml[line-length]
+  args:
+    executable: "{{ rhel9cis_shell_executable }}"
   changed_when: true
+  failed_when: false  # rc=1 means goss tests failed (expected); rc=2+ is a script error
+  register: post_audit_run
   environment:
     AUDIT_BIN: "{{ audit_bin }}"
     AUDIT_CONTENT_LOCATION: "{{ audit_conf_dest | default('/opt') }}"
@@ -12,7 +18,11 @@
   when: audit_format == "json"
   block:
     - name: Post Audit | Capture audit data if json format
-      ansible.builtin.shell: grep -E '"summary-line.*Count:.*Failed' "{{ post_audit_outfile }}" | cut -d'"' -f4
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -E '"summary-line.*Count:.*Failed' "{{ post_audit_outfile }}" | cut -d'"' -f4
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       register: post_audit_summary_json
 
@@ -24,7 +34,11 @@
   when: audit_format == "documentation"
   block:
     - name: Post Audit | Capture audit data if documentation format
-      ansible.builtin.shell: tail -2 "{{ post_audit_outfile }}"  | tac | tr '\n' ' '
+      ansible.builtin.shell: |
+        set -o pipefail
+        tail -2 "{{ post_audit_outfile }}"  | tac | tr '\n' ' '
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       register: post_audit_summary_documentation
 

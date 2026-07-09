@@ -34,9 +34,13 @@
 
     - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | If override file check for journal"
       when: discovered_tmpfile_override.stat.exists
-      ansible.builtin.shell: grep -E 'z /var/log/journal/%m/system.journal \d*' /usr/lib/tmpfiles.d/systemd.conf
-      register: discovered_journald_fileperms_override
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -E 'z /var/log/journal/%m/system.journal \d*' /usr/lib/tmpfiles.d/systemd.conf
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
+      register: discovered_journald_fileperms_override
       failed_when: discovered_journald_fileperms_override.rc not in [ 0, 1 ]
 
     - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Warning if override found"
@@ -98,7 +102,7 @@
     - name: "6.2.1.4 | PATCH | Ensure only one logging system is in use | when rsyslog"
       when:
         - rhel9cis_syslog == "rsyslog"
-        - "'systemd-journald' in ansible_facts.packages"
+        - "'systemd-journald' in ansible_facts['packages']"
       ansible.builtin.systemd:
         name: systemd-journald
         state: stopped
@@ -107,7 +111,7 @@
     - name: "6.2.1.4 | PATCH | Ensure only one logging system is in use | when journald"
       when:
         - rhel9cis_syslog == "journald"
-        - "'rsyslog' in ansible_facts.packages"
+        - "'rsyslog' in ansible_facts['packages']"
       ansible.builtin.systemd:
         name: rsyslog
         state: stopped

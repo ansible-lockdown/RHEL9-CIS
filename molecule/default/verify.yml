@@ -1,4 +1,5 @@
 ---
+
 - name: Verify
   hosts: all
   gather_facts: false

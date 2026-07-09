@@ -1,5 +1,39 @@
 # Changes to RHEL9CIS
 
+## July 2026 — QA pass: cross-repo alignment, variable rename, and lint fixes
+
+- Fixed template typo in templates/etc/systemd/system/tmp.mount.j2: YOUR CHANGED -> YOUR CHANGES
+- Renamed rhel9cis_rule_enable_repogpg to rhel9cis_enable_repogpg in defaults/main.yml,
+  vars/RedHat.yml, vars/AlmaLinux.yml, vars/OracleLinux.yml, and tasks/section_1/cis_1.2.1.x.yml
+  (_rule_ prefix is reserved for X.Y.Z control toggles only)
+- Added copyright_year: '2026' to defaults/main.yml
+- Fixed prelim.yml level tags: level1_server/level1_workstation -> level1-server/level1-workstation
+- Corrected rhel9cis_legacy_boot from true to false to match remediation default
+- Corrected rhel9cis_set_boot_pass from true to false to match remediation default
+- Renamed rhel9cis_rule_enable_repogpg to rhel9cis_enable_repogpg in vars/CIS.yml
+- Added CONTRIBUTING.md with DCO signing and PR workflow guidelines
+- Thanks to @xdkreij issue #450 ability to change location for files to run e.g.1.1.1.9
+- Thanks to @thuliumdrake issue #451 newer aide changes now cause config issues fix.
+- Thanks to @ChrisW-TX issue #452 enable multiline warning banner in the template
+- Updated location that goss is taken from goss-org moved to krameff
+- bumped actions/checkout version
+
+## June 2026 — QA pass: service defaults, version, and hygiene fixes
+
+- Behavior change: rhel9cis_nfs_server, rhel9cis_rpc_server, and rhel9cis_nis_server now
+  default to false (were true, contradicting *_mask: true -- services configured to run
+  and be masked simultaneously; mask wins at OS level making server: true a dead path)
+- Updated min_ansible_version from 2.10.1 to 2.16.1 in meta/main.yml and vars/main.yml
+- Removed export_badges_public.yml and update_galaxy.yml from .github/workflows/
+  (public-mirror-only workflows do not belong in this private repo)
+- Fixed LICENSE copyright casing: Mindpoint -> MindPoint
+- Rebranded README Twitter badge to X (x.com/AnsibleLockdown)
+- Added qa_report.md, prompt.md, test_inv to .gitignore
+- section 2.1 packages and service moved from hard coded to vars/main.yml to enable ore agnostic OS setups
+- tmp mount addresses and aligned with other repos
+- 5.2.4 logic in tasks/main.ylm updated and defaults/main.yml comments
+- pipefail and shell args added
+- ansible dot notation changed to e.g. ansible_facts['packages']
 
 ## April 2026
 

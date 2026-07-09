@@ -54,7 +54,11 @@
     - NIST800-53R5_AC-6
   block:
     - name: "5.2.4 | AUDIT | Ensure users must provide password for escalation | Discover accts with NOPASSWD"
-      ansible.builtin.shell: grep -Ei '(nopasswd)' /etc/sudoers /etc/sudoers.d/* | cut -d':' -f1
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -Ei '(nopasswd)' /etc/sudoers /etc/sudoers.d/* | cut -d':' -f1
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       become: true
       changed_when: false
       failed_when: false
@@ -80,7 +84,11 @@
     - NIST800-53R5_AC-6
   block:
     - name: "5.2.5 | AUDIT | Ensure re-authentication for privilege escalation is not disabled globally"
-      ansible.builtin.shell: grep -Ei '(!authenticate)' /etc/sudoers /etc/sudoers.d/* | cut -d':' -f1
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -Ei '(!authenticate)' /etc/sudoers /etc/sudoers.d/* | cut -d':' -f1
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       become: true
       changed_when: false
       failed_when: false
@@ -105,7 +113,11 @@
     - rule_5.2.6
   block:
     - name: "5.2.6 | AUDIT | Ensure sudo authentication timeout is configured correctly | Get files with timeout set"
-      ansible.builtin.shell: grep -is 'timestamp_timeout' /etc/sudoers /etc/sudoers.d/* | cut -d":" -f1 | uniq | sort
+      ansible.builtin.shell: |
+        set -o pipefail
+        grep -is 'timestamp_timeout' /etc/sudoers /etc/sudoers.d/* | cut -d":" -f1 | uniq | sort
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: discovered_sudo_timeout_files

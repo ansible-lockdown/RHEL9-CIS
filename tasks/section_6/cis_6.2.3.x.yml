@@ -2,7 +2,7 @@
 
 - name: "6.2.3.1 | PATCH | Ensure rsyslog is installed"
   when:
-    - "'rsyslog' not in ansible_facts.packages"
+    - "'rsyslog' not in ansible_facts['packages']"
     - rhel9cis_rule_6_2_3_1
   tags:
     - level1-server
@@ -81,7 +81,11 @@
     - NIST800-53R5_AU-12
   block:
     - name: "6.2.3.5 | AUDIT | Ensure logging is configured | rsyslog current config message out"
-      ansible.builtin.shell: cat /etc/rsyslog.conf | grep -Ev "^#|^$"
+      ansible.builtin.shell: |
+        set -o pipefail
+        cat /etc/rsyslog.conf | grep -Ev "^#|^$"
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false

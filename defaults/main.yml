@@ -15,6 +15,26 @@ os_check: true
 ## Will be fine if clean new un-configured build
 rhel9cis_disruption_high: false
 
+## Usage on containerized images
+# The role discovers dynamically (in tasks/main.yml) whether it
+# is executed on a container image and sets the variable
+# system_is_container the true. Otherwise, the default value
+# 'false' is left unchanged.
+container_vars_file: is_container.yml
+
+## Root user used
+# Root by default is not used unless setup by user
+# The role will only run certain commands if set to true
+# This allows the ability to skip tasks that may cause an issue
+rhel9cis_uses_root: false
+
+# Connecting user, due to the way many users work differently this is to try and assist the use of connecting user if required
+# This is useful when part of kickstart build or running as root and not defining the ansible_user option
+# used @ rhel10 5.2.4
+rhel9cis_default_user: root
+rhel9cis_connecting_user: "{{ ansible_facts['env']['SUDO_USER'] | default(rhel9cis_default_user) }}"
+rhel9cis_playbook_user: "{{ ansible_user | default(rhel9cis_connecting_user) }}"
+
 ## Switching on/off specific baseline sections
 # These variables govern whether the tasks of a particular section are to be executed when running the role.
 # E.g: If you want to execute the tasks of Section 1 you should set the "_section1" variable to true.
@@ -56,6 +76,7 @@ rhel9cis_legacy_boot: false
 # The audit variable found at the base
 ## metadata for Audit benchmark
 benchmark_version: 'v2.0.0'
+copyright_year: '2026'
 
 benchmark: RHEL9-CIS
 
@@ -66,57 +87,30 @@ skip_reboot: true
 # default value will change to true but won't reboot if not enabled but will error
 change_requires_reboot: false
 
-###
-### Settings for associated Audit role using Goss
-###
+# A location that can be used as as a temporary location to execute scripts
+# note the drive with need exec permissions used by 1.1.1.9
+rhel9cis_temp_exec_location: /var
 
-###########################################
+############################################
 ### Goss is required on the remote host ###
 ### vars/auditd.yml for other settings  ###
+
+# If the any of the following are set the variables used by them are loaded in vars/audit.yml these can be overridden by your
+# preferred method of variable management (e.g., vault, group_vars, host_vars, inventory etc.)
 
 # Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
 setup_audit: false
 
 # enable audits to run - this runs the audit and get the latest content
 run_audit: false
+
 # Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
 audit_run_heavy_tests: true
-# Ability to limit the number of concurrent processes used by goss (default 50)
-audit_max_concurrent: 50
 
 ## Only run Audit do not remediate
 audit_only: false
-#############################
 
-# How to retrieve audit binary
-# Options are copy or download - detailed settings at the bottom of this file
-# you will need access to either github or the file already downloaded
-get_audit_binary_method: download
-
-## if get_audit_binary_method - copy the following needs to be updated for your environment
-## it is expected that it will be copied from somewhere accessible to the control node
-## e.g copy from ansible control node to remote host
-audit_bin_copy_location: /some/accessible/path
-
-# how to get audit files onto host options
-# options are git/copy/archive/get_url other e.g. if you wish to run from already downloaded conf
-audit_content: git
-
-# If using either archive, copy, get_url:
-## Note will work with .tar files - zip will require extra configuration
-### If using get_url this is expecting github url in tar.gz format e.g.
-### https://github.com/ansible-lockdown/RHEL9-CIS-Audit/archive/refs/heads/benchmark-v1.0.0.tar.gz
-audit_conf_source: "some path or url to copy from"
-
-# Destination for the audit content to be placed on managed node
-# note may not need full path e.g. /opt with the directory being the {{ benchmark }}-Audit directory
-audit_conf_dest: "/opt"
-
-# Where the audit logs are stored
-audit_log_dir: '/opt'
-
-## Ability to collect and take audit files moving to a centralized location
-# This enables the collection of the files from the host
+# Fetch audit output files back to the controller
 fetch_audit_output: false
 
 # Method of getting,uploading the summary files
@@ -128,6 +122,8 @@ audit_output_collection_method: fetch
 
 # Location to put the audit files
 audit_output_destination: /opt/audit_summaries/
+
+#############################
 
 ### Goss Settings ##
 ####### END ########
@@ -521,6 +517,11 @@ rhel9cis_rule_7_2_9: true
 # these then build the variable and options that are passed to the handler to set the mount point for the controls in section1.
 rhel9cis_debug_mount_data: false
 
+## Control 1.1.1.9 - Ensure unused filesystems kernel modules are not available
+# This variable governs whether the discovery script is removed.
+# By setting to true this can affect the audit of the rule.
+rhel9cis_remove_kernel_discovery_script: false
+
 ## Control 1.1.2
 # If set to `true`, rule will be implemented using the `tmp.mount` systemd-service,
 # otherwise fstab configuration will be used.
@@ -534,14 +535,14 @@ rhel9cis_force_gpg_key_import: true
 
 ## Control 1.2.4
 # When installing RHEL from authorized Red Hat source, RHEL will come with default YUM repository. NOT having a default YUM
-# repo ('rhel9cis_rhel_default_repo' set as 'false'), in conjunction with 'rhel9cis_rule_enable_repogpg' set as 'True', will enable the tasks
+# repo ('rhel9cis_rhel_default_repo' set as 'false'), in conjunction with 'rhel9cis_enable_repogpg' set as 'True', will enable the tasks
 # which check the GPG signatures for all the individual YUM repositories.
 rhel9cis_rhel_default_repo: true
 ## Control 1.2.4
-# When 'rhel9cis_rule_enable_repogpg' is set to 'true'(in conjunction with 'rhel9cis_rhel_default_repo':'false'), conditions are met for
+# When 'rhel9cis_enable_repogpg' is set to 'true'(in conjunction with 'rhel9cis_rhel_default_repo':'false'), conditions are met for
 # enabling the GPG signatures-check for all the individual YUM repositories. If GPG signatures-check is enabled on repositories which do not
 # support it(like RedHat), installation of packages will fail.
-rhel9cis_rule_enable_repogpg: true
+rhel9cis_enable_repogpg: true
 
 ## Control 1.3.1.3|4|5 - SELinux policy settings
 # This selects type of policy; targeted or mls( multilevel )
@@ -696,7 +697,7 @@ rhel9cis_message_server: false  # This is for messaging dovecot and cyrus-imap
 rhel9cis_message_mask: false
 rhel9cis_nfs_server: true
 rhel9cis_nfs_mask: true
-rhel9cis_nis_server: true  # set to mask if nis client required
+rhel9cis_nis_server: false  # set to mask if nis client required
 rhel9cis_nis_mask: false
 rhel9cis_print_server: false  # replaces cups
 rhel9cis_print_mask: false
@@ -822,7 +823,7 @@ rhel9cis_sshd_config_file: /etc/ssh/sshd_config
 # access for users whose user name matches one of the patterns. This is done
 # by setting the value of `AllowUsers` option in `/etc/ssh/sshd_config` file.
 # If an USER@HOST format will be used, the specified user will be allowed only on that particular host.
-rhel9cis_sshd_allowusers: "{% if ansible_facts.user_id != 'root' %}{{ ansible_facts.user_id }}{% elif ansible_env.SUDO_USER is defined %}{{ ansible_env.SUDO_USER }}{% endif %}"
+rhel9cis_sshd_allowusers: "{% if ansible_facts['user_id'] != 'root' %}{{ ansible_facts['user_id'] }}{% elif ansible_env.SUDO_USER is defined %}{{ ansible_env.SUDO_USER }}{% endif %}"
 
 # (String) This variable, if specified, configures a list of GROUP name patterns, separated by spaces, to allow SSH access
 # for users whose primary group or supplementary group list matches one of the patterns. This is done
@@ -1064,13 +1065,6 @@ rhel9cis_force_user_warnage: false
 rhel9cis_futurepwchgdate_autofix: true
 
 # 5.4.2.x
-
-## 5.4.2.5 Root user used
-# Root by default is not used unless setup by user
-# The role will only run certain commands if set to true
-# This allows the ability to skip tasks that may cause an issue
-# With the understanding root has full access
-rhel9cis_uses_root: false
 
 ## 5.4.2.6 - Ensure root home directory permissions are 750 or more restrictive
 rhel9cis_root_umask: '0027'  # 0027 or more restrictive
@@ -1373,6 +1367,12 @@ rhel9cis_allow_auditd_uid_user_exclusions: false
 # This variable contains a list of uids to be excluded(users whose actions are not logged by auditd)
 rhel9cis_auditd_uid_exclude:
   - 1999
+
+  # 6.3.3.6 exclude listed mountpoints from the find command to locate privileged binaries
+# Allows operator to exclude mounted devices from being considered as within scope to find privileged binaries; mainly in the case of
+# external/temporary mounted USB drives.
+#   rhel9cis_priv_command_excluded_mounts: ["/mnt/backup_disk", "/mnt/usb_external_storage"]
+rhel9cis_priv_command_excluded_mounts: []
 
 # This can be used to configure other keys in auditd.conf
 # Example:

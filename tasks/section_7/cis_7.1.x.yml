@@ -175,7 +175,11 @@
     - NIST800-53R5_MP-2
   block:
     - name: "7.1.11 | AUDIT | Ensure world writable files and directories are secured | Get list of world-writable files"
-      ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
+      ansible.builtin.shell: |
+        set -o pipefail
+        df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       failed_when: false
       changed_when: false
       register: discovered_world_writable
@@ -192,7 +196,11 @@
       loop: "{{ discovered_world_writable.stdout_lines }}"
 
     - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured | Adjust world-writable directories add sticky bit"
-      ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -o+w ! -perm -1002 2>/dev/null | xargs chmod a+t
+      ansible.builtin.shell: |
+        set -o pipefail
+        df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -o+w ! -perm -1002 2>/dev/null | xargs chmod a+t
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       failed_when: discovered_set_stickybit.rc not in [ 0, 123 ]
       changed_when: discovered_set_stickybit.rc == 0
       register: discovered_set_stickybit
@@ -217,7 +225,7 @@
       check_mode: false
       register: discovered_unowned_files
       with_items:
-        - "{{ ansible_facts.mounts }}"
+        - "{{ ansible_facts['mounts'] }}"
       loop_control:
         label: "{{ item.mount }}"
 
@@ -278,7 +286,7 @@
       check_mode: false
       register: discovered_suid_sgid_files
       with_items:
-        - "{{ ansible_facts.mounts }}"
+        - "{{ ansible_facts['mounts'] }}"
       loop_control:
         label: "{{ item.mount }}"
 
