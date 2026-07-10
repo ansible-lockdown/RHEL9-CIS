@@ -1,7 +1,68 @@
 # Changes to RHEL9CIS
 
-## 2.0.5 - Based on CIS v2.0.0
+## July 2026 — QA pass: cross-repo alignment, variable rename, and lint fixes
 
+- Fixed template typo in templates/etc/systemd/system/tmp.mount.j2: YOUR CHANGED -> YOUR CHANGES
+- Renamed rhel9cis_rule_enable_repogpg to rhel9cis_enable_repogpg in defaults/main.yml,
+  vars/RedHat.yml, vars/AlmaLinux.yml, vars/OracleLinux.yml, and tasks/section_1/cis_1.2.1.x.yml
+  (_rule_ prefix is reserved for X.Y.Z control toggles only)
+- Added copyright_year: '2026' to defaults/main.yml
+- Fixed prelim.yml level tags: level1_server/level1_workstation -> level1-server/level1-workstation
+- Corrected rhel9cis_legacy_boot from true to false to match remediation default
+- Corrected rhel9cis_set_boot_pass from true to false to match remediation default
+- Renamed rhel9cis_rule_enable_repogpg to rhel9cis_enable_repogpg in vars/CIS.yml
+- Added CONTRIBUTING.md with DCO signing and PR workflow guidelines
+- Thanks to @xdkreij issue #450 ability to change location for files to run e.g.1.1.1.9
+- Thanks to @thuliumdrake issue #451 newer aide changes now cause config issues fix.
+- Thanks to @ChrisW-TX issue #452 enable multiline warning banner in the template
+- Updated location that goss is taken from goss-org moved to krameff
+- bumped actions/checkout version
+
+## June 2026 — QA pass: service defaults, version, and hygiene fixes
+
+- Behavior change: rhel9cis_nfs_server, rhel9cis_rpc_server, and rhel9cis_nis_server now
+  default to false (were true, contradicting *_mask: true -- services configured to run
+  and be masked simultaneously; mask wins at OS level making server: true a dead path)
+- Updated min_ansible_version from 2.10.1 to 2.16.1 in meta/main.yml and vars/main.yml
+- Removed export_badges_public.yml and update_galaxy.yml from .github/workflows/
+  (public-mirror-only workflows do not belong in this private repo)
+- Fixed LICENSE copyright casing: Mindpoint -> MindPoint
+- Rebranded README Twitter badge to X (x.com/AnsibleLockdown)
+- Added qa_report.md, prompt.md, test_inv to .gitignore
+- section 2.1 packages and service moved from hard coded to vars/main.yml to enable ore agnostic OS setups
+- tmp mount addresses and aligned with other repos
+- 5.2.4 logic in tasks/main.ylm updated and defaults/main.yml comments
+- pipefail and shell args added
+- ansible dot notation changed to e.g. ansible_facts['packages']
+
+## April 2026
+
+- bootloader password logic improved thanks to skullbringer on discord community
+- 7.1.12 and 7.1.13 fixed thanks to @bubaimondalsch #440
+- 4.3 tags updated
+- 2.1.x - improve logic for mask/disable/stop thanks to @numericillustration #434
+
+## March 2026 — workspace alignment
+
+- Common files aligned to std
+- workflows updates
+- titles updates
+- levels aligned
+- auditd improvement
+- grammar, lint
+- vars naming
+- Linting: converted ~75 single-item when: conditions from list to inline format
+- Linting: added blank line after --- YAML document marker in 10 files
+- Linting: fixed register: key order in 8 tasks (now appears after changed_when/failed_when)
+- Linting: fixed spelling typo sddr → saddr in cis_4.3.x.yml
+- Defaults: added justification comments for service client and bluetooth variables
+
+## Based on CIS v2.0.0
+
+# Feb26 2
+#430 thanks to @numericillustration - 5.4.2.5 missing echo
+
+# Feb26 1
 - QA Fixes
 - .j2 Branding Update
 - Added rhel9cis_uses_root variable definition for 5.4.2.5 root PATH integrity task
@@ -76,34 +137,6 @@ tidy up tags on tasks/main.yml
 - Thanks to @Fredouye
   - public issue 372
   - allow password with different locale
-
-## 2.0.4 - Based on CIS v2.0.0
-
-- addressed issue #419, thank you @aaronk1
-- addressed issue #418 thank you @bbaassssiiee
-- addressed issue #416 thank you @georgenalen and @bbaassssiiee
-- addressed issue #393 thank you to @fragglexarmy
-- addressed issue #394 thank you to @dbeuker
-- addressed issues #390 and #391 thanks to @polski-g
-- addressed issue #398 & #399 thanks to trumbaut
-- Added max-concurrent options for audit
-- work flow updates
-- audit logic improvements
-- auditd template 2.19 compatible
-- pre-commit updates
-- #410 thanks to @kpi-nourman
-- #413 thanks to @bbaassssiiee
-
-## 2.0.3 - Based on CIS v2.0.0
-- addressed issue #387, thank you @fragglexarmy
-- addressed issue #382 to improve regex logic on 5.4.2.4
-- improvement on crypto policy managed controls with var logic
-- addressed issue #384 thank you @polski-g
-- update command to shell module on tasks
-- addressed issue 371 thanks to @bgro and kodebach
-- addressed issue 350 thanks to @chrispipo
-- addressed issue 364 thanks to @polski-g
-- pre-commit update
 
 ## 2.0.2 - Based on CIS v2.0.0
 

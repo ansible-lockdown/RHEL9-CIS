@@ -1,0 +1,66 @@
+---
+
+- name: Prepare RHEL 9 CIS molecule host
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Bootstrap python, sudo, iproute, openssh via raw (idempotent - skips if already installed)
+      ansible.builtin.raw: |
+        dnf install -y python3 sudo iproute openssh-server openssh-clients
+      changed_when: false
+
+    - name: Gather facts now that python is present
+      ansible.builtin.setup:
+
+    - name: Install RHEL 9 CIS supporting packages
+      ansible.builtin.dnf:
+        name:
+          - audit
+          - aide
+          - crypto-policies
+          - crypto-policies-scripts
+          - firewalld
+          - policycoreutils
+          - policycoreutils-python-utils
+          - selinux-policy-targeted
+          - chrony
+          - rsyslog
+          - logrotate
+          - cronie
+          - acl
+          - kmod
+          - dnf-plugins-core
+          - python3-libselinux
+          - python3-policycoreutils
+          - python3-dnf-plugin-versionlock
+          - tmux
+          - git
+          - procps-ng
+          - dmidecode
+          - hostname
+        state: present
+
+    - name: Create directories that minimal images lack
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - /etc/sysctl.d
+        - /etc/ssh/sshd_config.d
+        - /run/sshd
+        - /var/log/audit
+
+    - name: Stub /etc/default/grub so GRUB-tag tasks don't fail in container
+      ansible.builtin.copy:
+        dest: /etc/default/grub
+        content: |
+          GRUB_TIMEOUT=5
+          GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
+          GRUB_DEFAULT=saved
+          GRUB_DISABLE_SUBMENU=true
+          GRUB_TERMINAL_OUTPUT="console"
+          GRUB_CMDLINE_LINUX=""
+          GRUB_DISABLE_RECOVERY="true"
+          GRUB_ENABLE_BLSCFG=true
+        mode: '0644'

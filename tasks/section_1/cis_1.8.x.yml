@@ -3,7 +3,7 @@
 - name: "1.8.1 | PATCH | Ensure GNOME Display Manager is removed"
   when:
     - rhel9cis_rule_1_8_1
-    - "'gdm' in ansible_facts.packages"
+    - "'gdm' in ansible_facts['packages']"
     - not rhel9cis_gui
   tags:
     - level2-server
@@ -198,7 +198,7 @@
     - rhel9cis_gui
   tags:
     - level1-server
-    - level2-workstation
+    - level1-workstation
     - patch
     - gui
     - rule_1.8.8
@@ -226,7 +226,7 @@
     - rhel9cis_gui
   tags:
     - level1-server
-    - level2-workstation
+    - level1-workstation
     - patch
     - gui
     - rule_1.8.9

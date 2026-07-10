@@ -53,7 +53,7 @@
     group: root
     mode: 'go-wx'
 
-- name: "1.7.4 | PATCH | Ensure permissions on /etc/motd are configured"
+- name: "1.7.4 | PATCH | Ensure access to /etc/motd is configured"
   when: rhel9cis_rule_1_7_4
   tags:
     - level1-server
@@ -69,7 +69,7 @@
     group: root
     mode: 'go-wx'
 
-- name: "1.7.5 | PATCH | Ensure permissions on /etc/issue are configured"
+- name: "1.7.5 | PATCH | Ensure access to /etc/issue is configured"
   when: rhel9cis_rule_1_7_5
   tags:
     - level1-server
@@ -85,7 +85,7 @@
     group: root
     mode: 'go-wx'
 
-- name: "1.7.6 | PATCH | Ensure permissions on /etc/issue.net are configured"
+- name: "1.7.6 | PATCH | Ensure access to /etc/issue.net is configured"
   when: rhel9cis_rule_1_7_6
   tags:
     - level1-server

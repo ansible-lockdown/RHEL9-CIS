@@ -12,7 +12,11 @@
     - NIST800-53R5_MP-2
   block:
     - name: "6.2.4.1 | AUDIT | Ensure access to all logfiles has been configured | find log files"
-      ansible.builtin.shell: find /var/log/ -type f -exec ls {} \;
+      ansible.builtin.shell: |
+        set -o pipefail
+        find /var/log/ -type f -exec ls {} \;
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
       register: discovered_logfiles
@@ -24,8 +28,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'ug-x,o-rwx'
-      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
-      register: discovered_logfile_list
+      failed_when: discovered_logfile_sssd_list.state not in '[ file, absent ]'
+      register: discovered_logfile_sssd_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions tmp min 664"
@@ -35,8 +39,8 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'ug-x,o-wx'
-      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
-      register: discovered_logfile_list
+      failed_when: discovered_logfile_tmp_list.state not in '[ file, absent ]'
+      register: discovered_logfile_tmp_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
     - name: "6.2.4.1 | PATCH | Ensure access to all logfiles has been configured | change permissions else all 640"
@@ -46,6 +50,6 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-x,g-wx,o-rwx'
-      failed_when: discovered_logfile_list.state not in '[ file, absent ]'
-      register: discovered_logfile_list
+      failed_when: discovered_logfile_else_list.state not in '[ file, absent ]'
+      register: discovered_logfile_else_list
       loop: "{{ discovered_logfiles.stdout_lines }}"

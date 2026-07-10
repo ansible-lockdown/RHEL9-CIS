@@ -1,6 +1,6 @@
 ---
 
-- name: "1.6.1 | AUDIT | Ensure system-wide crypto policy is not legacy"
+- name: "1.6.1 | PATCH | Ensure system-wide crypto policy is not legacy"
   when:
     - rhel9cis_rule_1_6_1
     - rhel9cis_crypto_policy_ansiblemanaged
@@ -165,7 +165,6 @@
   when:
     - rhel9cis_rule_1_6_7
     - "'NO-SSHETM' not in rhel9cis_crypto_policy_module"
-    - rhel9cis_crypto_policy_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation

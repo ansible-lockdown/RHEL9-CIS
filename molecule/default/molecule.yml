@@ -1,33 +1,50 @@
 ---
-# Molecule configuration
-# https://molecule.readthedocs.io/en/latest/
-
+dependency:
+  name: galaxy
+  options:
+    requirements-file: collections/requirements.yml
 driver:
-    name: docker
-
+  name: docker
 platforms:
-    - name: ubi9
-      image: registry.access.redhat.com/ubi9/ubi-init
-      pre_build_image: true
-      volumes:
-          - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      privileged: true
-      command: "/usr/sbin/init"
-      capabilities:
-          - SYS_ADMIN
-
+  - name: rhel9-cis-qa
+    image: rockylinux/rockylinux:9-ubi-init
+    platform: linux/arm64
+    pre_build_image: true
+    command: /usr/sbin/init
+    privileged: true
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /tmp
+    capabilities:
+      - SYS_ADMIN
 provisioner:
-    name: ansible
-    config_options:
-        defaults:
-            interpreter_python: auto_silent
-            callbacks_enabled: profile_tasks, timer
-
-lint: |
-    set -e
-    yamllint .
-    ansible-lint
-    flake8
-
+  name: ansible
+  log: true
+  config_options:
+    defaults:
+      callbacks_enabled: profile_tasks,timer
+  inventory:
+    host_vars:
+      rhel9-cis-qa:
+        ansible_become: false
+        setup_audit: true
+        run_audit: true
+        skip_reboot: true
+        system_is_container: true
+        # Override role default (`false` in defaults/main.yml) - safe in this
+        # throwaway container, exercises the full disruption_high code paths.
+        rhel9cis_disruption_high: true
+        # Required: role asserts this is not left at the default 'cis_example_profile'
+        rhel9cis_authselect_custom_profile_name: cis_molecule_profile
+        # authselect binary is non-functional in minimal containers (no PAM/sssd stack)
+        rhel9cis_allow_authselect_updates: false
+        fetch_audit_output: true
+        # Files land one level above the role repo (working dir root), e.g.
+        # `<working_dir>/_temp_fetched_audits/`. Override with `-e audit_output_destination=...`
+        # if you want them somewhere else.
+        audit_output_destination: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/../../_temp_fetched_audits/"
 verifier:
-    name: ansible
+  name: ansible

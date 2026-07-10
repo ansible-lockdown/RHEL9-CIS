@@ -40,9 +40,13 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.4.2.2 | AUDIT | Ensure root is the only GID 0 account | Get members of gid 0"
-      ansible.builtin.shell: "awk -F: '($1 !~ /^(sync|shutdown|halt|operator)/ && $4==\"0\") {print $1}' /etc/passwd | grep -wv 'root'"
-      register: discovered_gid0_members
+      ansible.builtin.shell: |
+        set -o pipefail
+        awk -F: '($1 !~ /^(sync|shutdown|halt|operator)/ && $4=="0") {print $1}' /etc/passwd | grep -wv 'root'
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
+      register: discovered_gid0_members
       failed_when: discovered_gid0_members.rc not in [ 0, 1 ]
 
     - name: "5.4.2.2 | PATCH | Ensure root is the only GID 0 account | Remove users not root from gid 0"
@@ -71,9 +75,13 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Get groups with gid 0"
-      ansible.builtin.shell: "awk -F: '$3==\"0\"{print $1}' /etc/group | grep -vw 'root'"
-      register: discovered_gid0_groups
+      ansible.builtin.shell: |
+        set -o pipefail
+        awk -F: '$3=="0"{print $1}' /etc/group | grep -vw 'root'
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
+      register: discovered_gid0_groups
       failed_when: discovered_gid0_groups.rc not in [ 0, 1 ]
 
     - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Warning if others gid 0 groups"
@@ -94,7 +102,7 @@
       vars:
         warn_control_id: '5.4.2.3'
 
-- name: "5.4.2.4 | PATCH | Ensure root account access is controlled "
+- name: "5.4.2.4 | PATCH | Ensure root account access is controlled"
   when: rhel9cis_rule_5_4_2_4
   tags:
     - level1-server
@@ -105,7 +113,7 @@
   ansible.builtin.debug:
     msg: "This is set as an assert in tasks/main"
 
-- name: "5.4.2.5 | PATCH | Ensure root PATH Integrity"
+- name: "5.4.2.5 | PATCH | Ensure root path integrity"
   when: rhel9cis_rule_5_4_2_5
   tags:
     - level1-server
@@ -120,13 +128,21 @@
     - NIST800-53R5_IA-5
   block:
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Get root paths"
-      ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2
+      ansible.builtin.shell: |
+        set -o pipefail
+        sudo -Hiu root env | grep '^PATH' | cut -d= -f2
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       register: discovered_root_paths
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Get root paths"
       when: discovered_root_paths is defined
-      ansible.builtin.shell: sudo -Hiu root env | grep '^PATH' | cut -d= -f2 | tr ":" "\n"
+      ansible.builtin.shell: |
+        set -o pipefail
+        sudo -Hiu root env | grep '^PATH' | cut -d= -f2 | tr ":" "\n"
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       register: discovered_root_paths_split
 
@@ -153,14 +169,22 @@
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Check for empty dirs"
       when: discovered_root_paths is defined
-      ansible.builtin.shell: 'echo {{ root_paths }} | grep -q "::" && echo "roots path contains a empty directory (::)"'
+      ansible.builtin.shell: |
+        set -o pipefail
+        echo {{ root_paths }} | grep -q "::" && echo "roots path contains a empty directory (::)"
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_root_path_empty_dir.rc not in [ 0, 1 ]
       register: discovered_root_path_empty_dir
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Check for trailing ':'"
       when: discovered_root_paths is defined
-      ansible.builtin.shell: '{{ root_paths }} | cut -d= -f2 | grep -q ":$" && echo "roots path contains a trailing (:)"'
+      ansible.builtin.shell: |
+        set -o pipefail
+        echo {{ root_paths }} | cut -d= -f2 | grep -q ":$" && echo "roots path contains a trailing (:)"
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_root_path_trailing_colon.rc not in [ 0, 1 ]
       register: discovered_root_path_trailing_colon

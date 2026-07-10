@@ -5,9 +5,9 @@
   when: os_check
   tags: always
   ansible.builtin.assert:
-    that: (ansible_facts.distribution != 'CentOS' and ansible_facts.os_family == 'RedHat' or ansible_facts.os_family == "Rocky") and ansible_facts.distribution_major_version is version_compare('9', '==')
-    fail_msg: "This role can only be run against Supported OSs. {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }} is not supported."
-    success_msg: "This role is running against a supported OS {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }}"
+    that: (ansible_facts['distribution'] != 'CentOS' and ansible_facts['os_family'] == 'RedHat' or ansible_facts['os_family'] == "Rocky") and ansible_facts['distribution_major_version'] is version_compare('9', '==')
+    fail_msg: "This role can only be run against Supported OSs. {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }} is not supported."
+    success_msg: "This role is running against a supported OS {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }}"
 
 - name: "Check ansible version"
   tags: always
@@ -17,7 +17,7 @@
     success_msg: "This role is running a supported version of ansible {{ ansible_version.full }} >= {{ min_ansible_version }}"
 
 - name: "Setup rules if container"
-  when: ansible_connection == 'docker' or ansible_facts.virtualization_type in ["docker", "lxc", "openvz", "podman", "container"]
+  when: ansible_connection == 'docker' or ansible_facts['virtualization_type'] in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - container_discovery
     - always
@@ -63,48 +63,49 @@
     fail_msg: "Crypto policy module is not a permitted version"
     success_msg: "Crypto policy module is a permitted version"
 
-- name: "Check password set for {{ ansible_env.SUDO_USER }}"
+- name: "Check password set for {{ rhel9cis_playbook_user }} | password state"  # noqa name[template]
   when:
+    - rhel9cis_playbook_user != 'root'
     - rhel9cis_rule_5_2_4
-    - ansible_env.SUDO_USER is defined
+    - ansible_facts['env']['SUDO_USER'] is defined
     - not system_is_ec2
-  tags:
-    - user_passwd
-    - rule_5.2.4
+  tags: always
+  no_log: true
   vars:
     sudo_password_rule: rhel9cis_rule_5_2_4  # pragma: allowlist secret
   block:
-    - name: "Check password set for {{ ansible_env.SUDO_USER }} | password state"  # noqa name[template]
-      ansible.builtin.shell: "(grep {{ ansible_env.SUDO_USER }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'"
+    - name: "Check password set for {{ rhel9cis_playbook_user }} | password state"  # noqa name[template]
+      ansible.builtin.shell: |
+          set -o pipefail
+          (grep {{ rhel9cis_playbook_user }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'
       changed_when: false
       failed_when: false
       check_mode: false
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       register: prelim_ansible_user_password_set
 
-    - name: "Check for local account {{ ansible_env.SUDO_USER }} | Check for local account"  # noqa name[template]
+    - name: "Check for local account {{ rhel9cis_playbook_user }} | Check for local account"  # noqa name[template]
       when: prelim_ansible_user_password_set.stdout == "not found"
       ansible.builtin.debug:
-        msg: "No local account found for {{ ansible_env.SUDO_USER }} user. Skipping local account checks."
+        msg: "No local account found for {{ rhel9cis_playbook_user }} user. Skipping local account checks."
 
     - name: "Check local account"
-      when: prelim_ansible_user_password_set.stdout != "not found"
       block:
-        - name: "Check password set for {{ ansible_env.SUDO_USER }} | Assert local password set"  # noqa name[template]
+        - name: "Check password set for {{ rhel9cis_playbook_user }} | Assert local password set"  # noqa name[template]
           ansible.builtin.assert:
-            that: |
-              (
-                ((prelim_ansible_user_password_set.stdout | length != 0) and (prelim_ansible_user_password_set.stdout != "!!" ))
-              or
-                (ansible_env.SUDO_USER in rhel9cis_sudoers_exclude_nopasswd_list)
-              )
-            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} has no password set or the user is not included in the exception list for rule 5.2.4 - It can break access"
-            success_msg: "You have a password set for the {{ ansible_env.SUDO_USER }} user or the user is included in the exception list for rule 5.2.4"
+            that:
+              - prelim_ansible_user_password_set.stdout | length != 0
+              - prelim_ansible_user_password_set.stdout != "!!"
+            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ rhel9cis_playbook_user }} has no password set - It can break access"
+            success_msg: "You have a password set for the {{ rhel9cis_playbook_user }} user"
 
-        - name: "Check account is not locked for {{ ansible_env.SUDO_USER }} | Assert local account not locked"  # noqa name[template]
+        - name: "Check account is not locked for {{ rhel9cis_playbook_user }} | Assert local account not locked"  # noqa name[template]
+          when: prelim_ansible_user_password_set.stdout != "not found"
           ansible.builtin.assert:
-            that: (not prelim_ansible_user_password_set.stdout.startswith("!")) or (ansible_env.SUDO_USER in rhel9cis_sudoers_exclude_nopasswd_list)
-            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ ansible_env.SUDO_USER }} is locked - It can break access"
-            success_msg: "The local account {{ ansible_env.SUDO_USER }} is not locked or included in the exception list for rule 5.2.4"
+            that: not prelim_ansible_user_password_set.stdout.startswith("!")
+            fail_msg: "You have {{ sudo_password_rule }} enabled but the user = {{ rhel9cis_playbook_user }} is locked - It can break access"
+            success_msg: "The local account is not locked for {{ rhel9cis_playbook_user }} user"
 
 - name: "Check authselect profile is selected"
   when: rhel9cis_allow_authselect_updates
@@ -132,7 +133,11 @@
     - rule_5.4.2.4
   block:
     - name: "Ensure root password is set"
-      ansible.builtin.shell: LC_ALL=C passwd -S root | grep -E "(Alternate authentication|Password set|Password locked)"
+      ansible.builtin.shell: |
+        set -o pipefail
+        LC_ALL=C passwd -S root | grep -E "(Alternate authentication|Password set|Password locked)"
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: prelim_root_passwd_set.rc not in [ 0, 1 ]
       register: prelim_root_passwd_set
@@ -151,7 +156,7 @@
 - name: "Include OS specific variables"
   tags: always
   ansible.builtin.include_vars:
-    file: "{{ ansible_facts.distribution }}.yml"
+    file: "{{ ansible_facts['distribution'] }}.yml"
 
 - name: "Include preliminary steps"
   tags: prelim_tasks
@@ -206,9 +211,9 @@
   ansible.builtin.import_tasks:
     file: post.yml
 
-- name: "Run post_remediation audit"
+- name: "Run post remediation audit"
   when: run_audit
-  tags: always
+  tags: run_audit
   ansible.builtin.import_tasks:
     file: post_remediation_audit.yml
 
@@ -218,7 +223,6 @@
     - (post_audit_summary is defined) or
       (ansible_local['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_summary is undefined)
   tags:
-    - always
     - benchmark
   block:
     - name: Create ansible facts directory if audit facts not present
@@ -241,13 +245,13 @@
   when:
     - fetch_audit_output
     - run_audit
-  tags: always
+  tags: run_audit
   ansible.builtin.import_tasks:
     file: fetch_audit_output.yml
 
 - name: "Show Audit Summary"
   when: run_audit
-  tags: always
+  tags: run_audit
   ansible.builtin.debug:
     msg: "{{ audit_results.split('\n') }}"
 

@@ -1,7 +1,11 @@
 ---
+
 # vars file for RHEL9-CIS
 
-min_ansible_version: 2.10.1
+# Set default value for reboot value
+change_requires_reboot: false
+
+min_ansible_version: 2.16.1
 rhel9cis_allowed_crypto_policies:
   - 'DEFAULT'
   - 'FUTURE'
@@ -24,7 +28,10 @@ rhel9cis_allowed_crypto_policies_modules:
   - 'NO-SSHWEAKMAC'
   - 'NO-WEAKMAC'
 
-rhel9_compiled_bootloader_password: "{% if rhel9cis_bootloader_salt != '' %}{{ (rhel9cis_bootloader_password | grub_hash(salt=rhel9cis_bootloader_salt)) }}{% else %}{{ rhel9cis_bootloader_password_hash }}{% endif %}" # noqa template-instead-of-copy
+# Ability to change the default shell
+# Note this can change how some of the ansible.builtin.shell tasks work and may require adjustments to args.executable for those tasks
+# Used mainly for overriding to use a more POSIX compliant shell such as dash or ash when running in a container environment
+rhel9cis_shell_executable: /bin/bash
 
 # Used to control warning summary
 warn_control_list: ""
@@ -36,7 +43,7 @@ prelim_interactive_users: []
 # Default empty values for 1.4.2
 efi_mount_opts_addition: ''
 
-gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
+gpg_key_package: "{{ ansible_facts['distribution'] | lower }}-gpg-keys"
 
 ## Controls 6.3.3.x - Audit template
 # This variable is set to true by tasks 6.3.3.1 to 6.3.3.20. As a result, the
@@ -52,11 +59,7 @@ update_audit_template: false
 # system_is_container the true. Otherwise, the default value
 # 'false' is left unchanged.
 system_is_container: false
-# The filename of the existing yml file in role's 'vars/' sub-directory
-# to be used for managing the role-behavior when a container was detected:
-# (de)activating rules or for other tasks(e.g. disabling Selinux or a specific
-# firewall-type).
-container_vars_file: is_container.yml
+
 # rhel9cis is left off the front of this var for consistency in testing pipeline
 # system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
 system_is_ec2: false
@@ -83,3 +86,101 @@ file_managed_by_ansible: |-
   # File managed by ansible as part of {{ benchmark }} benchmark
   # As part of Ansible-lockdown
   # Provided by {{ company_title }}
+
+# Packages and service 2.1.x
+#
+avahi_pkgs:
+  - avahi-autoipd
+  - avahi
+
+avahi_services:
+  - avahi-daemon.socket
+  - avahi-daemon.service
+
+dhcp_pkgs:
+  - dhcp-server
+dhcp_services:
+  - dhcpd.service
+  - dhcpd6.service
+
+dns_pkgs:
+  - bind
+dns_services:
+  - named.service
+
+dnsmasq_pkgs:
+  - dnsmasq
+dnsmasq_services:
+  - dnsmasq.service
+
+samba_pkgs:
+  - samba
+samba_services:
+  - smb.service
+
+vsftpd_pkgs:
+  - vsftpd
+vsftpd_services:
+  - vsftpd.service
+
+message_pkgs:
+  - dovecot
+  - cyrus-imapd
+message_services:
+  - dovecot.socket
+  - dovecot.service
+  - cyrus-imapd.service
+
+nfs_pkgs:
+  - nfs-utils
+nfs_services:
+  - nfs-server.service
+
+nis_pkgs:
+  - ypserv
+nis_services:
+  - ypserv.service
+
+print_pkgs:
+  - cups
+print_services:
+  - cups.service
+  - cups.socket
+
+rpcbind_pkgs:
+  - rpcbind
+rpcbind_services:
+  - rpcbind.service
+  - rpcbind.socket
+
+rsync_pkgs:
+  - rsync-daemon
+rsync_services:
+  - rsyncd.service
+  - rsyncd.socket
+
+snmp_pkgs:
+  - net-snmp
+snmp_services:
+  - net-snmp.service
+
+telnet_pkgs:
+  - telnet-server
+telnet_services:
+  - telnet.socket
+
+tftp_pkgs:
+  - tftp-server
+tftp_services:
+  - tftp.service
+  - tftp.socket
+
+proxy_pkgs:
+  - squid
+proxy_services:
+  - squid.service
+
+xinetd_pkgs:
+  - xinetd
+xinetd_services:
+  - xinetd.service

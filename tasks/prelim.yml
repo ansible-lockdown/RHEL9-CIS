@@ -14,15 +14,17 @@
     file: audit.yml
 
 - name: "PRELIM | Include pre-remediation audit tasks"
-  when:
-    - run_audit or audit_only
+  when: run_audit or audit_only
   tags: run_audit
   ansible.builtin.import_tasks: pre_remediation_audit.yml
 
 - name: "PRELIM | AUDIT | Interactive Users"
   tags: always
-  ansible.builtin.shell: >
+  ansible.builtin.shell: |
+    set -o pipefail
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1":"$3":"$6 }'
+  args:
+    executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_interactive_users_raw
@@ -35,16 +37,22 @@
 
 - name: "PRELIM | AUDIT | Interactive User accounts home directories"
   tags: always
-  ansible.builtin.shell: >
+  ansible.builtin.shell: |
+    set -o pipefail
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $6 }'
+  args:
+    executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_interactive_users_home
 
 - name: "PRELIM | AUDIT | Interactive UIDs"
   tags: always
-  ansible.builtin.shell: >
+  ansible.builtin.shell: |
+    set -o pipefail
     grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
+  args:
+    executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_interactive_uids
@@ -55,7 +63,7 @@
     file: parse_etc_password.yml
 
 - name: "PRELIM | PATCH | Ensure python3-libselinux is installed"
-  when: '"python3-libselinux" not in ansible_facts.packages'
+  when: "'python3-libselinux' not in ansible_facts['packages']"
   ansible.builtin.package:
     name: python3-libselinux
     state: present
@@ -63,14 +71,17 @@
 - name: PRELIM | AUDIT | Section 1.1 | Create list of mount points
   tags: always
   ansible.builtin.set_fact:
-    prelim_mount_names: "{{ ansible_facts.mounts | map(attribute='mount') | list }}"
+    prelim_mount_names: "{{ ansible_facts['mounts'] | map(attribute='mount') | list }}"
 
 - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options
   tags: always
   block:
     - name: PRELIM | AUDIT | Section 1.1 | Retrieve mount options - call mount  # noqa command-instead-of-module
       ansible.builtin.shell: |
+        set -o pipefail
         mount | awk '{print $1, $3, $5, $6}'
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       check_mode: false
       register: prelim_mount_output
@@ -93,8 +104,8 @@
 - name: "PRELIM | PATCH | Update to latest gpg keys"
   when:
     - rhel9cis_rule_1_2_1_1
-    - ansible_facts.distribution != 'RedHat'
-    - ansible_facts.distribution != 'OracleLinux'
+    - ansible_facts['distribution'] != 'RedHat'
+    - ansible_facts['distribution'] != 'OracleLinux'
   tags:
     - level1-server
     - level1-workstation
@@ -108,7 +119,7 @@
   when:
     - rhel9cis_rule_1_2_1_1
     - rhel9cis_force_gpg_key_import
-    - ansible_facts.distribution == 'RedHat'
+    - ansible_facts['distribution'] == 'RedHat'
   block:
     - name: "PRELIM | AUDIT | Import gpg keys | get data"
       ansible.builtin.command: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n'  # noqa command-instead-of-module
@@ -119,7 +130,11 @@
 
     - name: "PRELIM | AUDIT | Import gpg keys | Check Package"  # noqa command-instead-of-module
       when: "'not installed' in prelim_check_gpg_imported.stdout"
-      ansible.builtin.shell: rpm -qi redhat-release | grep Signature  # noqa command-instead-of-module
+      ansible.builtin.shell: |
+        set -o pipefail
+        rpm -qi redhat-release | grep Signature  # noqa command-instead-of-module
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
       check_mode: false
@@ -214,16 +229,16 @@
   block:
     - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
-      register: prelim_wireless_adapters
       changed_when: false
       check_mode: false
+      register: prelim_wireless_adapters
       failed_when: prelim_wireless_adapters.rc not in [ 0, 1 ]
 
     - name: "PRELIM | PATCH | Install Network-Manager | if wireless adapter present"
       when:
         - rhel9cis_install_network_manager
         - prelim_wireless_adapters.rc == 0
-        - "'NetworkManager' not in ansible_facts.packages"
+        - "'NetworkManager' not in ansible_facts['packages']"
       ansible.builtin.package:
         name: NetworkManager
         state: present
@@ -231,7 +246,7 @@
 - name: "PRELIM | PATCH | Install Cronie"
   when:
     - rhel9cis_rule_5_1_1
-    - '"cronie" not in ansible_facts.packages'
+    - "'cronie' not in ansible_facts['packages']"
   tags:
     - level1-server
     - level1-workstation
@@ -245,11 +260,11 @@
 - name: "PRELIM | PATCH | SSH Config file is not exist"
   when:
     - rhel9cis_sshd_config_file != '/etc/ssh/sshd_config'
-    - "'openssh-server' in ansible_facts.packages"
+    - "'openssh-server' in ansible_facts['packages']"
   tags:
     - always
-    - level1_server
-    - level1_workstation
+    - level1-server
+    - level1-workstation
   ansible.builtin.file:
     path: "{{ rhel9cis_sshd_config_file }}"
     owner: root
@@ -278,7 +293,11 @@
     - level1-server
     - level1-workstation
     - users
-  ansible.builtin.shell: "cat /etc/passwd | awk -F: '($3 == 0 && $1 != \"root\") {i++;print $1 } END {exit i}'"
+  ansible.builtin.shell: |
+    set -o pipefail
+    cat /etc/passwd | awk -F: '($3 == 0 && $1 != "root") {i++;print $1 } END {exit i}'
+  args:
+    executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_uid_zero_accounts_except_root
@@ -293,9 +312,16 @@
     state: directory
     mode: 'u+x,g-w,o-rwx'
 
+- name: "PRELIM | AUDIT | Discover if auditd is immutable"
+  tags: always
+  ansible.builtin.command: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
+  changed_when: false
+  failed_when: prelim_auditd_immutable_check.rc not in [ 0, 1, 2 ]
+  register: prelim_auditd_immutable_check
+
 - name: "PRELIM | PATCH | Configure System Accounting (auditd)"
   when:
-    - '"auditd" not in ansible_facts.packages'
+    - "'auditd' not in ansible_facts['packages']"
     - rhel9cis_rule_6_3_1_1
   tags:
     - level2-server
@@ -315,7 +341,11 @@
       rhel9cis_rule_6_3_4_3 or
       rhel9cis_rule_6_3_4_4
   tags: always
-  ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
+  ansible.builtin.shell: |
+    set -o pipefail
+    grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
+  args:
+    executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_auditd_logfile

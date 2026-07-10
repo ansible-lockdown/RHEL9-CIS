@@ -1,0 +1,18 @@
+---
+
+- name: Converge - apply RHEL 9 CIS remediation on UBI 9
+  hosts: all
+  any_errors_fatal: true
+  vars:
+    setup_audit: true
+    run_audit: true
+    system_is_container: true
+    skip_reboot: true
+    rhel9cis_disruption_high: false
+  pre_tasks:
+    - name: Set root password so PAM rules do not lock us out
+      ansible.builtin.user:
+        name: root
+        password: "{{ 'changeme123!' | password_hash('sha512') }}"
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
