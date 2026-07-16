@@ -3,7 +3,7 @@
 # handlers file for RHEL9-CIS
 
 - name: "Remount tmp filesystem"
-  ansible.builtin.include_tasks:
+  ansible.builtin.import_tasks:
     file: remount_tmp.yml
   listen: "Remount /tmp"
 
