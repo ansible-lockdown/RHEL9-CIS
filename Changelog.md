@@ -1,5 +1,9 @@
 # Changes to RHEL9CIS
 
+## Aug2026 - Update
+- 7.2.8 updated so only interactive users home dirs are changed
+- #457 fixed nginx service nae thansk to @jayTeeG78
+
 ## July 2026 — QA pass: cross-repo alignment, variable rename, and lint fixes
 
 - Fixed template typo in templates/etc/systemd/system/tmp.mount.j2: YOUR CHANGED -> YOUR CHANGES
