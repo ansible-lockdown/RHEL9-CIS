@@ -1,8 +1,28 @@
 # Changes to RHEL9CIS
 
-## Aug2026 - Update
+## Aug2026 - QA pass
+
+- handlers updated
+- nftables readdressed
+- optional nftables ruleset persistence added - rhel9cis_nft_tables_saveruleset (default false)
+  writes the live ruleset to /etc/nftables/cis.nft and includes it from /etc/sysconfig/nftables.conf
+- audit goss file renamed
+- several typos and lint
 - 7.2.8 updated so only interactive users home dirs are changed
 - #457 fixed nginx service nae thansk to @jayTeeG78
+- audit and defaults tidy up now default/main/{filename}.yml
+- bracket notation updated
+- tmp handler updates - taken from 2 different feedback loops
+  - RHEL9-CIS #459 (@Thulium-Drake)
+  - RHEL10-CIS #112 (@rajsshah86)
+- 5.2.4 password assert in tasks/main.yml now carries level2 tags - it was tags: always
+  so a level1-server run still executed a level2 assertion
+  - RHEL10-CIS #105 (@mindrb)
+- crypto policy now applied when only rhel9cis_crypto_policy changes - 1.6.1 is a debug
+  task so it never reported changed and never notified its handlers
+  - RHEL10-CIS #111 (@priteau)
+- prelim sshd_config.d/50-redhat.conf check tagged for rule_5.1.10/rule_5.1.11 - level
+  scoped runs selected the consumer without the producer and failed on an undefined register
 
 ## July 2026 — QA pass: cross-repo alignment, variable rename, and lint fixes
 
@@ -23,7 +43,7 @@
 - thanks to @defnotyujine
   - tmp mount handler changed to import_tasks
 - bumped actions/checkout version
-
+- updated workflows
 
 ## June 2026 — QA pass: service defaults, version, and hygiene fixes
 

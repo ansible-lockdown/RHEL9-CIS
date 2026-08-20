@@ -1,19 +1,40 @@
 ---
 
+- name: "OPTIONAL | PATCH | Ensure saved nftables ruleset is loaded at boot"
+  when:
+    - rhel9cis_nft_tables_saveruleset
+    - rhel9cis_rule_4_3_1 or rhel9cis_rule_4_3_2 or
+      rhel9cis_rule_4_3_3 or rhel9cis_rule_4_3_4
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - nftables
+  ansible.builtin.lineinfile:
+    path: /etc/sysconfig/nftables.conf
+    line: 'include "{{ rhel9cis_nft_tables_savefile }}"'
+    regexp: '^include "{{ rhel9cis_nft_tables_savefile }}"$'
+    create: true
+    owner: root
+    group: root
+    mode: 'go-rwx'
+
 - name: "OPTIONAL | PATCH | Create Table if doesn't exist and required"
   when:
     - rhel9cis_nft_tables_autonewtable
-    - rhel9cis_rule_4_3_1
-    - rhel9cis_rule_4_3_2
-    - rhel9cis_rule_4_3_3
-    - rhel9cis_rule_4_3_4
+    - rhel9cis_rule_4_3_1 or rhel9cis_rule_4_3_2 or
+      rhel9cis_rule_4_3_3 or rhel9cis_rule_4_3_4
   tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - nftables
     - rule_4.3.1
     - rule_4.3.2
     - rule_4.3.3
     - rule_4.3.4
   ansible.builtin.command: "nft add table inet {{ rhel9cis_nft_tables_tablename }}"
-  changed_when: true
+  changed_when: false
 
 - name: "4.3.1 | PATCH | Ensure nftables base chains exist"
   when: rhel9cis_rule_4_3_1
@@ -67,14 +88,17 @@
           - "{{ discovered_nftables_output_chains.stdout_lines }}"
 
     - name: "4.3.1 | PATCH | Ensure nftables base chains exist | Create chains if needed"
-      when: rhel9cis_nft_tables_autochaincreate
-      ansible.builtin.command: "{{ item }}"
+      when:
+        - rhel9cis_nft_tables_autochaincreate
+        - item.check.stdout | default('') | length == 0
+      ansible.builtin.command: >-
+        nft create chain inet "{{ rhel9cis_nft_tables_tablename }}"
+        {{ item.hook }} { type filter hook {{ item.hook }} priority 0 \; }
       changed_when: true
-      failed_when: false
       loop:
-        - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" input { type filter hook input priority 0 \; }
-        - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" forward { type filter hook forward priority 0 \; }
-        - nft create chain inet "{{ rhel9cis_nft_tables_tablename }}" output { type filter hook output priority 0 \; }
+        - { hook: input, check: "{{ discovered_nftables_input_chains }}" }
+        - { hook: forward, check: "{{ discovered_nftables_forward_chains }}" }
+        - { hook: output, check: "{{ discovered_nftables_output_chains }}" }
 
 - name: "4.3.2 | PATCH | Ensure nftables established connections are configured"
   when: rhel9cis_rule_4_3_2
@@ -106,7 +130,7 @@
       failed_when: false
       register: discovered_nftables_outconnectionrule
 
-    - name: "4.3.2| PATCH | Ensure nftables established connections are configured | Add input tcp established accept policy"
+    - name: "4.3.2 | PATCH | Ensure nftables established connections are configured | Add input tcp established accept policy"
       when: '"ip protocol tcp ct state established accept" not in discovered_nftables_inconnectionrule.stdout'
       ansible.builtin.command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input ip protocol tcp ct state established accept
       changed_when: true
@@ -179,7 +203,7 @@
     - name: "4.3.3 | AUDIT | Ensure nftables default deny firewall policy | Check for SSH allow"
       ansible.builtin.shell: |
         set -o pipefail
-        nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep 'ssh'
+        nft list table inet "{{ rhel9cis_nft_tables_tablename }}" | grep -E 'dport (22|ssh)'
       args:
         executable: "{{ rhel9cis_shell_executable }}"
       failed_when: false
@@ -187,22 +211,22 @@
       register: discovered_nftables_sshallowcheck
 
     - name: "4.3.3 | PATCH | Ensure nftables default deny firewall policy | Enable SSH traffic"
-      when: '"tcp dport ssh accept" not in discovered_nftables_sshallowcheck.stdout'
+      when: not discovered_nftables_sshallowcheck.stdout is search('tcp dport (22|ssh) accept')
       ansible.builtin.command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input tcp dport ssh accept
       changed_when: true
 
     - name: "4.3.3 | PATCH | Ensure nftables default deny firewall policy | Set hook input deny policy"
-      when: '"type filter hook input priority 0; policy drop;" not in discovered_nftables_inputpolicy.stdout'
+      when: not discovered_nftables_inputpolicy.stdout is search('hook input priority (0|filter); policy drop;')
       ansible.builtin.command: nft chain inet "{{ rhel9cis_nft_tables_tablename }}" input { policy drop \; }
       changed_when: true
 
     - name: "4.3.3 | PATCH | Ensure nftables default deny firewall policy | Create hook forward deny policy"
-      when: '"type filter hook forward priority 0; policy drop;" not in discovered_nftables_forwardpolicy.stdout'
+      when: not discovered_nftables_forwardpolicy.stdout is search('hook forward priority (0|filter); policy drop;')
       ansible.builtin.command: nft chain inet "{{ rhel9cis_nft_tables_tablename }}" forward { policy drop \; }
       changed_when: true
 
     - name: "4.3.3 | PATCH | Ensure nftables default deny firewall policy | Create hook output deny policy"
-      when: '"type filter hook output priority 0; policy drop;" not in discovered_nftables_outputpolicy.stdout'
+      when: not discovered_nftables_outputpolicy.stdout is search('hook output priority (0|filter); policy drop;')
       ansible.builtin.command: nft chain inet "{{ rhel9cis_nft_tables_tablename }}" output { policy drop \; }
       changed_when: true
 
@@ -260,3 +284,30 @@
       when: '"ip6 saddr ::1 counter packets 0 bytes 0 drop" not in discovered_nftables_ip6saddr.stdout'
       ansible.builtin.command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input ip6 saddr ::1 counter drop
       changed_when: true
+
+- name: "OPTIONAL | PATCH | Persist the nftables ruleset"
+  when:
+    - rhel9cis_nft_tables_saveruleset
+    - rhel9cis_rule_4_3_1 or rhel9cis_rule_4_3_2 or
+      rhel9cis_rule_4_3_3 or rhel9cis_rule_4_3_4
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - nftables
+  block:
+    - name: "OPTIONAL | AUDIT | Persist the nftables ruleset | Capture live ruleset"
+      ansible.builtin.command: nft list ruleset
+      changed_when: false
+      check_mode: false
+      register: discovered_nftables_live_ruleset
+
+    - name: "OPTIONAL | PATCH | Persist the nftables ruleset | Write ruleset file"
+      ansible.builtin.copy:
+        content: |
+          flush ruleset
+          {{ discovered_nftables_live_ruleset.stdout }}
+        dest: "{{ rhel9cis_nft_tables_savefile }}"
+        owner: root
+        group: root
+        mode: 'go-rwx'

@@ -76,7 +76,6 @@ rhel9cis_legacy_boot: false
 # The audit variable found at the base
 ## metadata for Audit benchmark
 benchmark_version: 'v2.0.0'
-copyright_year: '2026'
 
 benchmark: RHEL9-CIS
 
@@ -93,38 +92,10 @@ rhel9cis_temp_exec_location: /var
 
 ############################################
 ### Goss is required on the remote host ###
-### vars/auditd.yml for other settings  ###
 
-# If the any of the following are set the variables used by them are loaded in vars/audit.yml these can be overridden by your
-# preferred method of variable management (e.g., vault, group_vars, host_vars, inventory etc.)
-
-# Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
-setup_audit: false
-
-# enable audits to run - this runs the audit and get the latest content
-run_audit: false
-
-# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
-audit_run_heavy_tests: true
-
-## Only run Audit do not remediate
-audit_only: false
-
-# Fetch audit output files back to the controller
-fetch_audit_output: false
-
-# Method of getting,uploading the summary files
-## Ensure access and permissions are available for these to occur.
-## options are
-# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
-# copy - copies file to a location available to the managed node
-audit_output_collection_method: fetch
-
-# Location to put the audit files
-audit_output_destination: /opt/audit_summaries/
+# Settings move dto default/main.audit.yml
 
 #############################
-
 ### Goss Settings ##
 ####### END ########
 
@@ -405,7 +376,7 @@ rhel9cis_rule_5_4_2_5: true
 rhel9cis_rule_5_4_2_6: true
 rhel9cis_rule_5_4_2_7: true
 rhel9cis_rule_5_4_2_8: true
-# 5.4.2 Configure user default environment
+# 5.4.3 Configure user default environment
 rhel9cis_rule_5_4_3_1: true
 rhel9cis_rule_5_4_3_2: true
 rhel9cis_rule_5_4_3_3: true
@@ -807,6 +778,14 @@ rhel9cis_nft_tables_autonewtable: true
 # traffic, established connections, default deny). If 'rhel9cis_nft_tables_autonewtable' is set as true, a new table will
 # be created using as name the value stored by this variable.
 rhel9cis_nft_tables_tablename: filter
+
+## OPTIONAL - persist the nftables ruleset across reboot
+# CIS RHEL9 v2.0.0 does not require this: the benchmark remediation for 4.3.x is runtime `nft`
+# commands only, so by default the ruleset is lost on reboot. Enable to have the role write the
+# live ruleset to rhel9cis_nft_tables_savefile and include it from /etc/sysconfig/nftables.conf.
+# The saved file begins with `flush ruleset` - without it a reload appends duplicate rules.
+rhel9cis_nft_tables_saveruleset: false
+rhel9cis_nft_tables_savefile: /etc/nftables/cis.nft
 
 ## Section5 vars
 

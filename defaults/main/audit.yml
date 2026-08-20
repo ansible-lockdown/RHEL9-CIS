@@ -10,6 +10,31 @@ audit_cmd_timeout: 120000
 # you will need to access to either github or the file already downloaded
 get_audit_binary_method: download
 
+# Allow audit to setup the requirements including installing git (if option chosen and downloading and adding goss binary to system)
+setup_audit: false
+
+# enable audits to run - this runs the audit and get the latest content
+run_audit: false
+
+# Run heavy tests - some tests can have more impact on a system enabling these can have greater impact on a system
+audit_run_heavy_tests: true
+
+## Only run Audit do not remediate
+audit_only: false
+
+# Fetch audit output files back to the controller
+fetch_audit_output: false
+
+# Method of getting,uploading the summary files
+## Ensure access and permissions are available for these to occur.
+## options are
+# fetch - fetches from server and moves to location on the ansible controller (could be a mount point available to controller)
+# copy - copies file to a location available to the managed node
+audit_output_collection_method: fetch
+
+# Location to put the audit files
+audit_output_destination: /opt/audit_summaries/
+
 ## if get_audit_binary_method - copy the following needs to be updated for your environment
 ## it is expected that it will be copied from somewhere accessible to the control node
 ## e.g copy from ansible control node to remote host
@@ -56,8 +81,8 @@ audit_git_version: "benchmark_{{ benchmark_version }}"
 audit_conf_dir: "{{ audit_conf_dest | default('/opt') }}/{{ benchmark }}-Audit"
 
 # If changed these can affect other products
-pre_audit_outfile: "{{ audit_log_dir }}/{{ ansible_facts.hostname }}-{{ benchmark }}-{{ benchmark_version }}_pre_scan_{{ ansible_facts.date_time.epoch }}.{{ audit_format }}"
-post_audit_outfile: "{{ audit_log_dir }}/{{ ansible_facts.hostname }}-{{ benchmark }}-{{ benchmark_version }}_post_scan_{{ ansible_facts.date_time.epoch }}.{{ audit_format }}"
+pre_audit_outfile: "{{ audit_log_dir }}/{{ ansible_facts['hostname'] }}-{{ benchmark }}-{{ benchmark_version }}_pre_scan_{{ ansible_facts['date_time']['epoch'] }}.{{ audit_format }}"
+post_audit_outfile: "{{ audit_log_dir }}/{{ ansible_facts['hostname'] }}-{{ benchmark }}-{{ benchmark_version }}_post_scan_{{ ansible_facts['date_time']['epoch'] }}.{{ audit_format }}"
 
 ## The following should not need changing
 
@@ -70,7 +95,7 @@ audit_bin_path: /usr/local/bin/
 audit_bin: "{{ audit_bin_path }}goss"
 audit_format: json
 
-audit_vars_path: "{{ audit_conf_dir }}/vars/{{ ansible_facts.hostname }}.yml"
+audit_vars_path: "{{ audit_conf_dir }}/vars/{{ ansible_facts['hostname'] }}.yml"
 audit_results: |
   The{% if not audit_only %} pre remediation{% endif %} audit results are: {{ pre_audit_results }}
   {% if not audit_only %}The post remediation audit results are: {{ post_audit_results }}{% endif %}

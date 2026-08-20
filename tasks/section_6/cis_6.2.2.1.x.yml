@@ -29,7 +29,7 @@
     - rule_6.2.2.1.2
     - NIST800-53R5_AU-2
     - NIST800-53R5_AU-12
-  notify: Restart journald
+  notify: Restart systemd_journal_upload
   ansible.builtin.lineinfile:
     path: /etc/systemd/journal-upload.conf
     regexp: "{{ item.regexp }}"
