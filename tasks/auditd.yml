@@ -40,6 +40,7 @@
   register: discovered_audit_rules_updated
   notify:
     - Auditd rules reload
+    - Audit immutable fact
     - Restart auditd
 
 - name: POST | AUDITD | Set up auditd user logging exceptions
