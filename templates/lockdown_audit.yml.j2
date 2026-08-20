@@ -604,15 +604,15 @@ rhel9cis_passwd_complex_option: {{ rhel9cis_passwd_complex_option }}
   ## Control 5.4.1.1 - Ensure password expiration is 365 days or less
   # This variable governs after how many days a password expires.
   # CIS requires a value of 365 or less.
-rhel9cis_pass_max_days: 365
+rhel9cis_pass_max_days: {{ rhel9cis_pass_max_days }}
   ## Control 5.4.1.2 - Ensure minimum days between password change can be 7 or more
   # This variable specifies the minimum number of days allowed between changing
   # passwords. CIS requires a value of at least 1.
-rhel9cis_pass_min_days: 7
+rhel9cis_pass_min_days: {{ rhel9cis_pass_min_days }}
   ## Control 5.4.1.3 - Ensure password expiration warning days is 7 or more
   # This variable governs, how many days before a password expires, the user will be warned.
   # CIS requires a value of at least 7.
-rhel9cis_pass_warn_age: 7
+rhel9cis_pass_warn_age: {{ rhel9cis_pass_warn_age }}
 
 ## PAM AND Authselect
 
