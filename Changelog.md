@@ -23,6 +23,7 @@
   - RHEL10-CIS #111 (@priteau)
 - prelim sshd_config.d/50-redhat.conf check tagged for rule_5.1.10/rule_5.1.11 - level
   scoped runs selected the consumer without the producer and failed on an undefined register
+- README updates and updated contributing and contributors
 
 ## July 2026 — QA pass: cross-repo alignment, variable rename, and lint fixes
 
