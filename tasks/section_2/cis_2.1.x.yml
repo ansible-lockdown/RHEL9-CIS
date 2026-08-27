@@ -615,7 +615,7 @@
         - rhel9cis_nginx_mask
       notify: Systemd daemon reload
       ansible.builtin.systemd:
-        name: ngnix.service
+        name: nginx.service
         enabled: "{{ ('nginx' in ansible_facts['packages']) | ternary(false, omit) }}"
         state: "{{ ('nginx' in ansible_facts['packages']) | ternary('stopped', omit) }}"
         masked: true

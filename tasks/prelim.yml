@@ -3,16 +3,6 @@
 # Preliminary tasks that should always run
 # List users in order to look up files inside each home directory
 
-- name: "PRELIM | Include audit specific variables"
-  when:
-    - run_audit or audit_only
-    - setup_audit
-  tags:
-    - setup_audit
-    - run_audit
-  ansible.builtin.include_vars:
-    file: audit.yml
-
 - name: "PRELIM | Include pre-remediation audit tasks"
   when: run_audit or audit_only
   tags: run_audit
@@ -274,6 +264,15 @@
 
 - name: "PRELIM | PATCH | sshd_config.d/50-redhat.conf exists"
   when: rhel9cis_rule_5_1_10 or rhel9cis_rule_5_1_11
+  tags:
+    - level1-server
+    - level1-workstation
+    - level2-server
+    - level2-workstation
+    - patch
+    - sshd
+    - rule_5.1.10
+    - rule_5.1.11
   ansible.builtin.stat:
     path: /etc/ssh/sshd_config.d/50-redhat.conf
   register: prelim_sshd_50_redhat_file

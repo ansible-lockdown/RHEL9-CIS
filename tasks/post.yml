@@ -16,7 +16,10 @@
     owner: root
     group: root
     mode: 'go-rwx'
-  notify: Reload sysctl
+  notify:
+    - Reload sysctl
+    - Sysctl flush ipv4 route table
+    - Sysctl flush ipv6 route table
   loop:
     - 60-kernel_sysctl.conf
     - 60-disable_ipv6.conf
