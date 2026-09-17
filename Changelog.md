@@ -1,5 +1,26 @@
 # Changes to RHEL9CIS
 
+## Based on CIS Benchmark v2.0.0
+## Sept2026 - public issue fixes
+
+- #431 container discovery no longer errors when ansible_facts.virtualization_type is undefined thanks to @bbaassssiiee
+- #464 aide tasks 6.1.1/6.1.2/6.1.3 now gated on rhel9cis_config_aide before the registered stat is read thanks to @BFG73 and @rajsshah86
+- #465 NO-WEAKMAC.pmod uses the CIS documented wildcard mac = -*-64* thanks to @oppie81
+- #466 NO-SSHWEAKCIPHERS.pmod emits the cbc exclusions before -CHACHA20-POLY1305 thanks to @oppie81
+- #467 reviewed and no change needed - NO-SHA1 alone already clears hash@rpm from CURRENT.pol and 1.6.3 passes, thanks to @oppie81
+- 7.1.13 find -perm moved inside the parens so the SUID/SGID search runs at all
+- 1.2.1.3 block gained the patch tag, so --tags patch reaches the repo_gpgcheck remediation
+- 1.2.1.3 repo file regexp corrected from =s*0 to =\s*0
+- 1.6.6, 1.6.7 retagged manual and 5.3.2.1 retagged automated to match v2.0.0
+- 1.6.1 and 6.3.4.4 titles aligned to the v2.0.0 benchmark wording
+- 5.1.15 defaults comment corrected from 5.2.15
+- bridge template emits rhel9cis_enable_repogpg and rhel9cis_rhel_default_repo so the audit can follow the 1.2.1.3 gate
+- 5.3.2.1 authselect select now runs only when the live profile or its features differ, so it no longer reports changed and leaves a backup dir on every run
+- 6.2.1.1, 6.2.1.2 and 7.1.13 gained the patch tag - all three write but were tagged audit only, so --tags patch skipped them
+- rhel9cis_nft_tables_saveruleset now defaults true - without it the reboot the role triggers leaves the host with no nftables rules
+- nftables ruleset captured with nft -s so packet counters cannot drift the saved file
+- 5.3.3.2.7 - Corrected the file and value for the control thanks to @defnotyujine
+
 ## Aug2026 - QA pass
 
 - handlers updated

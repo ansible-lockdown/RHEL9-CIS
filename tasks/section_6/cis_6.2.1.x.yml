@@ -6,6 +6,7 @@
     - level1-server
     - level1-workstation
     - audit
+    - patch
     - journald
     - rule_6.2.1.1
   ansible.builtin.systemd:
@@ -19,6 +20,7 @@
     - level1-server
     - level1-workstation
     - audit
+    - patch
     - journald
     - rule_6.2.1.2
   block:

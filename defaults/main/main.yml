@@ -779,12 +779,14 @@ rhel9cis_nft_tables_autonewtable: true
 # be created using as name the value stored by this variable.
 rhel9cis_nft_tables_tablename: filter
 
-## OPTIONAL - persist the nftables ruleset across reboot
+## Persist the nftables ruleset across reboot
 # CIS RHEL9 v2.0.0 does not require this: the benchmark remediation for 4.3.x is runtime `nft`
-# commands only, so by default the ruleset is lost on reboot. Enable to have the role write the
-# live ruleset to rhel9cis_nft_tables_savefile and include it from /etc/sysconfig/nftables.conf.
+# commands only. Left off, the ruleset is lost on the reboot this role itself triggers, so the
+# host comes back up with no firewall rules - enabled by default for that reason. The role writes
+# the live ruleset to rhel9cis_nft_tables_savefile and includes it from /etc/sysconfig/nftables.conf.
 # The saved file begins with `flush ruleset` - without it a reload appends duplicate rules.
-rhel9cis_nft_tables_saveruleset: false
+# Set false if the ruleset is managed elsewhere.
+rhel9cis_nft_tables_saveruleset: true
 rhel9cis_nft_tables_savefile: /etc/nftables/cis.nft
 
 ## Section5 vars
@@ -841,7 +843,7 @@ rhel9cis_sshd_x11forwarding: 'no'
 # the SSH server.
 rhel9cis_sshd_logingracetime: 60
 
-## Control 5.2.15 - Ensure SSH LogLevel is appropriate
+## Control 5.1.15 - Ensure sshd LogLevel is configured
 # This variable is used to control the verbosity of the logging produced by the SSH server.
 # The options for setting it are as follows:
 # - `QUIET`: Minimal logging;
@@ -995,8 +997,7 @@ rhel9cis_passwd_dictcheck_file: etc/security/pwquality.conf.d/50-pwdictcheck.con
 rhel9cis_passwd_dictcheck_value: 1
 
 # 5.3.3.2.7 - Ensure password quality is enforced for the root user
-rhel9cis_passwd_quality_enforce_file: etc/security/pwquality.conf.d/50-pwquality_enforce.conf  # pragma: allowlist secret
-rhel9cis_passwd_quality_enforce_value: 1
+rhel9cis_passwd_quality_enforce_root_file: etc/security/pwquality.conf.d/50-pwroot.conf  # pragma: allowlist secret
 rhel9cis_passwd_quality_enforce_root_value: enforce_for_root  # pragma: allowlist secret
 
 # PWhistory

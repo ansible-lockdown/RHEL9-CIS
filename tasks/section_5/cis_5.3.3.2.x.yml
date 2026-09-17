@@ -349,8 +349,8 @@
     - NIST800-53R5_IA-5
     - pam
   ansible.builtin.template:
-    src: "{{ rhel9cis_passwd_quality_enforce_file }}.j2"
-    dest: "/{{ rhel9cis_passwd_quality_enforce_file }}"
+    src: "{{ rhel9cis_passwd_quality_enforce_root_file }}.j2"
+    dest: "/{{ rhel9cis_passwd_quality_enforce_root_file }}"
     owner: root
     group: root
-    mode: 'o-rwx'
+    mode: 'go-rwx'
