@@ -8,7 +8,7 @@
   tags:
     - level1-server
     - level1-workstation
-    - manual
+    - automated
     - patch
     - authselect
     - rule_5.3.2.1
@@ -37,7 +37,20 @@
         - system
         - password
 
+    - name: "5.3.2.1 | AUDIT | Ensure active authselect profile includes pam modules | Get current profile"
+      ansible.builtin.command: /usr/bin/authselect current
+      changed_when: false
+      failed_when: false
+      check_mode: false
+      register: discovered_authselect_current
+
     - name: "5.3.2.1 | PATCH | Ensure active authselect profile includes pam modules | Backup and Add pam modules"
+      when: >-
+        discovered_authselect_current.rc != 0 or
+        'Profile ID: custom/' ~ rhel9cis_authselect_custom_profile_name not in discovered_authselect_current.stdout or
+        (discovered_authselect_wanted_features | difference(discovered_authselect_current.stdout_lines | map('regex_replace', '^-\\s*', '') | map('trim') | list) | length > 0)
+      vars:
+        discovered_authselect_wanted_features: "{{ (['with-faillock'] if rhel9cis_rule_5_3_2_2 else []) + (['with-pwquality'] if rhel9cis_rule_5_3_2_3 else []) + (['with-pwhistory'] if rhel9cis_rule_5_3_2_4 else []) + (['without-nullok'] if rhel9cis_rule_5_3_3_4_1 else []) }}"
       ansible.builtin.command: "/usr/bin/authselect select custom/{{ rhel9cis_authselect_custom_profile_name }}{% if rhel9cis_rule_5_3_2_2 %} with-faillock{% endif %}{% if rhel9cis_rule_5_3_2_3 %} with-pwquality{% endif %}{% if rhel9cis_rule_5_3_2_4 %} with-pwhistory{% endif %}{% if rhel9cis_rule_5_3_3_4_1 %} without-nullok{% endif %} --force --backup=rhel9cis-preremediate-{{ lookup('pipe', 'date +%Y-%m-%d-%H%M') }}"
       changed_when: true
 
