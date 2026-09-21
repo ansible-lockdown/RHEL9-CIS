@@ -297,7 +297,7 @@
     - nftables
   block:
     - name: "OPTIONAL | AUDIT | Persist the nftables ruleset | Capture live ruleset"
-      ansible.builtin.command: nft list ruleset
+      ansible.builtin.command: nft -s list ruleset
       changed_when: false
       check_mode: false
       register: discovered_nftables_live_ruleset

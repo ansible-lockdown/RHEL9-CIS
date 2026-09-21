@@ -17,7 +17,7 @@
 - name: |
     "6.3.4.2 | PATCH | Ensure audit log files mode is configured"
     "6.3.4.3 | PATCH | Ensure audit log files owner is configured"
-    "6.3.4.4 | PATCH | Ensure only authorized groups are assigned ownership of audit log files"
+    "6.3.4.4 | PATCH | Ensure audit log files group owner is configured"
   when:
     - rhel9cis_rule_6_3_4_2 or
       rhel9cis_rule_6_3_4_3 or
