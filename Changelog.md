@@ -17,6 +17,7 @@
 - failed_when state checks use a list, not a string
 - 6.3.4.5 loop defaults to an empty list
 - ansible_interfaces, ansible_env and ansible_local moved to ansible_facts
+- boot type detected before the pre-remediation audit, so the audit receives rhel9cis_legacy_boot
 
 ## Sept2026 - public issue fixes
 

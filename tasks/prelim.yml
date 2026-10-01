@@ -3,6 +3,25 @@
 # Preliminary tasks that should always run
 # List users in order to look up files inside each home directory
 
+- name: "PRELIM | AUDIT | Set facts based on boot type"
+  tags: always
+  block:
+    - name: "PRELIM | AUDIT | Check whether machine is UEFI-based"
+      ansible.builtin.stat:
+        path: /sys/firmware/efi
+      register: prelim_efi_boot
+
+    - name: "PRELIM | AUDIT | Set legacy boot and grub path | Bios"
+      when: not prelim_efi_boot.stat.exists
+      ansible.builtin.set_fact:
+        rhel9cis_legacy_boot: true
+        grub2_path: /etc/grub2.cfg
+
+    - name: "PRELIM | AUDIT | Set grub fact | UEFI"
+      when: prelim_efi_boot.stat.exists
+      ansible.builtin.set_fact:
+        grub2_path: /etc/grub2-efi.cfg
+
 - name: "PRELIM | Include pre-remediation audit tasks"
   when: run_audit or audit_only
   tags: run_audit
@@ -184,25 +203,6 @@
       when: "':' in prelim_system_wide_crypto_policy.stdout"
       ansible.builtin.set_fact:
         current_crypto_module: "{{ prelim_system_wide_crypto_policy.stdout.split(':')[1] }}"
-
-- name: "PRELIM | AUDIT | Set facts based on boot type"
-  tags: always
-  block:
-    - name: "PRELIM | AUDIT | Check whether machine is UEFI-based"
-      ansible.builtin.stat:
-        path: /sys/firmware/efi
-      register: prelim_efi_boot
-
-    - name: "PRELIM | AUDIT | Set legacy boot and grub path | Bios"
-      when: not prelim_efi_boot.stat.exists
-      ansible.builtin.set_fact:
-        rhel9cis_legacy_boot: true
-        grub2_path: /etc/grub2.cfg
-
-    - name: "PRELIM | AUDIT | Set grub fact | UEFI"
-      when: prelim_efi_boot.stat.exists
-      ansible.builtin.set_fact:
-        grub2_path: /etc/grub2-efi.cfg
 
 - name: "PRELIM | AUDIT | Discover Gnome Desktop Environment"
   tags: always
