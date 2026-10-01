@@ -19,6 +19,11 @@
   check_mode: false
   register: prelim_interactive_users_raw
 
+- name: "PRELIM | AUDIT | Interactive Users (initialise)"
+  tags: always
+  ansible.builtin.set_fact:
+    prelim_interactive_users: []
+
 - name: "PRELIM | AUDIT | Interactive Users (reformat)"
   tags: always
   ansible.builtin.set_fact:
@@ -139,10 +144,11 @@
         state: present
 
 - name: "PRELIM | AUDIT | Check systemd coredump"
-  when: rhel9cis_rule_1_5_4
+  when: rhel9cis_rule_1_5_3 or rhel9cis_rule_1_5_4
   tags:
     - level1-server
     - level1-workstation
+    - rule_1.5.3
     - rule_1.5.4
     - systemd
   ansible.builtin.stat:
@@ -304,11 +310,16 @@
 - name: "PRELIM | PATCH | Create journald config directory"
   when:
     - rhel9cis_syslog == 'journald'
-    - rhel9cis_rule_6_2_1_3 or rhel9cis_rule_6_2_1_4
+    - rhel9cis_rule_6_2_1_3 or
+      rhel9cis_rule_6_2_2_2 or
+      rhel9cis_rule_6_2_2_3 or
+      rhel9cis_rule_6_2_2_4
   tags: always
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d
     state: directory
+    owner: root
+    group: root
     mode: 'u+x,g-w,o-rwx'
 
 - name: "PRELIM | AUDIT | Discover if auditd is immutable"

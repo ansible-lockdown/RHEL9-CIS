@@ -1,6 +1,23 @@
 # Changes to RHEL9CIS
 
 ## Based on CIS Benchmark v2.0.0
+## Oct2026 - public issue fixes
+
+- #468 1.5.3 skipped when /etc/systemd/coredump.conf is absent, matching 1.5.4 thanks to @matagyula
+- #468 journald.conf.d created when any of 6.2.1.3, 6.2.2.2, 6.2.2.3 or 6.2.2.4 is enabled thanks to @matagyula
+- auditd stop and start handlers skipped in containers
+- augenrules reload handler guarded when 6.3.3.x did not run
+- privileged commands discovery - pipefail no longer joined to the loop, excluded mounts applied
+- 99_auditd.rules mode u-x,g-wx,o-rwx
+- 3.2.1-3.2.4 modprobe loops use per-item regexp and line
+- prelim_interactive_users initialised empty
+- remount_tmp busy warning keyed on msg
+- tmp.mount enabled and unmasked on remount
+- unreachable Systemd restart tmp.mount handler removed
+- failed_when state checks use a list, not a string
+- 6.3.4.5 loop defaults to an empty list
+- ansible_interfaces, ansible_env and ansible_local moved to ansible_facts
+
 ## Sept2026 - public issue fixes
 
 - #431 container discovery no longer errors when ansible_facts.virtualization_type is undefined thanks to @bbaassssiiee

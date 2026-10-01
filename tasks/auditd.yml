@@ -16,14 +16,14 @@
 - name: "POST | AUDITD | Ensure use of privileged commands is collected"
   ansible.builtin.shell: |
     set -o pipefail
-    {%- set egrep_exclude = "(asdfmnop|{{ rhel9cis_priv_command_excluded_mounts | join('|') }})" -%}
+    {% set egrep_exclude = "(" ~ (["asdfmnop"] + rhel9cis_priv_command_excluded_mounts) | join("|") ~ ")" -%}
     for i in $(df | grep '^/dev' | grep -Ev '{{ egrep_exclude }}' | awk '{ print $NF }'); do
       find $i -xdev -type f -perm /6000 2>/dev/null;
     done
   args:
     executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
-  failed_when: false
+  failed_when: discovered_privileged_commands.rc not in [ 0, 1 ]
   check_mode: false
   register: discovered_privileged_commands
 
@@ -36,7 +36,7 @@
     dest: /etc/audit/rules.d/99_auditd.rules
     owner: root
     group: root
-    mode: 'u-x,go-wx'
+    mode: 'u-x,g-wx,o-rwx'
   register: discovered_audit_rules_updated
   notify:
     - Auditd rules reload
