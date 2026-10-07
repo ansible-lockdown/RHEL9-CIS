@@ -3,6 +3,25 @@
 # Preliminary tasks that should always run
 # List users in order to look up files inside each home directory
 
+- name: "PRELIM | AUDIT | Set facts based on boot type"
+  tags: always
+  block:
+    - name: "PRELIM | AUDIT | Check whether machine is UEFI-based"
+      ansible.builtin.stat:
+        path: /sys/firmware/efi
+      register: prelim_efi_boot
+
+    - name: "PRELIM | AUDIT | Set legacy boot and grub path | Bios"
+      when: not prelim_efi_boot.stat.exists
+      ansible.builtin.set_fact:
+        rhel9cis_legacy_boot: true
+        grub2_path: /etc/grub2.cfg
+
+    - name: "PRELIM | AUDIT | Set grub fact | UEFI"
+      when: prelim_efi_boot.stat.exists
+      ansible.builtin.set_fact:
+        grub2_path: /etc/grub2-efi.cfg
+
 - name: "PRELIM | Include pre-remediation audit tasks"
   when: run_audit or audit_only
   tags: run_audit
@@ -18,6 +37,11 @@
   changed_when: false
   check_mode: false
   register: prelim_interactive_users_raw
+
+- name: "PRELIM | AUDIT | Interactive Users (initialise)"
+  tags: always
+  ansible.builtin.set_fact:
+    prelim_interactive_users: []
 
 - name: "PRELIM | AUDIT | Interactive Users (reformat)"
   tags: always
@@ -139,10 +163,11 @@
         state: present
 
 - name: "PRELIM | AUDIT | Check systemd coredump"
-  when: rhel9cis_rule_1_5_4
+  when: rhel9cis_rule_1_5_3 or rhel9cis_rule_1_5_4
   tags:
     - level1-server
     - level1-workstation
+    - rule_1.5.3
     - rule_1.5.4
     - systemd
   ansible.builtin.stat:
@@ -178,25 +203,6 @@
       when: "':' in prelim_system_wide_crypto_policy.stdout"
       ansible.builtin.set_fact:
         current_crypto_module: "{{ prelim_system_wide_crypto_policy.stdout.split(':')[1] }}"
-
-- name: "PRELIM | AUDIT | Set facts based on boot type"
-  tags: always
-  block:
-    - name: "PRELIM | AUDIT | Check whether machine is UEFI-based"
-      ansible.builtin.stat:
-        path: /sys/firmware/efi
-      register: prelim_efi_boot
-
-    - name: "PRELIM | AUDIT | Set legacy boot and grub path | Bios"
-      when: not prelim_efi_boot.stat.exists
-      ansible.builtin.set_fact:
-        rhel9cis_legacy_boot: true
-        grub2_path: /etc/grub2.cfg
-
-    - name: "PRELIM | AUDIT | Set grub fact | UEFI"
-      when: prelim_efi_boot.stat.exists
-      ansible.builtin.set_fact:
-        grub2_path: /etc/grub2-efi.cfg
 
 - name: "PRELIM | AUDIT | Discover Gnome Desktop Environment"
   tags: always
@@ -304,11 +310,16 @@
 - name: "PRELIM | PATCH | Create journald config directory"
   when:
     - rhel9cis_syslog == 'journald'
-    - rhel9cis_rule_6_2_1_3 or rhel9cis_rule_6_2_1_4
+    - rhel9cis_rule_6_2_1_3 or
+      rhel9cis_rule_6_2_2_2 or
+      rhel9cis_rule_6_2_2_3 or
+      rhel9cis_rule_6_2_2_4
   tags: always
   ansible.builtin.file:
     path: /etc/systemd/journald.conf.d
     state: directory
+    owner: root
+    group: root
     mode: 'u+x,g-w,o-rwx'
 
 - name: "PRELIM | AUDIT | Discover if auditd is immutable"
