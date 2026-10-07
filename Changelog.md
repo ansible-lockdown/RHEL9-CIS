@@ -3,6 +3,7 @@
 ## Based on CIS Benchmark v2.0.0
 ## Oct2026 - public issue fixes
 
+- company name MindPoint Group - A Quantum Sky Company
 - #468 1.5.3 skipped when /etc/systemd/coredump.conf is absent, matching 1.5.4 thanks to @matagyula
 - #468 journald.conf.d created when any of 6.2.1.3, 6.2.2.2, 6.2.2.3 or 6.2.2.4 is enabled thanks to @matagyula
 - auditd stop and start handlers skipped in containers
@@ -18,6 +19,7 @@
 - 6.3.4.5 loop defaults to an empty list
 - ansible_interfaces, ansible_env and ansible_local moved to ansible_facts
 - boot type detected before the pre-remediation audit, so the audit receives rhel9cis_legacy_boot
+- 5.4.2.6 root .bash_profile mode u-x,go-wx, matching the rootfiles tmpfiles 0644 reset at boot
 
 ## Sept2026 - public issue fixes
 
