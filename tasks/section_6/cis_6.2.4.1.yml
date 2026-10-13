@@ -28,7 +28,7 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'ug-x,o-rwx'
-      failed_when: discovered_logfile_sssd_list.state not in '[ file, absent ]'
+      failed_when: discovered_logfile_sssd_list.state not in ['file', 'absent']
       register: discovered_logfile_sssd_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
@@ -39,7 +39,7 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'ug-x,o-wx'
-      failed_when: discovered_logfile_tmp_list.state not in '[ file, absent ]'
+      failed_when: discovered_logfile_tmp_list.state not in ['file', 'absent']
       register: discovered_logfile_tmp_list
       loop: "{{ discovered_logfiles.stdout_lines }}"
 
@@ -50,6 +50,6 @@
       ansible.builtin.file:
         path: "{{ item }}"
         mode: 'u-x,g-wx,o-rwx'
-      failed_when: discovered_logfile_else_list.state not in '[ file, absent ]'
+      failed_when: discovered_logfile_else_list.state not in ['file', 'absent']
       register: discovered_logfile_else_list
       loop: "{{ discovered_logfiles.stdout_lines }}"

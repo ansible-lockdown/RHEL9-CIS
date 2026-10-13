@@ -37,7 +37,9 @@
         msg: "Control being set via Handler 'update sysctl' which writes to /etc/sysctl.d/60-kernel_sysctl.conf"
 
 - name: "1.5.3 | PATCH | Ensure core dump backtraces are disabled"
-  when: rhel9cis_rule_1_5_3
+  when:
+    - rhel9cis_rule_1_5_3
+    - prelim_systemd_coredump.stat.exists
   tags:
     - level1-server
     - level1-workstation

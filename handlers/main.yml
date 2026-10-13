@@ -153,14 +153,6 @@
     value: '1'
     sysctl_set: true
 
-- name: Systemd restart tmp.mount
-  ansible.builtin.systemd:
-    name: tmp.mount
-    daemon_reload: true
-    enabled: true
-    masked: false
-    state: reloaded
-
 - name: Update Crypto Policy
   ansible.builtin.set_fact:
     rhel9cis_full_crypto_policy: "{{ rhel9cis_crypto_policy }}{{ rhel9cis_crypto_policy_module }}{% if rhel9cis_additional_crypto_policy_module | length > 0 %}:{{ rhel9cis_additional_crypto_policy_module }}{% endif %}"
@@ -224,7 +216,7 @@
 ## Auditd tasks note order for handlers to run
 
 - name: Auditd rules reload
-  when: prelim_auditd_immutable_check.rc == 1 or discovered_augenrules_check.stdout is search('No change')
+  when: prelim_auditd_immutable_check.rc == 1 or discovered_augenrules_check.stdout | default('') is search('No change')
   ansible.builtin.command: augenrules --load
   changed_when: true
   failed_when: discovered_augenrule_check.rc not in [ 0, 1 ]
@@ -237,12 +229,15 @@
   notify: Set reboot required
 
 - name: Stop auditd process
-  when: prelim_auditd_immutable_check is defined
+  when:
+    - prelim_auditd_immutable_check is defined
+    - not system_is_container
   ansible.builtin.command: systemctl kill auditd
   changed_when: true
   listen: Restart auditd
 
 - name: Start auditd process
+  when: not system_is_container
   ansible.builtin.systemd:
     name: auditd
     state: started

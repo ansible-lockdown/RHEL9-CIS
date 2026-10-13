@@ -345,7 +345,7 @@
           ansible.builtin.file:
             path: "{{ item }}"
             mode: 'u-x,go-rwx'
-          failed_when: discovered_dot_bash_history_to_change.state not in '[ file, absent ]'
+          failed_when: discovered_dot_bash_history_to_change.state not in ['file', 'absent']
           register: discovered_dot_bash_history_to_change
           loop: "{{ discovered_homedir_hidden_files.stdout_lines }}"
 
@@ -353,7 +353,7 @@
           ansible.builtin.file:
             path: '{{ item }}'
             mode: 'u-x,go-wx'
-          failed_when: discovered_dot_mode_to_change.state not in '[ file, absent ]'
+          failed_when: discovered_dot_mode_to_change.state not in ['file', 'absent']
           register: discovered_dot_mode_to_change
           loop: "{{ discovered_homedir_hidden_files.stdout_lines }}"
 
@@ -362,7 +362,7 @@
             path: "{{ item }}"
             owner: "{{ prelim_captured_passwd_data | selectattr('dir', 'in', prelim_interactive_users_home.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='uid') | last }}"
             group: "{{ prelim_captured_passwd_data | selectattr('dir', 'in', prelim_interactive_users_home.stdout_lines) | selectattr('dir', 'in', item) | map(attribute='gid') | last }}"
-          failed_when: discovered_dot_ownership_to_change.state not in '[ file, absent ]'
+          failed_when: discovered_dot_ownership_to_change.state not in ['file', 'absent']
           register: discovered_dot_ownership_to_change
           loop: "{{ discovered_homedir_hidden_files.stdout_lines }}"
 
