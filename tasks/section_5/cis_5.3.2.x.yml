@@ -25,6 +25,7 @@
     - name: "5.3.2.1 | AUDIT | Ensure active authselect profile includes pam modules | get profile features"
       ansible.builtin.command: "/usr/bin/authselect list-features custom/{{ rhel9cis_authselect_custom_profile_name }}"
       changed_when: false
+      check_mode: false
       register: discovered_authselect_profile_features
 
     - name: "5.3.2.1 | PATCH | Ensure active authselect profile includes pam modules | Add missing pam modules to config | pwquality"
@@ -82,6 +83,7 @@
             executable: "{{ rhel9cis_shell_executable }}"
           changed_when: false
           failed_when: discovered_authselect_current_faillock.rc not in [ 0, 1 ]
+          check_mode: false
           register: discovered_authselect_current_faillock
 
         - name: "5.3.2.2 | PATCH | Ensure pam_faillock module is enabled | Add feature if missing authselect"  # noqa syntax-check[specific]
@@ -99,7 +101,7 @@
           ansible.builtin.command: grep -E "(auth|account)\s*required\s*pam_faillock.so" /etc/pam.d/{system,password}-auth
           changed_when: false
           failed_when: false
-          register: discovered_faillock_not_authselect
+          check_mode: false
 
         - name: "5.3.2.2 | PATCH | Ensure pam_faillock module is enabled | Add lines system-auth"
           when: not rhel9cis_allow_authselect_updates
@@ -161,6 +163,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_authselect_current_quality.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_authselect_current_quality
 
     - name: "5.3.2.3 | PATCH | Ensure pam_pwquality module is enabled | Add feature if missing"
@@ -191,6 +194,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_authselect_current_history.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_authselect_current_history
 
     - name: "5.3.2.4 | PATCH | Ensure pam_pwhistory module is enabled | enable feature"
@@ -221,6 +225,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_authselect_pam_unix.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_authselect_pam_unix
 
     - name: "5.3.2.5 | PATCH | Ensure pam_unix module is enabled | system-auth"

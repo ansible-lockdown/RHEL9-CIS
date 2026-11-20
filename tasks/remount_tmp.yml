@@ -45,10 +45,10 @@
 - name: "/tmp mount busy, reboot required to apply changes | Set facts"
   when: (discovered_remount_tmp.msg is defined) or
         (discovered_remount_tmp_systemd.msg is defined)
-  vars:
-    warn_control_id: "/tmp mount busy, reboot required"
   ansible.builtin.set_fact:
     change_requires_reboot: true
     warn_control_list: "{{ warn_control_list }} [{{ warn_control_id }}]"
     warn_count: "{{ warn_count | int + 1 }}"
+  vars:
+    warn_control_id: "/tmp mount busy, reboot required"
   listen: "Remount /tmp"

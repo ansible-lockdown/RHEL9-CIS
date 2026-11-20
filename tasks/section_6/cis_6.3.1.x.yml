@@ -14,13 +14,13 @@
     - NIST800-53R5_SI-5
   block:
     - name: "6.3.1.1 | PATCH | Ensure auditd packages are installed | Install auditd packages"
-      when: "'auditd' not in ansible_facts['packages']"
+      when: "'audit' not in ansible_facts['packages']"
       ansible.builtin.package:
         name: audit
         state: present
 
     - name: "6.3.1.1 | PATCH | Ensure auditd packages are installed | Install auditd-lib packages"
-      when: "'auditd-lib' not in ansible_facts['packages']"
+      when: "'audit-libs' not in ansible_facts['packages']"
       ansible.builtin.package:
         name: audit-libs
         state: present

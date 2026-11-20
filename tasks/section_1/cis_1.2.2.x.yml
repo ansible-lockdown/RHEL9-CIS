@@ -13,4 +13,5 @@
   ansible.builtin.package:
     name: "*"
     state: latest
+    update_cache: true
   notify: Set reboot required

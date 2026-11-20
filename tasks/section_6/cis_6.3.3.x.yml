@@ -301,10 +301,15 @@
     - NIST800-53R5_AU-3
   ansible.builtin.command: augenrules --check
   changed_when: false
+  failed_when: discovered_augenrules_check.rc not in [ 0, 1 ]
+  check_mode: false
   register: discovered_augenrules_check
 
 - name: Auditd | 6.3.3.x | Auditd controls updated
   when: update_audit_template
+  tags:
+    - patch
+    - auditd
   ansible.builtin.debug:
     msg: "Auditd Controls handled in POST using template - updating /etc/auditd/rules.d/99_auditd.rules"
   changed_when: false

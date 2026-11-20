@@ -68,7 +68,7 @@ jobs:
       # Uses dedicated restricted role and policy to enable this only for this task
       # No credentials are part of github for AWS auth
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@main
+        uses: aws-actions/configure-aws-credentials@v6.3.0
         with:
           role-to-assume: ${{ secrets.AWS_ASSUME_ROLE }}
           role-session-name: ${{ secrets.AWS_ROLE_SESSION }}

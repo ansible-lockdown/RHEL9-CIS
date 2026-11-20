@@ -86,8 +86,8 @@ skip_reboot: true
 # default value will change to true but won't reboot if not enabled but will error
 change_requires_reboot: false
 
-# A location that can be used as as a temporary location to execute scripts
-# note the drive with need exec permissions used by 1.1.1.9
+# A location that can be used as a temporary location to execute scripts
+# note the drive needs exec permissions, used by 1.1.1.9
 rhel9cis_temp_exec_location: /var
 
 ############################################
@@ -978,10 +978,10 @@ rhel9cis_passwd_complex_file: etc/security/pwquality.conf.d/50-pwcomplexity.conf
 # ensure only one is selected
 rhel9cis_passwd_complex_option: minclass  # pragma: allowlist secret
 rhel9cis_passwd_minclass: 4
-# rhel9cis_passwd_complex: credits
+# rhel9cis_passwd_complex_option: credits
 rhel9cis_passwd_dcredit: -1
 rhel9cis_passwd_ucredit: -2
-rhel9cis_passwd_ocredit: 0
+rhel9cis_passwd_ocredit: -1
 rhel9cis_passwd_lcredit: -2
 
 # 5.3.3.2.4 - password maxrepeat
@@ -1068,7 +1068,8 @@ rhel9cis_shell_session_timeout: 900
 # - `/etc/bash.bashrc`.
 rhel9cis_shell_session_file: /etc/profile.d/tmout.sh
 
-## Control 5.4.3.2 bash umask
+## Control 5.4.3.3 - Ensure default user umask is configured
+# Default umask written to /etc/login.defs UMASK and to any shell-init umask weaker than 0027
 rhel9cis_bash_umask: '0027'  # 0027 or more restrictive
 
 ### Controls:
