@@ -505,6 +505,7 @@ rhel9cis_xinetd_server: {{ rhel9cis_xinetd_server }}
 rhel9cis_xinetd_mask: {{ rhel9cis_xinetd_mask }}
 rhel9cis_xwindow_server: {{ rhel9cis_xwindow_server }}  # will remove mask not an option
 rhel9cis_is_mail_server: {{ rhel9cis_is_mail_server }}
+rhel9cis_mta_postfix_installed: {{ 'postfix' in ansible_facts['packages'] }}
 
 ## Section 2.3 Service clients
 
@@ -587,9 +588,7 @@ rhel9cis_sudolog_location: {{ rhel9cis_sudolog_location }}
 
 ## Control 5.2.4
 # This will leave NOPASSWD intact for these users
-rhel9cis_sudoers_exclude_nopasswd_list:
-  - ec2-user
-  - vagrant
+rhel9cis_sudoers_exclude_nopasswd_list: {{ rhel9cis_sudoers_exclude_nopasswd_list | to_json }}
 
 ## Control 5.2 - Ensure access to the 'su' command is restricted
 # This variable determines the name of the group of users that are allowed to use the su command.

@@ -31,7 +31,7 @@
   tags: always
   ansible.builtin.shell: |
     set -o pipefail
-    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $1":"$3":"$6 }'
+    grep -E -v '^(root|halt|sync|shutdown):' /etc/passwd | awk -F: '($7 !~ /(nologin|false)$/ && $7 != "/dev/null") { print $1":"$3":"$6 }'
   args:
     executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
@@ -53,23 +53,12 @@
   tags: always
   ansible.builtin.shell: |
     set -o pipefail
-    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false" && $7 != "/dev/null") { print $6 }'
+    grep -E -v '^(root|halt|sync|shutdown):' /etc/passwd | awk -F: '($7 !~ /(nologin|false)$/ && $7 != "/dev/null") { print $6 }'
   args:
     executable: "{{ rhel9cis_shell_executable }}"
   changed_when: false
   check_mode: false
   register: prelim_interactive_users_home
-
-- name: "PRELIM | AUDIT | Interactive UIDs"
-  tags: always
-  ansible.builtin.shell: |
-    set -o pipefail
-    grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '(!index($7, "sbin/nologin") && $7 != "/bin/nologin" && $7 != "/bin/false") { print $3 }'
-  args:
-    executable: "{{ rhel9cis_shell_executable }}"
-  changed_when: false
-  check_mode: false
-  register: prelim_interactive_uids
 
 - name: "PRELIM | AUDIT | Capture /etc/password variables"
   tags: always
@@ -224,19 +213,23 @@
   tags: always
   block:
     - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
-      ansible.builtin.command: find /sys/class/net/*/ -type d -name wireless
+      ansible.builtin.shell: |
+        set -o pipefail
+        find /sys/class/net/*/ -type d -name wireless
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       check_mode: false
-      register: prelim_wireless_adapters
       failed_when: prelim_wireless_adapters.rc not in [ 0, 1 ]
+      register: prelim_wireless_adapters
 
     - name: "PRELIM | PATCH | Install Network-Manager | if wireless adapter present"
       when:
         - rhel9cis_install_network_manager
-        - prelim_wireless_adapters.rc == 0
-        - "'NetworkManager' not in ansible_facts['packages']"
+        - prelim_wireless_adapters.stdout | length > 0
+        - rhel9cis_network_manager_package_name not in ansible_facts['packages']
       ansible.builtin.package:
-        name: NetworkManager
+        name: "{{ rhel9cis_network_manager_package_name }}"
         state: present
 
 - name: "PRELIM | PATCH | Install Cronie"
@@ -327,6 +320,7 @@
   ansible.builtin.command: grep -c "^-e 2" /etc/audit/rules.d/99_auditd.rules
   changed_when: false
   failed_when: prelim_auditd_immutable_check.rc not in [ 0, 1, 2 ]
+  check_mode: false
   register: prelim_auditd_immutable_check
 
 - name: "PRELIM | PATCH | Configure System Accounting (auditd)"

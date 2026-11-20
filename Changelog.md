@@ -1,5 +1,73 @@
 # Changes to RHEL9CIS
 
+## CIS Benchmark 2.0.0
+## November 2026 - public issue fixes
+
+- 1.4.2: every file in /boot/grub2 set root:root 0600, no files created (addresses https://github.com/ansible-lockdown/RHEL9-CIS/issues/479) - Thank you @rajsshah86
+- 2.1.18: nginx-plus removed with nginx (addresses https://github.com/ansible-lockdown/RHEL9-CIS/issues/483) - Thank you @JoannaSeen
+- 5.4.3.3: weak umask tightened in /etc/bashrc and /etc/profile.d (addresses https://github.com/ansible-lockdown/RHEL9-CIS/issues/481) - Thank you @muhammadnourmanhadi
+- 5.4.3.3: login.defs UMASK set by lineinfile, comments left unchanged
+- 5.4.3.3: stricter and compliant symbolic umask values left unchanged
+- auditd immutable rules change requests a reboot
+- auditd rules reloaded whenever they are not immutable
+- route flush handlers no longer write /etc/sysctl.conf
+- ipv4 route flush handler failures no longer ignored
+- IPv6 route flush skipped when ipv6.disable=1
+- Grub2cfg handler failures no longer hidden
+- 98_auditd_exception.rules excludes only the listed users
+- playbook user lock check matches the exact username
+- lock and password asserts skipped for users in rhel9cis_sudoers_exclude_nopasswd_list
+- interactive users exclude /usr/bin/false and match whole account names
+- check_mode false on read-only discovery tasks
+- audit summary reports not run in check mode
+- audit run fails on a run_audit.sh error
+- unused, duplicate and orphan registers removed
+- tasks/check_prereqs.yml removed, never imported
+- initrd rebuilt when its sysctl files differ, with rhel9cis_disruption_high
+- sysctl post tasks and initrd rebuild tagged patch
+- crypto policy module check uses rhel9cis_additional_crypto_policy_module
+- rhel9cis_passwd_ocredit defaults to -1
+- pwcomplexity template pragma no longer rendered
+- snmp service name snmpd.service
+- relative symbolic modes on the compliance facts directory and file
+- bridge passes rhel9cis_sudoers_exclude_nopasswd_list
+- bridge passes rhel9cis_mta_postfix_installed
+- 1.1.2.x: partition missing warnings fire
+- 1.6.x, 5.1.4 - 5.1.6: crypto policy applied when the module is missing from the current policy
+- 2.1.1: autofs masked when the package is absent
+- 3.1.1: grubby runs when any boot entry lacks ipv6.disable=1
+- 3.1.2: wireless discovery expands /sys/class/net
+- 3.1.2: wireless modules set un-loadable, deny listed and unloaded
+- 3.2.1 - 3.2.4: modules set to /bin/false
+- 4.3.4: loopback drop rules not re-added once counters move
+- 5.1.x: sshd settings placed before Include and Match
+- 5.2.4: NOPASSWD exclusion matches whole names
+- 5.3.3.1.3: even_deny_root and root_unlock_time removed in one run
+- 5.4.1.x, 5.4.2.x, 7.2.2: user module never creates a home directory
+- 5.4.1.1: PASS_MAX_DAYS discovery min and max order
+- 5.4.1.5: existing user list follows rhel9cis_inactivelock.lock_days
+- 5.4.2.2: GID 0 account names matched exactly
+- 5.4.2.2: removed accounts dropped from the captured user lists
+- 5.4.2.7: system accounts selected by UID below UID_MIN or 65534, playbook user excluded
+- 5.4.2.7, 5.4.2.8: account names matched exactly
+- 5.4.2.7: accounts set to nologin dropped from the interactive user list
+- 5.4.3.1: nologin lines in /etc/shells commented out
+- 6.2.1.2: journal file modes set in tmpfiles override and on existing journals
+- 6.2.1.4: rsyslog started when it is the logging system
+- 6.2.2.1.3: systemd-journal-upload started
+- 6.2.2.1.3: skipped when systemd-journal-remote is neither installed nor installed by 6.2.2.1.1
+- 1.2.2.1: package metadata refreshed before updating
+- workflow actions pinned to release tags, actions.lock and dependabot for github-actions
+- 6.2.4.1: symlinked log files followed, README kept at 0664 or stricter
+- 6.3.1.1: audit package checks use the real package names
+- 6.3.3.21: augenrules check accepts rc 1
+- 6.3.4.2 - 6.3.4.4: every audit log file covered, log_group set
+- 7.2.4 - 7.2.6: unused pwck -r pipe removed
+- 7.2.6: warning reads the registered result
+- 7.2.7: duplicate group names read from the group database
+- 7.2.8: ACLs skip home directories that do not exist
+- 7.2.9: dot file owner matched by exact home path
+
 ## Based on CIS Benchmark v2.0.0
 ## Oct2026 - public issue fixes
 

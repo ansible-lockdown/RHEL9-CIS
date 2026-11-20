@@ -41,44 +41,48 @@
     - rule_1.4.2
     - NIST800-53R5_AC-3
   block:
-    - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | bios based system"
-      when: rhel9cis_legacy_boot
+    - name: "1.4.2 | AUDIT | Ensure access to bootloader config is configured | Find grub config files"
+      ansible.builtin.find:
+        paths: /boot/grub2
+        file_type: file
+      register: discovered_grub2_files
+
+    - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | Set owner and mode"
       ansible.builtin.file:
-        path: "/boot/grub2/{{ item.path }}"
+        path: "{{ item.path }}"
         owner: root
         group: root
-        mode: "{{ item.mode }}"
-        state: touch
-        modification_time: preserve
-        access_time: preserve
-      loop:
-        - { path: 'grub.cfg', mode: 'u-x,go-rwx' }
-        - { path: 'grubenv', mode: 'u-x,go-rwx' }
-        - { path: 'user.cfg', mode: 'u-x,go-rwx' }
+        mode: 'u-x,go-rwx'
+      loop: "{{ discovered_grub2_files.files }}"
 
     - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | efi based system"
       when: not rhel9cis_legacy_boot
-      vars:
-        efi_mount_options: ['umask=0077', 'fmask=0077', 'uid=0', 'gid=0']
       block:
-        - name: "1.4.2 | AUDIT | Ensure permissions on bootloader config are configured | efi based system | capture current state"
+        - name: "1.4.2 | AUDIT | Ensure access to bootloader config is configured | efi based system | capture current state"
           ansible.builtin.shell: |
             set -o pipefail
             grep "^[^#;]" /etc/fstab | grep '/boot/efi' | awk -F" " '{print $4}'
           args:
             executable: "{{ rhel9cis_shell_executable }}"
           changed_when: false
+          failed_when: discovered_efi_fstab.rc not in [ 0, 1 ]
           check_mode: false
           register: discovered_efi_fstab
 
         - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | efi based system | Build Options"
-          when: item not in discovered_efi_fstab.stdout
+          when:
+            - discovered_efi_fstab.stdout | length > 0
+            - item not in discovered_efi_fstab.stdout
           ansible.builtin.set_fact:
             efi_mount_opts_addition: "{{ efi_mount_opts_addition + ',' + item }}"
+          vars:
+            efi_mount_options: ['umask=0077', 'fmask=0077', 'uid=0', 'gid=0']
           loop: "{{ efi_mount_options }}"
 
         - name: "1.4.2 | PATCH | Ensure access to bootloader config is configured | efi based system | Add mount options"
-          when: efi_mount_opts_addition | length > 0
+          when:
+            - discovered_efi_fstab.stdout | length > 0
+            - efi_mount_opts_addition | length > 0
           ansible.builtin.lineinfile:
             path: /etc/fstab
             regexp: (.*/boot/efi\s*\w*\s*){{ discovered_efi_fstab.stdout }}(.*)

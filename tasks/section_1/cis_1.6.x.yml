@@ -14,10 +14,6 @@
     - NIST800-53R5_SC-6
   ansible.builtin.debug:
     msg: "Captured in prelim to ensure not LEGACY. Runs handler to update"
-  # A debug task is always 'ok', so without this the handlers below were never
-  # notified and a change to rhel9cis_crypto_policy was silently ignored whenever
-  # the 1.6.3-1.6.7 policy modules were already in place. Comparing the base
-  # policy keeps the task idempotent once it matches.
   changed_when: prelim_system_wide_crypto_policy.stdout.split(':')[0] != rhel9cis_crypto_policy
   notify:
     - Update Crypto Policy
@@ -68,7 +64,7 @@
     - name: "1.6.3 | PATCH | Ensure system wide crypto policy disables sha1 hash and signature support | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SHA1' }}"
-      changed_when: discovered_no_sha1_template is changed  # noqa: no-handler
+      changed_when: discovered_no_sha1_template is changed or (not ansible_facts['fips'] and 'NO-SHA1' not in (prelim_system_wide_crypto_policy.stdout | default('')).split(':'))  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy
@@ -99,7 +95,7 @@
     - name: "1.6.4 | PATCH | Ensure system wide crypto policy disables macs less than 128 bits | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-WEAKMAC' }}"
-      changed_when: discovered_no_weakmac_template is changed  # noqa: no-handler
+      changed_when: discovered_no_weakmac_template is changed or (not ansible_facts['fips'] and 'NO-WEAKMAC' not in (prelim_system_wide_crypto_policy.stdout | default('')).split(':'))  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy
@@ -130,7 +126,7 @@
     - name: "1.6.5 | PATCH | Ensure system wide crypto policy disables cbc for ssh | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHCBC' }}"
-      changed_when: discovered_no_sshcbc_template is changed  # noqa: no-handler
+      changed_when: discovered_no_sshcbc_template is changed or (not ansible_facts['fips'] and 'NO-SSHCBC' not in (prelim_system_wide_crypto_policy.stdout | default('')).split(':'))  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy
@@ -161,7 +157,7 @@
     - name: "1.6.6 | PATCH | Ensure system wide crypto policy disables chacha20-poly1305 for ssh | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHWEAKCIPHERS' }}"
-      changed_when: discovered_no_sshweakciphers_template is changed  # noqa: no-handler
+      changed_when: discovered_no_sshweakciphers_template is changed or (not ansible_facts['fips'] and 'NO-SSHWEAKCIPHERS' not in (prelim_system_wide_crypto_policy.stdout | default('')).split(':'))  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy
@@ -191,7 +187,7 @@
     - name: "1.6.7 | PATCH | Ensure system wide crypto policy disables EtM for ssh | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHETM' }}"
-      changed_when: discovered_no_sshetm_template is changed  # noqa: no-handler
+      changed_when: discovered_no_sshetm_template is changed or (not ansible_facts['fips'] and 'NO-SSHETM' not in (prelim_system_wide_crypto_policy.stdout | default('')).split(':'))  # noqa: no-handler
       notify:
         - Update Crypto Policy
         - Set Crypto Policy

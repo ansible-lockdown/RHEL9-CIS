@@ -97,13 +97,15 @@
         owner: root
         group: root
         mode: 'g-wx,o-rwx'
-      notify:
-        - Update Crypto Policy
-        - Set Crypto Policy
+      register: discovered_sshd_no_sshweakciphers_template
 
     - name: "5.1.4 | PATCH | Ensure sshd Ciphers are configured | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':NO-SSHWEAKCIPHERS' }}"
+      changed_when: discovered_sshd_no_sshweakciphers_template is changed or (not ansible_facts['fips'] and 'NO-SSHWEAKCIPHERS' not in (prelim_system_wide_crypto_policy.stdout | default('')).split(':'))  # noqa: no-handler
+      notify:
+        - Update Crypto Policy
+        - Set Crypto Policy
 
 - name: "5.1.5 | PATCH | Ensure sshd KexAlgorithms is configured"
   when:
@@ -126,13 +128,15 @@
         owner: root
         group: root
         mode: 'g-wx,o-rwx'
-      notify:
-        - Update Crypto Policy
-        - Set Crypto Policy
+      register: discovered_sshd_no_sha1_template
 
     - name: "5.1.5 | PATCH | Ensure sshd KexAlgorithms is configured | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':NO-SHA1' }}"
+      changed_when: discovered_sshd_no_sha1_template is changed or (not ansible_facts['fips'] and 'NO-SHA1' not in (prelim_system_wide_crypto_policy.stdout | default('')).split(':'))  # noqa: no-handler
+      notify:
+        - Update Crypto Policy
+        - Set Crypto Policy
 
 - name: "5.1.6 | PATCH | Ensure sshd MACs are configured"
   when:
@@ -155,13 +159,15 @@
         owner: root
         group: root
         mode: 'g-wx,o-rwx'
-      notify:
-        - Update Crypto Policy
-        - Set Crypto Policy
+      register: discovered_no_sshweakmacs_template
 
     - name: "5.1.6 | PATCH | Ensure sshd MACs are configured | submodule to crypto policy modules"
       ansible.builtin.set_fact:
         rhel9cis_crypto_policy_module: "{{ rhel9cis_crypto_policy_module + ':' + 'NO-SSHWEAKMACS' }}"
+      changed_when: discovered_no_sshweakmacs_template is changed or (not ansible_facts['fips'] and 'NO-SSHWEAKMACS' not in (prelim_system_wide_crypto_policy.stdout | default('')).split(':'))  # noqa: no-handler
+      notify:
+        - Update Crypto Policy
+        - Set Crypto Policy
 
 - name: "5.1.7 | PATCH | Ensure sshd access is configured"
   when: rhel9cis_rule_5_1_7
@@ -180,6 +186,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: "^AllowUsers"
         line: "AllowUsers {{ rhel9cis_sshd_allowusers }}"
+        insertbefore: '(?i)^\s*(Include|Match)\s'
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -189,6 +197,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: "^AllowGroups"
         line: "AllowGroups {{ rhel9cis_sshd_allowgroups }}"
+        insertbefore: '(?i)^\s*(Include|Match)\s'
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -198,7 +208,7 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: "^DenyUsers"
         line: "DenyUsers {{ rhel9cis_sshd_denyusers }}"
-        insertbefore: "^Match"
+        insertbefore: '(?i)^\s*(Include|Match)\s'
         firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
@@ -209,6 +219,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: "^DenyGroups"
         line: "DenyGroups {{ rhel9cis_sshd_denygroups }}"
+        insertbefore: '(?i)^\s*(Include|Match)\s'
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -229,6 +241,10 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: '^Banner'
     line: 'Banner /etc/issue.net'
+    insertbefore: '(?i)^\s*(Include|Match)\s'
+    firstmatch: true
+    validate: sshd -t -f %s
+  notify: Restart sshd
 
 - name: "5.1.9 | PATCH | Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured"
   when: rhel9cis_rule_5_1_9
@@ -249,6 +265,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: '^ClientAliveInterval'
         line: "ClientAliveInterval {{ rhel9cis_sshd_clientaliveinterval }}"
+        insertbefore: '(?i)^\s*(Include|Match)\s'
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -257,6 +275,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: '^ClientAliveCountMax'
         line: "ClientAliveCountMax {{ rhel9cis_sshd_clientalivecountmax }}"
+        insertbefore: '(?i)^\s*(Include|Match)\s'
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -275,6 +295,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: ^(#|)\s*DisableForwarding
         line: 'DisableForwarding yes'
+        insertbefore: '(?i)^\s*(Include|Match)\s'
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -315,6 +337,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: (?i)^(#|)\s*GSSAPIAuthentication
         line: GSSAPIAuthentication no
+        insertbefore: '(?i)^\s*(Include|Match)\s'
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -335,6 +359,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*HostbasedAuthentication
     line: 'HostbasedAuthentication no'
+    insertbefore: '(?i)^\s*(Include|Match)\s'
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -355,7 +381,7 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*IgnoreRhosts
     line: 'IgnoreRhosts yes'
-    insertbefore: "^Match"
+    insertbefore: '(?i)^\s*(Include|Match)\s'
     firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -373,7 +399,7 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*LoginGraceTime
     line: "LoginGraceTime {{ rhel9cis_sshd_logingracetime }}"
-    insertbefore: "^Match"
+    insertbefore: '(?i)^\s*(Include|Match)\s'
     firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -393,7 +419,7 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*LogLevel
     line: 'LogLevel {{ rhel9cis_ssh_loglevel }}'
-    insertbefore: "^Match"
+    insertbefore: '(?i)^\s*(Include|Match)\s'
     firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -411,7 +437,7 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: '^(#)?MaxAuthTries \d'
     line: 'MaxAuthTries {{ rhel9cis_ssh_maxauthtries }}'
-    insertbefore: "^Match"
+    insertbefore: '(?i)^\s*(Include|Match)\s'
     firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
@@ -433,6 +459,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*MaxStartups
     line: 'MaxStartups {{ rhel9cis_ssh_maxstartups }}'
+    insertbefore: '(?i)^\s*(Include|Match)\s'
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -453,6 +481,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*MaxSessions
     line: 'MaxSessions {{ rhel9cis_ssh_maxsessions }}'
+    insertbefore: '(?i)^\s*(Include|Match)\s'
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -473,6 +503,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*PermitEmptyPasswords
     line: 'PermitEmptyPasswords no'
+    insertbefore: '(?i)^\s*(Include|Match)\s'
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -491,6 +523,8 @@
         path: "{{ rhel9cis_sshd_config_file }}"
         regexp: (?i)^(#|)\s*PermitRootLogin
         line: 'PermitRootLogin no'
+        insertbefore: '(?i)^\s*(Include|Match)\s'
+        firstmatch: true
         validate: sshd -t -f %s
       notify: Restart sshd
 
@@ -517,6 +551,8 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*PermitUserEnvironment
     line: 'PermitUserEnvironment no'
+    insertbefore: '(?i)^\s*(Include|Match)\s'
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd
 
@@ -537,5 +573,7 @@
     path: "{{ rhel9cis_sshd_config_file }}"
     regexp: (?i)^(#|)\s*UsePAM
     line: 'UsePAM yes'
+    insertbefore: '(?i)^\s*(Include|Match)\s'
+    firstmatch: true
     validate: sshd -t -f %s
   notify: Restart sshd

@@ -62,13 +62,14 @@
       become: true
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_nopasswd_sudoers
 
     - name: "5.2.4 | PATCH | Ensure users must provide password for escalation | Remove nopasswd for accounts not excluded"
       when: discovered_nopasswd_sudoers.stdout | length > 0
       ansible.builtin.replace:
         path: "{{ item }}"
-        regexp: '^((?!#|{% for name in rhel9cis_sudoers_exclude_nopasswd_list %}{{ name }}{% if not loop.last -%}|{%- endif -%}{% endfor %}).*)NOPASSWD(.*)'
+        regexp: '^((?!\s*(?:#{% for nopasswd_user in rhel9cis_sudoers_exclude_nopasswd_list %}|{{ nopasswd_user | regex_escape }}\s{% endfor %})).*)NOPASSWD(.*)'
         replace: '\1PASSWD\2'
         validate: '/usr/sbin/visudo -cf %s'
       loop: "{{ discovered_nopasswd_sudoers.stdout_lines }}"
@@ -92,6 +93,7 @@
       become: true
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_priv_reauth
 
     - name: "5.2.5 | PATCH | Ensure re-authentication for privilege escalation is not disabled globally"
@@ -120,6 +122,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_sudo_timeout_files
 
     - name: "5.2.6 | PATCH | Ensure sudo authentication timeout is configured correctly | Set value if no results"
@@ -154,7 +157,6 @@
       ansible.builtin.group:
         name: "{{ rhel9cis_sugroup }}"
         state: present
-      register: discovered_sugroup
 
     - name: "5.2.7 | PATCH | Ensure access to the su command is restricted | remove users from group"
       ansible.builtin.lineinfile:

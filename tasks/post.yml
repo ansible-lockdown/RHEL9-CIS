@@ -10,6 +10,9 @@
     - rhel9cis_sysctl_update
     - not system_is_container
     - "'procps-ng' in ansible_facts['packages']"
+  tags:
+    - patch
+    - sysctl
   ansible.builtin.template:
     src: "etc/sysctl.d/{{ item }}.j2"
     dest: "/etc/sysctl.d/{{ item }}"
@@ -29,11 +32,39 @@
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
+- name: POST | Rebuild initrd when its sysctl settings differ from the system
+  when:
+    - rhel9cis_disruption_high
+    - not system_is_container
+  tags:
+    - patch
+    - sysctl
+  block:
+    - name: POST | Rebuild initrd when its sysctl settings differ from the system | Compare sysctl files
+      ansible.builtin.shell: |
+        set -o pipefail
+        img="/boot/initramfs-$(uname -r).img"
+        [ -f "$img" ] || exit 0
+        listing="$(lsinitrd "$img" 2>/dev/null)"
+        grep -qE ' etc/sysctl(\.conf|\.d/)' <<< "$listing" || exit 0
+        for f in /etc/sysctl.conf /etc/sysctl.d/*.conf; do
+          [ -f "$f" ] && [ ! -L "$f" ] || continue
+          lsinitrd -f "${f#/}" "$img" 2>/dev/null | cmp -s - "$f" || echo "$f"
+        done
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
+      changed_when: false
+      check_mode: false
+      register: discovered_initrd_sysctl_drift
+
+    - name: POST | Rebuild initrd when its sysctl settings differ from the system | Rebuild
+      when: discovered_initrd_sysctl_drift.stdout | length > 0
+      ansible.builtin.command: dracut --force --regenerate-all
+      changed_when: true
+
 - name: POST | reboot system if changes require it and not skipped
   when: change_requires_reboot
   tags: always
-  vars:
-    warn_control_id: Reboot_required
   block:
     - name: POST | Reboot system if changes require it and not skipped
       when: not skip_reboot
@@ -49,3 +80,5 @@
       when: skip_reboot
       ansible.builtin.import_tasks:
         file: warning_facts.yml
+      vars:
+        warn_control_id: Reboot_required

@@ -182,6 +182,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       failed_when: false
       changed_when: false
+      check_mode: false
       register: discovered_world_writable
 
     - name: "7.1.11 | PATCH | Ensure world writable files and directories are secured | Adjust world-writable files if they exist (Configurable)"

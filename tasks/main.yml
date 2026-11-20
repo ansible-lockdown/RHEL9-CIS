@@ -56,7 +56,7 @@
 - name: "Check crypto-policy module input"
   when:
     - rhel9cis_crypto_policy_ansiblemanaged
-    - rhel9cis_crypto_policy_module | length > 0
+    - rhel9cis_additional_crypto_policy_module | length > 0
   tags:
     - rule_1.6.1
     - crypto
@@ -83,7 +83,7 @@
     - name: "Check password set for {{ rhel9cis_playbook_user }} | password state"  # noqa name[template]
       ansible.builtin.shell: |
           set -o pipefail
-          (grep {{ rhel9cis_playbook_user }} /etc/shadow || echo 'not found:not found') | awk -F: '{print $2}'
+          awk -F: -v u='{{ rhel9cis_playbook_user }}' '$1 == u {print $2; f=1} END {if (!f) print "not found"}' /etc/shadow
       changed_when: false
       failed_when: false
       check_mode: false
@@ -97,6 +97,7 @@
         msg: "No local account found for {{ rhel9cis_playbook_user }} user. Skipping local account checks."
 
     - name: "Check local account"
+      when: rhel9cis_playbook_user not in rhel9cis_sudoers_exclude_nopasswd_list
       block:
         - name: "Check password set for {{ rhel9cis_playbook_user }} | Assert local password set"  # noqa name[template]
           ansible.builtin.assert:
@@ -126,6 +127,7 @@
       ansible.builtin.command: authselect list
       changed_when: false
       failed_when: prelim_authselect_profile_list.rc not in [ 0, 1 ]
+      check_mode: false
       register: prelim_authselect_profile_list
 
 - name: "Ensure root password is set"
@@ -146,6 +148,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: prelim_root_passwd_set.rc not in [ 0, 1 ]
+      check_mode: false
       register: prelim_root_passwd_set
 
     - name: "Ensure root password is set"
@@ -228,8 +231,7 @@
     - create_benchmark_facts
     - (post_audit_summary is defined) or
       (ansible_facts['local']['compliance_facts']['lockdown_audit_details']['audit_summary'] is undefined and post_audit_summary is undefined)
-  tags:
-    - benchmark
+  tags: benchmark
   block:
     - name: Create ansible facts directory if audit facts not present
       ansible.builtin.file:
@@ -237,7 +239,7 @@
         state: directory
         owner: root
         group: root
-        mode: 'u=rwx,go=rx'
+        mode: 'go-w'
 
     - name: Create ansible facts file and levels applied if audit facts not present
       ansible.builtin.template:
@@ -245,7 +247,7 @@
         dest: "{{ ansible_facts_path }}/compliance_facts.fact"
         owner: root
         group: root
-        mode: 'u-x,go=r'
+        mode: 'u-x,go-wx'
 
 - name: Fetch audit files
   when:

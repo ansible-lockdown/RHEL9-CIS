@@ -19,6 +19,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pam_nullok.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_pam_nullok
 
     - name: "5.3.3.4.1 | PATCH | Ensure pam_unix does not include nullok | Ensure nullok removed"
@@ -61,6 +62,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pam_remember.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_pam_remember
 
     - name: "5.3.3.4.2 | PATCH | Ensure pam_unix does not include remember | Ensure remember removed"
@@ -104,6 +106,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pam_pwhash.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_pam_pwhash
 
     - name: "5.3.3.4.3 | PATCH | Ensure pam_unix includes a strong password hashing algorithm | Ensure hash algorithm set"
@@ -148,6 +151,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pam_authtok.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_pam_authtok
 
     - name: "5.3.3.4.4 | PATCH | Ensure pam_unix includes use_authtok | pam_files"

@@ -20,6 +20,7 @@
   ansible.builtin.command: passwd -l {{ item }}
   changed_when: false
   failed_when: false
+  check_mode: false
   loop: "{{ prelim_uid_zero_accounts_except_root.stdout_lines }}"
 
 - name: "5.4.2.2 | PATCH | Ensure root is the only GID 0 account"
@@ -42,12 +43,13 @@
     - name: "5.4.2.2 | AUDIT | Ensure root is the only GID 0 account | Get members of gid 0"
       ansible.builtin.shell: |
         set -o pipefail
-        awk -F: '($1 !~ /^(sync|shutdown|halt|operator)/ && $4=="0") {print $1}' /etc/passwd | grep -wv 'root'
+        awk -F: '($1 !~ /^(root|sync|shutdown|halt|operator)$/ && $4=="0") {print $1}' /etc/passwd
       args:
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
-      register: discovered_gid0_members
       failed_when: discovered_gid0_members.rc not in [ 0, 1 ]
+      check_mode: false
+      register: discovered_gid0_members
 
     - name: "5.4.2.2 | PATCH | Ensure root is the only GID 0 account | Remove users not root from gid 0"
       when:
@@ -58,6 +60,12 @@
         group: root
         state: absent
       loop: "{{ discovered_gid0_members.stdout_lines }}"
+
+    - name: "5.4.2.2 | PATCH | Ensure root is the only GID 0 account | Drop removed users from the captured user lists"
+      when: discovered_gid0_members.stdout | length > 0
+      ansible.builtin.set_fact:
+        prelim_captured_passwd_data: "{{ prelim_captured_passwd_data | rejectattr('id', 'in', discovered_gid0_members.stdout_lines) | list }}"
+        prelim_interactive_users: "{{ prelim_interactive_users | rejectattr('username', 'in', discovered_gid0_members.stdout_lines) | list }}"
 
 - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group"
   when: rhel9cis_rule_5_4_2_3
@@ -81,8 +89,9 @@
       args:
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
-      register: discovered_gid0_groups
       failed_when: discovered_gid0_groups.rc not in [ 0, 1 ]
+      check_mode: false
+      register: discovered_gid0_groups
 
     - name: "5.4.2.3 | AUDIT | Ensure group root is the only GID 0 group | Warning if others gid 0 groups"
       when:
@@ -134,6 +143,7 @@
       args:
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
+      check_mode: false
       register: discovered_root_paths
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Get root paths"
@@ -144,6 +154,7 @@
       args:
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
+      check_mode: false
       register: discovered_root_paths_split
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Set fact"
@@ -176,6 +187,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_root_path_empty_dir.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_root_path_empty_dir
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Check for trailing ':'"
@@ -187,6 +199,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_root_path_trailing_colon.rc not in [ 0, 1 ]
+      check_mode: false
       register: discovered_root_path_trailing_colon
 
     - name: "5.4.2.5 | AUDIT | Ensure root PATH Integrity | Check for owner and permissions"
@@ -235,9 +248,11 @@
 - name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell"
   when:
     - rhel9cis_rule_5_4_2_7
-    - "item.id not in prelim_interactive_users | map(attribute='username')"
+    - (item.uid | int < prelim_min_int_uid | int) or (item.uid | int == 65534)
+    - item.id not in ['root', 'halt', 'sync', 'shutdown', 'nfsnobody']
     - item.id not in rhel9cis_system_users_shell
-    - "'root' not in item.id"
+    - item.id != rhel9cis_playbook_user
+    - item.shell is not search('(nologin|false)$')
     - rhel9cis_disruption_high
   tags:
     - level1-server
@@ -252,16 +267,32 @@
   ansible.builtin.user:
     name: "{{ item.id }}"
     shell: /usr/sbin/nologin
+    create_home: false
   loop: "{{ prelim_captured_passwd_data }}"
   loop_control:
     label: "{{ item.id }}"
+  register: discovered_system_accounts_set_nologin
+
+- name: "5.4.2.7 | PATCH | Ensure system accounts do not have a valid login shell | Drop accounts set to nologin from the interactive user list"
+  when:
+    - rhel9cis_rule_5_4_2_7
+    - rhel9cis_disruption_high
+    - discovered_system_accounts_set_nologin.results | default([]) | selectattr('changed') | list | length > 0
+  tags:
+    - level1-server
+    - level1-workstation
+    - patch
+    - shadow_suite
+    - rule_5.4.2.7
+  ansible.builtin.set_fact:
+    prelim_interactive_users: "{{ prelim_interactive_users | rejectattr('username', 'in', discovered_system_accounts_set_nologin.results | selectattr('changed') | map(attribute='item.id') | list) | list }}"
 
 - name: "5.4.2.8 | PATCH | Ensure accounts without a valid login shell are locked | Lock accounts"
   when:
     - rhel9cis_rule_5_4_2_8
     - rhel9cis_disruption_high
-    - "item.id not in prelim_interactive_users | map(attribute='username')"
-    - "'root' not in item.id"
+    - item.id not in prelim_interactive_users | map(attribute='username') | list
+    - item.id != 'root'
   tags:
     - level1-server
     - level1-workstation
@@ -275,6 +306,7 @@
   ansible.builtin.user:
     name: "{{ item.id }}"
     password_lock: true
+    create_home: false
   loop: "{{ prelim_captured_passwd_data }}"
   loop_control:
     label: "{{ item.id }}"

@@ -271,20 +271,23 @@
         owner: root
         group: root
         mode: 'u+x,go-wx'
+      register: discovered_fs_script
 
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Run discovery script"
+      when: not (ansible_check_mode and discovered_fs_script is changed)
       ansible.builtin.command: "{{ rhel9cis_temp_exec_location }}/fs_with_cves.sh"
       changed_when: false
       failed_when: discovered_fs_modules_loaded.rc not in [ 0, 99 ]
+      check_mode: false
       register: discovered_fs_modules_loaded
 
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Output Warning"
-      when: discovered_fs_modules_loaded.stdout | length > 0
+      when: discovered_fs_modules_loaded.stdout | default('') | length > 0
       ansible.builtin.debug:
         msg: "{{ ['Warning!! Discovered loaded Filesystem modules that need attention. This is a manual task'] + discovered_fs_modules_loaded.stdout_lines }}"
 
     - name: "1.1.1.9 | AUDIT | Ensure unused filesystems kernel modules are not available | Capture Warning"
-      when: discovered_fs_modules_loaded.stdout | length > 0
+      when: discovered_fs_modules_loaded.stdout | default('') | length > 0
       ansible.builtin.import_tasks:
         file: warning_facts.yml
       vars:

@@ -35,6 +35,7 @@
     - rule_4.3.4
   ansible.builtin.command: "nft add table inet {{ rhel9cis_nft_tables_tablename }}"
   changed_when: false
+  check_mode: false
 
 - name: "4.3.1 | PATCH | Ensure nftables base chains exist"
   when: rhel9cis_rule_4_3_1
@@ -54,6 +55,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_nftables_input_chains
 
     - name: "4.3.1 | AUDIT | Ensure nftables base chains exist | Get current chains for FORWARD"
@@ -64,6 +66,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_nftables_forward_chains
 
     - name: "4.3.1 | AUDIT | Ensure nftables base chains exist | Get current chains for OUTPUT"
@@ -74,6 +77,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_nftables_output_chains
 
     - name: "4.3.1 | AUDIT | Ensure nftables base chains exist | Display chains for review"
@@ -118,6 +122,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_nftables_inconnectionrule
 
     - name: "4.3.2 | AUDIT | Ensure nftables established connections are configured | Gather outbound connection rules"
@@ -128,6 +133,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_nftables_outconnectionrule
 
     - name: "4.3.2 | PATCH | Ensure nftables established connections are configured | Add input tcp established accept policy"
@@ -178,6 +184,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       failed_when: false
       changed_when: false
+      check_mode: false
       register: discovered_nftables_inputpolicy
 
     - name: "4.3.3 | AUDIT | Ensure nftables default deny firewall policy | Check for hook forward deny policy"
@@ -188,6 +195,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       failed_when: false
       changed_when: false
+      check_mode: false
       register: discovered_nftables_forwardpolicy
 
     - name: "4.3.3 | AUDIT | Ensure nftables default deny firewall policy | Check for hook output deny policy"
@@ -198,6 +206,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       failed_when: false
       changed_when: false
+      check_mode: false
       register: discovered_nftables_outputpolicy
 
     - name: "4.3.3 | AUDIT | Ensure nftables default deny firewall policy | Check for SSH allow"
@@ -208,6 +217,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       failed_when: false
       changed_when: false
+      check_mode: false
       register: discovered_nftables_sshallowcheck
 
     - name: "4.3.3 | PATCH | Ensure nftables default deny firewall policy | Enable SSH traffic"
@@ -248,6 +258,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_nftables_iiflo
 
     - name: "4.3.4 | AUDIT | Ensure nftables loopback traffic is configured | Gather ip saddr existence | nftables"
@@ -258,6 +269,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_nftables_ipsaddr
 
     - name: "4.3.4 | AUDIT | Ensure nftables loopback traffic is configured | Gather ip6 saddr existence | nftables"
@@ -268,6 +280,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: false
+      check_mode: false
       register: discovered_nftables_ip6saddr
 
     - name: "4.3.4 | PATCH | Ensure nftables loopback traffic is configured | Set iif lo accept rule | nftables"
@@ -276,12 +289,12 @@
       changed_when: true
 
     - name: "4.3.4 | PATCH | Ensure nftables loopback traffic is configured | Set ip saddr rule | nftables"
-      when: '"ip saddr 127.0.0.0/8 counter packets 0 bytes 0 drop" not in discovered_nftables_ipsaddr.stdout'
+      when: discovered_nftables_ipsaddr.stdout is not search('ip saddr 127\.0\.0\.0/8 (counter packets \d+ bytes \d+ )?drop')
       ansible.builtin.command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input ip saddr 127.0.0.0/8 counter drop
       changed_when: true
 
     - name: "4.3.4 | PATCH | Ensure nftables loopback traffic is configured | Set ip6 saddr rule | nftables"
-      when: '"ip6 saddr ::1 counter packets 0 bytes 0 drop" not in discovered_nftables_ip6saddr.stdout'
+      when: discovered_nftables_ip6saddr.stdout is not search('ip6 saddr ::1 (counter packets \d+ bytes \d+ )?drop')
       ansible.builtin.command: nft add rule inet "{{ rhel9cis_nft_tables_tablename }}" input ip6 saddr ::1 counter drop
       changed_when: true
 
