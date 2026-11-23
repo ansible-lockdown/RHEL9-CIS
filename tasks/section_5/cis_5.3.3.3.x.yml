@@ -17,6 +17,7 @@
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
       failed_when: discovered_pwhistory_remember.rc not in [0, 1]
+      check_mode: false
       register: discovered_pwhistory_remember
 
     - name: "5.3.3.3.1 | PATCH | Ensure password history remember is configured | Ensure remember is set pwhistory file"
@@ -79,8 +80,9 @@
       args:
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
-      register: discovered_pwhistory_use_authtok
       failed_when: discovered_pwhistory_use_authtok.rc not in [0, 1]
+      check_mode: false
+      register: discovered_pwhistory_use_authtok
 
     - name: "5.3.3.3.3 | PATCH | Ensure pam_pwhistory includes use_authtok | Ensure use_authtok is set"
       when:

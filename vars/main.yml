@@ -162,7 +162,7 @@ rsync_services:
 snmp_pkgs:
   - net-snmp
 snmp_services:
-  - net-snmp.service
+  - snmpd.service
 
 telnet_pkgs:
   - telnet-server

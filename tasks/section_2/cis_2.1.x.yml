@@ -1,9 +1,7 @@
 ---
 
 - name: "2.1.1 | PATCH | Ensure autofs services are not in use"
-  when:
-    - rhel9cis_rule_2_1_1
-    - "'autofs' in ansible_facts['packages']"
+  when: rhel9cis_rule_2_1_1
   tags:
     - level1-server
     - level2-workstation
@@ -595,7 +593,9 @@
         - not rhel9cis_nginx_server
         - not rhel9cis_nginx_mask
       ansible.builtin.package:
-        name: nginx
+        name:
+          - nginx
+          - nginx-plus
         state: absent
 
     - name: "2.1.18 | PATCH | Ensure web server services are not in use | Mask httpd service"
@@ -616,9 +616,11 @@
       notify: Systemd daemon reload
       ansible.builtin.systemd:
         name: nginx.service
-        enabled: "{{ ('nginx' in ansible_facts['packages']) | ternary(false, omit) }}"
-        state: "{{ ('nginx' in ansible_facts['packages']) | ternary('stopped', omit) }}"
+        enabled: "{{ nginx_installed | ternary(false, omit) }}"
+        state: "{{ nginx_installed | ternary('stopped', omit) }}"
         masked: true
+      vars:
+        nginx_installed: "{{ (['nginx', 'nginx-plus'] | select('in', ansible_facts['packages']) | list | length) > 0 }}"
 
 - name: "2.1.19 | PATCH | Ensure xinetd services are not in use"
   when: rhel9cis_rule_2_1_19

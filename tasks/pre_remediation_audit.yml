@@ -78,15 +78,22 @@
   args:
     executable: "{{ rhel9cis_shell_executable }}"
   changed_when: true
-  failed_when: false  # rc=1 means goss tests failed (expected pre-remediation); rc=2+ is a script error
+  failed_when: pre_audit_run.rc | default(0) != 0
   register: pre_audit_run
   environment:
     AUDIT_BIN: "{{ audit_bin }}"
     AUDIT_CONTENT_LOCATION: "{{ audit_conf_dest | default('/opt') }}"
     AUDIT_FILE: goss.yml
 
+- name: Pre Audit | Audit not run in check mode
+  when: ansible_check_mode
+  ansible.builtin.set_fact:
+    pre_audit_results: "not run in check mode"
+
 - name: Pre Audit | Capture audit data if json format
-  when: audit_format == "json"
+  when:
+    - audit_format == "json"
+    - not ansible_check_mode
   block:
     - name: Pre Audit | Capture audit data if json format
       ansible.builtin.shell: |
@@ -103,7 +110,9 @@
         pre_audit_results: "{{ pre_audit_summary_json.stdout }}"
 
 - name: Pre Audit | Capture audit data if documentation format
-  when: audit_format == "documentation"
+  when:
+    - audit_format == "documentation"
+    - not ansible_check_mode
   block:
     - name: Pre Audit | Capture audit data if documentation format
       ansible.builtin.shell: |

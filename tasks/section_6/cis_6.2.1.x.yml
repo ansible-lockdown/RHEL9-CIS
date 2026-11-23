@@ -24,42 +24,44 @@
     - journald
     - rule_6.2.1.2
   block:
-    - name: "6.2.1.2 | PATCH | Ensure journald log file access is configured | Default file permissions"
-      ansible.builtin.file:
-        path: /usr/lib/tmpfiles.d/systemd.conf
-        mode: 'g-wx,o-rwx'
-
-    - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Check for override file"
-      ansible.builtin.stat:
-        path: /etc/tmpfiles.d/systemd.conf
-      register: discovered_tmpfile_override
-
-    - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | If override file check for journal"
-      when: discovered_tmpfile_override.stat.exists
+    - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Get journal file tmpfiles directives"
       ansible.builtin.shell: |
         set -o pipefail
-        grep -E 'z /var/log/journal/%m/system.journal \d*' /usr/lib/tmpfiles.d/systemd.conf
+        systemd-tmpfiles --cat-config | grep -P -- '^\s*[^#\s]+\s+/var/log/journal/\S*\.journal\S*\s+'
       args:
         executable: "{{ rhel9cis_shell_executable }}"
       changed_when: false
-      register: discovered_journald_fileperms_override
-      failed_when: discovered_journald_fileperms_override.rc not in [ 0, 1 ]
+      failed_when: discovered_journald_tmpfiles_modes.rc not in [ 0, 1 ]
+      check_mode: false
+      register: discovered_journald_tmpfiles_modes
 
-    - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Warning if override found"
-      when:
-        - discovered_tmpfile_override.stat.exists
-        - discovered_journald_fileperms_override.stdout | length > 0
-      ansible.builtin.debug:
-        msg: "Warning!! - tmpfiles override found /usr/lib/tmpfiles.d/systemd.conf affecting journald files please confirm matches site policy"
+    - name: "6.2.1.2 | PATCH | Ensure journald log file access is configured | Set tmpfiles directive mode"
+      when: discovered_journald_tmpfiles_modes.stdout_lines | select('search', '\.journal\S*\s+0?([1357][0-7]{2}|[0-7][1235-7][0-7]|[0-7]{2}[1-7])\s') | list | length > 0
+      block:
+        - name: "6.2.1.2 | PATCH | Ensure journald log file access is configured | Create local tmpfiles override"
+          ansible.builtin.copy:
+            src: /usr/lib/tmpfiles.d/systemd.conf
+            dest: /etc/tmpfiles.d/systemd.conf
+            remote_src: true
+            force: false
+            owner: root
+            group: root
+            mode: 'u-x,go-wx'
 
-    - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Warning if override found"
-      when:
-        - discovered_tmpfile_override.stat.exists
-        - discovered_journald_fileperms_override.stdout | length > 0
-      ansible.builtin.import_tasks:
-        file: warning_facts.yml
-      vars:
-        warn_control_id: '6.2.1.2'
+        - name: "6.2.1.2 | PATCH | Ensure journald log file access is configured | Restrict journal file mode in override"
+          ansible.builtin.replace:
+            path: /etc/tmpfiles.d/systemd.conf
+            regexp: '^(\s*[^#\s]+\s+/var/log/journal/\S*\.journal\S*\s+)0?([1357][0-7]{2}|[0-7][1235-7][0-7]|[0-7]{2}[1-7])(\s.*)$'
+            replace: '\g<1>0640\g<3>'
+
+    - name: "6.2.1.2 | PATCH | Ensure journald log file access is configured | Restrict existing journal files"
+      ansible.builtin.shell: |
+        set -o pipefail
+        find /var/log/journal /run/log/journal -type f -name '*.journal*' -perm /0137 -exec chmod u-x,g-wx,o-rwx {} + -print 2>/dev/null || true
+      args:
+        executable: "{{ rhel9cis_shell_executable }}"
+      changed_when: discovered_journald_file_mode_fix.stdout | length > 0
+      register: discovered_journald_file_mode_fix
 
 - name: "6.2.1.3 | PATCH | Ensure journald log file rotation is configured"
   when: rhel9cis_rule_6_2_1_3
@@ -104,11 +106,11 @@
     - name: "6.2.1.4 | PATCH | Ensure only one logging system is in use | when rsyslog"
       when:
         - rhel9cis_syslog == "rsyslog"
-        - "'systemd-journald' in ansible_facts['packages']"
+        - "'rsyslog' in ansible_facts['packages']"
       ansible.builtin.systemd:
-        name: systemd-journald
-        state: stopped
-        enabled: false
+        name: rsyslog
+        state: started
+        enabled: true
 
     - name: "6.2.1.4 | PATCH | Ensure only one logging system is in use | when journald"
       when:
@@ -118,4 +120,3 @@
         name: rsyslog
         state: stopped
         enabled: false
-      register: discovered_rsyslog_service
